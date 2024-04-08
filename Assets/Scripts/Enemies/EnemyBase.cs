@@ -1,0 +1,126 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public interface IEnemy
+{
+    int Tier { get; }
+}
+public class EnemyBase : Destructables
+{
+    [SerializeField] protected int tier;
+    [SerializeField] protected float moveSpeed = 0f;
+    [SerializeField] protected static GameObject player = null;
+    protected GameState gameState;
+    protected Sprite enemySprite;
+    protected const float FLASH_DURATION = 2f / 60f;
+    protected const float ATTACK_TELEGRAPH_DURATION = 12f / 60f;
+    [SerializeField] protected LayerMask playerLayer;
+    [SerializeField] protected SpriteRenderer spriteRen;
+    [SerializeField] protected GameObject killEffect;
+    [SerializeField] protected GameObject hitEffect;
+    protected Rigidbody2D rb;
+    [SerializeField] protected Animator animator;
+    [SerializeField] protected GameObject miniStarPrefab;
+    
+    protected override void Start()
+    {
+        currentHP = maxHP;
+        rb = gameObject.GetComponent<Rigidbody2D>();
+    }
+    protected void Awake()
+    {
+        OnSpawn();
+    }
+    protected virtual void OnSpawn()
+    {
+
+    }
+    /// <summary>
+    /// The actions that the enemy will perform. This happens under Update()
+    /// </summary>
+    protected virtual void Behavior()
+    {
+        // stuff to do
+    }
+    protected virtual void Animation()
+    {
+
+    }
+    protected virtual void Trigger(Collider2D col)
+    {
+        // additional checks for OnTriggerEnter
+    }
+    protected void FixedUpdate()
+    {
+        Behavior();
+        Animation();
+        HealthCheck();
+    }
+    protected void HealthCheck()
+    {
+        // if the enemy's health reaches 0,
+        if (currentHP <= 0)
+        {
+            Die();
+        }
+    }
+    protected virtual void Die()
+    {
+        //GameState.instance.IncreaseKill(); // increase amount of kill
+        for (int i = 0; i < loot; i++)
+        {
+            float randomAngle = UnityEngine.Random.Range(0f, 359f); 
+            Instantiate(miniStarPrefab, transform.position, Quaternion.Euler(0f, 0f, randomAngle));
+        }
+        
+        Instantiate(killEffect, transform.position, Quaternion.identity); // spawn kill effect
+        CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Normal, transform.position); // do a little shake
+        AudioManager.instance.PlayOneShot(FMODEvents.instance.enemyKill, transform.position);
+        Destroy(gameObject); // destroy self
+    }
+    protected void Hurt(int damage)
+    {
+        currentHP -= damage;
+        if (currentHP > 0)
+        {
+            //aud.PlayHurt();
+            AudioManager.instance.PlayOneShot(FMODEvents.instance.enemyHurt, transform.position);
+            DamageFlash();
+            CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
+            Instantiate(hitEffect, transform.position, Quaternion.identity);
+        }
+    }
+    protected void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("PBullet") || collision.gameObject.CompareTag("NBullet"))
+        {
+            Hurt(collision.gameObject.GetComponent<BulletControl>().Damage);
+        }
+        Trigger(collision);
+    }
+    protected void DamageFlash()
+    {
+        StartCoroutine(DamageFlashAnimation());   
+    }
+    protected IEnumerator DamageFlashAnimation()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            spriteRen.color = Color.black;
+            yield return new WaitForSeconds(FLASH_DURATION);
+            spriteRen.color = Color.white;
+            yield return new WaitForSeconds(FLASH_DURATION);
+        }
+    }
+    protected IEnumerator AttackTelegraph()
+    {
+        animator.SetBool("attack", true);
+        yield return new WaitForSeconds(ATTACK_TELEGRAPH_DURATION);
+        animator.SetBool("attack", false);
+
+    }
+}

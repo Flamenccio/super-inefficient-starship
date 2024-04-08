@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06a6b7665e19526469470da20f72ea16, type: 3}
+  m_Name: ChokepointSouth
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 97a08d84b2df15e48bf7e23b5e11a6bb, type: 3}
+  secondaryWallLayout: {fileID: 11400000, guid: 04cced07e8dd65b4fbf82da87b4d3248, type: 2}
+  linkSet:
+  - linkDirection: 1
+    blackListedVariants: 040000000600000007000000
+  - linkDirection: 3
+    blackListedVariants: 030000000600000007000000
+  variant: 8
