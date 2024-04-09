@@ -11,6 +11,15 @@ using UnityEngine.InputSystem.Interactions;
 
 public class PlayerActions : MonoBehaviour
 {
+    private enum AttackState
+    {
+        Tap,
+        EnterHold,
+        Hold,
+        ExitHold
+    };
+
+    private AttackState mainAttackState = AttackState.Tap;
     private Vector2 moveInput; // directional input
     private Vector2 aimInput;
     private Rigidbody2D rb;
@@ -70,33 +79,35 @@ public class PlayerActions : MonoBehaviour
     }
     private void Update()
     {
+        // MAIN WEAPON HOLD ATTACK
         if (mainPressed)
         {
             if (mainHold >= HOLD_THRESHOLD)
             {
+                powerManager.MainAttackEffectHoldContinuous(rb);
                 powerManager.MainAttackHold(aimAngle.Degree, transform.position, playerAtt.UseAmmo, Time.deltaTime);
             }
             else
             {
+                powerManager.MainAttackEffectHoldEnter(rb);
                 mainHold += Time.deltaTime;
             }
         }
         else
         {
+            powerManager.MainAttackEffectHoldExit(rb);
             mainHold = 0f;
         }
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        // store the input vector
-        moveInput = context.ReadValue<Vector2>();
+        moveInput = context.ReadValue<Vector2>(); // store the input vector
     }
 
     public void OnAim(InputAction.CallbackContext context)
     {
-        // store the input vector
-        aimInput = context.ReadValue<Vector2>();
+        aimInput = context.ReadValue<Vector2>(); // store the input vector
     }
 
     public void OnFire1(InputAction.CallbackContext context)

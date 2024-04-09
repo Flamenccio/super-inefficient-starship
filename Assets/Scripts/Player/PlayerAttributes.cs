@@ -14,7 +14,9 @@ public class PlayerAttributes : MonoBehaviour
         KillPointBonus,
         MainDamageBonus,
     };
-    private float[] attributeBonuses;
+    private float[] attributeBonuses; // array of total percent increase of each attribute
+    private uint alteredAttributes; // a bitmask representing what attributes have been temporarily altered
+
     private int baseAmmo = 10;
     private int baseMaxAmmo = 50;
     private int baseMaxHP = 3;
@@ -23,7 +25,7 @@ public class PlayerAttributes : MonoBehaviour
     private float baseMoveSpeed = 4.8f;
     private float baseMainWeaponDamageBonus = 0f;
     
-    private Dictionary<Attribute, double> attributeValues = new();
+    private Dictionary<Attribute, double> attributeValues = new(); // current attribute values used for calculations and stuff
     private Dictionary<Attribute, double> baseAttributeValues = new();
 
     public int Ammo { get; private set; }
@@ -39,6 +41,7 @@ public class PlayerAttributes : MonoBehaviour
     private void Awake()
     {
         attributeBonuses = new float[Enum.GetNames(typeof(Attribute)).Length];
+
         MaxHP = baseMaxHP; // default values
         HP = MaxHP;
         MoveSpeed = baseMoveSpeed;
@@ -105,28 +108,17 @@ public class PlayerAttributes : MonoBehaviour
     }
     public bool ChangeLife(int life)
     {
-
         if (HP + life > MaxHP) return false;
         HP = Mathf.Clamp(HP + life, 0, MaxHP);
 
         return true;
     }
     /// <summary>
-    /// Calculates attribute % bonus from a select buff
-    /// </summary>
-    public void CompileBonus(BuffBase b)
-    {
-        foreach (BuffBase.StatBuff s in b.Buffs)
-        {
-            int x = (int)s.affectedAttribute;
-            attributeBonuses[x] += b.GetPercentChangeOf(s.affectedAttribute);
-        }
-    }
-    /// <summary>
     /// Takes some attribute <b>a</b> and a list of buffs <b>b</b>. From the list, recalculates attribute bonus. Also applies the bonus to the attribute.
     /// </summary>
     public void RecompileBonus(Attribute a, List<BuffBase> b)
     {
+        if ((alteredAttributes | ((uint)1 << (int)a)) == alteredAttributes) RestoreAttributeChange(a, b); // if this value is already changed, restore it.
         attributeBonuses[(int)a] = 0f;
         foreach (BuffBase bb in b)
         {
@@ -144,5 +136,35 @@ public class PlayerAttributes : MonoBehaviour
         attributeValues[a] = (1 + bonus) * y; // calculate final attribute value and apply it
         Debug.Log(attributeValues[a]);
         Debug.Log(MoveSpeed);
+    }
+    /// <summary>
+    /// Temporarily change an attribute's value by some percent.<para>The final value is used in calculations.</para>
+    /// </summary>
+    /// <param name="a">Attribute to affect.</param>
+    /// <param name="percent">How much to affect it.</param>
+    public void TemporaryAttributeChange(Attribute a, float percent)
+    {
+        int i = (int)a;
+        if ((alteredAttributes | ((uint)1 << i)) == alteredAttributes) return; // if this value is already changed, don't do anything.
+        attributeValues[a] = attributeValues[a] * percent; // change value
+
+        alteredAttributes |= (uint)1 << i; // add attribute to bit mask
+    }
+    /// <summary>
+    /// Restore an attribute's original value if it was temporarily changed.
+    /// </summary>
+    /// <param name="a"></param>
+    public void RestoreAttributeChange(Attribute a)
+    {
+        PowerupManager p = gameObject.GetComponent<PowerupManager>(); // cheat a little
+        RestoreAttributeChange(a, p.Buffs);
+    }
+    public void RestoreAttributeChange(Attribute a, List<BuffBase> b)
+    {
+        int i = (int)a;
+        if ((alteredAttributes & (1 << i)) == 0) return; // if this value has not been changed, don't do anything.
+
+        alteredAttributes &= ~((uint)1 << i); // clear bit corresponding to affected attribute
+        RecompileBonus(a, b);
     }
 }

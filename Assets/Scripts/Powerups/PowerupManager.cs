@@ -26,11 +26,12 @@ public class PowerupManager : MonoBehaviour
     private WeaponMain mainAttack;
     private WeaponMain subAttack;
 
-    private Action<float, Vector2, Func<int, bool>> mainAttackTap;
-    private Action<float, Vector2, Func<int, bool>, float> mainAttackHold;
+    //private Action<float, Vector2, Func<int, bool>> mainAttackTap;
+    //private Action<float, Vector2, Func<int, bool>, float> mainAttackHold;
     private Action powerupUpdate;
 
     private List<BuffBase> buffs = new List<BuffBase>();
+    public List<BuffBase> Buffs { get => buffs; }
 
     [SerializeField] [Tooltip("Path to default weapon.")] private UnityEditor.MonoScript defaultMain;
     private PlayerAttributes playerAttributes;
@@ -41,8 +42,8 @@ public class PowerupManager : MonoBehaviour
         mainAttack = gameObject.AddComponent(defaultMain.GetClass()).GetComponent<WeaponMain>();
         playerAttributes = gameObject.GetComponent<PlayerAttributes>();
 
-        mainAttackTap = mainAttack.Execute;
-        mainAttackHold = mainAttack.HoldExecute;
+        //mainAttackTap = mainAttack.Execute;
+        //mainAttackHold = mainAttack.HoldExecute;
         powerupUpdate += mainAttack.Run;
     }
     public WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
@@ -53,19 +54,33 @@ public class PowerupManager : MonoBehaviour
         mainAttack = gameObject.AddComponent(main.GetType()).GetComponent<WeaponMain>(); // and replace it with the new one
 
         // update attacks
-        mainAttackTap = mainAttack.Execute;
-        mainAttackHold = mainAttack.HoldExecute;
+        //mainAttackTap = mainAttack.Execute;
+        //mainAttackHold = mainAttack.HoldExecute;
         powerupUpdate += mainAttack.Run;
 
         return temp;
     }
     public void MainAttackTap(float angle, Vector2 origin, Func<int, bool> deductAmmo)
     {
+        //mainAttackTap(angle, origin, deductAmmo);
         mainAttack.Execute(angle, origin, deductAmmo);
     }
     public void MainAttackHold(float angle, Vector2 origin, Func<int, bool> deductAmmo, float holdTime)
     {
-        mainAttackHold(angle, origin, deductAmmo, holdTime);
+        //mainAttackHold(angle, origin, deductAmmo, holdTime);
+        mainAttack.HoldExecute(angle, origin, deductAmmo, holdTime);
+    }
+    public void MainAttackEffectHoldEnter(Rigidbody2D rigidbody)
+    {
+        mainAttack.PlayerEffectHoldEnter(rigidbody);
+    }
+    public void MainAttackEffectHoldExit(Rigidbody2D rigidbody)
+    {
+        mainAttack.PlayerEffectHoldExit(rigidbody);
+    }
+    public void MainAttackEffectHoldContinuous(Rigidbody2D rigidbody)
+    {
+        mainAttack.PlayerEffectHold(rigidbody);
     }
     private void Update()
     {
@@ -76,12 +91,12 @@ public class PowerupManager : MonoBehaviour
         int x = FindBuff(b);
         if (x < 0)
         {
-            Debug.Log("added");
+            //Debug.Log("added");
             buffs.Add(b); // if there is no existing duplciate, add it
         }
         else
         {
-            Debug.Log("Upgraded");
+            //Debug.Log("Upgraded");
             buffs[x].LevelChange(1); // if there is an existing duplicate level up
         }
         //playerAttributes.CompileBonus(b);

@@ -52,6 +52,21 @@ public class PlayerMotion : MonoBehaviour
         MovementRestricted = false;
     }
     /// <summary>
+    /// Prevents player from taking any actions for some given amount of time.
+    /// </summary>
+    /// <param name="t">Time in seconds.</param>
+    public void RestrictAction(float t)
+    {
+        if (ActionRestricted) return;
+        StartCoroutine(RestrictActionCoroutine(t));
+    }
+    private IEnumerator RestrictActionCoroutine(float t)
+    {
+        ActionRestricted = true;
+        yield return new WaitForSeconds(t);
+        ActionRestricted = false;
+    }
+    /// <summary>
     /// Exert an impulse on the player character.
     /// </summary>
     public void Shove(Vector2 direction, float magnitude)
