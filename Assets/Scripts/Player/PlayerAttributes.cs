@@ -34,7 +34,7 @@ public class PlayerAttributes : MonoBehaviour
     public float MoveSpeed { get => (float)attributeValues[Attribute.MoveSpeed]; private set => attributeValues[Attribute.MoveSpeed] = value; }
     public int MaxHP { get => (int)attributeValues[Attribute.MaxHP]; private set => attributeValues[Attribute.MaxHP] = value; }
     public int KillPoints { get; private set; }
-    public float KillPointBonus {  get => (float)attributeValues[Attribute.MaxHP]; private set => attributeValues[Attribute.KillPointBonus] = value; }
+    public float KillPointBonus {  get => (float)attributeValues[Attribute.KillPointBonus]; private set => attributeValues[Attribute.KillPointBonus] = value; }
     public float WeaponRange { get; private set; }
     public int MainWeaponDamage { get; private set; }
     public float MainWeaponDamageBonus {  get => (float)attributeValues[Attribute.MainDamageBonus]; private set => attributeValues[Attribute.MainDamageBonus] = value; }
@@ -92,6 +92,7 @@ public class PlayerAttributes : MonoBehaviour
     {
         if (Ammo + ammo > MaxAmmo)
         {
+            Ammo = MaxAmmo;
             return;
         }
         Ammo += ammo;

@@ -108,14 +108,12 @@ public class HUDControl : MonoBehaviour
     }
     public void DisplayFlyText(string text, Color color, Vector2 position)
     {
-
         GameObject instance = Instantiate(scoreFlyText, transform, false);
         instance.transform.position = position;
 
         TMP_Text instanceTMP = instance.GetComponent<TMP_Text>();
         instanceTMP.text = text;
         instanceTMP.color = color;
-
     }
     private IEnumerator LevelUpTextAnimation(int level)
     {

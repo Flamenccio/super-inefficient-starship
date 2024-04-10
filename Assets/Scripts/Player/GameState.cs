@@ -85,21 +85,18 @@ public class GameState : MonoBehaviour
 
     public void AddPoints(int addPoints)
     {
-        //points += addPoints;
         playerAtt.AddAmmo(addPoints);
-        //totalPoints += addPoints;
-        //inst.UpdateProgress(addPoints);
         progress += addPoints;
+        hudControl.DisplayScoreFlyText(addPoints);
         if (progress >= DifficultyCurve(difficulty + 1)) // level up
         {
             LevelUp();
         }
-        hudControl.DisplayScoreFlyText(addPoints);
-
     }
     public void CollectStar(int value)
     {
-        int total = (int)Mathf.Ceil(playerAtt.KillPoints * playerAtt.KillPointBonus) + value; // calculate total points gained
+        int total = Mathf.FloorToInt(playerAtt.KillPoints * playerAtt.KillPointBonus) + value; // calculate total points gained
+        Debug.Log("gained " + total + " points.");
         SpawnEnemies(); // spawn more enemies with an additional amount based on the amount of kill points obtained
         ResetKills();
         GameObject star = spawnControl.SpawnStar();
@@ -126,13 +123,6 @@ public class GameState : MonoBehaviour
             wallFrequency -= INCREASE_WALL_FREQUENCY;
         }
 
-        /*
-        if (enemyFrequency > MAX_ENEMY_SPAWN_FREQUENCY) // increase enemy spawn frequency
-        {
-            enemyFrequency -= INCREASE_ENEMY_SPAWN_FREQUENCY;
-        }
-        */
-
         waveSpawnAmount = EnemyWaveLevel();
 
         maxTime += MAX_TIME_INCREASE; // increase the maximum time
@@ -152,11 +142,6 @@ public class GameState : MonoBehaviour
     public bool RemovePoints(int points)
     {
         return playerAtt.UseAmmo(points);
-        /*
-        if (this.points - points < 0) return false;
-        this.points -= points;
-        return true;
-        */
     }
     public void ReplenishTimer()
     {

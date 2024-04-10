@@ -38,8 +38,8 @@ public class Minigun : WeaponMain
     }
     public override void PlayerEffectHoldEnter(Rigidbody2D rb)
     {
-        //playerAtt.TemporaryAttributeChange(PlayerAttributes.Attribute.MoveSpeed, 0.33f);
-        PlayerMotion.Instance.Move(transform.right, 100f, 0.1f);
+        playerAtt.TemporaryAttributeChange(PlayerAttributes.Attribute.MoveSpeed, 0.33f);
+        //PlayerMotion.Instance.Move(transform.right, 100f, 0.1f);
     }
     public override void PlayerEffectHoldExit(Rigidbody2D rb)
     {
