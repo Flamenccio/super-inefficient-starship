@@ -20,13 +20,13 @@ public class Minigun : WeaponMain
         cost = 1;
         mainAttack = Resources.Load<GameObject>("Prefabs/Bullets/PlayerMini");
     }
-    public override void HoldExecute(float directionDeg, Vector2 origin, Func<int, bool> deductAmmo, float elapsedTime)
+    public override void Hold(float directionDeg, Vector2 origin)
     {
         if (freqTimer <= 0f)
         {
             if (rounds <= 0)
             {
-                if (!deductAmmo(cost)) return;
+                if (!consumeAmmo(cost)) return;
                 rounds = MAX_ROUNDS;
             }
             AudioManager.instance.PlayOneShot(FMODEvents.instance.playerShootMini, transform.position);
@@ -34,13 +34,13 @@ public class Minigun : WeaponMain
             freqTimer = frequency;
             rounds--;
         }
-        else freqTimer -= elapsedTime;
+        else freqTimer -= Time.deltaTime;
     }
-    public override void PlayerEffectHoldEnter(Rigidbody2D rb)
+    public override void HoldEnter(float angleDeg, Vector2 origin)
     {
         playerAtt.TemporaryAttributeChange(PlayerAttributes.Attribute.MoveSpeed, 0.33f);
     }
-    public override void PlayerEffectHoldExit(Rigidbody2D rb)
+    public override void HoldExit(float angleDeg, Vector2 origin)
     {
         playerAtt.RestoreAttributeChange(PlayerAttributes.Attribute.MoveSpeed);
     }

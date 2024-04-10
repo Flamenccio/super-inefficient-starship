@@ -40,10 +40,12 @@ public class PlayerMotion : MonoBehaviour
     /// Prevents player from moving via input for some given amount of time. <para>Note that only <b>one</b> restriction may exist at any time; repeatedly restricting the player character will not accumulate restriction time.</para>
     /// </summary>
     /// <param name="t">Time in seconds.</param>
-    public void RestrictMovement(float t)
+    public bool RestrictMovement(float t)
     {
-        if (MovementRestricted) return;
+        // TODO this will cause problems if two actions need to edit the same stat--please fix!
+        if (MovementRestricted) return false;
         StartCoroutine(RestrictMovementCoroutine(t));
+        return true;
     }
     private IEnumerator RestrictMovementCoroutine(float t)
     {

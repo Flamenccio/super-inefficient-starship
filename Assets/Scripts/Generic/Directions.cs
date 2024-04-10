@@ -204,12 +204,4 @@ public class Directions
         }
         return false;
     }
-    public Vector2 DegreeToVector2(float d)
-    {
-        return RadianToVector2(d * Mathf.Deg2Rad);
-    }
-    public Vector2 RadianToVector2(float r)
-    {
-        return new Vector2(Mathf.Cos(r), Mathf.Sin(r));
-    }
 }

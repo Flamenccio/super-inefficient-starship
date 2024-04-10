@@ -18,15 +18,14 @@ public class Dash : WeaponSub
         cost = 0;
         Rarity = PowerupRarity.Common;
     }
-    public override void Execute(float directionDeg, Vector2 origin, Func<int, bool> deductAmmo)
+    public override void Tap(float directionDeg, Vector2 origin)
     {
-        Debug.Log("A" + cooldownTimer);
         if (cooldownTimer < cooldown) return; // don't do anything if on cooldown
-        Debug.Log("B");
-        Directions d = new();
+        if (!PlayerMotion.Instance.RestrictMovement(DURATION)) return;
+        float r = Mathf.Deg2Rad * directionDeg;
+        Vector2 v = new(Mathf.Cos(r), Mathf.Sin(r));
         AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDash, transform.position);
-        PlayerMotion.Instance.RestrictMovement(DURATION);
-        PlayerMotion.Instance.Move(d.DegreeToVector2(directionDeg), SPEED, DURATION);
+        PlayerMotion.Instance.Move(v, SPEED, DURATION);
         cooldownTimer = 0f;
     }
     public override void Run()

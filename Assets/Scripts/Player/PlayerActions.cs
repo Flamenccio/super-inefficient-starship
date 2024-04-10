@@ -23,16 +23,12 @@ public class PlayerActions : MonoBehaviour
     private Rigidbody2D rb;
 
     private AllAngle aimAngle;
-    private float dashCD = 1.0f;
     private bool mainPressed = false;
     private float mainHold = 0.0f;
     private float acceleration = 1.0f;
     private float deceleration = 1.0f;
     private float aimResponsiveness = 0.6f;
 
-    private const float DASH_DURATION = 5f / 60f;
-    private const float DASH_COOLDOWN = 1.0f;
-    private const float DASH_SPEED = 50.0f;
     private const float HOLD_THRESHOLD = 0.50f;
 
     [SerializeField] private GameObject bullet;
@@ -60,38 +56,20 @@ public class PlayerActions : MonoBehaviour
             Movement();
         }
         Aim();
-
-        // HACK temporary
-        if (dashCD > 0.0f)
-        {
-            dashCD -= Time.deltaTime;
-        }
-        else
-        {
-            dashCD = 0.0f;
-        }
-        if (DASH_COOLDOWN - dashCD <= DASH_DURATION)
-        {
-            Instantiate(afterImagePrefab, transform.position, Quaternion.Euler(transform.rotation.eulerAngles));
-        }
     }
     private void Update()
     {
         // MAIN WEAPON HOLD ATTACK
-        if (mainPressed)
+        if (mainPressed) // TODO clean this up
         {
             if (mainHold >= HOLD_THRESHOLD)
             {
                 if (mainAttackState == AttackState.Tap)
                 {
-                    powerManager.MainAttackEffectHoldEnter(rb);
+                    powerManager.MainAttackHoldEnter(aimAngle.Degree, transform.position);
                     mainAttackState = AttackState.Hold;
                 }
-                else
-                {
-                    powerManager.MainAttackEffectHoldContinuous(rb);
-                }
-                powerManager.MainAttackHold(aimAngle.Degree, transform.position, playerAtt.UseAmmo, Time.deltaTime);
+                else powerManager.MainAttackHold(aimAngle.Degree, transform.position);
             }
             else
             {
@@ -102,7 +80,7 @@ public class PlayerActions : MonoBehaviour
         {
             if (mainAttackState == AttackState.Hold)
             {
-                powerManager.MainAttackEffectHoldExit(rb);
+                powerManager.MainAttackHold(aimAngle.Degree, transform.position);
                 mainAttackState = AttackState.Tap;
             }
             mainHold = 0f;
@@ -121,61 +99,37 @@ public class PlayerActions : MonoBehaviour
 
     public void OnFire1(InputAction.CallbackContext context)
     {
-        // if held down, then do charged fire
-        // if released without holding down long enough, do normal fire
         if (context.performed)
         {
-            //AudioManager.instance.PlayOneShot(FMODEvents.instance.playerShoot, transform.position);
+            float a;
             if (AimAssist.instance.Target != null)
             {
                 GameObject t = AimAssist.instance.Target;
-                float a = Mathf.Rad2Deg * Mathf.Atan2(t.transform.position.y - transform.position.y, t.transform.position.x - transform.position.x);
-
-                powerManager.MainAttackTap(a, transform.position, playerAtt.UseAmmo);
-                //powerManager.mainAttackTap(a, transform.position, playerAtt.UseAmmo);
+                a = Mathf.Rad2Deg * Mathf.Atan2(t.transform.position.y - transform.position.y, t.transform.position.x - transform.position.x);
             }
-            else
-            {
-                powerManager.MainAttackTap(aimAngle.Degree, transform.position, playerAtt.UseAmmo);
-                //powerManager.mainAttackTap(aimAngle.Degree, transform.position, playerAtt.UseAmmo);
-            }
+            else a = aimAngle.Degree;
+            powerManager.MainAttackTap(a, transform.position);
         }
         mainPressed = context.ReadValueAsButton();
     }
-    public void OnFire2(InputAction.CallbackContext context) // HACK temporary
+    public void OnFire2(InputAction.CallbackContext context)
     {
-        /*
-        if (context.performed && dashCD == 0 && !PlayerMotion.Instance.MovementRestricted)
-        {
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDash, transform.position);
-            // dash in the left stick direction
-            //StartCoroutine(Dash());
-            DashTemp();
-            dashCD = DASH_COOLDOWN;
-
-            // activate cooldown gauge
-            //cdControl.Display(1.0f);
-        }
-        */
         if (context.performed)
         {
-            powerManager.SubAttackTap(aimAngle.Degree, transform.position, playerAtt.UseAmmo);
+            powerManager.SubAttackTap(aimAngle.Degree, transform.position);
         }
     }
     private void Movement()
     {
-        // if the player is providing direcitonal input:
-        if (moveInput != Vector2.zero)
+        if (moveInput != Vector2.zero) // if the player is providing direcitonal input:
         {
             Vector2 newVelocity = new Vector2(moveInput.x * acceleration + rb.velocity.x, moveInput.y * acceleration + rb.velocity.y);
 
-            //newVelocity = Vector2.ClampMagnitude(newVelocity, MAX_SPEED);
             newVelocity = Vector2.ClampMagnitude(newVelocity, playerAtt.MoveSpeed);
 
             rb.velocity = newVelocity;
         }
-        // otherwise, if no directional input is given:
-        else if (rb.velocity.magnitude > 0f)
+        else if (rb.velocity.magnitude > 0f) // otherwise, if no directional input is given:
         {
             rb.velocity = new Vector2(rb.velocity.x - rb.velocity.x * deceleration, rb.velocity.y - rb.velocity.y * deceleration);
         }

@@ -15,10 +15,10 @@ public class Blaster : WeaponMain
         cooldown = 8f / 60f;
         mainAttack = Resources.Load<GameObject>("Prefabs/Bullets/Player");
     }
-    public override void Execute(float directionDeg, Vector2 origin, Func<int, bool> deductAmmo)
+    public override void Tap(float directionDeg, Vector2 origin)
     {
         if (cooldownTimer < cooldown) return; // don't do anything if on cooldown
-        if (!deductAmmo(cost)) return; // don't do anything if there is not enough ammo
+        if (!consumeAmmo(cost)) return; // don't do anything if there is not enough ammo
         AudioManager.instance.PlayOneShot(FMODEvents.instance.playerShoot, transform.position);
         Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, directionDeg));
         cooldownTimer = 0f;

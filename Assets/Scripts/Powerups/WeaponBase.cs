@@ -24,10 +24,10 @@ public class WeaponBase : MonoBehaviour, IPowerup
     public string Desc { get; protected set; }
     public int Level { get; protected set; }
     public PowerupRarity Rarity { get; protected set; }
-
     public WeaponType Type { get => weaponType; }
     public int Cost { get => cost; }
     public float Cooldown { get => cooldown; }
+    protected Func<int, bool> consumeAmmo;
 
     private void Awake()
     {
@@ -38,10 +38,13 @@ public class WeaponBase : MonoBehaviour, IPowerup
     {
         cooldownTimer = 0f;
         playerAtt = gameObject.GetComponent<PlayerAttributes>();
+        if (playerAtt == null)
+        {
+            Debug.LogError("ERROR: could not find a PlayerAttributes class in player.");
+            throw new NullReferenceException("ERROR: could not find a PlayerAttributes class in player.");
+        }
+        consumeAmmo = playerAtt.UseAmmo;
     }
-
-    // HACK: rather than passing a new deductAmmo method every Execute() call, why not cache it when an instance comes awake?
-    public virtual void Execute(float directionDeg, Vector2 origin, Func<int, bool> deductAmmo) { }
     public virtual void Run()
     {
         if (cooldownTimer < cooldown)
@@ -49,19 +52,22 @@ public class WeaponBase : MonoBehaviour, IPowerup
             cooldownTimer += Time.deltaTime;
         }
     }
-    public virtual void PlayerEffectTap(Rigidbody2D rb) { } // any effects that a weapon may do to a player on TAP
+    /// <summary>
+    /// What weapon does when player taps button.
+    /// </summary>
+    public virtual void Tap(float angleDeg, Vector2 origin) { }
     /// <summary>
     /// The player effect that is called <b>once</b> when player enters hold attack.
     /// </summary>
-    public virtual void PlayerEffectHoldEnter(Rigidbody2D rb) { }
+    public virtual void HoldEnter(float angleDeg, Vector2 origin) { }
     /// <summary>
     /// The player effect that is run continuously while player is holding attack button.
     /// </summary>
-    public virtual void PlayerEffectHold(Rigidbody2D rb) { }
+    public virtual void Hold(float angleDeg, Vector2 origin) { }
     /// <summary>
     /// The player effect that is called <b>once</b> when player exits hold attack.
     /// </summary>
-    public virtual void PlayerEffectHoldExit(Rigidbody2D rb) { }
+    public virtual void HoldExit(float angleDeg, Vector2 origin) { }
     public void LevelChange(int levels)
     {
         if (Level < -levels) return; // if applying this change makes the level negative, don't

@@ -159,23 +159,14 @@ public class GameState : MonoBehaviour
     public bool RemoveLife(int life)
     {
         CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
-        // HACK maybe have something else do this
-        Instantiate(hitEffect2, player.position, Quaternion.identity);
+        Instantiate(hitEffect2, player.position, Quaternion.identity); // HACK maybe have something else do this
         cameraControl.HurtZoom();
         hudControl.DisplayHurtLines();
         playerAtt.ChangeLife(-life);
         if (playerAtt.HP == 0) {
             GameOver();
         }
-        /* 
-        if (this.life - life < 0)
-        {
-            life = 0;
-            GameOver();
-        }
-        */
-        StartCoroutine(HurtSlowmo());
-        //this.life -= life;
+        //StartCoroutine(HurtSlowmo());
         return true;
     }
     public void ReplenishLife(int life)

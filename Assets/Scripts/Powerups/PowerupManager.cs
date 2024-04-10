@@ -65,35 +65,28 @@ public class PowerupManager : MonoBehaviour
         subAttack = gameObject.AddComponent(sub.GetType()).GetComponent<WeaponSub>();
 
         powerupUpdate += subAttack.Run;
+
         return temp;
     }
-    public void MainAttackTap(float angle, Vector2 origin, Func<int, bool> deductAmmo)
+    public void MainAttackTap(float angle, Vector2 origin)
     {
-        mainAttack.Execute(angle, origin, deductAmmo);
+        mainAttack.Tap(angle, origin);
     }
-    public void MainAttackHold(float angle, Vector2 origin, Func<int, bool> deductAmmo, float holdTime)
+    public void MainAttackHold(float angle, Vector2 origin)
     {
-        mainAttack.HoldExecute(angle, origin, deductAmmo, holdTime);
+        mainAttack.Hold(angle, origin);
     }
-    public void MainAttackEffectHoldEnter(Rigidbody2D rigidbody)
+    public void MainAttackHoldEnter(float angle, Vector2 origin)
     {
-        mainAttack.PlayerEffectHoldEnter(rigidbody);
+        mainAttack.HoldEnter(angle, origin);
     }
-    public void MainAttackEffectHoldExit(Rigidbody2D rigidbody)
+    public void MainAttackHoldExit(float angle, Vector2 origin)
     {
-        mainAttack.PlayerEffectHoldExit(rigidbody);
+        mainAttack.HoldExit(angle, origin);
     }
-    public void MainAttackEffectHoldContinuous(Rigidbody2D rigidbody)
+    public void SubAttackTap(float angle, Vector2 origin)
     {
-        mainAttack.PlayerEffectHold(rigidbody);
-    }
-    public void SubAttackTap(float angle, Vector2 origin, Func<int, bool> deductAmmo)
-    {
-        subAttack.Execute(angle, origin, deductAmmo);
-    }
-    public void SubAttackEffectTap(Rigidbody2D rigidbody)
-    {
-        subAttack.PlayerEffectTap(rigidbody);
+        subAttack.Tap(angle, origin);
     }
     private void Update()
     {
