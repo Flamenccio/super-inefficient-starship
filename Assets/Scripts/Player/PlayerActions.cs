@@ -14,9 +14,7 @@ public class PlayerActions : MonoBehaviour
     private enum AttackState
     {
         Tap,
-        EnterHold,
         Hold,
-        ExitHold
     };
 
     private AttackState mainAttackState = AttackState.Tap;
@@ -35,7 +33,7 @@ public class PlayerActions : MonoBehaviour
     private const float DASH_DURATION = 5f / 60f;
     private const float DASH_COOLDOWN = 1.0f;
     private const float DASH_SPEED = 50.0f;
-    private const float HOLD_THRESHOLD = 0.25f;
+    private const float HOLD_THRESHOLD = 0.50f;
 
     [SerializeField] private GameObject bullet;
     [SerializeField] private GameObject afterImagePrefab;
@@ -84,18 +82,29 @@ public class PlayerActions : MonoBehaviour
         {
             if (mainHold >= HOLD_THRESHOLD)
             {
-                powerManager.MainAttackEffectHoldContinuous(rb);
+                if (mainAttackState == AttackState.Tap)
+                {
+                    powerManager.MainAttackEffectHoldEnter(rb);
+                    mainAttackState = AttackState.Hold;
+                }
+                else
+                {
+                    powerManager.MainAttackEffectHoldContinuous(rb);
+                }
                 powerManager.MainAttackHold(aimAngle.Degree, transform.position, playerAtt.UseAmmo, Time.deltaTime);
             }
             else
             {
-                powerManager.MainAttackEffectHoldEnter(rb);
                 mainHold += Time.deltaTime;
             }
         }
         else
         {
-            powerManager.MainAttackEffectHoldExit(rb);
+            if (mainAttackState == AttackState.Hold)
+            {
+                powerManager.MainAttackEffectHoldExit(rb);
+                mainAttackState = AttackState.Tap;
+            }
             mainHold = 0f;
         }
     }
@@ -123,16 +132,19 @@ public class PlayerActions : MonoBehaviour
                 float a = Mathf.Rad2Deg * Mathf.Atan2(t.transform.position.y - transform.position.y, t.transform.position.x - transform.position.x);
 
                 powerManager.MainAttackTap(a, transform.position, playerAtt.UseAmmo);
+                //powerManager.mainAttackTap(a, transform.position, playerAtt.UseAmmo);
             }
             else
             {
                 powerManager.MainAttackTap(aimAngle.Degree, transform.position, playerAtt.UseAmmo);
+                //powerManager.mainAttackTap(aimAngle.Degree, transform.position, playerAtt.UseAmmo);
             }
         }
         mainPressed = context.ReadValueAsButton();
     }
     public void OnFire2(InputAction.CallbackContext context) // HACK temporary
     {
+        /*
         if (context.performed && dashCD == 0 && !PlayerMotion.Instance.MovementRestricted)
         {
             AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDash, transform.position);
@@ -144,11 +156,11 @@ public class PlayerActions : MonoBehaviour
             // activate cooldown gauge
             //cdControl.Display(1.0f);
         }
-    }
-    private void DashTemp() // HACK temporary
-    {
-        PlayerMotion.Instance.RestrictMovement(DASH_DURATION);
-        rb.AddForce(moveInput * DASH_SPEED, ForceMode2D.Impulse);
+        */
+        if (context.performed)
+        {
+            powerManager.SubAttackTap(aimAngle.Degree, transform.position, playerAtt.UseAmmo);
+        }
     }
     private void Movement()
     {
@@ -168,7 +180,6 @@ public class PlayerActions : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x - rb.velocity.x * deceleration, rb.velocity.y - rb.velocity.y * deceleration);
         }
     }
-    
     private void Aim()
     {
         // if the player actively aiming, update the aim angle

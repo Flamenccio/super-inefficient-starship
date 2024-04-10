@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Minigun : WeaponMain
 {
-    private float frequency = 4f / 60f;
+    private readonly float frequency = 4f / 60f;
     private float freqTimer = 0f;
     private const int MAX_ROUNDS = 3; // rounds per ammo
     private int rounds = 0;
-    private float[] sprayPattern = { 5.0f, -8.3f, 4.6f, -6.2f, 7.4f, 0f }; // slight inacurracies in degrees
+    private readonly float[] sprayPattern = { 5.0f, -8.3f, 4.6f, -6.2f, 7.4f, 0f }; // slight inacurracies in degrees
     protected override void Startup()
     {
         base.Startup();
@@ -39,7 +39,6 @@ public class Minigun : WeaponMain
     public override void PlayerEffectHoldEnter(Rigidbody2D rb)
     {
         playerAtt.TemporaryAttributeChange(PlayerAttributes.Attribute.MoveSpeed, 0.33f);
-        //PlayerMotion.Instance.Move(transform.right, 100f, 0.1f);
     }
     public override void PlayerEffectHoldExit(Rigidbody2D rb)
     {

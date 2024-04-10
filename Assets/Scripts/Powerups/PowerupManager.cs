@@ -24,27 +24,27 @@ public enum PowerupRarity
 public class PowerupManager : MonoBehaviour
 {
     private WeaponMain mainAttack;
-    private WeaponMain subAttack;
+    private WeaponSub subAttack;
 
-    //private Action<float, Vector2, Func<int, bool>> mainAttackTap;
-    //private Action<float, Vector2, Func<int, bool>, float> mainAttackHold;
     private Action powerupUpdate;
 
     private List<BuffBase> buffs = new List<BuffBase>();
     public List<BuffBase> Buffs { get => buffs; }
 
     [SerializeField] [Tooltip("Path to default weapon.")] private UnityEditor.MonoScript defaultMain;
+    [SerializeField] [Tooltip("Path to default sub weapon.")] private UnityEditor.MonoScript defaultSub;
     private PlayerAttributes playerAttributes;
 
     private void Awake()
     {
         // set default attacks
         mainAttack = gameObject.AddComponent(defaultMain.GetClass()).GetComponent<WeaponMain>();
+        subAttack = gameObject.AddComponent(defaultSub.GetClass()).GetComponent<WeaponSub>();
+
         playerAttributes = gameObject.GetComponent<PlayerAttributes>();
 
-        //mainAttackTap = mainAttack.Execute;
-        //mainAttackHold = mainAttack.HoldExecute;
         powerupUpdate += mainAttack.Run;
+        powerupUpdate += subAttack.Run;
     }
     public WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
     {
@@ -53,21 +53,26 @@ public class PowerupManager : MonoBehaviour
         Destroy(mainAttack); // remove the current main attack from player
         mainAttack = gameObject.AddComponent(main.GetType()).GetComponent<WeaponMain>(); // and replace it with the new one
 
-        // update attacks
-        //mainAttackTap = mainAttack.Execute;
-        //mainAttackHold = mainAttack.HoldExecute;
         powerupUpdate += mainAttack.Run;
 
         return temp;
     }
+    public WeaponSub AddSub(WeaponSub sub) // same thing as above
+    {
+        WeaponSub temp = subAttack;
+        powerupUpdate -= subAttack.Run;
+        Destroy(subAttack);
+        subAttack = gameObject.AddComponent(sub.GetType()).GetComponent<WeaponSub>();
+
+        powerupUpdate += subAttack.Run;
+        return temp;
+    }
     public void MainAttackTap(float angle, Vector2 origin, Func<int, bool> deductAmmo)
     {
-        //mainAttackTap(angle, origin, deductAmmo);
         mainAttack.Execute(angle, origin, deductAmmo);
     }
     public void MainAttackHold(float angle, Vector2 origin, Func<int, bool> deductAmmo, float holdTime)
     {
-        //mainAttackHold(angle, origin, deductAmmo, holdTime);
         mainAttack.HoldExecute(angle, origin, deductAmmo, holdTime);
     }
     public void MainAttackEffectHoldEnter(Rigidbody2D rigidbody)
@@ -81,6 +86,14 @@ public class PowerupManager : MonoBehaviour
     public void MainAttackEffectHoldContinuous(Rigidbody2D rigidbody)
     {
         mainAttack.PlayerEffectHold(rigidbody);
+    }
+    public void SubAttackTap(float angle, Vector2 origin, Func<int, bool> deductAmmo)
+    {
+        subAttack.Execute(angle, origin, deductAmmo);
+    }
+    public void SubAttackEffectTap(Rigidbody2D rigidbody)
+    {
+        subAttack.PlayerEffectTap(rigidbody);
     }
     private void Update()
     {

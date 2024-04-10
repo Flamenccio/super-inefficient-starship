@@ -8,8 +8,8 @@ public class WeaponBase : MonoBehaviour, IPowerup
     public enum WeaponType
     {
         Main,
+        Sub,
         Special,
-        Defense,
         Support
     };
 
@@ -50,9 +50,18 @@ public class WeaponBase : MonoBehaviour, IPowerup
         }
     }
     public virtual void PlayerEffectTap(Rigidbody2D rb) { } // any effects that a weapon may do to a player on TAP
-    public virtual void PlayerEffectHoldEnter(Rigidbody2D rb) { } // any effects that a weapon do to a player when entering HOLD attacks.
-    public virtual void PlayerEffectHold(Rigidbody2D rb) { } // any effects that a weapon do to a player while HOLD is performed.
-    public virtual void PlayerEffectHoldExit(Rigidbody2D rb) { } // any effects that a weapon do to a player when exiting HOLD attacks.
+    /// <summary>
+    /// The player effect that is called <b>once</b> when player enters hold attack.
+    /// </summary>
+    public virtual void PlayerEffectHoldEnter(Rigidbody2D rb) { }
+    /// <summary>
+    /// The player effect that is run continuously while player is holding attack button.
+    /// </summary>
+    public virtual void PlayerEffectHold(Rigidbody2D rb) { }
+    /// <summary>
+    /// The player effect that is called <b>once</b> when player exits hold attack.
+    /// </summary>
+    public virtual void PlayerEffectHoldExit(Rigidbody2D rb) { }
     public void LevelChange(int levels)
     {
         if (Level < -levels) return; // if applying this change makes the level negative, don't
