@@ -55,19 +55,25 @@ public class WeaponBase : MonoBehaviour, IPowerup
     /// <summary>
     /// What weapon does when player taps button.
     /// </summary>
-    public virtual void Tap(float angleDeg, Vector2 origin) { }
+    /// <param name="aimAngleDeg">Where player is <b>aiming</b> in degrees (right stick on gamepads).</param>
+    /// <param name="moveAngleDeg">Where player is <b>moving</b> in degrees (left stick on gamepads).</param>
+    public virtual void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin) { }
     /// <summary>
     /// The player effect that is called <b>once</b> when player enters hold attack.
     /// </summary>
-    public virtual void HoldEnter(float angleDeg, Vector2 origin) { }
+    /// <param name="aimAngleDeg">Where player is <b>aiming</b> in degrees (right stick on gamepads).</param>
+    /// <param name="moveAngleDeg">Where player is <b>moving</b> in degrees (left stick on gamepads).</param>
+    public virtual void HoldEnter(float aimAngleDeg, float moveAngleDeg, Vector2 origin) { }
     /// <summary>
     /// The player effect that is run continuously while player is holding attack button.
     /// </summary>
-    public virtual void Hold(float angleDeg, Vector2 origin) { }
+    /// <param name="aimAngleDeg">Where player is <b>aiming</b> in degrees (right stick on gamepads).</param>
+    /// <param name="moveAngleDeg">Where player is <b>moving</b> in degrees (left stick on gamepads).</param>
+    public virtual void Hold(float aimAngleDeg, float moveAngleDeg, Vector2 origin) { }
     /// <summary>
     /// The player effect that is called <b>once</b> when player exits hold attack.
     /// </summary>
-    public virtual void HoldExit(float angleDeg, Vector2 origin) { }
+    public virtual void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin) { }
     public void LevelChange(int levels)
     {
         if (Level < -levels) return; // if applying this change makes the level negative, don't

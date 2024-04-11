@@ -18,11 +18,11 @@ public class Dash : WeaponSub
         cost = 0;
         Rarity = PowerupRarity.Common;
     }
-    public override void Tap(float directionDeg, Vector2 origin)
+    public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
     {
         if (cooldownTimer < cooldown) return; // don't do anything if on cooldown
         if (!PlayerMotion.Instance.RestrictMovement(DURATION)) return;
-        float r = Mathf.Deg2Rad * directionDeg;
+        float r = Mathf.Deg2Rad * moveAngleDeg;
         Vector2 v = new(Mathf.Cos(r), Mathf.Sin(r));
         AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDash, transform.position);
         PlayerMotion.Instance.Move(v, SPEED, DURATION);

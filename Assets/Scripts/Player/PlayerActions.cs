@@ -18,11 +18,10 @@ public class PlayerActions : MonoBehaviour
     };
 
     private AttackState mainAttackState = AttackState.Tap;
-    private Vector2 moveInput; // directional input
+    private AllAngle moveInput; // directional input
     private Vector2 aimInput;
     private Rigidbody2D rb;
-
-    private AllAngle aimAngle;
+    private AllAngle aimAngle; // this value is the dampened value of ainInput, which is the raw player input
     private bool mainPressed = false;
     private float mainHold = 0.0f;
     private float acceleration = 1.0f;
@@ -31,10 +30,6 @@ public class PlayerActions : MonoBehaviour
 
     private const float HOLD_THRESHOLD = 0.50f;
 
-    [SerializeField] private GameObject bullet;
-    [SerializeField] private GameObject afterImagePrefab;
-    [SerializeField] private CooldownControl cdControl;
-    [SerializeField] private GameState gameState;
     [SerializeField] private PowerupManager powerManager;
     [SerializeField] private PlayerAttributes playerAtt;
 
@@ -59,37 +54,12 @@ public class PlayerActions : MonoBehaviour
     }
     private void Update()
     {
-        // MAIN WEAPON HOLD ATTACK
-        if (mainPressed) // TODO clean this up
-        {
-            if (mainHold >= HOLD_THRESHOLD)
-            {
-                if (mainAttackState == AttackState.Tap)
-                {
-                    powerManager.MainAttackHoldEnter(aimAngle.Degree, transform.position);
-                    mainAttackState = AttackState.Hold;
-                }
-                else powerManager.MainAttackHold(aimAngle.Degree, transform.position);
-            }
-            else
-            {
-                mainHold += Time.deltaTime;
-            }
-        }
-        else
-        {
-            if (mainAttackState == AttackState.Hold)
-            {
-                powerManager.MainAttackHold(aimAngle.Degree, transform.position);
-                mainAttackState = AttackState.Tap;
-            }
-            mainHold = 0f;
-        }
+        Fire1Hold();
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector2>(); // store the input vector
+        moveInput.Vector = context.ReadValue<Vector2>(); // store the input vector
     }
 
     public void OnAim(InputAction.CallbackContext context)
@@ -97,6 +67,7 @@ public class PlayerActions : MonoBehaviour
         aimInput = context.ReadValue<Vector2>(); // store the input vector
     }
 
+    // TODO i want to generalize this so i don't have to copy the same code for the other 3 actions
     public void OnFire1(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -107,23 +78,58 @@ public class PlayerActions : MonoBehaviour
                 GameObject t = AimAssist.instance.Target;
                 a = Mathf.Rad2Deg * Mathf.Atan2(t.transform.position.y - transform.position.y, t.transform.position.x - transform.position.x);
             }
-            else a = aimAngle.Degree;
-            powerManager.MainAttackTap(a, transform.position);
+            else
+            {
+                a = aimAngle.Degree;
+            }
+
+            powerManager.MainAttackTap(a, moveInput.Degree, transform.position);
         }
         mainPressed = context.ReadValueAsButton();
+    }
+    private void Fire1Hold()
+    {
+        if (mainPressed)
+        {
+            if (mainHold >= HOLD_THRESHOLD)
+            {
+                if (mainAttackState == AttackState.Tap)
+                {
+                    powerManager.MainAttackHoldEnter(aimAngle.Degree, moveInput.Degree, transform.position);
+                    mainAttackState = AttackState.Hold;
+                }
+                else
+                {
+                    powerManager.MainAttackHold(aimAngle.Degree, moveInput.Degree, transform.position);
+                }
+            }
+            else
+            {
+                mainHold += Time.deltaTime;
+            }
+        }
+        else
+        {
+            if (mainAttackState == AttackState.Hold)
+            {
+                powerManager.MainAttackHold(aimAngle.Degree, moveInput.Degree, transform.position);
+                mainAttackState = AttackState.Tap;
+            }
+            mainHold = 0f;
+        }
     }
     public void OnFire2(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            powerManager.SubAttackTap(aimAngle.Degree, transform.position);
+            powerManager.SubAttackTap(aimAngle.Degree, moveInput.Degree, transform.position);
         }
     }
     private void Movement()
     {
-        if (moveInput != Vector2.zero) // if the player is providing direcitonal input:
+        if (moveInput.Vector != Vector2.zero) // if the player is providing direcitonal input:
         {
-            Vector2 newVelocity = new Vector2(moveInput.x * acceleration + rb.velocity.x, moveInput.y * acceleration + rb.velocity.y);
+            Vector2 newVelocity = new((moveInput.Vector.x * acceleration) + rb.velocity.x, (moveInput.Vector.y * acceleration) + rb.velocity.y);
 
             newVelocity = Vector2.ClampMagnitude(newVelocity, playerAtt.MoveSpeed);
 
@@ -131,7 +137,7 @@ public class PlayerActions : MonoBehaviour
         }
         else if (rb.velocity.magnitude > 0f) // otherwise, if no directional input is given:
         {
-            rb.velocity = new Vector2(rb.velocity.x - rb.velocity.x * deceleration, rb.velocity.y - rb.velocity.y * deceleration);
+            rb.velocity = new Vector2(rb.velocity.x - (rb.velocity.x * deceleration), rb.velocity.y - (rb.velocity.y * deceleration));
         }
     }
     private void Aim()
@@ -142,9 +148,9 @@ public class PlayerActions : MonoBehaviour
         {
             aimAngle.Degree = Mathf.LerpAngle(aimAngle.Degree, Mathf.Atan2(aimInput.y, aimInput.x) * Mathf.Rad2Deg, aimResponsiveness);
         }
-        else if (moveInput != Vector2.zero)
+        else if (moveInput.Vector != Vector2.zero)
         {
-            aimAngle.Degree = Mathf.LerpAngle(aimAngle.Degree, Mathf.Atan2(moveInput.y, moveInput.x) * Mathf.Rad2Deg, aimResponsiveness);
+            aimAngle.Degree = Mathf.LerpAngle(aimAngle.Degree, Mathf.Atan2(moveInput.Vector.y, moveInput.Vector.x) * Mathf.Rad2Deg, aimResponsiveness);
         }
         // turn the player to face the aim angle
         rb.rotation = Mathf.LerpAngle(rb.rotation, aimAngle.Degree, aimResponsiveness);

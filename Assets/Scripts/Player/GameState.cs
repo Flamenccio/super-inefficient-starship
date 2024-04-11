@@ -105,7 +105,6 @@ public class GameState : MonoBehaviour
     }
     public void AddKillPoint(int pt)
     {
-        //killPoints += pt;
         playerAtt.AddKillPoints(pt);
     }
     private void LevelUp()
@@ -113,9 +112,7 @@ public class GameState : MonoBehaviour
         if (heart != null) Destroy(heart);
 
         difficulty++; // increase difficulty
-
         spawnControl.SpawnStage(); // spawn another stage
-
         heart = spawnControl.SpawnHeart();
 
         if (wallFrequency > MAX_WALL_FREQUENCY) // increase wall frequency
@@ -124,9 +121,7 @@ public class GameState : MonoBehaviour
         }
 
         waveSpawnAmount = EnemyWaveLevel();
-
         maxTime += MAX_TIME_INCREASE; // increase the maximum time
-
         hudControl.DisplayLevelUpText(difficulty); // display on HUD
 
         if (progress >= DifficultyCurve(difficulty + 1)) // level up again, if necessary
@@ -163,10 +158,11 @@ public class GameState : MonoBehaviour
         cameraControl.HurtZoom();
         hudControl.DisplayHurtLines();
         playerAtt.ChangeLife(-life);
+
         if (playerAtt.HP == 0) {
             GameOver();
         }
-        //StartCoroutine(HurtSlowmo());
+
         return true;
     }
     public void ReplenishLife(int life)
@@ -176,13 +172,7 @@ public class GameState : MonoBehaviour
             AddPoints(3);
             return;
         }
-        /*
-        this.life += life;
-        if (this.life > maxLife)
-        {
-            this.life = maxLife;
-        }
-        */
+
         hudControl.DisplayHealthFlyText(life);
     }
 
@@ -198,7 +188,9 @@ public class GameState : MonoBehaviour
     private void MainTimer()
     {
         if (infiniteTime) return;
+
         if (mainTimer > 0.0f) mainTimer -= Time.deltaTime;
+
         if (mainTimer < 0.0f)
         {
             GameOver();
@@ -216,8 +208,7 @@ public class GameState : MonoBehaviour
                 // HACK this is so messy
                 if (difficulty >= MIN_LEVEL_WALL_UPGRADE)
                 {
-                    float chance = Random.Range(0f, 1f);
-                    if (chance >= CHANCE_WALL_UPGRADE)
+                    if (Random.Range(0f, 1f) >= CHANCE_WALL_UPGRADE)
                     {
                         spawnControl.SpawnWall(2);
                     }
@@ -234,23 +225,6 @@ public class GameState : MonoBehaviour
         }
         wallTimer += Time.deltaTime;
     }
-    /*
-    private void EnemyTimer()
-    {
-        if (enemyTimer < enemyFrequency) enemyTimer += Time.deltaTime;
-        if (enemyTimer >= enemyFrequency)
-        {
-            enemyTimer = 0.0f;
-            if (difficulty > MIN_LEVEL_ENEMY_SPAWN)
-            {
-                for (int i = 0; i < waveSpawnAmount; i++) // spawn a wave of enemies
-                {
-                    spawnControl.SpawnEnemy(difficulty);
-                }
-            }
-        }
-    }
-    */
     /// <summary>
     /// spawn a wave of enemies defined by waveSpawnAmount PLUS an amount based on the amount of killPoints obtained
     /// </summary>
@@ -264,7 +238,6 @@ public class GameState : MonoBehaviour
         if (kp > 0) kp = Mathf.FloorToInt(Mathf.Log(kp)); // kill point scaling
 
         int r = Random.Range(0, 3); // spawns an additional 0 to 2 more enemies randomly
-
         int enemies = waveSpawnAmount + kp + r; // total amount of enemies to spawn in this wave
 
         for (int i = 0; i < enemies; i++) // spawn a wave of enemies
@@ -282,7 +255,6 @@ public class GameState : MonoBehaviour
     }
     public void ResetKills()
     {
-        //killPoints = 0;
         playerAtt.UseKillPoints();
     }
     private IEnumerator Reload()
@@ -291,11 +263,5 @@ public class GameState : MonoBehaviour
         Time.timeScale = 0.0f;
         yield return new WaitForSecondsRealtime(1.0f);
         SceneManager.LoadScene(0);
-    }
-    private IEnumerator HurtSlowmo()
-    {
-        //Time.timeScale = 0.5f;
-        yield return new WaitForSecondsRealtime(1.0f);
-        Time.timeScale = 1.0f;
     }
 }

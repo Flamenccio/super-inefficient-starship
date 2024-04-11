@@ -23,9 +23,10 @@ public class Tracker : EnemyShootBase, IEnemy
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private LayerMask invisWallLayer;
     [SerializeField] private LayerMask footprintLayer;
-    private AllAngle intentAngle = new AllAngle();
-    private float intentTimer = 0;
-    private AllAngle correctAngle = new AllAngle();
+
+    private AllAngle intentAngle = new(); // the direction the tracker wants to travel in
+    private float intentTimer = 0; // how long the tracker will travel in direction specified by intentAngle
+    private AllAngle correctAngle = new();
     private bool rerouting = false;
     private EnemyState behaviorState = EnemyState.Patrol;
 
@@ -38,11 +39,11 @@ public class Tracker : EnemyShootBase, IEnemy
     // necessary classes
     private GameObject obstacle;
     private GameObject target = null; // the current object being followed
-    private List<GameObject> ignoreList = new List<GameObject>();
+    private List<GameObject> ignoreList = new();
 
     protected override void Behavior()
     {
-        switch (behaviorState)
+        switch (behaviorState) // TODO each state needs to be cleaned up
         {
             case EnemyState.Patrol:
                 PatrolBehaviorPrecheck();
@@ -66,18 +67,19 @@ public class Tracker : EnemyShootBase, IEnemy
         if (behaviorState != EnemyState.Patrol) { return; }
 
         intentTimer += Time.deltaTime;
-        if (intentTimer >= PATROL_TIME) {
-            intentAngle.Vector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+
+        if (intentTimer >= PATROL_TIME) { // if the timer runs out, choose another direction to travel in
+            intentAngle.Degree = Random.Range(0f, 360f);
             intentTimer = 0f;
         }
 
         RaycastHit2D lineOfSight = LineOfSight(intentAngle.Vector, VISION_RANGE, wallsLayer);
+        obstacle = LookForWalls(lineOfSight);
 
-        if (LookForWalls(lineOfSight) != null)
+        if (obstacle != null) // if there is an obstacle in the way, find another path
         {
             if (!rerouting)
             {
-                obstacle = LookForWalls(lineOfSight);
                 rerouting = true;
                 correctAngle.Degree = CorrectPath(lineOfSight.normal, new Vector2(Mathf.Cos(rb.rotation), Mathf.Sin(rb.rotation)));
             }
@@ -88,7 +90,7 @@ public class Tracker : EnemyShootBase, IEnemy
                 intentTimer = -1f;
             }
         }
-        if (rerouting && (LookForWalls(lineOfSight) == null || obstacle != LookForWalls(lineOfSight)))
+        if (rerouting && (obstacle == null || obstacle != LookForWalls(lineOfSight))) // HACK ???
         {
             rerouting = false;
         }
@@ -132,8 +134,10 @@ public class Tracker : EnemyShootBase, IEnemy
         ClearPath();
         if (target != null)
         {
-            AllAngle trackedAngle = new AllAngle();
-            trackedAngle.Vector = new Vector2(target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
+            AllAngle trackedAngle = new()
+            {
+                Vector = new Vector2(target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y)
+            };
             float trackedDistance = Vector2.Distance(transform.position, target.transform.position);
             RaycastHit2D lineOfSight = LineOfSight(trackedAngle.Vector, trackedDistance, invisWallLayer);
 
@@ -215,16 +219,6 @@ public class Tracker : EnemyShootBase, IEnemy
         }
         base.Behavior();
     }
-    private bool Radar()
-    {
-        GameObject player = null;
-        player = SearchPlayer();
-        if (player != null)
-        {
-            return true;
-        }
-        return false;
-    }
     /// <summary>
     /// finds and returns the closest footprint while avoiding those in the ignore list
     /// </summary>
@@ -284,20 +278,12 @@ public class Tracker : EnemyShootBase, IEnemy
     /// <returns></returns>
     private float CorrectPath(Vector2 normalVector, Vector2 rigidbodyVector)
     {
-        AllAngle angle = new AllAngle();
-        angle.Vector = Vector2.Reflect(rigidbodyVector, normalVector);
+        AllAngle angle = new()
+        {
+            Vector = Vector2.Reflect(rigidbodyVector, normalVector)
+        };
 
         return angle.Degree;
-    }
-    private Vector2 CorrectPathVector(Vector2 normalVector, Vector2 rigidbodyVector)
-    {
-        // convert the angle from CorrectPath() into a vector
-        float correctPath = CorrectPath(normalVector, rigidbodyVector);
-        return new Vector2(Mathf.Cos(correctPath), Mathf.Sin(correctPath));
-    }
-    private Vector2 PerpendicularVector(float x, float y)
-    {
-        return new Vector2(-y, x);
     }
     private void ClearPath()
     {

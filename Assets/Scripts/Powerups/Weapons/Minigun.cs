@@ -20,7 +20,7 @@ public class Minigun : WeaponMain
         cost = 1;
         mainAttack = Resources.Load<GameObject>("Prefabs/Bullets/PlayerMini");
     }
-    public override void Hold(float directionDeg, Vector2 origin)
+    public override void Hold(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
     {
         if (freqTimer <= 0f)
         {
@@ -30,17 +30,17 @@ public class Minigun : WeaponMain
                 rounds = MAX_ROUNDS;
             }
             AudioManager.instance.PlayOneShot(FMODEvents.instance.playerShootMini, transform.position);
-            Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, directionDeg + sprayPattern[rounds]));
+            Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg + sprayPattern[rounds]));
             freqTimer = frequency;
             rounds--;
         }
         else freqTimer -= Time.deltaTime;
     }
-    public override void HoldEnter(float angleDeg, Vector2 origin)
+    public override void HoldEnter(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
     {
         playerAtt.TemporaryAttributeChange(PlayerAttributes.Attribute.MoveSpeed, 0.33f);
     }
-    public override void HoldExit(float angleDeg, Vector2 origin)
+    public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
     {
         playerAtt.RestoreAttributeChange(PlayerAttributes.Attribute.MoveSpeed);
     }

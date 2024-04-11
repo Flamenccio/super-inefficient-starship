@@ -68,25 +68,25 @@ public class PowerupManager : MonoBehaviour
 
         return temp;
     }
-    public void MainAttackTap(float angle, Vector2 origin)
+    public void MainAttackTap(float aimAngle, float moveAngle, Vector2 origin)
     {
-        mainAttack.Tap(angle, origin);
+        mainAttack.Tap(aimAngle, moveAngle, origin);
     }
-    public void MainAttackHold(float angle, Vector2 origin)
+    public void MainAttackHold(float aimAngle, float moveAngle, Vector2 origin)
     {
-        mainAttack.Hold(angle, origin);
+        mainAttack.Hold(aimAngle, moveAngle, origin);
     }
-    public void MainAttackHoldEnter(float angle, Vector2 origin)
+    public void MainAttackHoldEnter(float aimAngle, float moveAngle, Vector2 origin)
     {
-        mainAttack.HoldEnter(angle, origin);
+        mainAttack.HoldEnter(aimAngle, moveAngle, origin);
     }
-    public void MainAttackHoldExit(float angle, Vector2 origin)
+    public void MainAttackHoldExit(float aimAngle, float moveAngle, Vector2 origin)
     {
-        mainAttack.HoldExit(angle, origin);
+        mainAttack.HoldExit(aimAngle, moveAngle, origin);
     }
-    public void SubAttackTap(float angle, Vector2 origin)
+    public void SubAttackTap(float aimAngle, float moveAngle, Vector2 origin)
     {
-        subAttack.Tap(angle, origin);
+        subAttack.Tap(aimAngle, moveAngle, origin);
     }
     private void Update()
     {
@@ -97,15 +97,12 @@ public class PowerupManager : MonoBehaviour
         int x = FindBuff(b);
         if (x < 0)
         {
-            //Debug.Log("added");
             buffs.Add(b); // if there is no existing duplciate, add it
         }
         else
         {
-            //Debug.Log("Upgraded");
             buffs[x].LevelChange(1); // if there is an existing duplicate level up
         }
-        //playerAttributes.CompileBonus(b);
         foreach(PlayerAttributes.Attribute a in b.GetAffectedAttributes())
         {
             playerAttributes.RecompileBonus(a, buffs);
@@ -119,7 +116,7 @@ public class PowerupManager : MonoBehaviour
             return false;
         }
         buffs.RemoveAt(x);
-        buffs.Sort((BuffBase a, BuffBase b) => { return (a.Level < b.Level ? -1 : 1); }); // basically resort the list based on level: higher level buffs will be placed at the top.
+        buffs.Sort((BuffBase a, BuffBase b) => a.Level < b.Level ? -1 : 1); // basically resort the list based on level: higher level buffs will be placed at the top.
         foreach (PlayerAttributes.Attribute a in b.GetAffectedAttributes())
         {
             playerAttributes.RecompileBonus(a, buffs);
