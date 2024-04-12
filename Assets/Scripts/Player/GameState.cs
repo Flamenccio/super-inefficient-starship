@@ -128,6 +128,8 @@ public class GameState : MonoBehaviour
         {
             LevelUp();
         }
+
+        cameraControl.IncreaseCameraSize();
     }
     /// <summary>
     /// Remove points from player

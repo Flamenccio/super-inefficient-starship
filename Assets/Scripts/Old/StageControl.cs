@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class StageControl : MonoBehaviour
+public class StageControl : MonoBehaviour // UNUSED
 {
+    /*
     // types of stage variants
     public enum variants
     {
@@ -211,4 +212,5 @@ public class StageControl : MonoBehaviour
         primaryWalls[dirModified] = null;
         Destroy(remove);
     }
+    */
 }

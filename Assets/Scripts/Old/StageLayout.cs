@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Stage Layout", menuName = "Stage Layout", order = 1)]
-public class StageLayout : ScriptableObject
+//[CreateAssetMenu(fileName = "New Stage Layout", menuName = "Stage Layout", order = 1)]
+public class StageLayout : ScriptableObject // UNUSED
 {
+    /*
     [System.Serializable]
     public struct variantBlackList
     {
@@ -34,4 +35,5 @@ public class StageLayout : ScriptableObject
     {
         return incomptibleVariants[n];
     }
+    */
 }

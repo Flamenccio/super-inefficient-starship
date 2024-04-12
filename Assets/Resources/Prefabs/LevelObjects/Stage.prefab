@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3830853316294236593}
   - component: {fileID: 3830853316294236592}
   - component: {fileID: 3830853316294236599}
-  - component: {fileID: -8925693345022826204}
   m_Layer: 3
   m_Name: Stage
   m_TagString: Background
@@ -132,17 +131,4 @@ MonoBehaviour:
   invisibleWallPrefab: {fileID: 6579367236385490562, guid: 1a4b4d32993d64140a2b3ce5c8561497, type: 3}
   stageLinkPrefab: {fileID: 5009577540713311329, guid: c890cdc0dbfc2e24ebaade4c94e59f5d, type: 3}
   initialStage: 0
-  resources: {fileID: -8925693345022826204}
---- !u!114 &-8925693345022826204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3830853316294236598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ba04bcdd44281643b0f86b13f32a378, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainScript: {fileID: 3830853316294236599}
+  resources: {fileID: 0}

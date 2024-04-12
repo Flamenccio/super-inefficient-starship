@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class StageSharedResources : MonoBehaviour
+public class StageSharedResources : MonoBehaviour // UNUSED
 {
+    /*
     // a class that contains all resources that stages will have access too
 
     [SerializeField] private List<Sprite> sprites = new List<Sprite>();
@@ -53,7 +54,7 @@ public class StageSharedResources : MonoBehaviour
         }
         return null;
     }
-    public StageVariant StageVariant(StageVariant.variants v)
+    public StageVariant StageVariant(StageVariant.Variants v)
     {
         foreach (StageVariant SV in variants)
         {
@@ -65,4 +66,5 @@ public class StageSharedResources : MonoBehaviour
         return null;
 
     }
+    */
 }

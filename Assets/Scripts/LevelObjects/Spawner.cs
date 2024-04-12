@@ -9,6 +9,7 @@ using UnityEditor;
 using System.Runtime.CompilerServices;
 using System.Net;
 using System.ComponentModel;
+using System.Linq;
 
 public class Spawner : MonoBehaviour
 {
@@ -25,8 +26,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] private GameObject starPrefab;
     [SerializeField] private GameObject heartPrefab;
     // other necessary classes/objects
-    [SerializeField] private CameraControl cameraControl;
-    [SerializeField] private Directions directionsClass = new Directions();
     [SerializeField] private GameObject stageContainer;
     [SerializeField] private List<Stage> stageList = new List<Stage>();
     private EnemyList enemyList;
@@ -80,27 +79,27 @@ public class Spawner : MonoBehaviour
         int root = 0;
 
         Collider2D target = null;
-        Collider2D[] targets = null;
+        List<Collider2D> targets = new();
 
         while (!spawnReady && attempts < 5)
         {
             attempts++;
-
             root = GenerateRandomRootStage(); // pick random root stage
-
             localSpawnCoord = GenerateLocalPosition(root); // pick random local location
             
             // update the global position
             globalSpawnCoord = localSpawnCoord + (Vector2)stageList[root].transform.position;
             globalSpawnCoord = OffsetPosition(globalSpawnCoord);
-
             target = Physics2D.OverlapPoint(globalSpawnCoord, wallLayer); // check if a wall is already at that location
+
             if (target != null) continue;
 
             target = Physics2D.OverlapCircle(globalSpawnCoord, ENEMY_SPAWN_RADIUS, LayerMask.GetMask("Player")); // check if the player is within the spawn radius (enemySpawnRadius)
+
             if (target != null) continue;
 
             target = Physics2D.OverlapPoint(globalSpawnCoord, stageLayer); // check if the point is viable (within the stage)
+
             if (target == null) continue;
 
             spawnReady = true;
@@ -108,18 +107,18 @@ public class Spawner : MonoBehaviour
         if (!spawnReady) return null;
 
         GameObject enemy = enemyList.GetRandomEnemy(difficulty);
+
         if (enemy == null) return null;
 
-        targets = Physics2D.OverlapCircleAll(globalSpawnCoord, 2.0f, wallLayer); // destroy walls around the spawn location
+        targets.AddRange(Physics2D.OverlapCircleAll(globalSpawnCoord, 2.0f, wallLayer)); // destroy walls around the spawn location
+
         foreach (Collider2D wallCollider in targets)
         {
             wallCollider.GetComponent<Wall>().Die();
             DecreaseWallCount();
         }
 
-        Instantiate(enemy, globalSpawnCoord, Quaternion.Euler(0f, 0f, 0f));
-
-        return null;
+        return Instantiate(enemy, globalSpawnCoord, Quaternion.Euler(0f, 0f, 0f));
     }
 
     /// <summary>
@@ -134,22 +133,19 @@ public class Spawner : MonoBehaviour
 
         while (!tk.spawnReady)
         {
-
             // choose a root stage to spawn in
             tk.root = GenerateRandomRootStage();
             tk.rootStage = stageList[tk.root];
-
             tk.localSpawnCoords = GenerateLocalPosition(tk.root);
             tk.localSpawnCoords = OffsetPosition(tk.localSpawnCoords);
-
             tk.globalSpawnCoords = tk.localSpawnCoords + (Vector2)tk.rootStage.transform.position; // calculate a global position based off of the local position
 
-            // check if the point is viable (within the stage)
-            target = Physics2D.OverlapPoint(tk.globalSpawnCoords, stageLayer);
+            target = Physics2D.OverlapPoint(tk.globalSpawnCoords, stageLayer); // check if the point is viable (within the stage)
+
             if (target == null) continue;
 
-            // check if the point is not occupied by other items
-            target = Physics2D.OverlapPoint(tk.globalSpawnCoords, itemLayer);
+            target = Physics2D.OverlapPoint(tk.globalSpawnCoords, itemLayer); // check if the point is not occupied by other items
+
             if (target != null) continue;
 
             tk.spawnReady = true;
@@ -165,44 +161,33 @@ public class Spawner : MonoBehaviour
     public void SpawnStage()
     {
         stages++; // increase number of stage count
-
         SpawnToolkit toolkit = InitializeNewToolkit();
-
-        Directions.Cardinals localSpawnDirection = new Directions.Cardinals(); // initialize new Cardinal struct
-        localSpawnDirection.Vector = Vector2.up;
-
-        toolkit.spawnReady = false;
-        Stage newStage = null;
+        Directions.Cardinals localSpawnDirection = new()
+        {
+            Vector = Vector2.up
+        };
+        Stage newStage;
 
         do
         {
-            toolkit.root = GenerateRandomRootStage(); // get a random stage number
-            toolkit.rootStage = stageList[toolkit.root]; // get the random stage object
-            toolkit.rootStage.ScanNearbyStages(); // make sure there are not any stray stages nearby before we begin adding stuff.
-            localSpawnDirection.Direction = directionsClass.RandomDirection(); // choose random cardinal to spawn new stage 
-
-            // grab a random stage variant; avoid using the normal stage (type 0)
-            StageVariant.variants newStageVariant = (StageVariant.variants)Random.Range(1, System.Enum.GetNames(typeof(StageVariant.variants)).Length); 
-            newStage = Instantiate(stagePrefab, stageContainer.transform).GetComponent<Stage>(); // instantiate new thing
-            newStage.UpdateVariant(newStageVariant);
-
-            if (toolkit.rootStage.Extend(localSpawnDirection.Direction, newStage))
-            {
-                toolkit.spawnReady = true;
-            }
-            else
-            {
-                Destroy(newStage.gameObject); // i hate how this works but it works
-            }
+            toolkit.root = GenerateRandomRootStage(); // get random stage number
+            toolkit.rootStage = stageList[toolkit.root]; // get stage from stage number
+            toolkit.rootStage.ScanNearbyStages(); // make sure things are connected
+            localSpawnDirection.Direction = Directions.Instance.RandomDirection();
+            toolkit.spawnReady = toolkit.rootStage.LinkableInDirection(localSpawnDirection.Direction);
         } while (!toolkit.spawnReady);
 
-        toolkit.globalSpawnCoords = (Vector2)toolkit.rootStage.transform.position + STAGE_LENGTH * 2 * localSpawnDirection.Vector;
+        List<StageVariant.Variants> blacklisted = new(StageResources.Instance.GetStageVariant(toolkit.rootStage.Variant).Links.First(v => v.LinkDirection == localSpawnDirection.Direction).BlackListedVariants); // copy blacklisted variants of stage link in chosen direction
+        List<StageVariant.Variants> variants = new(StageResources.Instance.GetVariantsExtendableInDirection(Directions.Instance.OppositeOf(localSpawnDirection.Direction)).Except(blacklisted)); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
+        StageVariant.Variants v = variants[Random.Range(1, variants.Count)]; // pull a random variant from the list (excluding NORMAL variant)
+        newStage = Instantiate(stagePrefab, stageContainer.transform).GetComponent<Stage>(); // instantiate new stage
+        newStage.UpdateVariant(v);
+        toolkit.rootStage.LinkStageUnsafe(localSpawnDirection.Direction, newStage);
+        newStage.LinkStageUnsafe(Directions.Instance.OppositeOf(localSpawnDirection.Direction), toolkit.rootStage);
+        toolkit.globalSpawnCoords = (Vector2)toolkit.rootStage.transform.position + (STAGE_LENGTH * 2 * localSpawnDirection.Vector);
         newStage.transform.position = toolkit.globalSpawnCoords; // place the new stage in the right place
         newStage.ScanNearbyStages(); // scan for nearby stages
-
         stageList.Add(newStage); // add the new stage to the stage list
-
-        cameraControl.IncreaseCameraSize(); // zoom camera out
     }
     public void SpawnWall(int wallLevel)
     {
@@ -211,7 +196,6 @@ public class Spawner : MonoBehaviour
         SpawnToolkit toolkit = InitializeNewToolkit();
         toolkit.root = GenerateRandomRootStage();
         toolkit.rootStage = stageList[toolkit.root];
-
         Collider2D wall;
 
         // new method: attempt to find a nearby wall to spawn next to. if none is found, just place the wall
@@ -224,13 +208,13 @@ public class Spawner : MonoBehaviour
 
         if (wall != null)
         {
-            Vector2 offset = directionsClass.DirectionDictionary[Random.Range(1, 8)];
+            Vector2 offset = Directions.Instance.DirectionDictionary[Random.Range(1, 8)];
             toolkit.globalSpawnCoords = (Vector2)wall.transform.position + offset;
             toolkit.localSpawnCoords = toolkit.globalSpawnCoords - (Vector2)toolkit.rootStage.transform.position;
         }
 
-        // check if point is valid
-        wall = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, stageLayer);
+        wall = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, stageLayer); // check if point is valid
+
         if (wall == null || wall.gameObject != toolkit.rootStage.gameObject) // if the spawn point is off the map, try again
         {
             SpawnWall(wallLevel);
@@ -239,20 +223,21 @@ public class Spawner : MonoBehaviour
 
         // is something already there
         wall = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, entityLayers);
+
         if (wall != null)
         {
             return;
         }
 
         GameObject instance = Instantiate(wallPrefab, stageList[toolkit.root].transform);
+
         if (wallLevel == 2)
         {
             instance.GetComponent<Wall>().Upgrade(); // if wall level is 2, upgrade the wall
         }
-        instance.transform.localPosition = toolkit.localSpawnCoords;
 
-        // increase wall count
-        walls++;
+        instance.transform.localPosition = toolkit.localSpawnCoords;
+        walls++; // increase wall count
     }
     public GameObject SpawnHeart()
     {
@@ -314,15 +299,15 @@ public class Spawner : MonoBehaviour
     }
     private SpawnToolkit InitializeNewToolkit()
     {
-        SpawnToolkit newToolkit = new SpawnToolkit();
-        newToolkit.root = 0;
-        newToolkit.rootStage = null;
-        newToolkit.localSpawnCoords = Vector2.zero;
-        newToolkit.globalSpawnCoords = Vector2.zero;
-        newToolkit.spawnAttempts = 0;
-        newToolkit.spawnReady = false;
-        newToolkit.stageCheck = null;
-
-        return newToolkit;
+        return new()
+        {
+            root = 0,
+            rootStage = null,
+            localSpawnCoords = Vector2.zero,
+            globalSpawnCoords = Vector2.zero,
+            spawnAttempts = 0,
+            spawnReady = false,
+            stageCheck = null
+        };
     }
 }

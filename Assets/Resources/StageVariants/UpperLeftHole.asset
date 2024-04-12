@@ -18,7 +18,7 @@ MonoBehaviour:
   - linkDirection: 3
     blackListedVariants: 0300000007000000
   - linkDirection: 0
-    blackListedVariants: 03000000
+    blackListedVariants: 030000000a000000
   - linkDirection: 2
     blackListedVariants: 
   - linkDirection: 1

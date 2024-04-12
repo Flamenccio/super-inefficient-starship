@@ -23,8 +23,8 @@ public class WallLayout : ScriptableObject
         public bool Permanence { get => permanence; }
     }
     [Tooltip("The stage variant that this layout is associated with.")]
-    [SerializeField] private StageVariant.variants associatedVariant;
+    [SerializeField] private StageVariant.Variants associatedVariant;
     [SerializeField] private List<invisibleWallAttributes> layout = new List<invisibleWallAttributes>();
     public List<invisibleWallAttributes> Layout { get => layout; }
-    public StageVariant.variants AssociatedVariant { get => associatedVariant; }
+    public StageVariant.Variants AssociatedVariant { get => associatedVariant; }
 }

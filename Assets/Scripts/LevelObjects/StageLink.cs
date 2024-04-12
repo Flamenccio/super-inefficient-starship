@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class StageLink : MonoBehaviour 
 {
-    [SerializeField] private List<StageVariant.variants> blacklistedVariants = new List<StageVariant.variants>();
+    [SerializeField] private List<StageVariant.Variants> blacklistedVariants = new List<StageVariant.Variants>();
     private const int STAGE_LENGTH = 16; // length (and width) of a stage module. 
     private Vector2 OVERLAP_BOX_SIZE = new Vector2(STAGE_LENGTH / 2, STAGE_LENGTH / 2); // the size of the overlap box used to scan for nearby stages.
     private const float NEAR_SEARCH_RADIUS = 2.0f; // radius of circle used to search for nearby links.
@@ -22,9 +22,9 @@ public class StageLink : MonoBehaviour
         parentStage = gameObject.GetComponentInParent<Stage>();
         primaryWall = gameObject.GetComponent<PrimaryWall>();
     }
-    public bool IsValidVariant(StageVariant.variants variant)
+    public bool IsValidVariant(StageVariant.Variants variant)
     {
-        foreach (StageVariant.variants v in blacklistedVariants)
+        foreach (StageVariant.Variants v in blacklistedVariants)
         {
             if (variant == v) return false;
         }
@@ -40,7 +40,7 @@ public class StageLink : MonoBehaviour
         {
             return false;
         }
-        if (!IsValidVariant(stage.Variants))
+        if (!IsValidVariant(stage.Variant))
         {
             return false;
         }
@@ -68,14 +68,14 @@ public class StageLink : MonoBehaviour
     }
     public bool IsVacant()
     {
-        return (linkedStage == null);
+        return linkedStage == null;
     }
     // just a wrapper
     public void SpawnWall(PrimaryWall.orientation orient)
     {
         primaryWall.SpawnWall(orient);
     }
-    public void UpdateProperties(List<StageVariant.variants> blacklist, Directions.directions dir)
+    public void UpdateProperties(List<StageVariant.Variants> blacklist, Directions.directions dir)
     {
         // we can't update the properties if the link is already in use
         if (linkedStage != null) return;
@@ -95,7 +95,6 @@ public class StageLink : MonoBehaviour
     public void ScanNearbyStages()
     {
         if (linkedStage != null) return; // if this link is already populated, no need to scan for more stages.
-        Directions d = new Directions();
 
         // First pass: look for close stage links. If there are any, connect to them.
         Collider2D[] colliders = Physics2D.OverlapCircleAll((Vector2)gameObject.transform.position, NEAR_SEARCH_RADIUS, STAGE_LINK_LAYER);
@@ -121,14 +120,14 @@ public class StageLink : MonoBehaviour
         }
 
         // Second pass: look for close stages. If there are any, connect both stages.
-        colliders = Physics2D.OverlapBoxAll((d.DirectionsToVector2(placement) * (STAGE_LENGTH / 2)) + (Vector2)gameObject.transform.position, OVERLAP_BOX_SIZE, 0f, STAGE_LAYER);
+        colliders = Physics2D.OverlapBoxAll((Directions.Instance.DirectionsToVector2(placement) * (STAGE_LENGTH / 2)) + (Vector2)gameObject.transform.position, OVERLAP_BOX_SIZE, 0f, STAGE_LAYER);
         foreach (Collider2D col in colliders)
         {
             if (col.gameObject.GetInstanceID() != parentStage.gameObject.GetInstanceID()) // if the collider is this link's associated stage, move on
             {
                 Stage other = col.gameObject.GetComponent<Stage>();
                 ForcePopulateLink(other);
-                other.LinkStageUnsafe(d.OppositeOf(placement), ParentStage);
+                other.LinkStageUnsafe(Directions.Instance.OppositeOf(placement), ParentStage);
                 return;
             }
         }

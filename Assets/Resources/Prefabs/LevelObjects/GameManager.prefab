@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7819916859176104666}
   - component: {fileID: 439820155804191655}
   - component: {fileID: 6298481370965533257}
+  - component: {fileID: 342103236671325835}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -51,6 +52,7 @@ MonoBehaviour:
   hitEffect2: {fileID: 6901339793978723851, guid: 13805d7e337ce6945ac162b28f478c88, type: 3}
   cameraControl: {fileID: 0}
   player: {fileID: 0}
+  playerAtt: {fileID: 0}
   infiniteTime: 0
 --- !u!114 &439820155804191655
 MonoBehaviour:
@@ -95,3 +97,16 @@ MonoBehaviour:
   itemLayer:
     serializedVersion: 2
     m_Bits: 256
+--- !u!114 &342103236671325835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4731174166187999380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba04bcdd44281643b0f86b13f32a378, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainScript: {fileID: 0}

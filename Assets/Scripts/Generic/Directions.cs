@@ -12,7 +12,7 @@ public struct AllAngle
     private Vector2 vector;
     public float Degree
     {
-        get { return degree; }
+        readonly get { return degree; }
         set
         {
             degree = value;
@@ -22,7 +22,7 @@ public struct AllAngle
     }
     public float Radian
     {
-        get { return radian; }
+        readonly get { return radian; }
         set
         {
             radian = value;
@@ -32,7 +32,7 @@ public struct AllAngle
     }
     public Vector2 Vector
     {
-        get { return vector; }
+        readonly get { return vector; }
         set
         {
             vector = value;
@@ -43,21 +43,10 @@ public struct AllAngle
 }
 public class Directions
 {
-    private readonly Vector2[] cardinalVectors = new Vector2[4]
-    {
-        new Vector2(0,1),
-        new Vector2(1,0),
-        new Vector2(0,-1),
-        new Vector2(-1,0)
-    };
-    /// <summary>
-    /// A dictionary mapping cardinal and intercardinal values to a list.
-    /// Mostly for choosing a random direction.
-    /// Exclude 0 if you don't want (0,0).
-    /// All cardinal directions are <b>even.</b>
-    /// All intercardinal directions are <b>odd.</b>
-    /// </summary>
-    private Dictionary<int, Vector2> directionsDictionary = new Dictionary<int, Vector2>()
+    static Directions() { }
+    private Directions() { }
+    public static Directions Instance { get; } = new Directions();
+    public Dictionary<int, Vector2> DirectionDictionary { get; } = new()
     {
         [0] = new Vector2(0, 0),
         [1] = new Vector2(1, -1),
@@ -69,11 +58,13 @@ public class Directions
         [7] = new Vector2(-1, 1),
         [8] = new Vector2(1, 0),
     };
-    public Dictionary<int, Vector2> DirectionDictionary { get { return directionsDictionary; } }
-    public Vector2[] CardinalVectors
+    public Vector2[] CardinalVectors { get; } = new Vector2[4]
     {
-        get { return cardinalVectors; }
-    }
+        new Vector2(0,1),
+        new Vector2(1,0),
+        new Vector2(0,-1),
+        new Vector2(-1,0)
+    };
     public enum directions
     {
         North,
@@ -87,11 +78,10 @@ public class Directions
         Vector2 vector;
         public Vector2 Vector
         {
-            get { return vector; }
+            readonly get { return vector; }
             set
             {
-                Directions dirClass = new Directions();
-                if (!dirClass.IsCardinal(value))
+                if (!Instance.IsCardinal(value))
                 {
                     vector = Vector2.up;
                     direction = directions.North;
@@ -99,17 +89,16 @@ public class Directions
                 }
                 vector = value;
                 vector.Normalize();
-                direction = dirClass.VectorToDirection(vector);
+                direction = Instance.VectorToDirection(vector);
             }
         }
         public directions Direction
         {
-            get { return direction; }
+            readonly get { return direction; }
             set
             {
-                Directions dirClass = new Directions();
                 direction = value;
-                vector = dirClass.DirectionsToVector2(direction);
+                vector = Instance.DirectionsToVector2(direction);
             }
         }
     }
@@ -120,19 +109,14 @@ public class Directions
     /// <returns>Returns a normalized Vector2 value.</returns>
     public Vector2 DirectionsToVector2(directions dir)
     {
-        switch (dir)
+        return dir switch
         {
-            case directions.North:
-                return new Vector2(0, 1);
-            case directions.East:
-                return new Vector2(1, 0);
-            case directions.South:
-                return new Vector2(0, -1);
-            case directions.West:
-                return new Vector2(-1, 0);
-            default:
-                return Vector2.zero;
-        }
+            directions.North => new Vector2(0, 1),
+            directions.East => new Vector2(1, 0),
+            directions.South => new Vector2(0, -1),
+            directions.West => new Vector2(-1, 0),
+            _ => Vector2.zero,
+        };
     }
     /// <summary>
     /// Converts an integer value to a normalized Vector2. Returns (0, 0) by default.
@@ -141,19 +125,14 @@ public class Directions
     /// <returns>Returns a normalized Vector2 value.</returns>
     public Vector2 IntToVector2(int dir)
     {
-        switch (dir)
+        return dir switch
         {
-            case (int)directions.North:
-                return new Vector2(0, 1);
-            case (int)directions.East:
-                return new Vector2(1, 0);
-            case (int)directions.South:
-                return new Vector2(0, -1);
-            case (int)directions.West:
-                return new Vector2(-1, 0);
-            default:
-                return Vector2.zero;
-        }
+            (int)directions.North => new Vector2(0, 1),
+            (int)directions.East => new Vector2(1, 0),
+            (int)directions.South => new Vector2(0, -1),
+            (int)directions.West => new Vector2(-1, 0),
+            _ => Vector2.zero,
+        };
     }
     public directions OppositeOf(int dir)
     {
@@ -174,14 +153,12 @@ public class Directions
     /// <summary>
     /// if the given vector is not a cardinal, returns north
     /// </summary>
-    /// <param name="dir"></param>
-    /// <returns></returns>
     public directions VectorToDirection(Vector2 dir)
     {
         dir.Normalize();
         for (int i = 0; i < (int)directions.West + 1; i++)
         {
-            if (dir.Equals(cardinalVectors[i]))
+            if (dir.Equals(CardinalVectors[i]))
             {
                 return IntToDirection(i);
             }
@@ -195,7 +172,7 @@ public class Directions
     public bool IsCardinal(Vector2 vector)
     {
         vector.Normalize();
-        foreach (Vector2 v in cardinalVectors)
+        foreach (Vector2 v in CardinalVectors)
         {
             if (vector.Equals(v))
             {

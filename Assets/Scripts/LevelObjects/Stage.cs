@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Stage : MonoBehaviour
@@ -8,40 +9,26 @@ public class Stage : MonoBehaviour
     [SerializeField] private GameObject invisibleWallPrefab; // prefab for invisible walls
     [SerializeField] private GameObject stageLinkPrefab; // prefab for stage links
     [SerializeField] private bool initialStage; // is this stage the first one in the level?
-    [SerializeField] private StageResources resources; // class that provides access to common stage resources
 
-    private StageVariant.variants variant = StageVariant.variants.Normal; // initialize the stage as a normal variant
+    private StageVariant.Variants variant = StageVariant.Variants.Normal; // initialize the stage as a normal variant
     private Sprite sprite; // sprite representing the stage
-    private Dictionary<Directions.directions, StageLink> links = new Dictionary<Directions.directions, StageLink>(); // a list of all stage links associated with their direction
+    private Dictionary<Directions.directions, StageLink> links = new(); // a list of all stage links associated with their direction
     private PolygonCollider2D polyCollider; // collider that conforms to sprite shape
     private Mesh polymesh; // mesh for poly collider
-
-    public StageVariant.variants Variants { get { return variant; } }
+    public StageVariant.Variants Variant { get { return variant; } }
     public Sprite Sprite { get { return sprite; } }
     public bool InitialStage { get { return initialStage; } }
-
-    private void Start()
-    {
-        // normal variant by default
-        if (initialStage)
-        {
-            //UpdateVariant(StageVariant.variants.Normal);
-        }
-    }
     private void Awake()
     {
         polyCollider = gameObject.GetComponent<PolygonCollider2D>();
         polymesh = polyCollider.CreateMesh(true, true);
     }
-    // this function is called when another stage wants to connect to this one.
-    // in order for a connection to work, the extender must request a "handshake" to the extendee.
-    // the connection only happens if both extender and extendee accept the handshake. 
     /// <summary>
     /// Request an extension handshake to this stage.
     /// </summary>
     /// <param name="dir">Direction to extend in.</param>
     /// <param name="stage">Stage to extend to.</param>
-    /// <returns></returns>
+    /// <returns>True if successful, false if unsuccessful</returns>
     public bool Handshake(Directions.directions dir, Stage stage)
     {
         if (!LinkableInDirection(dir, stage.variant))
@@ -60,20 +47,19 @@ public class Stage : MonoBehaviour
     }
     public bool Extend(Directions.directions dir, Stage stage)
     {
-        Directions d = new Directions();
-        if (!Handshake(dir, stage) || !stage.Handshake(d.OppositeOf(dir), this))// check if both this and stage's handshakes are true
+        if (!Handshake(dir, stage) || !stage.Handshake(Directions.Instance.OppositeOf(dir), this))// check if both this and stage's handshakes are true
         {
             return false;
         }
         // link two stages.
         LinkStageUnsafe(dir, stage);
-        stage.LinkStageUnsafe(d.OppositeOf(dir), this);
+        stage.LinkStageUnsafe(Directions.Instance.OppositeOf(dir), this);
         return true;
     }
-    public void UpdateVariant(StageVariant.variants updatedVariant)
+    public void UpdateVariant(StageVariant.Variants updatedVariant)
     {
         variant = updatedVariant;
-        StageVariant v = resources.GetStageVariant(variant);
+        StageVariant v = StageResources.Instance.GetStageVariant(variant);
         sprite = v.Sprite;
         spriteRen.sprite = sprite;
 
@@ -91,13 +77,13 @@ public class Stage : MonoBehaviour
     /// </summary>
     private void CommitUpdate()
     {
-        StageVariant v = resources.GetStageVariant(variant); // retrieve the variant's template
+        StageVariant v = StageResources.Instance.GetStageVariant(variant); // retrieve the variant's template
 
         // spawn secondary walls
         int i = 0;
         if (v.SecondaryWallLayout != null)
         {
-            foreach (var invisibleWallConfig in  v.SecondaryWallLayout.Layout)
+            foreach (var invisibleWallConfig in v.SecondaryWallLayout.Layout)
             {
                 SecondaryWall instance = Instantiate(invisibleWallPrefab, transform).GetComponent<SecondaryWall>();
                 CopyWallAttributes(instance, invisibleWallConfig);
@@ -111,7 +97,6 @@ public class Stage : MonoBehaviour
         {
             StageLink instance = Instantiate(stageLinkPrefab, transform).GetComponent<StageLink>();
             instance.UpdateProperties(link.BlackListedVariants, link.LinkDirection);
-
             links.Add(link.LinkDirection, instance);
 
             switch (link.LinkDirection)
@@ -140,22 +125,23 @@ public class Stage : MonoBehaviour
     }
     public bool LinkableInDirection(Directions.directions dir)
     {
-        return links.TryGetValue(dir, out StageLink x);
+        return links.TryGetValue(dir, out StageLink x) && x.IsVacant();
     }
-    public bool LinkableInDirection(Directions.directions dir, StageVariant.variants variant)
+    public bool LinkableInDirection(Directions.directions dir, StageVariant.Variants variant)
     {
-        StageLink s;
-        links.TryGetValue(dir, out s);
+        links.TryGetValue(dir, out StageLink s);
         bool t = false;
-        if (s != null) t = s.IsValidVariant(variant) && s.IsVacant();
+        if (s != null) t = s.IsValidVariant(variant);
         return LinkableInDirection(dir) && t;
+    }
+    public StageLink GetLinkInDirection(Directions.directions dir)
+    {
+        links.TryGetValue(dir, out StageLink x);
+        return x;
     }
     /// <summary>
     /// Link a stage to this stage disregarding incompatible variants. 
     /// </summary>
-    /// <param name="dir"></param>
-    /// <param name="stage"></param>
-    /// <returns></returns>
     public bool LinkStageUnsafe(Directions.directions dir, Stage stage)
     {
         links.TryGetValue(dir, out StageLink l);

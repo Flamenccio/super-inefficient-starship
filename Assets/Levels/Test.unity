@@ -1395,6 +1395,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4703b3d75a71b40a6c483cf5ed33e7, type: 3}
+--- !u!114 &768205119 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3830853316294236599, guid: ea4703b3d75a71b40a6c483cf5ed33e7, type: 3}
+  m_PrefabInstance: {fileID: 768205118}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14ba76e1eb90a3f4a8fe56e338ca5650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &863409161
 GameObject:
   m_ObjectHideFlags: 0
@@ -4796,6 +4807,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 342103236671325835, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
+      propertyPath: mainScript
+      value: 
+      objectReference: {fileID: 768205119}
     - target: {fileID: 1522121735883455340, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -4886,7 +4901,7 @@ PrefabInstance:
       objectReference: {fileID: 667081393}
     - target: {fileID: 7819916859176104666, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: infiniteTime
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7819916859176104666, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: cameraControl

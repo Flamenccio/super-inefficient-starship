@@ -20,7 +20,7 @@ MonoBehaviour:
   - linkDirection: 1
     blackListedVariants: 
   - linkDirection: 2
-    blackListedVariants: 02000000
+    blackListedVariants: 020000000a000000
   - linkDirection: 3
-    blackListedVariants: 02000000
+    blackListedVariants: 0200000008000000
   variant: 4

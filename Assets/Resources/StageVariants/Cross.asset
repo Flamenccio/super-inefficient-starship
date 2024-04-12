@@ -16,11 +16,11 @@ MonoBehaviour:
   secondaryWallLayout: {fileID: 11400000, guid: 475acb8724ec9764fbbfca40c62cc3d2, type: 2}
   linkSet:
   - linkDirection: 0
-    blackListedVariants: 
+    blackListedVariants: 090000000a000000
   - linkDirection: 1
     blackListedVariants: 0700000008000000
   - linkDirection: 2
-    blackListedVariants: 
+    blackListedVariants: 090000000a000000
   - linkDirection: 3
     blackListedVariants: 0700000008000000
   variant: 6
