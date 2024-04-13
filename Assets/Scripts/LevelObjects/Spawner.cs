@@ -66,51 +66,40 @@ public class Spawner : MonoBehaviour
         // if the level is too low to spawn anything, return nothing
         if (difficulty < enemyList.MinimumEnemySpawningLevel) return null;
 
-        // spawn an enemy at a random location (make sure it's not too close to the player)
-        // the enemy should be scaled with difficulty
-        bool spawnReady = false;
-
-        Vector2 localSpawnCoord = Vector2.zero;
-
-        Vector2 globalSpawnCoord = Vector2.zero;
-
-        int attempts = 0;
-
-        int root = 0;
-
-        Collider2D target = null;
+        SpawnToolkit tk = new();
+        Collider2D target;
         List<Collider2D> targets = new();
 
-        while (!spawnReady && attempts < 5)
+        while (!tk.spawnReady && tk.spawnAttempts < 5)
         {
-            attempts++;
-            root = GenerateRandomRootStage(); // pick random root stage
-            localSpawnCoord = GenerateLocalPosition(root); // pick random local location
+            tk.spawnAttempts++;
+            tk.root = GenerateRandomRootStage(); // pick random root stage
+            tk.localSpawnCoords = GenerateLocalPosition(tk.root); // pick random local location
             
             // update the global position
-            globalSpawnCoord = localSpawnCoord + (Vector2)stageList[root].transform.position;
-            globalSpawnCoord = OffsetPosition(globalSpawnCoord);
-            target = Physics2D.OverlapPoint(globalSpawnCoord, wallLayer); // check if a wall is already at that location
+            tk.globalSpawnCoords = tk.localSpawnCoords + (Vector2)stageList[tk.root].transform.position;
+            tk.globalSpawnCoords = OffsetPosition(tk.globalSpawnCoords);
+            target = Physics2D.OverlapPoint(tk.globalSpawnCoords, wallLayer); // check if a wall is already at that location
 
             if (target != null) continue;
 
-            target = Physics2D.OverlapCircle(globalSpawnCoord, ENEMY_SPAWN_RADIUS, LayerMask.GetMask("Player")); // check if the player is within the spawn radius (enemySpawnRadius)
+            target = Physics2D.OverlapCircle(tk.globalSpawnCoords, ENEMY_SPAWN_RADIUS, LayerMask.GetMask("Player")); // check if the player is within the spawn radius (enemySpawnRadius)
 
             if (target != null) continue;
 
-            target = Physics2D.OverlapPoint(globalSpawnCoord, stageLayer); // check if the point is viable (within the stage)
+            target = Physics2D.OverlapPoint(tk.globalSpawnCoords, stageLayer); // check if the point is viable (within the stage)
 
             if (target == null) continue;
 
-            spawnReady = true;
+            tk.spawnReady = true;
         }
-        if (!spawnReady) return null;
+        if (!tk.spawnReady) return null;
 
         GameObject enemy = enemyList.GetRandomEnemy(difficulty);
 
         if (enemy == null) return null;
 
-        targets.AddRange(Physics2D.OverlapCircleAll(globalSpawnCoord, 2.0f, wallLayer)); // destroy walls around the spawn location
+        targets.AddRange(Physics2D.OverlapCircleAll(tk.globalSpawnCoords, 2.0f, wallLayer)); // destroy walls around the spawn location
 
         foreach (Collider2D wallCollider in targets)
         {
@@ -118,24 +107,23 @@ public class Spawner : MonoBehaviour
             DecreaseWallCount();
         }
 
-        return Instantiate(enemy, globalSpawnCoord, Quaternion.Euler(0f, 0f, 0f));
+        return Instantiate(enemy, tk.globalSpawnCoords, Quaternion.Euler(0f, 0f, 0f));
     }
 
     /// <summary>
     /// spawn a star on stage
     /// </summary>
     /// <returns>returns the spanwed star object</returns>
-    public GameObject SpawnStar()
+    public GameObject SpawnStar() // TODO this is broken! causes stalls
     {
         // spawn a star at a random location
         SpawnToolkit tk = InitializeNewToolkit();
         Collider2D target;
+        tk.root = GenerateRandomRootStage(); // choose a root stage to spawn in
+        tk.rootStage = stageList[tk.root];
 
-        while (!tk.spawnReady)
+        do
         {
-            // choose a root stage to spawn in
-            tk.root = GenerateRandomRootStage();
-            tk.rootStage = stageList[tk.root];
             tk.localSpawnCoords = GenerateLocalPosition(tk.root);
             tk.localSpawnCoords = OffsetPosition(tk.localSpawnCoords);
             tk.globalSpawnCoords = tk.localSpawnCoords + (Vector2)tk.rootStage.transform.position; // calculate a global position based off of the local position
@@ -149,8 +137,7 @@ public class Spawner : MonoBehaviour
             if (target != null) continue;
 
             tk.spawnReady = true;
-        }
-        if (!tk.spawnReady) return null;
+        } while (!tk.spawnReady);
 
         // spawn the star
         GameObject star = Instantiate(starPrefab, tk.rootStage.transform);
@@ -174,7 +161,7 @@ public class Spawner : MonoBehaviour
             toolkit.rootStage = stageList[toolkit.root]; // get stage from stage number
             toolkit.rootStage.ScanNearbyStages(); // make sure things are connected
             localSpawnDirection.Direction = Directions.Instance.RandomDirection();
-            toolkit.spawnReady = toolkit.rootStage.LinkableInDirection(localSpawnDirection.Direction);
+            toolkit.spawnReady = toolkit.rootStage.LinkableInDirection(localSpawnDirection.Direction); // check if the root stage can be extended in direction
         } while (!toolkit.spawnReady);
 
         List<StageVariant.Variants> blacklisted = new(StageResources.Instance.GetStageVariant(toolkit.rootStage.Variant).Links.First(v => v.LinkDirection == localSpawnDirection.Direction).BlackListedVariants); // copy blacklisted variants of stage link in chosen direction
@@ -203,7 +190,6 @@ public class Spawner : MonoBehaviour
         toolkit.localSpawnCoords = GenerateLocalPosition(toolkit.root);
         toolkit.localSpawnCoords = OffsetPosition(toolkit.localSpawnCoords);
         toolkit.globalSpawnCoords = toolkit.localSpawnCoords + (Vector2)toolkit.rootStage.transform.position;
-
         wall = Physics2D.OverlapCircle(toolkit.globalSpawnCoords, 12.0f, wallLayer);
 
         if (wall != null)
@@ -215,16 +201,14 @@ public class Spawner : MonoBehaviour
 
         wall = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, stageLayer); // check if point is valid
 
-        if (wall == null || wall.gameObject != toolkit.rootStage.gameObject) // if the spawn point is off the map, try again
+        if (wall == null || wall.gameObject != toolkit.rootStage.gameObject) // if the spawn point is off the map, give up
         {
-            SpawnWall(wallLevel);
             return;
         }
 
-        // is something already there
-        wall = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, entityLayers);
+        wall = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, entityLayers); // is something already there
 
-        if (wall != null)
+        if (wall != null) // if something is already present, give up
         {
             return;
         }
@@ -239,41 +223,31 @@ public class Spawner : MonoBehaviour
         instance.transform.localPosition = toolkit.localSpawnCoords;
         walls++; // increase wall count
     }
-    public GameObject SpawnHeart()
+    public GameObject SpawnHeart() // TODO this is broken too!
     {
         SpawnToolkit toolkit = InitializeNewToolkit();
+        toolkit.root = GenerateRandomRootStage(); // choose a root stage to spawn in
 
-        // because the star MUST spawn, we use a loop until success
-        while (!toolkit.spawnReady && toolkit.spawnAttempts < 5)
+        do // because the heart MUST spawn, we use a loop until success
         {
-            toolkit.spawnAttempts++;
-
-            // choose a root stage to spawn in
-            toolkit.root = GenerateRandomRootStage();
-
-            // create a randomized local position
-            toolkit.localSpawnCoords = GenerateLocalPosition(toolkit.root);
+            toolkit.localSpawnCoords = GenerateLocalPosition(toolkit.root); // create a randomized local position
             toolkit.localSpawnCoords = OffsetPosition(toolkit.localSpawnCoords);
+            toolkit.globalSpawnCoords = toolkit.localSpawnCoords + (Vector2)stageList[toolkit.root].transform.position; // calculate a global position based off of the local position
+            toolkit.stageCheck = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, stageLayer); // check if the point is viable (within the stage)
 
-            // calculate a global position based off of the local position
-            toolkit.globalSpawnCoords = toolkit.localSpawnCoords + (Vector2)stageList[toolkit.root].transform.position;
-
-            // check if the point is viable (within the stage)
-            toolkit.stageCheck = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, stageLayer);
             if (toolkit.stageCheck == null) continue;
 
-            // check if the point is not occupied by other items
-            toolkit.stageCheck = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, itemLayer);
+            toolkit.stageCheck = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, itemLayer); // check if the point is not occupied by other items
+
             if (toolkit.stageCheck != null) continue;
 
             toolkit.spawnReady = true;
-        }
-        if (!toolkit.spawnReady) return null;
+        } while (!toolkit.spawnReady);
 
-        // spawn the star
-        GameObject star = Instantiate(heartPrefab, stageList[toolkit.root].transform);
-        star.transform.localPosition = toolkit.localSpawnCoords;
-        return star;
+        // spawn the heart 
+        GameObject heart = Instantiate(heartPrefab, stageList[toolkit.root].transform);
+        heart.transform.localPosition = toolkit.localSpawnCoords;
+        return heart;
     }
     /// <summary>
     /// Because the squares on the stage grid are offset by 0.5 units (the center of the grid is between the squares), we also need to offset each spawned entity and item by 0.5 units to perfectly fit the square.
