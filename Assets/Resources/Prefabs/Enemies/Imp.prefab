@@ -143,7 +143,7 @@ MonoBehaviour:
   hitEffect: {fileID: 245488470297807647, guid: 4c81216f993a4a6459468c4f226759c2, type: 3}
   animator: {fileID: 0}
   miniStarPrefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
-  aud: {fileID: 0}
+  activeRange: 200
   enemyBullet: {fileID: 0}
   searchRadius: 0
   fireRate: 0

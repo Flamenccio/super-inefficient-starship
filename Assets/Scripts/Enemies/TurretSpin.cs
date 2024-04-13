@@ -7,7 +7,7 @@ public class TurretSpin : EnemyShootBase, IEnemy
     public int Tier { get => tier; }
     [SerializeField] private float rotationSpeed = 1f;
     private int rotationDirection = 1;
-    private float[] angles = new float[4]
+    private readonly float[] angles = new float[4]
     {
         45f,
         135f,

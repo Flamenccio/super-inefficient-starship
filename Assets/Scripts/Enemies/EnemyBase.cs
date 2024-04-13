@@ -13,7 +13,7 @@ public class EnemyBase : Destructables
 {
     [SerializeField] protected int tier;
     [SerializeField] protected float moveSpeed = 0f;
-    [SerializeField] protected static GameObject player = null;
+    protected Transform player;
     protected GameState gameState;
     protected Sprite enemySprite;
     protected const float FLASH_DURATION = 2f / 60f;
@@ -23,8 +23,12 @@ public class EnemyBase : Destructables
     [SerializeField] protected GameObject killEffect;
     [SerializeField] protected GameObject hitEffect;
     protected Rigidbody2D rb;
+    protected const float SLOW_UPDATE_FREQUENCY = 0.25f;
+    protected float slowUpdateTimer = 0f;
+    protected bool active = true; // is this enemy currently active?
     [SerializeField] protected Animator animator;
     [SerializeField] protected GameObject miniStarPrefab;
+    [SerializeField] protected float activeRange; // the player must be within range for this enemy to activate
     
     protected override void Start()
     {
@@ -33,6 +37,7 @@ public class EnemyBase : Destructables
     }
     protected void Awake()
     {
+        player = PlayerMotion.Instance.transform;
         OnSpawn();
     }
     protected virtual void OnSpawn()
@@ -56,9 +61,23 @@ public class EnemyBase : Destructables
     }
     protected void FixedUpdate()
     {
-        Behavior();
-        Animation();
+        if (active)
+        {
+            Behavior();
+            Animation();
+        }
+    
         HealthCheck();
+
+        if (slowUpdateTimer >= SLOW_UPDATE_FREQUENCY)
+        {
+            slowUpdateTimer = 0f;
+            SlowUpdate();
+        }
+        else
+        {
+            slowUpdateTimer += Time.fixedDeltaTime;
+        }
     }
     protected void HealthCheck()
     {
@@ -93,6 +112,13 @@ public class EnemyBase : Destructables
             CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
             Instantiate(hitEffect, transform.position, Quaternion.identity);
         }
+    }
+    /// <summary>
+    /// Called every 0.25 seconds.
+    /// </summary>
+    protected virtual void SlowUpdate()
+    {
+        active = Vector2.Distance(transform.position, player.position) <= activeRange;
     }
     protected void OnTriggerEnter2D(Collider2D collision)
     {

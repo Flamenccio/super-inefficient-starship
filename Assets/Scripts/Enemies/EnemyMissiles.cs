@@ -9,7 +9,7 @@ public class EnemyMissiles : TurretTrack, IEnemy
     protected override void Attack()
     {
         if (player == null) return;
-        if (Vector2.Distance(player.transform.position, transform.position) < searchRadius)
+        if (Vector2.Distance(player.position, transform.position) < searchRadius)
         {
             StartCoroutine(BurstAttack());
         }
@@ -18,7 +18,7 @@ public class EnemyMissiles : TurretTrack, IEnemy
     {
         for (int i = 0; i < BURST_AMOUNT; i++)
         {
-            Fire(player.transform.position);
+            Fire(player.position);
             yield return new WaitForSeconds(BURST_INTERVAL);
         }
     }

@@ -8,7 +8,7 @@ public class EnemyShootBase : EnemyBase
     [SerializeField] protected GameObject enemyBullet;
     [SerializeField] protected float searchRadius;
     [SerializeField] protected float fireRate;
-    private AllAngle aaFireDirection = new AllAngle();
+    private AllAngle aaFireDirection = new();
     protected float fireTimer = 0f;
     private const float BULLET_OFFSET = 0.5f;
 
@@ -22,7 +22,7 @@ public class EnemyShootBase : EnemyBase
     {
         animator.SetBool("attack", false); // disable attack telegraph
         aaFireDirection.Degree = direction; // convert angle from degrees to vector
-        Vector3 offset = new Vector3(aaFireDirection.Vector.x * BULLET_OFFSET, aaFireDirection.Vector.y * BULLET_OFFSET); // calculate an offset so the bullet doesn't spawn inside the enemy
+        Vector3 offset = new(aaFireDirection.Vector.x * BULLET_OFFSET, aaFireDirection.Vector.y * BULLET_OFFSET); // calculate an offset so the bullet doesn't spawn inside the enemy
         Instantiate(enemyBullet, transform.position + offset, Quaternion.Euler(0f, 0f, direction));
     }
     protected override void Behavior()
@@ -39,12 +39,11 @@ public class EnemyShootBase : EnemyBase
     }
     protected GameObject SearchPlayer()
     {
-        Collider2D[] target;
-        target = Physics2D.OverlapCircleAll(transform.position, searchRadius, playerLayer);
+        Collider2D[] target = Physics2D.OverlapCircleAll(transform.position, searchRadius, playerLayer);
         if (target.Length < 0) return null;
         foreach (Collider2D collider in target)
         {
-            if (collider.gameObject.tag.Equals("Player"))
+            if (collider.gameObject.CompareTag("Player"))
             {
                 return collider.gameObject;
             }

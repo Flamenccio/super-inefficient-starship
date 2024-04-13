@@ -33,7 +33,7 @@ public class ImpSpawner : EnemyBase, IEnemy
             {
                 float xOff = Random.Range(-SPAWN_OFFSET, SPAWN_OFFSET + 1);
                 float yOff = Random.Range(-SPAWN_OFFSET, SPAWN_OFFSET + 1);
-                Vector2 offset = new Vector2(xOff, yOff);
+                Vector2 offset = new(xOff, yOff);
                 Instantiate(impPrefab, transform.position + (Vector3)offset, Quaternion.Euler(0f, 0f, Random.Range(0f, 360f))); // spawn in an imp at randomized offset and rotation.
             }
         }

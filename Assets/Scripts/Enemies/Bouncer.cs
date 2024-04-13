@@ -12,8 +12,10 @@ public class Bouncer : TurretSpin, IEnemy
     private const float CIRCLE_CAST_RADIUS = 0.5f;
     protected override void OnSpawn()
     {
-        AllAngle randomDirection = new AllAngle();
-        randomDirection.Degree = Random.Range(0f, 360f);
+        AllAngle randomDirection = new()
+        {
+            Degree = Random.Range(0f, 360f)
+        };
         travelDirection = randomDirection.Vector;
         base.OnSpawn();
     }
