@@ -82,7 +82,6 @@ MonoBehaviour:
   wallPrefab: {fileID: 66644284648686917, guid: 756db517a0d87d846ba85acc1babc14e, type: 3}
   starPrefab: {fileID: 3723733491574340259, guid: 4fa7adc0407007b42b9ef2c09b2135db, type: 3}
   heartPrefab: {fileID: 4752744516956781119, guid: a57d87ecc7699c64386cf32df3b4d3d6, type: 3}
-  cameraControl: {fileID: 0}
   stageContainer: {fileID: 4731174166187999380}
   stageList: []
   stageLayer:
@@ -97,6 +96,12 @@ MonoBehaviour:
   itemLayer:
     serializedVersion: 2
     m_Bits: 256
+  raycastEnterLayer:
+    serializedVersion: 2
+    m_Bits: 16384
+  raycastExitLayers:
+    serializedVersion: 2
+    m_Bits: 1032
 --- !u!114 &342103236671325835
 MonoBehaviour:
   m_ObjectHideFlags: 0

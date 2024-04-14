@@ -34,7 +34,6 @@ public class EnemyList : MonoBehaviour
         while (true)
         {
             n = FindEmptySlot(enemyListTiered[tier]);
-            Debug.Log("n: " + n.ToString());
             enemy = enemyListTiered[tier][UnityEngine.Random.Range(0, n)];
             if (enemy == null)
             {

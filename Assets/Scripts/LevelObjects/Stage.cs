@@ -165,6 +165,10 @@ public class Stage : MonoBehaviour
     {
         return polymesh.bounds.extents.y;
     }
+    public Vector2 GetCenter()
+    {
+        return polymesh.bounds.center;
+    }
     public void ScanNearbyStages()
     {
         foreach (KeyValuePair<Directions.directions, StageLink> link in links)

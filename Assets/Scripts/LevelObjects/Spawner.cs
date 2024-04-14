@@ -35,6 +35,8 @@ public class Spawner : MonoBehaviour
     [SerializeField] private LayerMask entityLayers; // layer of all game objects that need their own unique space
     [SerializeField] private LayerMask wallLayer; // layer of all walls
     [SerializeField] private LayerMask itemLayer; // layer of all items
+    [SerializeField] private LayerMask raycastEnterLayer; // layer used for finding point in stage
+    [SerializeField] private LayerMask raycastExitLayers; // layer of invisible walls
 
     private struct SpawnToolkit
     {
@@ -114,34 +116,19 @@ public class Spawner : MonoBehaviour
     /// spawn a star on stage
     /// </summary>
     /// <returns>returns the spanwed star object</returns>
-    public GameObject SpawnStar() // TODO this is broken! causes stalls
+    public GameObject SpawnStar()
     {
         // spawn a star at a random location
         SpawnToolkit tk = InitializeNewToolkit();
-        Collider2D target;
+        //Collider2D target;
         tk.root = GenerateRandomRootStage(); // choose a root stage to spawn in
         tk.rootStage = stageList[tk.root];
-
-        do
-        {
-            tk.localSpawnCoords = GenerateLocalPosition(tk.root);
-            tk.localSpawnCoords = OffsetPosition(tk.localSpawnCoords);
-            tk.globalSpawnCoords = tk.localSpawnCoords + (Vector2)tk.rootStage.transform.position; // calculate a global position based off of the local position
-
-            target = Physics2D.OverlapPoint(tk.globalSpawnCoords, stageLayer); // check if the point is viable (within the stage)
-
-            if (target == null) continue;
-
-            target = Physics2D.OverlapPoint(tk.globalSpawnCoords, itemLayer); // check if the point is not occupied by other items
-
-            if (target != null) continue;
-
-            tk.spawnReady = true;
-        } while (!tk.spawnReady);
+        tk.globalSpawnCoords = FindPointInStage(tk.rootStage);
+        // TODO align with grid
 
         // spawn the star
         GameObject star = Instantiate(starPrefab, tk.rootStage.transform);
-        star.transform.localPosition = tk.localSpawnCoords;
+        star.transform.position = tk.globalSpawnCoords;
         return star;
     }
 
@@ -186,9 +173,7 @@ public class Spawner : MonoBehaviour
         Collider2D wall;
 
         // new method: attempt to find a nearby wall to spawn next to. if none is found, just place the wall
-
-        toolkit.localSpawnCoords = GenerateLocalPosition(toolkit.root);
-        toolkit.localSpawnCoords = OffsetPosition(toolkit.localSpawnCoords);
+        toolkit.localSpawnCoords = GenerateLocalPositionOnGrid(toolkit.root);
         toolkit.globalSpawnCoords = toolkit.localSpawnCoords + (Vector2)toolkit.rootStage.transform.position;
         wall = Physics2D.OverlapCircle(toolkit.globalSpawnCoords, 12.0f, wallLayer);
 
@@ -227,26 +212,12 @@ public class Spawner : MonoBehaviour
     {
         SpawnToolkit toolkit = InitializeNewToolkit();
         toolkit.root = GenerateRandomRootStage(); // choose a root stage to spawn in
-
-        do // because the heart MUST spawn, we use a loop until success
-        {
-            toolkit.localSpawnCoords = GenerateLocalPosition(toolkit.root); // create a randomized local position
-            toolkit.localSpawnCoords = OffsetPosition(toolkit.localSpawnCoords);
-            toolkit.globalSpawnCoords = toolkit.localSpawnCoords + (Vector2)stageList[toolkit.root].transform.position; // calculate a global position based off of the local position
-            toolkit.stageCheck = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, stageLayer); // check if the point is viable (within the stage)
-
-            if (toolkit.stageCheck == null) continue;
-
-            toolkit.stageCheck = Physics2D.OverlapPoint(toolkit.globalSpawnCoords, itemLayer); // check if the point is not occupied by other items
-
-            if (toolkit.stageCheck != null) continue;
-
-            toolkit.spawnReady = true;
-        } while (!toolkit.spawnReady);
+        toolkit.rootStage = stageList[toolkit.root];
+        toolkit.globalSpawnCoords = FindPointInStage(toolkit.rootStage);
 
         // spawn the heart 
-        GameObject heart = Instantiate(heartPrefab, stageList[toolkit.root].transform);
-        heart.transform.localPosition = toolkit.localSpawnCoords;
+        GameObject heart = Instantiate(heartPrefab, toolkit.rootStage.transform);
+        heart.transform.position = toolkit.globalSpawnCoords;
         return heart;
     }
     /// <summary>
@@ -265,7 +236,12 @@ public class Spawner : MonoBehaviour
     }
     private Vector2 GenerateLocalPosition(int rootStage)
     {
-        return new Vector2((int)Random.Range(-stageList[rootStage].GetExtentX(), stageList[rootStage].GetExtentX()), (int)Random.Range(-stageList[rootStage].GetExtentY(), stageList[rootStage].GetExtentY()));
+        return new Vector2(Mathf.FloorToInt(Random.Range(-stageList[rootStage].GetExtentX(), stageList[rootStage].GetExtentX())), Mathf.FloorToInt(Random.Range(-stageList[rootStage].GetExtentY(), stageList[rootStage].GetExtentY())));
+    }
+    private Vector2 GenerateLocalPositionOnGrid(int rootStage) // like GenerateLocalPosition, but returns coordinates aligned with grid.
+    {
+        Vector2 v = GenerateLocalPosition(rootStage);
+        return OffsetPosition(v);
     }
     private int GenerateRandomRootStage()
     {
@@ -283,5 +259,35 @@ public class Spawner : MonoBehaviour
             spawnReady = false,
             stageCheck = null
         };
+    }
+    /// <summary>
+    /// Returns a random point inside polygon defined by stage. This method should only be used if an item MUST be spawned (e.g. star, hearts).
+    /// </summary>
+    private Vector2 FindPointInStage(Stage root)
+    {
+        float xBounds = root.GetExtentX();
+        float yBounds = root.GetExtentY() - 0.5f;
+        float yOrigin = Random.Range(-yBounds, yBounds) + root.gameObject.transform.position.y + root.GetCenter().y;
+        float xOrigin = root.gameObject.transform.position.x - xBounds - 1; // the raycast should start just outside the stage
+        bool turn = false; // false = looking for raycastTestLayer; true = looking for inviswall layer
+        List<float> collisions = new(); // x coordinates--y is kept constant
+        root.gameObject.layer = LayerMask.NameToLayer("RaycastTest"); // temporarily change stage layer
+        RaycastHit2D ray;
+
+        do
+        {
+            ray = Physics2D.Raycast(new Vector2(xOrigin, yOrigin), Vector2.right, 16, turn ? raycastExitLayers : raycastEnterLayer);
+
+            if (ray.collider == null) break;
+
+            xOrigin = ray.point.x + 0.05f;
+            collisions.Add(ray.point.x);
+            turn = !turn;
+        } while(ray.collider != null);
+
+        root.gameObject.layer = LayerMask.NameToLayer("Background"); // return stage layer
+        int pairs = Mathf.FloorToInt(collisions.Count / 2);
+        int pair = Random.Range(0, pairs);
+        return new Vector2(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin);
     }
 }

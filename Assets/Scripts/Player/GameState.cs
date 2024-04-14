@@ -88,6 +88,7 @@ public class GameState : MonoBehaviour
         playerAtt.AddAmmo(addPoints);
         progress += addPoints;
         hudControl.DisplayScoreFlyText(addPoints);
+
         if (progress >= DifficultyCurve(difficulty + 1)) // level up
         {
             LevelUp();
@@ -96,7 +97,6 @@ public class GameState : MonoBehaviour
     public void CollectStar(int value)
     {
         int total = Mathf.FloorToInt(playerAtt.KillPoints * playerAtt.KillPointBonus) + value; // calculate total points gained
-        Debug.Log("gained " + total + " points.");
         SpawnEnemies(); // spawn more enemies with an additional amount based on the amount of kill points obtained
         ResetKills();
         GameObject star = spawnControl.SpawnStar();
