@@ -125,6 +125,13 @@ public class PlayerActions : MonoBehaviour
             powerManager.SubAttackTap(aimAngle.Degree, moveInput.Degree, transform.position);
         }
     }
+    public void OnSpecial(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            powerManager.SpecialAttackTap(aimAngle.Degree, moveInput.Degree, transform.position);
+        }
+    }
     private void Movement()
     {
         if (moveInput.Vector != Vector2.zero) // if the player is providing direcitonal input:

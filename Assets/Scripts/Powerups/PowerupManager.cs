@@ -25,6 +25,7 @@ public class PowerupManager : MonoBehaviour
 {
     private WeaponMain mainAttack;
     private WeaponSub subAttack;
+    private WeaponSpecial specialAttack;
 
     private Action powerupUpdate;
 
@@ -33,6 +34,7 @@ public class PowerupManager : MonoBehaviour
 
     [SerializeField] [Tooltip("Path to default weapon.")] private UnityEditor.MonoScript defaultMain;
     [SerializeField] [Tooltip("Path to default sub weapon.")] private UnityEditor.MonoScript defaultSub;
+    [SerializeField] private UnityEditor.MonoScript debugSpecial; // gives special at start
     private PlayerAttributes playerAttributes;
 
     private void Awake()
@@ -40,6 +42,12 @@ public class PowerupManager : MonoBehaviour
         // set default attacks
         mainAttack = gameObject.AddComponent(defaultMain.GetClass()).GetComponent<WeaponMain>();
         subAttack = gameObject.AddComponent(defaultSub.GetClass()).GetComponent<WeaponSub>();
+
+        if (debugSpecial != null)
+        {
+            specialAttack = gameObject.AddComponent(debugSpecial.GetClass()).GetComponent<WeaponSpecial>();
+            powerupUpdate += specialAttack.Run;
+        }
 
         playerAttributes = gameObject.GetComponent<PlayerAttributes>();
 
@@ -68,6 +76,17 @@ public class PowerupManager : MonoBehaviour
 
         return temp;
     }
+    public WeaponSpecial AddSpecial(WeaponSpecial special)
+    {
+        WeaponSpecial temp = specialAttack;
+        powerupUpdate -= specialAttack.Run;
+        Destroy(specialAttack);
+        specialAttack = gameObject.AddComponent(special.GetType()).GetComponent<WeaponSpecial>();
+
+        powerupUpdate += specialAttack.Run;
+
+        return temp;
+    }
     public void MainAttackTap(float aimAngle, float moveAngle, Vector2 origin)
     {
         mainAttack.Tap(aimAngle, moveAngle, origin);
@@ -87,6 +106,10 @@ public class PowerupManager : MonoBehaviour
     public void SubAttackTap(float aimAngle, float moveAngle, Vector2 origin)
     {
         subAttack.Tap(aimAngle, moveAngle, origin);
+    }
+    public void SpecialAttackTap(float aimAngle, float moveAngle, Vector2 origin)
+    {
+        specialAttack.Tap(aimAngle, moveAngle, origin);
     }
     private void Update()
     {

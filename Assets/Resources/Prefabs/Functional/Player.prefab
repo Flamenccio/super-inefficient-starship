@@ -199,6 +199,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: AimAssist, Assembly-CSharp
+        m_MethodName: OnAim
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: CrosshairsControl, Assembly-CSharp
+        m_MethodName: OnAim
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 4231892635959146387}
         m_TargetAssemblyTypeName: AimAssist, Assembly-CSharp
         m_MethodName: OnAim
@@ -230,13 +254,41 @@ MonoBehaviour:
     m_ActionId: d780804d-d009-4c47-839c-21b9f63622f1
     m_ActionName: Game/Fire1[/XInputControllerWindows/rightTrigger]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2152614155733081992}
+        m_TargetAssemblyTypeName: PlayerActions, Assembly-CSharp
+        m_MethodName: OnFire2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: aba31c0d-69ca-43d4-92f4-fb1d5e6097cc
     m_ActionName: Game/Fire2[/XInputControllerWindows/leftTrigger]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: eb82c898-e237-43fd-9814-d4430e7f72ed
     m_ActionName: 'Game/DEBUG: add buff[/Keyboard/a]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2152614155733081992}
+        m_TargetAssemblyTypeName: PlayerActions, Assembly-CSharp
+        m_MethodName: OnSpecial
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6273f8b8-9107-42a1-855f-b6a5b6d1d150
+    m_ActionName: Game/Special[/XInputControllerWindows/leftShoulder]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Game
@@ -254,10 +306,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf93a75bbff41a4ca3cec5665346f02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 3247408391109038382, guid: 82b9c0481752dbb47b8c0cfff92d0c6b, type: 3}
-  afterImagePrefab: {fileID: 7310451257306078532, guid: 347bae39dfd536f4480a81b631b45266, type: 3}
-  cdControl: {fileID: 0}
-  gameState: {fileID: 0}
   powerManager: {fileID: 6512970577687625348}
   playerAtt: {fileID: 5948239196993711514}
 --- !u!114 &2152614155733081995
@@ -329,6 +377,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultMain: {fileID: 11500000, guid: c650866d81b74f44aae7c6f16fc086ba, type: 3}
+  defaultSub: {fileID: 0}
+  debugSpecial: {fileID: 0}
 --- !u!114 &7438514266558005631
 MonoBehaviour:
   m_ObjectHideFlags: 0

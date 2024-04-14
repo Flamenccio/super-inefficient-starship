@@ -14,6 +14,7 @@ public class PlayerMotion : MonoBehaviour
     public bool ActionRestricted { get; private set; }
     public static PlayerMotion Instance { get; private set; }
     public Vector2 PlayerPosition { get => transform.position; }
+    public Transform PlayerTransform { get => transform; }
     private void Start()
     {
         Instance = this;

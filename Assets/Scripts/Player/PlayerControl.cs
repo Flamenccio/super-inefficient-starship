@@ -71,6 +71,15 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Special"",
+                    ""type"": ""Button"",
+                    ""id"": ""6273f8b8-9107-42a1-855f-b6a5b6d1d150"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -337,6 +346,17 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
                     ""action"": ""DEBUG: add buff"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e8cba101-00f2-480c-a12d-876b1b2e0f85"",
+                    ""path"": ""<XInputController>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Special"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -350,6 +370,7 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
         m_Game_Fire1 = m_Game.FindAction("Fire1", throwIfNotFound: true);
         m_Game_Fire2 = m_Game.FindAction("Fire2", throwIfNotFound: true);
         m_Game_DEBUGaddbuff = m_Game.FindAction("DEBUG: add buff", throwIfNotFound: true);
+        m_Game_Special = m_Game.FindAction("Special", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -414,6 +435,7 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Fire1;
     private readonly InputAction m_Game_Fire2;
     private readonly InputAction m_Game_DEBUGaddbuff;
+    private readonly InputAction m_Game_Special;
     public struct GameActions
     {
         private @PlayerControl m_Wrapper;
@@ -423,6 +445,7 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
         public InputAction @Fire1 => m_Wrapper.m_Game_Fire1;
         public InputAction @Fire2 => m_Wrapper.m_Game_Fire2;
         public InputAction @DEBUGaddbuff => m_Wrapper.m_Game_DEBUGaddbuff;
+        public InputAction @Special => m_Wrapper.m_Game_Special;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -447,6 +470,9 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
                 @DEBUGaddbuff.started -= m_Wrapper.m_GameActionsCallbackInterface.OnDEBUGaddbuff;
                 @DEBUGaddbuff.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnDEBUGaddbuff;
                 @DEBUGaddbuff.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnDEBUGaddbuff;
+                @Special.started -= m_Wrapper.m_GameActionsCallbackInterface.OnSpecial;
+                @Special.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnSpecial;
+                @Special.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnSpecial;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -466,6 +492,9 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
                 @DEBUGaddbuff.started += instance.OnDEBUGaddbuff;
                 @DEBUGaddbuff.performed += instance.OnDEBUGaddbuff;
                 @DEBUGaddbuff.canceled += instance.OnDEBUGaddbuff;
+                @Special.started += instance.OnSpecial;
+                @Special.performed += instance.OnSpecial;
+                @Special.canceled += instance.OnSpecial;
             }
         }
     }
@@ -477,5 +506,6 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
         void OnFire1(InputAction.CallbackContext context);
         void OnFire2(InputAction.CallbackContext context);
         void OnDEBUGaddbuff(InputAction.CallbackContext context);
+        void OnSpecial(InputAction.CallbackContext context);
     }
 }

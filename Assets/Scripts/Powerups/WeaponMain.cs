@@ -12,9 +12,6 @@ public class WeaponMain : WeaponBase
         weaponType = WeaponType.Main;
         base.Startup();
     }
-    public virtual void HoldExecute(float directionDeg, Vector2 origin, Func<int, bool> deductAmmo, float elapsedTime) // charge attack
-    {
-    }
     protected int GetWeaponDamage()
     {
         return mainAttack.GetComponent<BulletControl>().Damage;

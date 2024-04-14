@@ -15,8 +15,8 @@ public class BulletControl : MonoBehaviour
     // default move speed
     [SerializeField] protected float moveSpeed = 20.0f;
     [SerializeField] protected float maxDistance = 1f;
-    [SerializeField] private GameObject parryEffect;
-    [SerializeField] private GameObject impactEffect;
+    [SerializeField] protected GameObject parryEffect;
+    [SerializeField] protected GameObject impactEffect;
     [SerializeField] protected List<string> ignoredTags = new();
     [SerializeField] protected KnockbackMultipiers knockbackMultiplier;
     protected CameraEffects cameraEff = CameraEffects.instance;
