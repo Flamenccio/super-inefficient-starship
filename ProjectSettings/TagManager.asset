@@ -34,8 +34,8 @@ TagManager:
   - PlayerBullet
   - StageLink
   - RaycastTest
-  - 
-  - 
+  - Effects
+  - PlayerIntangible
   - 
   - 
   - 
@@ -60,6 +60,9 @@ TagManager:
     locked: 0
   - name: Entities
     uniqueID: 3643888443
+    locked: 0
+  - name: Effects
+    uniqueID: 2916334423
     locked: 0
   - name: UI
     uniqueID: 120903243

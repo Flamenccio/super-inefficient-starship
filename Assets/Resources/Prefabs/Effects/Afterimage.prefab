@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1263398751877527051}
   - component: {fileID: 4692379476145070277}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Sprite Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -651078853
-  m_SortingLayer: 2
+  m_SortingLayerID: -1378632873
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 060f789f7027c894ba6196cae4e6aa7e, type: 3}
   m_Color: {r: 0.538697, g: 0.9150943, b: 0.71355075, a: 1}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7144944706049027933}
   - component: {fileID: 4454140853431717890}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Afterimage
   m_TagString: Effect
   m_Icon: {fileID: 0}

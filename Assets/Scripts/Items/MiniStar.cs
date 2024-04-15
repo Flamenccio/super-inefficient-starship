@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MiniStar : Star 
+public class MiniStar : Star
 {
     private const float MAX_SPEED = 20.0f;
     private const float MIN_SPEED = 15.0f;
@@ -18,12 +18,14 @@ public class MiniStar : Star
     protected override void CollectEffect(Transform player)
     {
         AudioManager.instance.PlayOneShot(FMODEvents.instance.miniStarCollect, transform.position);
+
+        // TODO: make ministar fly to top of screen when collected
     }
     protected override void ConstantEffect()
     {
         if (rb.velocity.magnitude > 0f)
         {
-            rb.velocity = new Vector2(rb.velocity.x - rb.velocity.x * DECELERATION, rb.velocity.y - rb.velocity.y * DECELERATION);
+            rb.velocity = new Vector2(rb.velocity.x - rb.velocity.x * DECELERATION, rb.velocity.y - (rb.velocity.y * DECELERATION));
         }
     }
     protected override void TriggerEffect(Collider2D collider)

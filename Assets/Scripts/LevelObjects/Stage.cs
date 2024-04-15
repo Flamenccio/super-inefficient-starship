@@ -18,6 +18,8 @@ public class Stage : MonoBehaviour
     public StageVariant.Variants Variant { get { return variant; } }
     public Sprite Sprite { get { return sprite; } }
     public bool InitialStage { get { return initialStage; } }
+    public Vector2 Extents { get => polymesh.bounds.extents; }
+    public Vector2 Center { get => polymesh.bounds.center; }
     private void Awake()
     {
         polyCollider = gameObject.GetComponent<PolygonCollider2D>();
@@ -156,18 +158,6 @@ public class Stage : MonoBehaviour
         wall.relativePosition = attributes.Position;
         wall.xSize = attributes.XSize;
         wall.ySize = attributes.YSize;
-    }
-    public float GetExtentX()
-    {
-        return polymesh.bounds.extents.x;
-    }
-    public float GetExtentY()
-    {
-        return polymesh.bounds.extents.y;
-    }
-    public Vector2 GetCenter()
-    {
-        return polymesh.bounds.center;
     }
     public void ScanNearbyStages()
     {

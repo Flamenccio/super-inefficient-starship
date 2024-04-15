@@ -158,8 +158,10 @@ MonoBehaviour:
   - MiniStar
   - Heart
   - InvisWall
+  - Effects
+  - PlayerIntangible
   knockbackMultiplier: 20
-  damage: 3
+  damage: 2
   rb: {fileID: 7899587434270893482}
 --- !u!50 &7899587434270893482
 Rigidbody2D:

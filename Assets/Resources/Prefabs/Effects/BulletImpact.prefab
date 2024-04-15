@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9194933506876959945}
   - component: {fileID: 50848873406495724}
   - component: {fileID: -1030184013496089378}
-  m_Layer: 5
+  m_Layer: 15
   m_Name: BulletImpact
   m_TagString: Effect
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 120903243
+  m_SortingLayerID: -1378632873
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 531026839, guid: ee417b074502ee440a709589ab5a116e, type: 3}

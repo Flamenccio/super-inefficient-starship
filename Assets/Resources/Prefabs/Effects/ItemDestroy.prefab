@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1175986615984056175}
   - component: {fileID: 1175986615984056144}
   - component: {fileID: 1175986615984056145}
-  m_Layer: 5
+  m_Layer: 15
   m_Name: ItemDestroy
   m_TagString: Effect
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 120903243
+  m_SortingLayerID: -1378632873
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}

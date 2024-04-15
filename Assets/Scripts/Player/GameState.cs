@@ -67,20 +67,18 @@ public class GameState : MonoBehaviour
             instance = this;
         }
         mainTimer = maxTime;
-        // make sure to import player stats (max life, maxTime, etc.)
-
         spawnControl = gameObject.GetComponent<Spawner>();
+        spawnControl.SpawnStar();
+        Physics2D.IgnoreLayerCollision(16, 6); // HACK hardcoded
     }
     private void Start()
     {
-        spawnControl.SpawnStar();
         Time.timeScale= 1.0f;
     }
     private void Update()
     {
         MainTimer();
         WallTimer();
-        //EnemyTimer();
     }
 
     public void AddPoints(int addPoints)
@@ -112,8 +110,8 @@ public class GameState : MonoBehaviour
         if (heart != null) Destroy(heart);
 
         difficulty++; // increase difficulty
-        spawnControl.SpawnStage(); // spawn another stage
         heart = spawnControl.SpawnHeart();
+        spawnControl.SpawnStage(); // spawn another stage
 
         if (wallFrequency > MAX_WALL_FREQUENCY) // increase wall frequency
         {

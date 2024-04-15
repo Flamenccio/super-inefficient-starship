@@ -8,17 +8,24 @@ using UnityEngine;
 /// </summary>
 public class PlayerMotion : MonoBehaviour
 {
+    private enum Restrictions
+    {
+        Movement,
+        Aim,
+        Ability
+    }
     private const float KNOCKBACK_DURATION = 6f / 60f;
     [SerializeField] private Rigidbody2D rb;
-    public bool MovementRestricted { get; private set; }
-    public bool ActionRestricted { get; private set; }
+    private int playerRestrictions;
+    public bool MovementRestricted { get => GetRestrictedBit(Restrictions.Movement); }
+    public bool ActionRestricted { get ; private set; }
+    public bool AimRestricted { get => GetRestrictedBit(Restrictions.Aim); }
     public static PlayerMotion Instance { get; private set; }
     public Vector2 PlayerPosition { get => transform.position; }
     public Transform PlayerTransform { get => transform; }
     private void Start()
     {
         Instance = this;
-        MovementRestricted = false;
         ActionRestricted = false;
     }
     /// <summary>
@@ -46,29 +53,36 @@ public class PlayerMotion : MonoBehaviour
     {
         // TODO this will cause problems if two actions need to edit the same stat--please fix!
         if (MovementRestricted) return false;
-        StartCoroutine(RestrictMovementCoroutine(t));
+        StartCoroutine(RestrictPlayer(t, Restrictions.Movement));
         return true;
     }
-    private IEnumerator RestrictMovementCoroutine(float t)
-    {
-        MovementRestricted = true;
-        yield return new WaitForSeconds(t);
-        MovementRestricted = false;
-    }
     /// <summary>
-    /// Prevents player from taking any actions for some given amount of time.
+    /// Prevents player from taking any actions (e.g. using weapons) for some given amount of time.
     /// </summary>
     /// <param name="t">Time in seconds.</param>
-    public void RestrictAction(float t)
+    public bool RestrictAbility(float t)
     {
-        if (ActionRestricted) return;
-        StartCoroutine(RestrictActionCoroutine(t));
+        if (ActionRestricted) return false;
+        StartCoroutine(RestrictPlayer(t, Restrictions.Ability));
+        return true;
     }
-    private IEnumerator RestrictActionCoroutine(float t)
+    public bool RestrictAim(float t)
     {
-        ActionRestricted = true;
+        if (AimRestricted) return false;
+        StartCoroutine(RestrictPlayer(t, Restrictions.Aim));
+        return true;
+    }
+    private IEnumerator RestrictPlayer(float t, Restrictions restriction)
+    {
+        int r = (int)restriction;
+        playerRestrictions |= (1 << r); // set bit
         yield return new WaitForSeconds(t);
-        ActionRestricted = false;
+        playerRestrictions &= ~(1 << r); // clear bit
+    }
+    private bool GetRestrictedBit(Restrictions restrictions)
+    {
+        int x = playerRestrictions | (1 << (int)restrictions);
+        return x == playerRestrictions;
     }
     /// <summary>
     /// Exert an impulse on the player character.
@@ -101,5 +115,19 @@ public class PlayerMotion : MonoBehaviour
     public void Knockback(Vector2 direction, float power)
     {
         Move(direction, power, KNOCKBACK_DURATION);
+    }
+    /// <summary>
+    /// Allows player to pass through enemies (not bullets!) for specified time.
+    /// </summary>
+    public void Blink(float duration)
+    {
+        if (gameObject.layer.Equals(LayerMask.NameToLayer("PlayerIntangible"))) return;
+        StartCoroutine(BlinkCoroutine(duration));
+    }
+    private IEnumerator BlinkCoroutine(float t)
+    {
+        gameObject.layer = LayerMask.NameToLayer("PlayerIntangible");
+        yield return new WaitForSeconds(t);
+        gameObject.layer = LayerMask.NameToLayer("Player");
     }
 }

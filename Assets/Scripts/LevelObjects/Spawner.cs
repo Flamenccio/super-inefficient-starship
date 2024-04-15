@@ -122,7 +122,7 @@ public class Spawner : MonoBehaviour
         SpawnToolkit tk = InitializeNewToolkit();
         //Collider2D target;
         tk.root = GenerateRandomRootStage(); // choose a root stage to spawn in
-        tk.rootStage = stageList[tk.root];
+        tk.rootStage = stageList[tk.root]; // TODO this breaks when reloading scene
         tk.globalSpawnCoords = FindPointInStage(tk.rootStage);
         // TODO align with grid
 
@@ -236,7 +236,7 @@ public class Spawner : MonoBehaviour
     }
     private Vector2 GenerateLocalPosition(int rootStage)
     {
-        return new Vector2(Mathf.FloorToInt(Random.Range(-stageList[rootStage].GetExtentX(), stageList[rootStage].GetExtentX())), Mathf.FloorToInt(Random.Range(-stageList[rootStage].GetExtentY(), stageList[rootStage].GetExtentY())));
+        return new Vector2(Mathf.FloorToInt(Random.Range(-stageList[rootStage].Extents.x, stageList[rootStage].Extents.x)), Mathf.FloorToInt(Random.Range(-stageList[rootStage].Extents.y, stageList[rootStage].Extents.y)));
     }
     private Vector2 GenerateLocalPositionOnGrid(int rootStage) // like GenerateLocalPosition, but returns coordinates aligned with grid.
     {
@@ -265,9 +265,9 @@ public class Spawner : MonoBehaviour
     /// </summary>
     private Vector2 FindPointInStage(Stage root)
     {
-        float xBounds = root.GetExtentX();
-        float yBounds = root.GetExtentY() - 0.5f;
-        float yOrigin = Random.Range(-yBounds, yBounds) + root.gameObject.transform.position.y + root.GetCenter().y;
+        float xBounds = root.Extents.x;
+        float yBounds = root.Extents.y - 0.5f;
+        float yOrigin = Random.Range(-yBounds, yBounds) + root.gameObject.transform.position.y + root.Center.y;
         float xOrigin = root.gameObject.transform.position.x - xBounds - 1; // the raycast should start just outside the stage
         bool turn = false; // false = looking for raycastTestLayer; true = looking for inviswall layer
         List<float> collisions = new(); // x coordinates--y is kept constant

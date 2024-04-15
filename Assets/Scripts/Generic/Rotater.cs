@@ -14,7 +14,7 @@ public class Rotater : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Rotate(new Vector3(0f, 0f, speed * (int)direction));
+        if (Vector2.Distance(transform.position, PlayerMotion.Instance.PlayerPosition) <= 20f) transform.Rotate(new Vector3(0f, 0f, speed * (int)direction));
     }
 
 }

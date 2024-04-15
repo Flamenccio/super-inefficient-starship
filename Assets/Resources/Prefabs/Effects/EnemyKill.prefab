@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7258470485781298144}
   - component: {fileID: 5072465833097331521}
   - component: {fileID: 7761071380579025505}
-  m_Layer: 5
+  m_Layer: 15
   m_Name: EnemyKill
   m_TagString: Effect
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 120903243
+  m_SortingLayerID: -1378632873
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -1631410020, guid: da9e2d2f8e298274482d07d51181dc1a, type: 3}

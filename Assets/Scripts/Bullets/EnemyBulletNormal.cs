@@ -15,6 +15,7 @@ public class EnemyBulletNormal : BulletControl
             "Footprint",
             "Heart",
             "MiniStar",
+            "Effects"
         };
     }
     protected override void Trigger(Collider2D collider)

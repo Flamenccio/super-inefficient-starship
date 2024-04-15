@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2705238964985144563}
   - component: {fileID: 9120389254838163092}
   - component: {fileID: 7901617799036724224}
-  m_Layer: 5
+  m_Layer: 15
   m_Name: HeartSpawn
   m_TagString: Effect
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 120903243
+  m_SortingLayerID: -1378632873
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 1187273523, guid: 39262ba5447188d43a51b194ef6779fd, type: 3}

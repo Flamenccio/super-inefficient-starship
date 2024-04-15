@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8625941825237215562}
   - component: {fileID: 6452734011731798305}
   - component: {fileID: 2069350366403775828}
-  m_Layer: 5
+  m_Layer: 15
   m_Name: StarCollect
   m_TagString: Effect
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 120903243
+  m_SortingLayerID: -1378632873
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}

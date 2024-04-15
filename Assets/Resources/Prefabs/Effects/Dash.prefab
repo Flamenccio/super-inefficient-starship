@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1992203100557577597}
   - component: {fileID: 1992203100557577594}
   - component: {fileID: 1992203100557577596}
-  m_Layer: 5
+  m_Layer: 15
   m_Name: Dash
   m_TagString: Effect
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 120903243
+  m_SortingLayerID: -1378632873
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 538bd841c18b98748bcaa388367c8623, type: 3}

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4752744516956781089}
   - component: {fileID: 4752744516956781118}
-  - component: {fileID: 4752744516956781088}
   - component: {fileID: 3552411892060906712}
   m_Layer: 8
   m_Name: Heart
@@ -51,20 +50,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1
---- !u!114 &4752744516956781088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4752744516956781119}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 793c41f5aef4d374ba0d52ad42451814, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collectEffect: {fileID: 0}
-  spawnEffect: {fileID: 0}
 --- !u!114 &3552411892060906712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,7 +160,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 54058ee23b541874c93dae39de74dfbd, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 2
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0

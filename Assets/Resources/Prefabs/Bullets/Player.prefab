@@ -110,6 +110,8 @@ MonoBehaviour:
   - Footprint
   - Heart
   - MiniStar
+  - Effects
+  - PlayerIntangible
   knockbackMultiplier: 0
   damage: 1
   rb: {fileID: 3247408391109038378}

@@ -147,6 +147,8 @@ MonoBehaviour:
   - Background
   - Footprint
   - MiniStar
+  - Effects
+  - PlayerIntangible
   knockbackMultiplier: 0
   damage: 1
   rb: {fileID: 1613613872814323935}

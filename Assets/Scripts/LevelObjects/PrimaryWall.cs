@@ -37,7 +37,6 @@ public class PrimaryWall : MonoBehaviour
     {
         if (wallCollider != null)
         {
-            Debug.Log(gameObject.GetInstanceID() + " wall destroyed.");
             Destroy(wallCollider);
         }
 

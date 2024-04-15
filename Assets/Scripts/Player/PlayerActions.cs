@@ -32,6 +32,7 @@ public class PlayerActions : MonoBehaviour
 
     [SerializeField] private PowerupManager powerManager;
     [SerializeField] private PlayerAttributes playerAtt;
+    private PlayerMotion playerMotion;
 
     public Rigidbody2D Rigidbody { get => rb; }
 
@@ -46,7 +47,11 @@ public class PlayerActions : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (!PlayerMotion.Instance.MovementRestricted)
+        if (playerMotion == null)
+        {
+            playerMotion = PlayerMotion.Instance;
+        }
+        if (!playerMotion.MovementRestricted)
         {
             Movement();
         }
@@ -64,7 +69,7 @@ public class PlayerActions : MonoBehaviour
 
     public void OnAim(InputAction.CallbackContext context)
     {
-        aimInput = context.ReadValue<Vector2>(); // store the input vector
+        if (!playerMotion.AimRestricted) aimInput = context.ReadValue<Vector2>(); // store the input vector
     }
 
     // TODO i want to generalize this so i don't have to copy the same code for the other 3 actions
@@ -168,7 +173,6 @@ public class PlayerActions : MonoBehaviour
         {
             BuffBase b = new Agility_MovementSpeed();
             powerManager.AddBuff(b);
-            Debug.Log(playerAtt.MoveSpeed.ToString());
         }
     }
 }

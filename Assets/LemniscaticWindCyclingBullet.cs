@@ -6,6 +6,7 @@ public class LemniscaticWindCyclingBullet : BulletControl
 {
     private float timer = 0f;
     private float maxTimer = 0.15f;
+    public int EnemiesHit { get; private set; }
 
     protected override void DeathTimer()
     {
@@ -27,6 +28,10 @@ public class LemniscaticWindCyclingBullet : BulletControl
         else
         {
             Instantiate(impactEffect, transform.position, Quaternion.identity);
+        }
+        if (collider.gameObject.CompareTag("Enemy"))
+        {
+            EnemiesHit++;
         }
     }
 }
