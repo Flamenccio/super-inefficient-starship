@@ -48,15 +48,6 @@ public class PlayerAttributes : MonoBehaviour
         KillPointBonus = baseKillPointBonus;
         Ammo = baseAmmo;
 
-        // populate bonus dictionary
-        /*
-        attributeValues.Add(Attribute.MaxAmmo, baseMaxAmmo);
-        attributeValues.Add(Attribute.MoveSpeed, baseMoveSpeed);
-        attributeValues.Add(Attribute.MaxHP, baseMaxHP);
-        attributeValues.Add(Attribute.KillPointBonus, baseKillPointBonus);
-        attributeValues.Add(Attribute.MainDamageBonus, baseMainWeaponDamageBonus);
-        */
-
         // populate base dictionary
         baseAttributeValues.Add(Attribute.MaxAmmo, baseMaxAmmo);
         baseAttributeValues.Add(Attribute.MaxHP, baseMaxHP);
@@ -69,16 +60,6 @@ public class PlayerAttributes : MonoBehaviour
             attributeValues[a] = baseAttributeValues[a];
         }
     }
-    /*
-    private void Start()
-    {
-
-    }
-    
-    private void Update()
-    {
-    }
-    */
     public bool UseAmmo(int ammo)
     {
         if (Ammo - ammo < 0)

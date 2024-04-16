@@ -23,10 +23,11 @@ public class HUDControl : MonoBehaviour
     [SerializeField] private CrosshairAmmoController crosshairAmmo;
     [SerializeField] private TMP_Text killPointsDisplay;
     [SerializeField] private PlayerAttributes playerAtt;
+    [SerializeField] private TMP_Text killPointBonusDisplay;
 
     private bool vignetteCrossfading = false;
     private int levelUpAnimating = 0;
-    private Color vignetteColor = new Color(255f, 0f, 0f);
+    private Color vignetteColor = new(255f, 0f, 0f);
     private GameState gState;
 
     private Vector2 levelUpBackgroundSize = Vector2.zero;
@@ -57,7 +58,8 @@ public class HUDControl : MonoBehaviour
         crosshairAmmo.UpdateAmmo(playerAtt.Ammo);
         timeDisplay.text = CorrectTimerDisplay(gState.Timer);
         hpDisplay.text = playerAtt.HP.ToString();
-        killPointsDisplay.text = playerAtt.KillPoints.ToString();
+        killPointsDisplay.text = $"+{playerAtt.KillPoints}";
+        killPointBonusDisplay.text = $"x{playerAtt.KillPointBonus}";
 
         // fade vignette in as time starts to run out
         if (gState.Timer <= 5.0f && !vignetteCrossfading)
@@ -96,21 +98,20 @@ public class HUDControl : MonoBehaviour
     }
     public void DisplayScoreFlyText(int score) 
     {
-        Vector2 position = scoreDisplay.rectTransform.position + new Vector3(0f, 0f);
-        string text = string.Concat("+", score.ToString());
-        DisplayFlyText(text, Color.yellow, position);
+        //Vector2 position = scoreDisplay.rectTransform.position + new Vector3(0f, 0f);
+        string text = $"+{score}";
+        DisplayFlyText(text, Color.yellow, scoreDisplay.transform.position);
     }
     public void DisplayHealthFlyText(int healthGained)
     {
-        Vector2 position = hpDisplay.rectTransform.position + new Vector3(0f, 0f);
-        string text = string.Concat("+", healthGained.ToString());
-        DisplayFlyText(text, Color.green, position);
+        //Vector2 position = hpDisplay.rectTransform.position + new Vector3(0f, 0f);
+        string text = $"+{healthGained}";
+        DisplayFlyText(text, Color.green, hpDisplay.transform.position);
     }
     public void DisplayFlyText(string text, Color color, Vector2 position)
     {
-        GameObject instance = Instantiate(scoreFlyText, transform, false);
+        GameObject instance = Instantiate(scoreFlyText, position, Quaternion.identity, transform);
         instance.transform.position = position;
-
         TMP_Text instanceTMP = instance.GetComponent<TMP_Text>();
         instanceTMP.text = text;
         instanceTMP.color = color;

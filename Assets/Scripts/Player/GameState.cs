@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class GameState : MonoBehaviour
 {
-    // this class basically runs the game
+    // this class coordinates all other management classes
+
     public static GameState instance;
 
     // parameters
@@ -19,21 +20,15 @@ public class GameState : MonoBehaviour
     // constants
     private const float MAX_TIME_INCREASE = 0.5f;
     private const float BASE_TIME = 10.0f;
-
     private const float INCREASE_WALL_FREQUENCY = 0.25f;
     private const float MAX_WALL_FREQUENCY = 1.0f;
     private const int MIN_LEVEL_WALL_UPGRADE = 12; // the minimum level required for level 2 walls to start spawning
     private const float CHANCE_WALL_UPGRADE = 0.5f;
-
-    //private const float BASE_ENEMY_SPAWN_FREQUENCY = 5.0f;
-    //private const float INCREASE_ENEMY_SPAWN_FREQUENCY = 0.2f;
-    //private const float MAX_ENEMY_SPAWN_FREQUENCY = 2.0f;
     private const int MIN_LEVEL_ENEMY_SPAWN = 0;
 
     // timers
     private float maxTime = BASE_TIME;
     private float mainTimer = 0.0f;
-    //private float enemyFrequency = BASE_ENEMY_SPAWN_FREQUENCY;
     private float wallFrequency = 3.0f;
     private float wallTimer = 0.0f;
 
@@ -46,41 +41,46 @@ public class GameState : MonoBehaviour
     [SerializeField] private CameraControl cameraControl;
     [SerializeField] private Transform player;
     [SerializeField] private PlayerAttributes playerAtt;
+    [SerializeField] private Camera cam;
 
     // debug stuff
     [SerializeField] private bool infiniteTime;
 
-    public float Timer { get
+    public float Timer
+    {
+        get
         {
-            int temp;
-            temp = Mathf.RoundToInt(mainTimer * 100);
+            int temp = Mathf.RoundToInt(mainTimer * 100);
             return temp / 100f;
         }
     }
     public int Level { get => difficulty; }
     public int Progress { get => progress; }
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        mainTimer = maxTime;
-        spawnControl = gameObject.GetComponent<Spawner>();
-        spawnControl.SpawnStar();
-        Physics2D.IgnoreLayerCollision(16, 6); // HACK hardcoded
-    }
     private void Start()
     {
         Time.timeScale= 1.0f;
+    }
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+
+        mainTimer = maxTime;
+        spawnControl = gameObject.GetComponent<Spawner>();
+        spawnControl.SpawnStar();
     }
     private void Update()
     {
         MainTimer();
         WallTimer();
     }
-
     public void AddPoints(int addPoints)
     {
         playerAtt.AddAmmo(addPoints);
@@ -101,8 +101,14 @@ public class GameState : MonoBehaviour
         goalArrow.PointAt(star);
         AddPoints(total); // add points to current points
     }
+    public void CollectMiniStar(int value)
+    {
+        AddKillPoint(value);
+        spawnControl.SpawnFlyingStar(PlayerMotion.Instance.PlayerPosition, PlayerMotion.Instance.transform, hudControl.transform);
+    }
     public void AddKillPoint(int pt)
     {
+
         playerAtt.AddKillPoints(pt);
     }
     private void LevelUp()
@@ -183,7 +189,7 @@ public class GameState : MonoBehaviour
     /// <returns></returns>
     public int DifficultyCurve(int nextLevel)
     {
-        return Mathf.CeilToInt((2 * Mathf.Pow(nextLevel, 11f / 5f)));
+        return Mathf.CeilToInt(2 * Mathf.Pow(nextLevel, 11f / 5f));
     }
     private void MainTimer()
     {
@@ -228,8 +234,7 @@ public class GameState : MonoBehaviour
     /// <summary>
     /// spawn a wave of enemies defined by waveSpawnAmount PLUS an amount based on the amount of killPoints obtained
     /// </summary>
-    /// <param name="kp">amount of killpoints obtained</param>
-    private void SpawnEnemies() 
+    private void SpawnEnemies()
     {
         if (difficulty < MIN_LEVEL_ENEMY_SPAWN) return; // if level is not high enough, don't do anything
 
@@ -262,6 +267,7 @@ public class GameState : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.1f);
         Time.timeScale = 0.0f;
         yield return new WaitForSecondsRealtime(1.0f);
+        instance = null; // clear instance
         SceneManager.LoadScene(0);
     }
 }

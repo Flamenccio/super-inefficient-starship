@@ -5,7 +5,7 @@ using UnityEngine;
 public class LemniscaticWindCyclingBullet : BulletControl
 {
     private float timer = 0f;
-    private float maxTimer = 0.15f;
+    private float maxTimer = 0.10f;
     public int EnemiesHit { get; private set; }
 
     protected override void DeathTimer()

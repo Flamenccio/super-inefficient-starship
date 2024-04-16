@@ -53,6 +53,7 @@ MonoBehaviour:
   cameraControl: {fileID: 0}
   player: {fileID: 0}
   playerAtt: {fileID: 0}
+  cam: {fileID: 0}
   infiniteTime: 0
 --- !u!114 &439820155804191655
 MonoBehaviour:
@@ -82,6 +83,7 @@ MonoBehaviour:
   wallPrefab: {fileID: 66644284648686917, guid: 756db517a0d87d846ba85acc1babc14e, type: 3}
   starPrefab: {fileID: 3723733491574340259, guid: 4fa7adc0407007b42b9ef2c09b2135db, type: 3}
   heartPrefab: {fileID: 4752744516956781119, guid: a57d87ecc7699c64386cf32df3b4d3d6, type: 3}
+  flyingStarPrefab: {fileID: 7517241255086465919, guid: d74c6b1c137d16d4d9ef3c0dd533e746, type: 3}
   stageContainer: {fileID: 4731174166187999380}
   stageList: []
   stageLayer:

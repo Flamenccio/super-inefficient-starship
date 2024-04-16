@@ -44,6 +44,7 @@ public class PlayerActions : MonoBehaviour
     {
         acceleration = playerAtt.MoveSpeed / 4f;
         deceleration = playerAtt.MoveSpeed / 26f;
+        playerMotion = PlayerMotion.Instance;
     }
     private void FixedUpdate()
     {
@@ -64,7 +65,7 @@ public class PlayerActions : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        moveInput.Vector = context.ReadValue<Vector2>(); // store the input vector
+        if (!playerMotion.MovementRestricted) moveInput.Vector = context.ReadValue<Vector2>(); // store the input vector
     }
 
     public void OnAim(InputAction.CallbackContext context)

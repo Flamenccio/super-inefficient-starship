@@ -431,3 +431,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRen: {fileID: 8393633311850066908}
+  brightnessFrequency: 2
+  maxOpacity: 0.5
+  minOpacity: 0
+  sizeFrequency: 2
+  maxSize: 0.75
+  minSize: 0.1

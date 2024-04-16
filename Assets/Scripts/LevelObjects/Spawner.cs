@@ -18,16 +18,16 @@ public class Spawner : MonoBehaviour
     private int walls = 0;
     private const int MAX_WALLS = 10000;
     private const int STAGE_LENGTH = 8;
-    private const int MIN_WALL_UPGRADE_LEVEL = 9;
 
     // prefabs
     [SerializeField] private GameObject stagePrefab;
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject starPrefab;
     [SerializeField] private GameObject heartPrefab;
+    [SerializeField] private GameObject flyingStarPrefab;
     // other necessary classes/objects
     [SerializeField] private GameObject stageContainer;
-    [SerializeField] private List<Stage> stageList = new List<Stage>();
+    [SerializeField] private List<Stage> stageList = new();
     private EnemyList enemyList;
 
     // layer masks
@@ -53,13 +53,16 @@ public class Spawner : MonoBehaviour
 
     // constants
     private const float ENEMY_SPAWN_RADIUS = 5.0f; // the minimum space required between the player and enemy for it (the enemy) to spawn
+    private void Start()
+    {
+    }
     private void Awake()
     {
-        // add the starting stage
+        Debug.Log("Awake called");
         stageList.Add(FindObjectOfType<Stage>());
         enemyList = gameObject.GetComponent<EnemyList>();
     }
-    public void DecreaseWallCount()
+    public void DecreaseWallCount() // HACK kind of useless
     {
         walls--;
     }
@@ -77,9 +80,7 @@ public class Spawner : MonoBehaviour
             tk.spawnAttempts++;
             tk.root = GenerateRandomRootStage(); // pick random root stage
             tk.localSpawnCoords = GenerateLocalPosition(tk.root); // pick random local location
-            
-            // update the global position
-            tk.globalSpawnCoords = tk.localSpawnCoords + (Vector2)stageList[tk.root].transform.position;
+            tk.globalSpawnCoords = tk.localSpawnCoords + (Vector2)stageList[tk.root].transform.position; // update the global position
             tk.globalSpawnCoords = OffsetPosition(tk.globalSpawnCoords);
             target = Physics2D.OverlapPoint(tk.globalSpawnCoords, wallLayer); // check if a wall is already at that location
 
@@ -120,14 +121,12 @@ public class Spawner : MonoBehaviour
     {
         // spawn a star at a random location
         SpawnToolkit tk = InitializeNewToolkit();
-        //Collider2D target;
         tk.root = GenerateRandomRootStage(); // choose a root stage to spawn in
+        Debug.Log($"Number of stages: {stageList.Count}");
         tk.rootStage = stageList[tk.root]; // TODO this breaks when reloading scene
         tk.globalSpawnCoords = FindPointInStage(tk.rootStage);
-        // TODO align with grid
-
-        // spawn the star
-        GameObject star = Instantiate(starPrefab, tk.rootStage.transform);
+        tk.globalSpawnCoords = AlignPosition(tk.globalSpawnCoords);
+        GameObject star = Instantiate(starPrefab, tk.rootStage.transform); // spawn the star
         star.transform.position = tk.globalSpawnCoords;
         return star;
     }
@@ -208,17 +207,23 @@ public class Spawner : MonoBehaviour
         instance.transform.localPosition = toolkit.localSpawnCoords;
         walls++; // increase wall count
     }
-    public GameObject SpawnHeart() // TODO this is broken too!
+    public GameObject SpawnHeart()
     {
         SpawnToolkit toolkit = InitializeNewToolkit();
         toolkit.root = GenerateRandomRootStage(); // choose a root stage to spawn in
         toolkit.rootStage = stageList[toolkit.root];
         toolkit.globalSpawnCoords = FindPointInStage(toolkit.rootStage);
+        toolkit.globalSpawnCoords = AlignPosition(toolkit.globalSpawnCoords);
 
         // spawn the heart 
         GameObject heart = Instantiate(heartPrefab, toolkit.rootStage.transform);
         heart.transform.position = toolkit.globalSpawnCoords;
         return heart;
+    }
+    public void SpawnFlyingStar(Vector2 origin, Transform target, Transform canvas)
+    {
+        StarFly sf = Instantiate(flyingStarPrefab, origin, Quaternion.identity).GetComponent<StarFly>();
+        sf.FlyTo(target);
     }
     /// <summary>
     /// Because the squares on the stage grid are offset by 0.5 units (the center of the grid is between the squares), we also need to offset each spawned entity and item by 0.5 units to perfectly fit the square.
@@ -228,11 +233,16 @@ public class Spawner : MonoBehaviour
     private Vector2 OffsetPosition(Vector2 offset)
     {
         // offset the spawn location so that the wall spawns in the right place (on square)
-        if (offset.x > 0) offset.x += 0.5f;
-        if (offset.y > 0) offset.y += 0.5f;
-        if (offset.x <= 0) offset.x -= 0.5f;
-        if (offset.y <= 0) offset.y -= 0.5f;
+        if (offset.x > 0) offset.x -= 0.5f;
+        if (offset.y > 0) offset.y -= 0.5f;
+        if (offset.x <= 0) offset.x += 0.5f;
+        if (offset.y <= 0) offset.y += 0.5f;
         return offset;
+    }
+    private Vector2 AlignPosition(Vector2 position)
+    {
+        Vector2 newPos = new(Mathf.Ceil(position.x), Mathf.Ceil(position.y));
+        return OffsetPosition(newPos);
     }
     private Vector2 GenerateLocalPosition(int rootStage)
     {
@@ -288,6 +298,6 @@ public class Spawner : MonoBehaviour
         root.gameObject.layer = LayerMask.NameToLayer("Background"); // return stage layer
         int pairs = Mathf.FloorToInt(collisions.Count / 2);
         int pair = Random.Range(0, pairs);
-        return new Vector2(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin);
+        return new Vector2(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin); // TODO this causes a bug, but idk how...
     }
 }

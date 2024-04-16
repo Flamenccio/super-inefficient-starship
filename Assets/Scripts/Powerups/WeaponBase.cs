@@ -19,6 +19,7 @@ public class WeaponBase : MonoBehaviour, IPowerup
     protected float cooldownTimer;
     protected float holdThreshold;
     protected PlayerAttributes playerAtt;
+    public bool AimAssisted { get; protected set; } // whether the weapon should aim towards the aim assist target on TAP
 
     public string Name { get; protected set; }
     public string Desc { get; protected set; }
@@ -32,6 +33,7 @@ public class WeaponBase : MonoBehaviour, IPowerup
     private void Awake()
     {
         Level = 1;
+        AimAssisted = false;
         Startup();
     }
     protected virtual void Startup()

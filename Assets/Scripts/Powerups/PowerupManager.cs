@@ -29,7 +29,7 @@ public class PowerupManager : MonoBehaviour
 
     private Action powerupUpdate;
 
-    private List<BuffBase> buffs = new List<BuffBase>();
+    private List<BuffBase> buffs = new();
     public List<BuffBase> Buffs { get => buffs; }
 
     [SerializeField] [Tooltip("Path to default weapon.")] private UnityEditor.MonoScript defaultMain;
@@ -54,15 +54,14 @@ public class PowerupManager : MonoBehaviour
         powerupUpdate += mainAttack.Run;
         powerupUpdate += subAttack.Run;
     }
+    // HACK these are all the same; please try to make just one method to handle each weapon 
     public WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
     {
         WeaponMain temp = mainAttack;
         powerupUpdate -= mainAttack.Run;
         Destroy(mainAttack); // remove the current main attack from player
         mainAttack = gameObject.AddComponent(main.GetType()).GetComponent<WeaponMain>(); // and replace it with the new one
-
         powerupUpdate += mainAttack.Run;
-
         return temp;
     }
     public WeaponSub AddSub(WeaponSub sub) // same thing as above
@@ -71,9 +70,7 @@ public class PowerupManager : MonoBehaviour
         powerupUpdate -= subAttack.Run;
         Destroy(subAttack);
         subAttack = gameObject.AddComponent(sub.GetType()).GetComponent<WeaponSub>();
-
         powerupUpdate += subAttack.Run;
-
         return temp;
     }
     public WeaponSpecial AddSpecial(WeaponSpecial special)
@@ -82,9 +79,7 @@ public class PowerupManager : MonoBehaviour
         powerupUpdate -= specialAttack.Run;
         Destroy(specialAttack);
         specialAttack = gameObject.AddComponent(special.GetType()).GetComponent<WeaponSpecial>();
-
         powerupUpdate += specialAttack.Run;
-
         return temp;
     }
     public void MainAttackTap(float aimAngle, float moveAngle, Vector2 origin)

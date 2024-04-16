@@ -25,8 +25,17 @@ public class PlayerMotion : MonoBehaviour
     public Transform PlayerTransform { get => transform; }
     private void Start()
     {
-        Instance = this;
-        ActionRestricted = false;
+    }
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
     /// <summary>
     /// Instantly and instantaneously moves player to given global coordinate.

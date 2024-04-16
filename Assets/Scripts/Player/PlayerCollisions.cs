@@ -32,7 +32,8 @@ public class PlayerCollisions : MonoBehaviour
         if (collision.CompareTag("MiniStar"))
         {
             gState.ReplenishTimer(0.5f);
-            gState.AddKillPoint(collision.GetComponent<MiniStar>().Value);
+            //gState.AddKillPoint(collision.GetComponent<MiniStar>().Value);
+            gState.CollectMiniStar(collision.GetComponent<MiniStar>().Value);
         }
         if ((collision.CompareTag("EBullet") || collision.CompareTag("NBullet")) && !invulnerable)
         {

@@ -4,19 +4,53 @@ using UnityEngine;
 
 public class Pulse : MonoBehaviour
 {
+    private float tBrightness;
+    private float tSize;
     [SerializeField] private SpriteRenderer spriteRen;
-    private float t;
-    private const float FREQUENCY = 2f;
-    private const float AMPLITUDE = 0.2f;
-    private const float MIDDLE = 1;
-    private const float PERIOD = (2 * Mathf.PI) / FREQUENCY;
-    private const float MAX_OPACITY = 0.50f;
+    private Color originalColor;
+    private Color white = Color.white;
+    private Color colorAmplitude;
 
+    [SerializeField] private float brightnessFrequency = 2f;
+    [SerializeField] private float maxOpacity = 1;
+    [SerializeField] private float minOpacity = 0;
+    private float brightnessAmplitude;
+
+    [SerializeField] private float sizeFrequency = 2f;
+    [SerializeField] private float maxSize = 1.0f;
+    [SerializeField] private float minSize = 0.25f;
+    private float sizeAmplitude;
+
+    private float brightnessPeriod = 2 * Mathf.PI;
+    private float sizePeriod = 2 * Mathf.PI;
+    
+    // TODO make glow become more white as size decreases
+    private void Start()
+    {
+        originalColor = spriteRen.color;
+        colorAmplitude = new((white.r - originalColor.r) / 2f, (white.g - originalColor.g) / 2f, (white.b - originalColor.b) / 2f);
+
+        brightnessPeriod = (2 * Mathf.PI) / brightnessFrequency;
+        maxOpacity = Mathf.Clamp01(Mathf.Abs(maxOpacity));
+        minOpacity = Mathf.Clamp01(Mathf.Abs(minOpacity));
+        brightnessAmplitude = (maxOpacity - minOpacity) / 2;
+
+        sizePeriod = (2 * Mathf.PI) / sizeFrequency;
+        maxSize = Mathf.Abs(maxSize);
+        minSize = Mathf.Abs(minSize);
+        sizeAmplitude = (maxSize - minSize) / 2;
+    }
     private void Update()
     {
-        t += Time.deltaTime;
-        t %= PERIOD;
-        transform.localScale = new Vector2((AMPLITUDE * Mathf.Sin(FREQUENCY * t)) + MIDDLE, (AMPLITUDE * Mathf.Sin(FREQUENCY * t)) + MIDDLE);
-        spriteRen.color = new Color(spriteRen.color.r, spriteRen.color.g, spriteRen.color.b, (AMPLITUDE * Mathf.Cos(FREQUENCY * t)) + (MAX_OPACITY - AMPLITUDE));
+        tBrightness += Time.deltaTime;
+        tBrightness %= brightnessPeriod;
+        tSize += Time.deltaTime;
+        tSize %= sizePeriod;
+
+        transform.localScale = new((sizeAmplitude * Mathf.Sin(sizeFrequency * tSize)) + (maxSize - sizeAmplitude), (sizeAmplitude * Mathf.Sin(sizeFrequency * tSize)) + (maxSize - sizeAmplitude));
+
+        spriteRen.color = new(spriteRen.color.r, spriteRen.color.g, spriteRen.color.b, (brightnessAmplitude * Mathf.Cos(brightnessFrequency * tBrightness)) + (maxOpacity - brightnessAmplitude));
+
+        spriteRen.color = spriteRen.color = new((colorAmplitude.r * Mathf.Cos(sizeFrequency * tSize)) + (white.r - colorAmplitude.r), (colorAmplitude.g * Mathf.Cos(sizeFrequency * tSize)) + (white.g - colorAmplitude.g), (colorAmplitude.b * Mathf.Cos(sizeFrequency * tSize)) + (white.b - colorAmplitude.b), spriteRen.color.a);
     }
 }
