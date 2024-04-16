@@ -118,7 +118,7 @@ public class PlayerActions : MonoBehaviour
         {
             if (mainAttackState == AttackState.Hold)
             {
-                powerManager.MainAttackHold(aimAngle.Degree, moveInput.Degree, transform.position);
+                powerManager.MainAttackHoldExit(aimAngle.Degree, moveInput.Degree, transform.position);
                 mainAttackState = AttackState.Tap;
             }
             mainHold = 0f;

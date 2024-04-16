@@ -207,28 +207,15 @@ public class GameState : MonoBehaviour
     {
         if (wallTimer >= wallFrequency)
         {
-            // reset timer and spawn a wall
             wallTimer = 0.0f;
+            int wallType = (difficulty >= MIN_LEVEL_WALL_UPGRADE && Random.Range(0f, 1f) >= CHANCE_WALL_UPGRADE) ? 2 : 1; // determine wall type based on difficulty
+
             for (int i = 0; i < difficulty + 1; i++)
             {
-                // HACK this is so messy
-                if (difficulty >= MIN_LEVEL_WALL_UPGRADE)
-                {
-                    if (Random.Range(0f, 1f) >= CHANCE_WALL_UPGRADE)
-                    {
-                        spawnControl.SpawnWall(2);
-                    }
-                    else
-                    {
-                        spawnControl.SpawnWall(1);
-                    }
-                }
-                else
-                {
-                    spawnControl.SpawnWall(1);
-                }
+                spawnControl.SpawnWall(wallType);
             }
         }
+
         wallTimer += Time.deltaTime;
     }
     /// <summary>

@@ -2271,63 +2271,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1150961883}
   m_CullTransparentMesh: 1
---- !u!1001 &1165120272
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 7755075267815121952, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_Name
-      value: LemniscaticWindCyclingShockwave
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_RootOrder
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7755075267815121981, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
 --- !u!1 &1212784806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4731174166187999380, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
@@ -5032,7 +4975,7 @@ PrefabInstance:
       objectReference: {fileID: 667081393}
     - target: {fileID: 7819916859176104666, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: infiniteTime
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7819916859176104666, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: cameraControl
