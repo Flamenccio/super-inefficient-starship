@@ -51,6 +51,6 @@ public class Pulse : MonoBehaviour
 
         spriteRen.color = new(spriteRen.color.r, spriteRen.color.g, spriteRen.color.b, (brightnessAmplitude * Mathf.Cos(brightnessFrequency * tBrightness)) + (maxOpacity - brightnessAmplitude));
 
-        spriteRen.color = spriteRen.color = new((colorAmplitude.r * Mathf.Cos(sizeFrequency * tSize)) + (white.r - colorAmplitude.r), (colorAmplitude.g * Mathf.Cos(sizeFrequency * tSize)) + (white.g - colorAmplitude.g), (colorAmplitude.b * Mathf.Cos(sizeFrequency * tSize)) + (white.b - colorAmplitude.b), spriteRen.color.a);
+        spriteRen.color = new((colorAmplitude.r * Mathf.Cos(sizeFrequency * tSize)) + (white.r - colorAmplitude.r), (colorAmplitude.g * Mathf.Cos(sizeFrequency * tSize)) + (white.g - colorAmplitude.g), (colorAmplitude.b * Mathf.Cos(sizeFrequency * tSize)) + (white.b - colorAmplitude.b), spriteRen.color.a);
     }
 }

@@ -123,7 +123,7 @@ public class Spawner : MonoBehaviour
         SpawnToolkit tk = InitializeNewToolkit();
         tk.root = GenerateRandomRootStage(); // choose a root stage to spawn in
         Debug.Log($"Number of stages: {stageList.Count}");
-        tk.rootStage = stageList[tk.root]; // TODO this breaks when reloading scene
+        tk.rootStage = stageList[tk.root];
         tk.globalSpawnCoords = FindPointInStage(tk.rootStage);
         tk.globalSpawnCoords = AlignPosition(tk.globalSpawnCoords);
         GameObject star = Instantiate(starPrefab, tk.rootStage.transform); // spawn the star
@@ -143,7 +143,7 @@ public class Spawner : MonoBehaviour
 
         do
         {
-            toolkit.root = GenerateRandomRootStage(); // get random stage number
+            toolkit.root = GenerateRandomRootStage();
             toolkit.rootStage = stageList[toolkit.root]; // get stage from stage number
             toolkit.rootStage.ScanNearbyStages(); // make sure things are connected
             localSpawnDirection.Direction = Directions.Instance.RandomDirection();
