@@ -33,7 +33,11 @@ public class Wall : Destructables
             currentHP -= collision.GetComponent<BulletControl>().Damage;
             if (currentHP <= 0)
             {
-                if (level == 0) Die();
+                if (level == 0)
+                {
+                    AudioManager.instance.PlayOneShot(FMODEvents.instance.wallDestroy, transform.position);
+                    Die();
+                }
                 Downgrade();
             }
         }
@@ -55,7 +59,6 @@ public class Wall : Destructables
         Instantiate(destroyEffect, transform.position, Quaternion.identity);
         spawnControl.DecreaseWallCount();
         Destroy(this.gameObject);
-        //gameObject.SetActive(false);
     }
     // upgrades wall to level 1 and resets life timer
     public void Upgrade()

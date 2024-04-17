@@ -7,6 +7,7 @@ public class Blaster : WeaponMain
 {
     protected override void Startup()
     {
+        AimAssisted = true;
         base.Startup();
         Name = "Blaster";
         Desc = "Fires a short-ranged bullet on [TAP].\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";

@@ -47,17 +47,6 @@ public class Stage : MonoBehaviour
             return false; // otherwise, not linkable in direction.
         }
     }
-    public bool Extend(Directions.directions dir, Stage stage)
-    {
-        if (!Handshake(dir, stage) || !stage.Handshake(Directions.Instance.OppositeOf(dir), this))// check if both this and stage's handshakes are true
-        {
-            return false;
-        }
-        // link two stages.
-        LinkStageUnsafe(dir, stage);
-        stage.LinkStageUnsafe(Directions.Instance.OppositeOf(dir), this);
-        return true;
-    }
     public void UpdateVariant(StageVariant.Variants updatedVariant)
     {
         variant = updatedVariant;
@@ -135,11 +124,6 @@ public class Stage : MonoBehaviour
         bool t = false;
         if (s != null) t = s.IsValidVariant(variant);
         return LinkableInDirection(dir) && t;
-    }
-    public StageLink GetLinkInDirection(Directions.directions dir)
-    {
-        links.TryGetValue(dir, out StageLink x);
-        return x;
     }
     /// <summary>
     /// Link a stage to this stage disregarding incompatible variants. 

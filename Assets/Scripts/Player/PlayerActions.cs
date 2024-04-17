@@ -38,10 +38,10 @@ public class PlayerActions : MonoBehaviour
 
     private void Awake()
     {
-        rb = gameObject.GetComponent<Rigidbody2D>();
     }
     private void Start()
     {
+        rb = gameObject.GetComponent<Rigidbody2D>();
         acceleration = playerAtt.MoveSpeed / 4f;
         deceleration = playerAtt.MoveSpeed / 26f;
         playerMotion = PlayerMotion.Instance;
@@ -73,25 +73,40 @@ public class PlayerActions : MonoBehaviour
         if (!playerMotion.AimRestricted) aimInput = context.ReadValue<Vector2>(); // store the input vector
     }
 
-    // TODO i want to generalize this so i don't have to copy the same code for the other 3 actions
     public void OnFire1(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            float a;
-            if (AimAssist.instance.Target != null)
-            {
-                GameObject t = AimAssist.instance.Target;
-                a = Mathf.Rad2Deg * Mathf.Atan2(t.transform.position.y - transform.position.y, t.transform.position.x - transform.position.x);
-            }
-            else
-            {
-                a = aimAngle.Degree;
-            }
-
-            powerManager.MainAttackTap(a, moveInput.Degree, transform.position);
-        }
+            AttackTap(powerManager.MainAttackTap, powerManager.MainAttackAimAssisted);
+        } 
         mainPressed = context.ReadValueAsButton();
+    }
+    private void AttackWithAimAssist(Action<float, float, Vector2> attack)
+    {
+        float a;
+
+        if (AimAssist.instance.Target != null)
+        {
+            GameObject t = AimAssist.instance.Target;
+            a = Mathf.Rad2Deg * Mathf.Atan2(t.transform.position.y - transform.position.y, t.transform.position.x - transform.position.x);
+        }
+        else
+        {
+            a = aimAngle.Degree;
+        }
+
+        attack(a, moveInput.Degree, transform.position);
+    }
+    private void AttackTap(Action<float, float, Vector2> attack, bool aimAssist)
+    {
+        if (aimAssist)
+        {
+            AttackWithAimAssist(attack);
+        }
+        else
+        {
+            attack(aimAngle.Degree, moveInput.Degree, transform.position);
+        }
     }
     private void Fire1Hold()
     {
@@ -118,7 +133,7 @@ public class PlayerActions : MonoBehaviour
         {
             if (mainAttackState == AttackState.Hold)
             {
-                powerManager.MainAttackHold(aimAngle.Degree, moveInput.Degree, transform.position);
+                powerManager.MainAttackHoldExit(aimAngle.Degree, moveInput.Degree, transform.position);
                 mainAttackState = AttackState.Tap;
             }
             mainHold = 0f;
@@ -128,14 +143,14 @@ public class PlayerActions : MonoBehaviour
     {
         if (context.performed)
         {
-            powerManager.SubAttackTap(aimAngle.Degree, moveInput.Degree, transform.position);
+            AttackTap(powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
         }
     }
     public void OnSpecial(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            powerManager.SpecialAttackTap(aimAngle.Degree, moveInput.Degree, transform.position);
+            AttackTap(powerManager.SpecialAttackTap, powerManager.SpecialAttackAimAssisted);
         }
     }
     private void Movement()

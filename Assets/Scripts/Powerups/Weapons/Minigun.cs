@@ -10,6 +10,7 @@ public class Minigun : WeaponMain
     private const int MAX_ROUNDS = 3; // rounds per ammo
     private int rounds = 0;
     private readonly float[] sprayPattern = { 5.0f, -8.3f, 4.6f, -6.2f, 7.4f, 0f }; // slight inacurracies in degrees
+
     protected override void Startup()
     {
         base.Startup();
@@ -26,7 +27,10 @@ public class Minigun : WeaponMain
         {
             if (rounds <= 0)
             {
-                if (!consumeAmmo(cost)) return;
+                if (!consumeAmmo(cost))
+                {
+                    return;
+                }
                 rounds = MAX_ROUNDS;
             }
             AudioManager.instance.PlayOneShot(FMODEvents.instance.playerShootMini, transform.position);

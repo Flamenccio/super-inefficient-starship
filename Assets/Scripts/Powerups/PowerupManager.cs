@@ -26,11 +26,33 @@ public class PowerupManager : MonoBehaviour
     private WeaponMain mainAttack;
     private WeaponSub subAttack;
     private WeaponSpecial specialAttack;
-
     private Action powerupUpdate;
-
     private List<BuffBase> buffs = new();
     public List<BuffBase> Buffs { get => buffs; }
+    public bool MainAttackAimAssisted
+    {
+        get
+        {
+            if (mainAttack == null) return false;
+            return mainAttack.AimAssisted;
+        }
+    }
+    public bool SubAttackAimAssisted
+    {
+        get
+        {
+            if (subAttack == null) return false;
+            return subAttack.AimAssisted;
+        }
+    }
+    public bool SpecialAttackAimAssisted
+    {
+        get
+        {
+            if (specialAttack == null) return false;
+            return specialAttack.AimAssisted;
+        }
+    }
 
     [SerializeField] [Tooltip("Path to default weapon.")] private UnityEditor.MonoScript defaultMain;
     [SerializeField] [Tooltip("Path to default sub weapon.")] private UnityEditor.MonoScript defaultSub;

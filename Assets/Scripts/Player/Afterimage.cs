@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Afterimage : MonoBehaviour
 {
-    private const float LIFETIME = 1.0f;
+    [SerializeField] private float LIFETIME = 1.0f;
     private float lifeTimer = 0f;
     [SerializeField] private SpriteRenderer spriteRen;
 

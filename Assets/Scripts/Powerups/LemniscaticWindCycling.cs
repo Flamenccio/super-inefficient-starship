@@ -5,7 +5,6 @@ using UnityEngine;
 public class LemniscaticWindCycling : WeaponSpecial
 {
     private const int MAX_CHARGES = 2;
-    private int charges = MAX_CHARGES;
     private GameObject shockwaveEffect;
     private GameObject attack;
     private LemniscaticWindCyclingBullet attackInstance;
@@ -15,6 +14,7 @@ public class LemniscaticWindCycling : WeaponSpecial
     protected override void Startup()
     {
         base.Startup();
+        AimAssisted = true;
         Name = "Lemniscatic Wind Cycling";
         Desc = "Rushes forward, dealing damage to any enemies in your path. If at least 3 enemies are struck in one dash, grants another charge.";
         Level = 1;
@@ -23,14 +23,20 @@ public class LemniscaticWindCycling : WeaponSpecial
         shockwaveEffect = Resources.Load<GameObject>("Prefabs/Effects/LemniscaticWindCyclingShockwave");
         attack = Resources.Load<GameObject>("Prefabs/Bullets/LemniscaticWindCyclingAttack");
     }
+    protected override void Start()
+    {
+        GameState.instance.SetSpecialCharges(MAX_CHARGES, cooldown);
+        playerAtt.SetCharges(MAX_CHARGES, cooldown);
+    }
     public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
     {
         PlayerMotion pm = PlayerMotion.Instance;
 
         if (pm.AimRestricted || pm.MovementRestricted) return;
 
-        if (charges <= 0) return;
+        if (!playerAtt.UseCharge(1)) return;
 
+        AudioManager.instance.PlayOneShot(FMODEvents.instance.playerSpecialBurst, transform.position);
         pm.RestrictAim(DURATION);
         pm.Blink(DURATION);
         rechargeUsed = false;
@@ -39,27 +45,14 @@ public class LemniscaticWindCycling : WeaponSpecial
         CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, pm.transform.position);
         float r = aimAngleDeg * Mathf.Deg2Rad;
         pm.Move(new Vector2(Mathf.Cos(r), Mathf.Sin(r)), SPEED, DURATION);
-        charges--;
     }
     public override void Run()
     {
-        if (charges < MAX_CHARGES)
-        {
-            if (cooldownTimer < cooldown)
-            {
-                cooldownTimer += Time.deltaTime;
-            }
-
-            if (cooldownTimer >= cooldown)
-            {
-                cooldownTimer = 0f;
-                charges++;
-            }
-        }
         if (!rechargeUsed && attackInstance != null && attackInstance.EnemiesHit >= 3)
         {
+            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerSpecialQue, transform.position);
             rechargeUsed = true;
-            charges++;
+            playerAtt.ReplenishCharge(1);
         }
     }
 }

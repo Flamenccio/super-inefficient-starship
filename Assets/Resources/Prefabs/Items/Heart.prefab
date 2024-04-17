@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4752744516956781089}
   - component: {fileID: 4752744516956781118}
-  - component: {fileID: 3552411892060906712}
+  - component: {fileID: -4186887297183029457}
   m_Layer: 8
   m_Name: Heart
   m_TagString: Heart
@@ -50,7 +50,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1
---- !u!114 &3552411892060906712
+--- !u!114 &-4186887297183029457
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4752744516956781119}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a88109f650f5444d8e7c41e1a468c6f, type: 3}
+  m_Script: {fileID: 11500000, guid: 793c41f5aef4d374ba0d52ad42451814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   collectEffect: {fileID: 4840318195339208362, guid: b05d3b03af9db634ab6e3856bc3872d5, type: 3}
@@ -136,7 +136,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 120903243
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: -707211513, guid: 12d646c6b99cfac488f98f150d5b6b8e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

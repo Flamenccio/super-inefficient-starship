@@ -36,11 +36,14 @@ public class WeaponBase : MonoBehaviour, IPowerup
         AimAssisted = false;
         Startup();
     }
+    protected virtual void Start()
+    {
+        
+    }
     protected virtual void Startup()
     {
         cooldownTimer = 0f;
-        playerAtt = gameObject.GetComponent<PlayerAttributes>();
-        if (playerAtt == null)
+        if (!gameObject.TryGetComponent<PlayerAttributes>(out playerAtt))
         {
             Debug.LogError("ERROR: could not find a PlayerAttributes class in player.");
             throw new NullReferenceException("ERROR: could not find a PlayerAttributes class in player.");

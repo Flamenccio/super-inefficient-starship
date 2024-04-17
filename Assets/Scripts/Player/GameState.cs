@@ -209,24 +209,11 @@ public class GameState : MonoBehaviour
         {
             // reset timer and spawn a wall
             wallTimer = 0.0f;
+            int wallLevel = (difficulty >= MIN_LEVEL_WALL_UPGRADE && Random.Range(0f, 1f) >= CHANCE_WALL_UPGRADE) ? 2 : 1;
+
             for (int i = 0; i < difficulty + 1; i++)
             {
-                // HACK this is so messy
-                if (difficulty >= MIN_LEVEL_WALL_UPGRADE)
-                {
-                    if (Random.Range(0f, 1f) >= CHANCE_WALL_UPGRADE)
-                    {
-                        spawnControl.SpawnWall(2);
-                    }
-                    else
-                    {
-                        spawnControl.SpawnWall(1);
-                    }
-                }
-                else
-                {
-                    spawnControl.SpawnWall(1);
-                }
+                spawnControl.SpawnWall(wallLevel);
             }
         }
         wallTimer += Time.deltaTime;
@@ -269,5 +256,26 @@ public class GameState : MonoBehaviour
         yield return new WaitForSecondsRealtime(1.0f);
         instance = null; // clear instance
         SceneManager.LoadScene(0);
+    }
+    public void SetSpecialCharges(int amount, float cooldown)
+    {
+        playerAtt.SetCharges(amount, cooldown);
+        hudControl.AddSpecialCharges(amount);
+    }
+    public bool AddSpecialCharges(int amount)
+    {
+        if (playerAtt.MaxSpecialCharges == 0) // we can only add special charges if it's already set: we need cooldown time
+        {
+            return false;
+        }
+
+        playerAtt.AddCharges(amount);
+        hudControl.AddSpecialCharges(amount);
+        return true;
+    }
+    public void ClearSpecialCharges()
+    {
+        playerAtt.SetCharges(0, 0);
+        hudControl.ClearSpecialCharges();
     }
 }

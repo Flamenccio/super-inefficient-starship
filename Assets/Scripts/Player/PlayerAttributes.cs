@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,9 +36,29 @@ public class PlayerAttributes : MonoBehaviour
     public int MaxHP { get => (int)attributeValues[Attribute.MaxHP]; private set => attributeValues[Attribute.MaxHP] = value; }
     public int KillPoints { get; private set; }
     public float KillPointBonus {  get => (float)attributeValues[Attribute.KillPointBonus]; private set => attributeValues[Attribute.KillPointBonus] = value; }
-    public float WeaponRange { get; private set; }
-    public int MainWeaponDamage { get; private set; }
+    public float WeaponRange { get; }
+    public int MainWeaponDamage { get; }
     public float MainWeaponDamageBonus {  get => (float)attributeValues[Attribute.MainDamageBonus]; private set => attributeValues[Attribute.MainDamageBonus] = value; }
+    public int SpecialCharges { get; private set; }
+    public int MaxSpecialCharges { get; private set; }
+    public float SpecialChargeTimer { get; private set; }
+    public float SpecialChargeCooldown { get; private set; }
+    public float SpecialChargeProgress
+    {
+        get
+        {
+            if (SpecialChargeCooldown <= 0f)
+            {
+                return 0f;
+            }
+            return SpecialChargeTimer / SpecialChargeCooldown;
+        }
+    }
+
+    private void Start()
+    {
+                
+    }
     private void Awake()
     {
         attributeBonuses = new float[Enum.GetNames(typeof(Attribute)).Length];
@@ -47,6 +68,10 @@ public class PlayerAttributes : MonoBehaviour
         MoveSpeed = baseMoveSpeed;
         KillPointBonus = baseKillPointBonus;
         Ammo = baseAmmo;
+        SpecialCharges = 0;
+        MaxSpecialCharges = 0;
+        SpecialChargeTimer = 0f;
+        SpecialChargeCooldown = 0f;
 
         // populate base dictionary
         baseAttributeValues.Add(Attribute.MaxAmmo, baseMaxAmmo);
@@ -58,6 +83,26 @@ public class PlayerAttributes : MonoBehaviour
         foreach (Attribute a in baseAttributeValues.Keys)
         {
             attributeValues[a] = baseAttributeValues[a];
+        }
+
+        
+    }
+    private void Update()
+    {
+        // automatically replenish charges
+        if (SpecialCharges < MaxSpecialCharges)
+        {
+            SpecialChargeTimer += Time.deltaTime;
+        }
+        else
+        {
+            SpecialChargeTimer = 0f;
+        }
+
+        if (SpecialChargeTimer >= SpecialChargeCooldown)
+        {
+            SpecialChargeTimer = 0f;
+            ReplenishCharge(1);
         }
     }
     public bool UseAmmo(int ammo)
@@ -128,7 +173,7 @@ public class PlayerAttributes : MonoBehaviour
     {
         int i = (int)a;
         if ((alteredAttributes | ((uint)1 << i)) == alteredAttributes) return; // if this value is already changed, don't do anything.
-        attributeValues[a] = attributeValues[a] * percent; // change value
+        attributeValues[a] *= percent; // change value
 
         alteredAttributes |= (uint)1 << i; // add attribute to bit mask
     }
@@ -148,5 +193,33 @@ public class PlayerAttributes : MonoBehaviour
 
         alteredAttributes &= ~((uint)1 << i); // clear bit corresponding to affected attribute
         RecompileBonus(a, b);
+    }
+    public bool UseCharge(int amount)
+    {
+        if (SpecialCharges < amount) return false;
+        SpecialCharges -= amount;
+        return true;
+    }
+    public bool ReplenishCharge(int amount)
+    {
+        if (SpecialCharges + amount > MaxSpecialCharges) return false;
+        SpecialCharges += amount;
+        return true;
+    }
+    public bool SetCharges(int max, float cooldown)
+    {
+        Debug.Log($"Max: {max}");
+        MaxSpecialCharges = max;
+        SpecialCharges = MaxSpecialCharges;
+        SpecialChargeCooldown = cooldown;
+        return true;
+    }
+    public void AddCharges(int amount)
+    {
+        MaxSpecialCharges += amount;
+    }
+    public void RemoveCharges()
+    {
+        SetCharges(0, 0);
     }
 }

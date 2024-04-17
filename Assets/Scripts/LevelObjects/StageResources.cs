@@ -25,6 +25,7 @@ public class StageResources : MonoBehaviour
 
         if (mainScript == null) Debug.LogWarning("mainScript not assigned!");
 
+        // TODO bad
         if (mainScript.InitialStage) // if this gameobject is the initial stage, load all resources; there must be exactly ONE initial stage!
         {
             stageVariants.AddRange(Resources.LoadAll<StageVariant>("StageVariants")); // load all stagevariants here
