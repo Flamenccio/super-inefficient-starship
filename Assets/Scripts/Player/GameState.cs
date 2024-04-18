@@ -257,25 +257,4 @@ public class GameState : MonoBehaviour
         instance = null; // clear instance
         SceneManager.LoadScene(0);
     }
-    public void SetSpecialCharges(int amount, float cooldown)
-    {
-        playerAtt.SetCharges(amount, cooldown);
-        hudControl.AddSpecialCharges(amount);
-    }
-    public bool AddSpecialCharges(int amount)
-    {
-        if (playerAtt.MaxSpecialCharges == 0) // we can only add special charges if it's already set: we need cooldown time
-        {
-            return false;
-        }
-
-        playerAtt.AddCharges(amount);
-        hudControl.AddSpecialCharges(amount);
-        return true;
-    }
-    public void ClearSpecialCharges()
-    {
-        playerAtt.SetCharges(0, 0);
-        hudControl.ClearSpecialCharges();
-    }
 }

@@ -25,7 +25,7 @@ public class LemniscaticWindCycling : WeaponSpecial
     }
     protected override void Start()
     {
-        GameState.instance.SetSpecialCharges(MAX_CHARGES, cooldown);
+        //GameState.instance.SetSpecialCharges(MAX_CHARGES, cooldown);
         playerAtt.SetCharges(MAX_CHARGES, cooldown);
     }
     public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
