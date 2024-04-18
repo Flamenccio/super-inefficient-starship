@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -53,6 +54,21 @@ public class PowerupManager : MonoBehaviour
             return specialAttack.AimAssisted;
         }
     }
+    
+    // MAIN ATTACK METHODS
+    public Action<float, float, Vector2> MainAttackTap { get; private set; }
+    public Action<float, float, Vector2> MainAttackHold { get; private set; }
+    public Action<float, float, Vector2> MainAttackHoldEnter { get; private set; }
+    public Action<float, float, Vector2> MainAttackHoldExit { get; private set; }
+
+    // SUB ATTACK METHODS
+    public Action<float, float, Vector2> SubAttackTap { get; private set; }
+
+    // SPECIAL ATTACK METHODS
+    public Action<float, float, Vector2> SpecialAttackTap { get; private set; }
+
+    // SUPPORT ATTACK METHODS
+
 
     [SerializeField] [Tooltip("Path to default weapon.")] private UnityEditor.MonoScript defaultMain;
     [SerializeField] [Tooltip("Path to default sub weapon.")] private UnityEditor.MonoScript defaultSub;
@@ -61,76 +77,93 @@ public class PowerupManager : MonoBehaviour
 
     private void Awake()
     {
-        // set default attacks
-        mainAttack = gameObject.AddComponent(defaultMain.GetClass()).GetComponent<WeaponMain>();
-        subAttack = gameObject.AddComponent(defaultSub.GetClass()).GetComponent<WeaponSub>();
+        AddWeapon(defaultSub);
+        AddWeapon(defaultMain);
 
         if (debugSpecial != null)
         {
-            specialAttack = gameObject.AddComponent(debugSpecial.GetClass()).GetComponent<WeaponSpecial>();
-            powerupUpdate += specialAttack.Run;
+            AddWeapon(debugSpecial);
         }
-
-        playerAttributes = gameObject.GetComponent<PlayerAttributes>();
-
-        powerupUpdate += mainAttack.Run;
-        powerupUpdate += subAttack.Run;
     }
-    // HACK these are all the same; please try to make just one method to handle each weapon 
-    public WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
+    private void Start()
+    {
+        playerAttributes = gameObject.GetComponent<PlayerAttributes>();
+    }
+    private WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
     {
         WeaponMain temp = mainAttack;
-        powerupUpdate -= mainAttack.Run;
-        Destroy(mainAttack); // remove the current main attack from player
-        mainAttack = gameObject.AddComponent(main.GetType()).GetComponent<WeaponMain>(); // and replace it with the new one
-        powerupUpdate += mainAttack.Run;
+
+        if (mainAttack != null)
+        {
+            powerupUpdate -= mainAttack.Run;
+            Destroy(mainAttack); // replace scripts
+        }
+
+        mainAttack = main;
+        powerupUpdate += mainAttack.Run; // update delegates and stuff
+        MainAttackTap = mainAttack.Tap;
+        MainAttackHold = mainAttack.Hold;
+        MainAttackHoldEnter = mainAttack.HoldEnter;
+        MainAttackHoldExit = mainAttack.HoldExit;
         return temp;
     }
-    public WeaponSub AddSub(WeaponSub sub) // same thing as above
+    private WeaponSub AddSub(WeaponSub sub) // same thing as above
     {
         WeaponSub temp = subAttack;
-        powerupUpdate -= subAttack.Run;
-        Destroy(subAttack);
-        subAttack = gameObject.AddComponent(sub.GetType()).GetComponent<WeaponSub>();
+
+        if (subAttack != null)
+        {
+            powerupUpdate -= subAttack.Run;
+            Destroy(subAttack);
+        }
+
+        subAttack = sub;
         powerupUpdate += subAttack.Run;
+        SubAttackTap = subAttack.Tap;
         return temp;
     }
-    public WeaponSpecial AddSpecial(WeaponSpecial special)
+    private WeaponSpecial AddSpecial(WeaponSpecial special)
     {
         WeaponSpecial temp = specialAttack;
-        powerupUpdate -= specialAttack.Run;
-        Destroy(specialAttack);
-        specialAttack = gameObject.AddComponent(special.GetType()).GetComponent<WeaponSpecial>();
+
+        if (specialAttack != null)
+        {
+            powerupUpdate -= specialAttack.Run;
+            Destroy(specialAttack);
+        }
+
+        specialAttack = special;
         powerupUpdate += specialAttack.Run;
+        SpecialAttackTap = specialAttack.Tap;
         return temp;
     }
-    public void MainAttackTap(float aimAngle, float moveAngle, Vector2 origin)
+    public void AddWeapon(UnityEditor.MonoScript script)
     {
-        mainAttack.Tap(aimAngle, moveAngle, origin);
-    }
-    public void MainAttackHold(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        mainAttack.Hold(aimAngle, moveAngle, origin);
-    }
-    public void MainAttackHoldEnter(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        mainAttack.HoldEnter(aimAngle, moveAngle, origin);
-    }
-    public void MainAttackHoldExit(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        mainAttack.HoldExit(aimAngle, moveAngle, origin);
-    }
-    public void SubAttackTap(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        subAttack.Tap(aimAngle, moveAngle, origin);
-    }
-    public void SpecialAttackTap(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        specialAttack.Tap(aimAngle, moveAngle, origin);
+        if (script == null) return;
+
+        Type weaponType = script.GetClass();
+        Type weaponClass = weaponType.BaseType;
+        object t = gameObject.AddComponent(weaponType).GetComponent(weaponType);
+
+        if (weaponClass == typeof(WeaponSpecial))
+        {
+            AddSpecial(t as WeaponSpecial);
+            return;
+        }
+        if (weaponClass == typeof(WeaponMain))
+        {
+            AddMain(t as WeaponMain);
+            return;
+        }
+        if (weaponClass == typeof(WeaponSub))
+        {
+            AddSub(t as  WeaponSub);
+            return;
+        }
     }
     private void Update()
     {
-        powerupUpdate();
+        powerupUpdate?.Invoke();
     }
     public void AddBuff(BuffBase b)
     {

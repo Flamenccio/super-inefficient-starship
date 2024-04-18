@@ -108,8 +108,29 @@ public class HUDControl : MonoBehaviour
     }
     private void UpdateSpecialChargeHUD()
     {
+        if (playerAtt.MaxSpecialCharges == 0) return;
+
         currentCharge = playerAtt.SpecialCharges;
 
+        if (specialCharges.Count != playerAtt.MaxSpecialCharges) // update max special charge count if necessary
+        {
+            int difference = playerAtt.MaxSpecialCharges - specialCharges.Count;
+
+            if (difference == -specialCharges.Count)
+            {
+                ClearSpecialCharges();
+            }
+            else if (difference > 0)
+            {
+                AddSpecialCharges(difference);
+            }
+            else if (difference < 0)
+            {
+                RemoveSpecialCharges(difference);
+            }
+        }
+
+        // control appearance of charges
         if (currentCharge == 0)
         {
             specialCharges[0].sprite = specialChargeUsed;
@@ -143,8 +164,12 @@ public class HUDControl : MonoBehaviour
         string text = $"+{healthGained}";
         DisplayFlyText(text, Color.green, hpDisplay.transform.position);
     }
-    public void AddSpecialCharges(int amount)
+    private void AddSpecialCharges(int amount)
     {
+        amount = Mathf.Abs(amount);
+
+        if (amount == 0) return;
+
         for (int i = 0; i < amount; i++)
         {
             var charge = Instantiate(specialChargePrefab, specialChargeContainer, false);
@@ -153,20 +178,44 @@ public class HUDControl : MonoBehaviour
             {
                 charge.rectTransform.localPosition = new Vector2(specialCharges[^1].transform.localPosition.x + SPECIAL_CHARGE_DISTANCE, SPECIAL_CHARGE_LOCAL_Y_OFFSET);
                 specialCharges.Add(charge);
-                foreach(var img in specialCharges)
-                {
-                    img.transform.localPosition = new Vector2(img.transform.localPosition.x - (SPECIAL_CHARGE_DISTANCE / 2f), SPECIAL_CHARGE_LOCAL_Y_OFFSET);
-                }
-            
             }
             else
             {
                 charge.transform.localPosition = new Vector2(0f, SPECIAL_CHARGE_LOCAL_Y_OFFSET);
                 specialCharges.Add(charge);
+                return;
             }
         }
+
+        float xOffset = amount * (SPECIAL_CHARGE_DISTANCE / 2f);
+
+        foreach (var img in specialCharges)
+        {
+            img.transform.localPosition = new Vector2(img.transform.localPosition.x - xOffset, SPECIAL_CHARGE_LOCAL_Y_OFFSET);
+        }
     }
-    public void ClearSpecialCharges()
+    private void RemoveSpecialCharges(int amount)
+    {
+        amount = Mathf.Abs(amount); // amount must be nonnegative for this to work
+
+        if (amount == 0) return; // don't do anything if amount is zero
+
+        if (specialCharges.Count < amount) return; // don't do anything if the removed amount exceeds what the list has
+
+        for (int i = 0; i < amount; i++)
+        {
+            Destroy(specialCharges[^(i + 1)]); // destroy last charge in list
+            specialCharges.RemoveAt(specialCharges.Count - i);
+        }
+
+        float xOffset = amount * (SPECIAL_CHARGE_DISTANCE / 2f);
+
+        foreach (var img in specialCharges)
+        {
+            img.transform.localPosition = new Vector2(img.transform.localPosition.x + xOffset, SPECIAL_CHARGE_LOCAL_Y_OFFSET); // move things back
+        }
+    }
+    private void ClearSpecialCharges()
     {
         foreach (var img in specialCharges)
         {

@@ -78,7 +78,7 @@ public class PlayerActions : MonoBehaviour
         if (context.performed)
         {
             AttackTap(powerManager.MainAttackTap, powerManager.MainAttackAimAssisted);
-        } 
+        }
         mainPressed = context.ReadValueAsButton();
     }
     private void AttackWithAimAssist(Action<float, float, Vector2> attack)
@@ -95,7 +95,7 @@ public class PlayerActions : MonoBehaviour
             a = aimAngle.Degree;
         }
 
-        attack(a, moveInput.Degree, transform.position);
+        attack?.Invoke(a, moveInput.Degree, transform.position);
     }
     private void AttackTap(Action<float, float, Vector2> attack, bool aimAssist)
     {
@@ -105,7 +105,7 @@ public class PlayerActions : MonoBehaviour
         }
         else
         {
-            attack(aimAngle.Degree, moveInput.Degree, transform.position);
+            attack?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position);
         }
     }
     private void Fire1Hold()
@@ -116,12 +116,12 @@ public class PlayerActions : MonoBehaviour
             {
                 if (mainAttackState == AttackState.Tap)
                 {
-                    powerManager.MainAttackHoldEnter(aimAngle.Degree, moveInput.Degree, transform.position);
+                    powerManager.MainAttackHoldEnter?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position);
                     mainAttackState = AttackState.Hold;
                 }
                 else
                 {
-                    powerManager.MainAttackHold(aimAngle.Degree, moveInput.Degree, transform.position);
+                    powerManager.MainAttackHold?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position);
                 }
             }
             else
@@ -133,7 +133,7 @@ public class PlayerActions : MonoBehaviour
         {
             if (mainAttackState == AttackState.Hold)
             {
-                powerManager.MainAttackHoldExit(aimAngle.Degree, moveInput.Degree, transform.position);
+                powerManager.MainAttackHoldExit?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position);
                 mainAttackState = AttackState.Tap;
             }
             mainHold = 0f;

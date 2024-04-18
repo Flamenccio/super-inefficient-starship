@@ -302,6 +302,6 @@ public class Spawner : MonoBehaviour
         root.gameObject.layer = LayerMask.NameToLayer("Background"); // return stage layer
         int pairs = Mathf.FloorToInt(collisions.Count / 2);
         int pair = Random.Range(0, pairs);
-        return new Vector2(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin); // TODO this causes a bug, but idk how...
+        return new Vector2(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin); // URGENT this causes a bug, but idk how...
     }
 }
