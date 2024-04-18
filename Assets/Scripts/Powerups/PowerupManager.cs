@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -53,6 +54,19 @@ public class PowerupManager : MonoBehaviour
             return specialAttack.AimAssisted;
         }
     }
+    
+    // MAIN ATTACK METHODS
+    public Action<float, float, Vector2> MainAttackTap { get; private set; }
+    public Action<float, float, Vector2> MainAttackHold { get; private set; }
+    public Action<float, float, Vector2> MainAttackHoldEnter { get; private set; }
+    public Action<float, float, Vector2> MainAttackHoldExit { get; private set; }
+
+    // SUB ATTACK METHODS
+    public Action<float, float, Vector2> SubAttackTap { get; private set; }
+
+    // SPECIAL ATTACK METHODS
+    public Action<float, float, Vector2> SpecialAttackTap { get; private set; }
+
 
     [SerializeField] [Tooltip("Path to default weapon.")] private UnityEditor.MonoScript defaultMain;
     [SerializeField] [Tooltip("Path to default sub weapon.")] private UnityEditor.MonoScript defaultSub;
@@ -62,71 +76,69 @@ public class PowerupManager : MonoBehaviour
     private void Awake()
     {
         // set default attacks
-        mainAttack = gameObject.AddComponent(defaultMain.GetClass()).GetComponent<WeaponMain>();
-        subAttack = gameObject.AddComponent(defaultSub.GetClass()).GetComponent<WeaponSub>();
+        WeaponMain m = gameObject.AddComponent(defaultMain.GetClass()).GetComponent<WeaponMain>();
+        AddMain(m);
+        WeaponSub s = gameObject.AddComponent(defaultSub.GetClass()).GetComponent<WeaponSub>();
+        AddSub(s);
 
         if (debugSpecial != null)
         {
-            specialAttack = gameObject.AddComponent(debugSpecial.GetClass()).GetComponent<WeaponSpecial>();
-            powerupUpdate += specialAttack.Run;
+            WeaponSpecial sp = specialAttack = gameObject.AddComponent(debugSpecial.GetClass()).GetComponent<WeaponSpecial>();
+            AddSpecial(sp);
         }
-
-        playerAttributes = gameObject.GetComponent<PlayerAttributes>();
-
-        powerupUpdate += mainAttack.Run;
-        powerupUpdate += subAttack.Run;
     }
-    // HACK these are all the same; please try to make just one method to handle each weapon 
+    private void Start()
+    {
+        playerAttributes = gameObject.GetComponent<PlayerAttributes>();
+    }
+    // HACK these are all the same; please try to make just one method to handle all weapons
     public WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
     {
         WeaponMain temp = mainAttack;
-        powerupUpdate -= mainAttack.Run;
-        Destroy(mainAttack); // remove the current main attack from player
-        mainAttack = gameObject.AddComponent(main.GetType()).GetComponent<WeaponMain>(); // and replace it with the new one
-        powerupUpdate += mainAttack.Run;
+
+        if (mainAttack != null)
+        {
+            powerupUpdate -= mainAttack.Run;
+            Destroy(mainAttack); // replace scripts
+        }
+
+        mainAttack = gameObject.AddComponent(main.GetType()).GetComponent<WeaponMain>();
+        powerupUpdate += mainAttack.Run; // update delegates and stuff
+        MainAttackTap = mainAttack.Tap;
+        MainAttackHold = mainAttack.Hold;
+        MainAttackHoldEnter = mainAttack.HoldEnter;
+        MainAttackHoldExit = mainAttack.HoldExit;
         return temp;
     }
     public WeaponSub AddSub(WeaponSub sub) // same thing as above
     {
         WeaponSub temp = subAttack;
-        powerupUpdate -= subAttack.Run;
-        Destroy(subAttack);
+
+        if (subAttack != null)
+        {
+            powerupUpdate -= subAttack.Run;
+            Destroy(subAttack);
+        }
+
         subAttack = gameObject.AddComponent(sub.GetType()).GetComponent<WeaponSub>();
         powerupUpdate += subAttack.Run;
+        SubAttackTap = subAttack.Tap;
         return temp;
     }
     public WeaponSpecial AddSpecial(WeaponSpecial special)
     {
         WeaponSpecial temp = specialAttack;
-        powerupUpdate -= specialAttack.Run;
-        Destroy(specialAttack);
+
+        if (specialAttack != null)
+        {
+            powerupUpdate -= specialAttack.Run;
+            Destroy(specialAttack);
+        }
+
         specialAttack = gameObject.AddComponent(special.GetType()).GetComponent<WeaponSpecial>();
         powerupUpdate += specialAttack.Run;
+        SpecialAttackTap = specialAttack.Tap;
         return temp;
-    }
-    public void MainAttackTap(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        mainAttack.Tap(aimAngle, moveAngle, origin);
-    }
-    public void MainAttackHold(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        mainAttack.Hold(aimAngle, moveAngle, origin);
-    }
-    public void MainAttackHoldEnter(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        mainAttack.HoldEnter(aimAngle, moveAngle, origin);
-    }
-    public void MainAttackHoldExit(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        mainAttack.HoldExit(aimAngle, moveAngle, origin);
-    }
-    public void SubAttackTap(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        subAttack.Tap(aimAngle, moveAngle, origin);
-    }
-    public void SpecialAttackTap(float aimAngle, float moveAngle, Vector2 origin)
-    {
-        specialAttack.Tap(aimAngle, moveAngle, origin);
     }
     private void Update()
     {
