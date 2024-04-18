@@ -67,6 +67,8 @@ public class PowerupManager : MonoBehaviour
     // SPECIAL ATTACK METHODS
     public Action<float, float, Vector2> SpecialAttackTap { get; private set; }
 
+    // SUPPORT ATTACK METHODS
+
 
     [SerializeField] [Tooltip("Path to default weapon.")] private UnityEditor.MonoScript defaultMain;
     [SerializeField] [Tooltip("Path to default sub weapon.")] private UnityEditor.MonoScript defaultSub;
@@ -75,24 +77,19 @@ public class PowerupManager : MonoBehaviour
 
     private void Awake()
     {
-        // set default attacks
-        WeaponMain m = gameObject.AddComponent(defaultMain.GetClass()).GetComponent<WeaponMain>();
-        AddMain(m);
-        WeaponSub s = gameObject.AddComponent(defaultSub.GetClass()).GetComponent<WeaponSub>();
-        AddSub(s);
+        AddWeapon(defaultSub);
+        AddWeapon(defaultMain);
 
         if (debugSpecial != null)
         {
-            WeaponSpecial sp = specialAttack = gameObject.AddComponent(debugSpecial.GetClass()).GetComponent<WeaponSpecial>();
-            AddSpecial(sp);
+            AddWeapon(debugSpecial);
         }
     }
     private void Start()
     {
         playerAttributes = gameObject.GetComponent<PlayerAttributes>();
     }
-    // HACK these are all the same; please try to make just one method to handle all weapons
-    public WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
+    private WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
     {
         WeaponMain temp = mainAttack;
 
@@ -102,7 +99,7 @@ public class PowerupManager : MonoBehaviour
             Destroy(mainAttack); // replace scripts
         }
 
-        mainAttack = gameObject.AddComponent(main.GetType()).GetComponent<WeaponMain>();
+        mainAttack = main;
         powerupUpdate += mainAttack.Run; // update delegates and stuff
         MainAttackTap = mainAttack.Tap;
         MainAttackHold = mainAttack.Hold;
@@ -110,7 +107,7 @@ public class PowerupManager : MonoBehaviour
         MainAttackHoldExit = mainAttack.HoldExit;
         return temp;
     }
-    public WeaponSub AddSub(WeaponSub sub) // same thing as above
+    private WeaponSub AddSub(WeaponSub sub) // same thing as above
     {
         WeaponSub temp = subAttack;
 
@@ -120,12 +117,12 @@ public class PowerupManager : MonoBehaviour
             Destroy(subAttack);
         }
 
-        subAttack = gameObject.AddComponent(sub.GetType()).GetComponent<WeaponSub>();
+        subAttack = sub;
         powerupUpdate += subAttack.Run;
         SubAttackTap = subAttack.Tap;
         return temp;
     }
-    public WeaponSpecial AddSpecial(WeaponSpecial special)
+    private WeaponSpecial AddSpecial(WeaponSpecial special)
     {
         WeaponSpecial temp = specialAttack;
 
@@ -135,14 +132,38 @@ public class PowerupManager : MonoBehaviour
             Destroy(specialAttack);
         }
 
-        specialAttack = gameObject.AddComponent(special.GetType()).GetComponent<WeaponSpecial>();
+        specialAttack = special;
         powerupUpdate += specialAttack.Run;
         SpecialAttackTap = specialAttack.Tap;
         return temp;
     }
+    public void AddWeapon(UnityEditor.MonoScript script)
+    {
+        if (script == null) return;
+
+        Type weaponType = script.GetClass();
+        Type weaponClass = weaponType.BaseType;
+        object t = gameObject.AddComponent(weaponType).GetComponent(weaponType);
+
+        if (weaponClass == typeof(WeaponSpecial))
+        {
+            AddSpecial(t as WeaponSpecial);
+            return;
+        }
+        if (weaponClass == typeof(WeaponMain))
+        {
+            AddMain(t as WeaponMain);
+            return;
+        }
+        if (weaponClass == typeof(WeaponSub))
+        {
+            AddSub(t as  WeaponSub);
+            return;
+        }
+    }
     private void Update()
     {
-        powerupUpdate();
+        powerupUpdate?.Invoke();
     }
     public void AddBuff(BuffBase b)
     {
