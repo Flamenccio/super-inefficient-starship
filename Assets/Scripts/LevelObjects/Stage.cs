@@ -22,6 +22,8 @@ public class Stage : MonoBehaviour
     public Vector2 Center { get => polymesh.bounds.center; }
     private void Awake()
     {
+        if (initialStage) UpdateVariant(StageVariant.Variants.Normal);
+
         polyCollider = gameObject.GetComponent<PolygonCollider2D>();
         polymesh = polyCollider.CreateMesh(true, true);
     }
