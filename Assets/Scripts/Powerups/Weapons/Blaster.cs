@@ -10,7 +10,7 @@ public class Blaster : WeaponMain
         AimAssisted = true;
         base.Startup();
         Name = "Blaster";
-        Desc = "Fires a short-ranged bullet on [TAP].\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
+        Desc = "[TAP]: Fires a short-ranged bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
         Rarity = PowerupRarity.Common;
         cost = 1;
         cooldown = 8f / 60f;

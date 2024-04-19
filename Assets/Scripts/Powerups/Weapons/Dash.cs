@@ -12,7 +12,7 @@ public class Dash : WeaponSub
     {
         base.Startup();
         afterImage = Resources.Load<GameObject>("Prefabs/Effects/Afterimage");
-        Desc = "Move quickly in any direction.";
+        Desc = "[TAP]: Quickly move a set distance in direction you are moving in.";
         Name = "Dash";
         cooldown = 1.0f;
         cost = 0;
