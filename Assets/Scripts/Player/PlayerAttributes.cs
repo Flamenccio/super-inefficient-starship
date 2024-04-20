@@ -107,7 +107,7 @@ public class PlayerAttributes : MonoBehaviour
     }
     public bool UseAmmo(int ammo)
     {
-        if (Ammo - ammo < 0)
+        if (Ammo < ammo)
         {
             return false;
         }

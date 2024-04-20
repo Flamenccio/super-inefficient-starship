@@ -24,7 +24,6 @@ public class Pulse : MonoBehaviour
     private float brightnessPeriod = 2 * Mathf.PI;
     private float sizePeriod = 2 * Mathf.PI;
     
-    // TODO make glow become more white as size decreases
     private void Start()
     {
         originalColor = spriteRen.color;

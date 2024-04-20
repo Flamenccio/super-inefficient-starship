@@ -2,24 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMissiles : TurretTrack, IEnemy
+namespace Enemy
 {
-    private const float BURST_INTERVAL = 0.50f; // the amount of time between each shot in burst
-    private const int BURST_AMOUNT = 3;
-    protected override void Attack()
+    public class EnemyMissiles : TurretTrack, IEnemy
     {
-        if (player == null) return;
-        if (Vector2.Distance(player.position, transform.position) < searchRadius)
+        private const float BURST_INTERVAL = 0.50f; // the amount of time between each shot in burst
+        private const int BURST_AMOUNT = 3;
+        protected override void Attack()
         {
-            StartCoroutine(BurstAttack());
+            if (player == null) return;
+            if (Vector2.Distance(player.position, transform.position) < searchRadius)
+            {
+                StartCoroutine(BurstAttack());
+            }
         }
-    }
-    private IEnumerator BurstAttack()
-    {
-        for (int i = 0; i < BURST_AMOUNT; i++)
+        private IEnumerator BurstAttack()
         {
-            Fire(player.position);
-            yield return new WaitForSeconds(BURST_INTERVAL);
+            for (int i = 0; i < BURST_AMOUNT; i++)
+            {
+                Fire(player.position);
+                yield return new WaitForSeconds(BURST_INTERVAL);
+            }
         }
     }
 }

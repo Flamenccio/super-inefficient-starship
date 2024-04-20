@@ -2,33 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Imp : EnemyShootBase, IEnemy
+namespace Enemy
 {
-    public int Tier { get { return tier; } }
-    [SerializeField] private GameObject hitboxPrefab;
-    [SerializeField] private float hitRadius = 1.0f;
-    private const float TURNING_SPEED = 0.01f;
-    protected override void OnSpawn()
+    public class Imp : EnemyShootBase, IEnemy
     {
-        searchRadius = 100f; // huuuge search radius, basically inescapable (like responsibility)
-    }
-    protected override void Trigger(Collider2D col)
-    {
-        if (col.gameObject.CompareTag("Player"))
+        public int Tier { get { return tier; } }
+        [SerializeField] private GameObject hitboxPrefab;
+        [SerializeField] private float hitRadius = 1.0f;
+        private const float TURNING_SPEED = 0.01f;
+        protected override void OnSpawn()
         {
-            // destroy this gameObject, but don't drop stars
-            Instantiate(killEffect, transform.position, Quaternion.identity); // spawn kill effects
-            GameObject ouch = Instantiate(hitboxPrefab, transform.position, Quaternion.identity);
-            ouch.GetComponent<Hitbox>().EditProperties(0f, hitRadius, 0, Hitbox.AttackType.Enemy);
-            Destroy(gameObject); // destroy self
+            searchRadius = 100f; // huuuge search radius, basically inescapable (like responsibility)
         }
-    }
-    protected override void Behavior()
-    {
-        float yDiff = player.position.y - transform.position.y;
-        float xDiff = player.position.x - transform.position.x;
-        float faceAngle = Mathf.LerpAngle(transform.rotation.eulerAngles.z, Mathf.Atan2(yDiff, xDiff) * Mathf.Rad2Deg, TURNING_SPEED);
-        transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, faceAngle));
-        rb.velocity = new Vector2(transform.right.x * moveSpeed, transform.right.y * moveSpeed);
+        protected override void Trigger(Collider2D col)
+        {
+            if (col.gameObject.CompareTag("Player"))
+            {
+                // destroy this gameObject, but don't drop stars
+                Instantiate(killEffect, transform.position, Quaternion.identity); // spawn kill effects
+                GameObject ouch = Instantiate(hitboxPrefab, transform.position, Quaternion.identity);
+                ouch.GetComponent<Hitbox>().EditProperties(0f, hitRadius, 0, Hitbox.AttackType.Enemy);
+                Destroy(gameObject); // destroy self
+            }
+        }
+        protected override void Behavior()
+        {
+            float yDiff = player.position.y - transform.position.y;
+            float xDiff = player.position.x - transform.position.x;
+            float faceAngle = Mathf.LerpAngle(transform.rotation.eulerAngles.z, Mathf.Atan2(yDiff, xDiff) * Mathf.Rad2Deg, TURNING_SPEED);
+            transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, faceAngle));
+            rb.velocity = new Vector2(transform.right.x * moveSpeed, transform.right.y * moveSpeed);
+        }
     }
 }
