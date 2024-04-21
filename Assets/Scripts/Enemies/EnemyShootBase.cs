@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -37,7 +38,6 @@ namespace Enemy
             if (!telegraphed && fireTimer >= fireRate - ATTACK_TELEGRAPH_DURATION)
             {
                 telegraphed = true;
-                Debug.Log("pew pew");
                 StartCoroutine(AttackTelegraph());
             }
             if (fireTimer >= fireRate)
@@ -46,22 +46,6 @@ namespace Enemy
                 fireTimer = 0f;
             }
             fireTimer += Time.deltaTime;
-        }
-        protected GameObject SearchPlayer()
-        {
-            Collider2D[] target = Physics2D.OverlapCircleAll(transform.position, searchRadius, playerLayer);
-
-            if (target.Length == 0) return null;
-
-            foreach (Collider2D collider in target)
-            {
-                if (collider.gameObject.CompareTag("Player"))
-                {
-                    return collider.gameObject;
-                }
-            }
-
-            return null;
         }
     }
 }

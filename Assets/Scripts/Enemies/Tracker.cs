@@ -15,8 +15,8 @@ namespace Enemy
     {
         private enum EnemyState
         {
-            Patrol,
-            Pursuit,
+            Wander,
+            Chase,
             Attack
         }
         // fields 
@@ -26,7 +26,7 @@ namespace Enemy
         [SerializeField] private LayerMask invisWallLayer;
         [SerializeField] private LayerMask footprintLayer;
 
-        private EnemyState behaviorState = EnemyState.Patrol;
+        private EnemyState behaviorState = EnemyState.Wander;
         private float behaviorTimer = 0f;
         private float checkTimer = 0f;
         private AllAngle travelDirection = new();
@@ -52,10 +52,10 @@ namespace Enemy
         {
             switch (behaviorState)
             {
-                case EnemyState.Patrol:
+                case EnemyState.Wander:
                     WanderState();
                     break;
-                case EnemyState.Pursuit:
+                case EnemyState.Chase:
                     ChaseState();
                     break;
                 case EnemyState.Attack:
@@ -124,14 +124,14 @@ namespace Enemy
             rb.velocity = travelDirection.Vector.normalized * moveSpeed;
             faceDirection.Degree = travelDirection.Degree;
 
-            if (behaviorTimer > 0f || behaviorState != EnemyState.Patrol) return;
+            if (behaviorTimer > 0f || behaviorState != EnemyState.Wander) return;
 
             behaviorTimer = Random.Range(WANDER_BEHAVIOR_TIMER_MIN, WANDER_BEHAVIOR_TIMER_MAX);
             travelDirection.Degree = Random.Range(0f, 360f);
         }
         private void WanderCheck()
         {
-            if (checkTimer > 0f) return;
+            if (checkTimer > 0f || behaviorState != EnemyState.Wander) return;
 
             checkTimer = CHECK_TIMER_MAX;
             RaycastHit2D obstacle = Physics2D.CircleCast(transform.position, OBSTACLE_SCAN_RADIUS, travelDirection.Vector, OBSTACLE_SCAN_DISTANCE, wallsLayer);
@@ -159,7 +159,7 @@ namespace Enemy
 
                 if (track.CompareTag("Footprint"))
                 {
-                    ChangeState(EnemyState.Pursuit);
+                    ChangeState(EnemyState.Chase);
                     target = track.gameObject;
                     return;
                 }
@@ -172,7 +172,7 @@ namespace Enemy
         }
         private void ChaseBehavior()
         {
-            if (behaviorTimer > 0f || behaviorState != EnemyState.Pursuit) return;
+            if (behaviorTimer > 0f || behaviorState != EnemyState.Chase) return;
 
             ClearPath();
             behaviorTimer = CHASE_BEHAVIOR_TIMER_MAX;
@@ -182,7 +182,7 @@ namespace Enemy
         }
         private void ChaseCheck()
         {
-            if (checkTimer > 0f) return;
+            if (checkTimer > 0f || behaviorState != EnemyState.Chase) return;
 
             checkTimer = CHECK_TIMER_MAX;
             Collider2D playerScan = Physics2D.OverlapCircle(transform.position, RADAR_RADIUS, playerLayer);
@@ -203,24 +203,25 @@ namespace Enemy
             }
 
             float distanceToFootprint = Vector2.Distance(transform.position, target.transform.position);
-            
+
             if (!target.TryGetComponent<Footprint>(out var currentFootprint))
             {
-                ChangeState(EnemyState.Patrol);
+                ChangeState(EnemyState.Wander);
                 return;
             }
 
             if (IsInLineOfSight(transform, target.transform, distanceToFootprint, invisWallLayer, footprintLayer))
             {
                 if (distanceToFootprint <= FOOTPRINT_DISTANCE_MIN) target = currentFootprint.NextFootprint.gameObject;
-                else if (distanceToFootprint >= FOOTPRINT_DISTANCE_MAX) target = currentFootprint.PrevFootprint.gameObject;
+
+                else if (distanceToFootprint >= FOOTPRINT_DISTANCE_MAX) target = currentFootprint.PrevFootprint != null ? currentFootprint.PrevFootprint.gameObject : null;
             }
             else
             {
-                target = currentFootprint.PrevFootprint.gameObject;
+                target = currentFootprint.PrevFootprint != null ? currentFootprint.PrevFootprint.gameObject : null;
             }
 
-            if (target == null) ChangeState(EnemyState.Patrol);
+            if (target == null) ChangeState(EnemyState.Wander);
         }
         private void AttackState()
         {
@@ -247,7 +248,7 @@ namespace Enemy
             if (IsInLineOfSight(transform, target.transform, attackRange, invisWallLayer, playerLayer) && distanceToPlayer <= attackRange) return;
 
             target = SearchFootprint();
-            ChangeState(EnemyState.Pursuit);
+            ChangeState(EnemyState.Chase);
         }
         private void ChangeState(EnemyState state)
         {

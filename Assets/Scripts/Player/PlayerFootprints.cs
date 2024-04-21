@@ -7,9 +7,8 @@ using UnityEngine.InputSystem;
 public class PlayerFootprints : MonoBehaviour
 {
     [SerializeField] private GameObject footprintPrefab;
-    private const int FOOTPRINT_AMOUNT = 7;
-    //private GameObject[] footprints = new GameObject[FOOTPRINT_AMOUNT];
-    private const float STEP_DISTANCE = 5.0f; // the distance needed to travel to leave one footprint
+    private const int FOOTPRINT_AMOUNT = 10;
+    private const float STEP_DISTANCE = 2.0f; // the distance needed to travel to leave one footprint
 
     private Footprint currentFootprint = null;
     private Footprint previousFootprint = null;
