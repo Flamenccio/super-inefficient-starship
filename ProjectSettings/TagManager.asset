@@ -18,6 +18,7 @@ TagManager:
   - Trigger
   - Effect
   - NBullet
+  - ItemBox
   layers:
   - Default
   - TransparentFX

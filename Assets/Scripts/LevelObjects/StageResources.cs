@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class StageResources : MonoBehaviour
 {
-    [SerializeField] private Stage mainScript; // the Stage script attached to this gameobject
+    //[SerializeField] private Stage mainScript; // the Stage script attached to this gameobject
     private static List<StageVariant> stageVariants = new List<StageVariant>();
     public static StageResources Instance { get; private set; }
     public List<StageVariant.Variants> AllVariants { get; private set; }
@@ -23,15 +23,8 @@ public class StageResources : MonoBehaviour
 
         Instance = this;
 
-        if (mainScript == null) Debug.LogWarning("mainScript not assigned!");
-
-        // TODO bad
-        if (mainScript.InitialStage) // if this gameobject is the initial stage, load all resources; there must be exactly ONE initial stage!
-        {
-            stageVariants.AddRange(Resources.LoadAll<StageVariant>("StageVariants")); // load all stagevariants here
-            stageVariants.Sort((a, b) => (int)a.Variant < (int)b.Variant ? -1 : 1); // sort variants by variant
-            mainScript.UpdateVariant(StageVariant.Variants.Normal); // tell the stage to update
-        }
+        stageVariants.AddRange(Resources.LoadAll<StageVariant>("StageVariants")); // load all stagevariants here
+        stageVariants.Sort((a, b) => (int)a.Variant < (int)b.Variant ? -1 : 1); // sort variants by variant
     }
     /// <summary>
     /// Returns a StageVariant matching the variant given.

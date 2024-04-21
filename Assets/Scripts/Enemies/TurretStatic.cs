@@ -3,28 +3,30 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class TurretStatic : EnemyShootBase, IEnemy
+namespace Enemy
 {
-    public int Tier { get => tier; }
-
-    [Tooltip("Where to fire bullets (in degrees).")]
-    [SerializeField] private List<float> angles = new();
-
-    protected override void Behavior()
+    public class TurretStatic : EnemyShootBase, IEnemy
     {
-        // periodically shoot bullets in directions specified in list
-        if (fireTimer >= fireRate)
-        {
-            Attack();
-        }
-        base.Behavior();
-    }
-    protected void Attack()
-    {
-        foreach (float angle in angles)
-        {
-            Fire(angle);
-        }
-    }
+        public int Tier { get => tier; }
 
+        [Tooltip("Where to fire bullets (in degrees).")]
+        [SerializeField] private List<float> angles = new();
+
+        protected override void Behavior()
+        {
+            // periodically shoot bullets in directions specified in list
+            if (fireTimer >= fireRate)
+            {
+                Attack();
+            }
+            base.Behavior();
+        }
+        protected void Attack()
+        {
+            foreach (float angle in angles)
+            {
+                Fire(angle);
+            }
+        }
+    }
 }

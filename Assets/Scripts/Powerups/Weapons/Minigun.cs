@@ -15,7 +15,7 @@ public class Minigun : WeaponMain
     {
         base.Startup();
         Name = "Minigun";
-        Desc = "Continuously fires a stream of bullets on [HOLD]. Highly inaccurate.\nDamage: low\nRange: below average\nSpeed: fast\nCooldown: very short.";
+        Desc = "[HOLD]: Continuously fires a stream of bullets. Highly inaccurate.\nDamage: low\nRange: below average\nSpeed: fast\nCooldown: very short.";
         Rarity = PowerupRarity.Common;
         cooldown = 0.5f;
         cost = 1;

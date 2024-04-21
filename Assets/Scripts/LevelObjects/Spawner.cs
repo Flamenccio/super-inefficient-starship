@@ -62,8 +62,8 @@ public class Spawner : MonoBehaviour
         stageList.Add(FindObjectOfType<Stage>());
         enemyList = gameObject.GetComponent<EnemyList>();
     }
-    public void DecreaseWallCount() // HACK kind of useless
-    {
+    public void DecreaseWallCount() {
+        if (walls <= 0) return;
         walls--;
     }
     public GameObject SpawnEnemy(int difficulty)

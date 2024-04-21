@@ -16,7 +16,7 @@ public class LemniscaticWindCycling : WeaponSpecial
         base.Startup();
         AimAssisted = true;
         Name = "Lemniscatic Wind Cycling";
-        Desc = "Rushes forward, dealing damage to any enemies in your path. If at least 3 enemies are struck in one dash, grants another charge.";
+        Desc = "[TAP]: Rushes forward, dealing damage to any enemies in your path.\nIf at least 3 enemies are struck in one dash, grants 1 SPECIAL CHARGE.";
         Level = 1;
         Rarity = PowerupRarity.Rare;
         cooldown = 3.0f;

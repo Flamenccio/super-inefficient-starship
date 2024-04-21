@@ -119,6 +119,7 @@ public class HUDControl : MonoBehaviour
             if (difference == -specialCharges.Count)
             {
                 ClearSpecialCharges();
+                return; // if there are no charges, there are no HUD elements to update: return early
             }
             else if (difference > 0)
             {

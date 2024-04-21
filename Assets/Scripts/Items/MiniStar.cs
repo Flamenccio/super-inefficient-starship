@@ -18,8 +18,6 @@ public class MiniStar : Star
     protected override void CollectEffect(Transform player)
     {
         AudioManager.instance.PlayOneShot(FMODEvents.instance.miniStarCollect, transform.position);
-
-        // TODO: make ministar fly to top of screen when collected
     }
     protected override void ConstantEffect()
     {
