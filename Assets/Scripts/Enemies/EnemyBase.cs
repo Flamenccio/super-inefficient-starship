@@ -31,6 +31,7 @@ namespace Enemy
         protected const float SLOW_UPDATE_FREQUENCY = 0.25f;
         protected float slowUpdateTimer = 0f;
         protected bool active = true; // is this enemy currently active?
+        protected bool telegraphed = false; // so we only play the telegraph animation once
 
         protected override void Start()
         {
@@ -108,7 +109,6 @@ namespace Enemy
             currentHP -= damage;
             if (currentHP > 0)
             {
-                //aud.PlayHurt();
                 AudioManager.instance.PlayOneShot(FMODEvents.instance.enemyHurt, transform.position);
                 DamageFlash();
                 CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);

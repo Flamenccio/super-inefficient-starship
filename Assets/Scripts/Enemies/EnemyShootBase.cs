@@ -34,12 +34,15 @@ namespace Enemy
         }
         protected override void Behavior()
         {
-            if (fireTimer >= fireRate - ATTACK_TELEGRAPH_DURATION)
+            if (!telegraphed && fireTimer >= fireRate - ATTACK_TELEGRAPH_DURATION)
             {
+                telegraphed = true;
+                Debug.Log("pew pew");
                 StartCoroutine(AttackTelegraph());
             }
             if (fireTimer >= fireRate)
             {
+                telegraphed = false;
                 fireTimer = 0f;
             }
             fireTimer += Time.deltaTime;
@@ -48,7 +51,7 @@ namespace Enemy
         {
             Collider2D[] target = Physics2D.OverlapCircleAll(transform.position, searchRadius, playerLayer);
 
-            if (target.Length < 0) return null;
+            if (target.Length == 0) return null;
 
             foreach (Collider2D collider in target)
             {
