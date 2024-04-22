@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Flamenccio.Effects.Audio;
 
 namespace Flamenccio.Item
 {

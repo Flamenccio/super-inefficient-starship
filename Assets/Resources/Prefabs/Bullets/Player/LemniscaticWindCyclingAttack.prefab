@@ -150,16 +150,7 @@ MonoBehaviour:
   maxDistance: 1
   parryEffect: {fileID: 8596703315022740292, guid: 9bbb1de6277cc2e42bf8b447521a9a09, type: 3}
   impactEffect: {fileID: 5705401448773474299, guid: e20bac83db7a0f14d93f0809b1b1f3a4, type: 3}
-  ignoredTags:
-  - Player
-  - Star
-  - Background
-  - Footprint
-  - MiniStar
-  - Heart
-  - InvisWall
-  - Effects
-  - PlayerIntangible
+  ignoredTags: []
   knockbackMultiplier: 20
   damage: 2
   rb: {fileID: 7899587434270893482}

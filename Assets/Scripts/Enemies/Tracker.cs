@@ -1,13 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.Security;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
-using UnityEngine.Rendering;
-using UnityEngine.U2D;
-using UnityEngine.UIElements;
+using Flamenccio.Utility;
+using Flamenccio.LevelObject.Walls;
+using Flamenccio.Core.Player;
 
 namespace Enemy
 {

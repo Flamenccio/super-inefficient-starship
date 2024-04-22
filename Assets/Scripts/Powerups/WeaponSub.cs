@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class WeaponSub : WeaponBase // parent class for all sub weapons
+namespace Flamenccio.Powerup.Weapon
 {
-    protected override void Startup()
+    public class WeaponSub : WeaponBase // parent class for all sub weapons
     {
-        base.Startup();
-        weaponType = WeaponType.Sub;
+        protected override void Startup()
+        {
+            base.Startup();
+            weaponType = WeaponType.Sub;
+        }
     }
 }

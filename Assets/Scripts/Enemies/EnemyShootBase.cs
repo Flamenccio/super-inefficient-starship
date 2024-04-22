@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Flamenccio.Attack;
+using Flamenccio.Utility;
 
 namespace Enemy
 {

@@ -1,77 +1,77 @@
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Hitbox : BulletControl 
+namespace Flamenccio.Attack
 {
-    // this is basically a generic circular static hitbox.
-    // useful attacks that need a instantaneous hitbox (i.e., explosions) 
+    public class Hitbox : BulletControl
+    {
+        // this is basically a generic circular static hitbox.
+        // useful attacks that need a instantaneous hitbox (i.e., explosions) 
 
-    // default attack type is neutral
-    public enum AttackType
-    {
-        Neutral,
-        Player,
-        Enemy,
-    }
+        // default attack type is neutral
+        public enum AttackType
+        {
+            Neutral,
+            Player,
+            Enemy,
+        }
 
-    [SerializeField] private AttackType type = AttackType.Neutral;
-    [SerializeField] private float lifetime = 2f / 60f; // how long the hitbox will last. 2/60 second is default.
-    [SerializeField] private float timer = 0f; // amount of time in seconds this hitbox has been active
-    private float radius = 1.0f;
-    [SerializeField] private CircleCollider2D circleCollider;
+        [SerializeField] private AttackType type = AttackType.Neutral;
+        [SerializeField] private float lifetime = 2f / 60f; // how long the hitbox will last. 2/60 second is default.
+        [SerializeField] private float timer = 0f; // amount of time in seconds this hitbox has been active
+        private float radius = 1.0f;
+        [SerializeField] private CircleCollider2D circleCollider;
 
-    /// <summary>
-    /// <para>If lifetime is less than or equal to 0, default lifetime is kept.</para>
-    /// <para>If radius is less than or equal to 0, default radius is kept.</para>
-    /// <para>If damage is less than or equal to 0, default damage is kept.</para>
-    /// </summary>
-    public void EditProperties(float lifetime, float radius,  int damage,  AttackType attackType, KnockbackMultipiers knockback)
-    {
-        if (lifetime > 0)
+        /// <summary>
+        /// <para>If lifetime is less than or equal to 0, default lifetime is kept.</para>
+        /// <para>If radius is less than or equal to 0, default radius is kept.</para>
+        /// <para>If damage is less than or equal to 0, default damage is kept.</para>
+        /// </summary>
+        public void EditProperties(float lifetime, float radius, int damage, AttackType attackType, KnockbackMultipiers knockback)
         {
-            this.lifetime = lifetime;
+            if (lifetime > 0)
+            {
+                this.lifetime = lifetime;
+            }
+            if (radius > 0)
+            {
+                this.radius = radius;
+                circleCollider.radius = radius;
+            }
+            if (damage > 0)
+            {
+                this.damage = damage;
+            }
+            type = attackType;
+            ChangeAttackType(attackType);
+            this.knockbackMultiplier = knockback;
+            timer = 0; // reset the timer just in case
         }
-        if (radius > 0)
+        public void EditProperties(float lifetime, float radius, int damage, AttackType attackType)
         {
-            this.radius = radius;
-            circleCollider.radius = radius;
+            EditProperties(lifetime, radius, damage, attackType, knockbackMultiplier);
         }
-        if (damage > 0)
+        protected override void Behavior()
         {
-            this.damage = damage;
+            if (timer >= lifetime)
+            {
+                Destroy(gameObject);
+            }
+            timer += Time.deltaTime;
         }
-        type = attackType;
-        ChangeAttackType(attackType);
-        this.knockbackMultiplier = knockback;
-        timer = 0; // reset the timer just in case
-    }
-    public void EditProperties(float lifetime, float radius, int damage, AttackType attackType)
-    {
-        EditProperties(lifetime, radius, damage, attackType, knockbackMultiplier);
-    }
-    protected override void Behavior()
-    {
-        if (timer >= lifetime)
+        private void ChangeAttackType(AttackType attackType)
         {
-            Destroy(gameObject);
-        }
-        timer += Time.deltaTime;
-    }
-    private void ChangeAttackType(AttackType attackType)
-    {
-        switch (attackType)
-        {
-            case AttackType.Neutral:
-                gameObject.tag = "NBullet";
-                break;
-            case AttackType.Enemy:
-                gameObject.tag = "EBullet";
-                break;
-            case AttackType.Player:
-                gameObject.tag = "PBullet";
-                break;
+            switch (attackType)
+            {
+                case AttackType.Neutral:
+                    gameObject.tag = "NBullet";
+                    break;
+                case AttackType.Enemy:
+                    gameObject.tag = "EBullet";
+                    break;
+                case AttackType.Player:
+                    gameObject.tag = "PBullet";
+                    break;
+            }
         }
     }
 }

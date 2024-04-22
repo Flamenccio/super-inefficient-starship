@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConditionalBuff : BuffBase
+namespace Flamenccio.Powerup
 {
-    public ConditionalBuff()
+    public class ConditionalBuff : BuffBase
     {
-        Type = BuffType.Conditional;
+        public ConditionalBuff()
+        {
+            Type = BuffType.Conditional;
+        }
     }
 }
