@@ -1,15 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Flamenccio.Effects.Audio;
 
-public class Heart : Item 
+namespace Flamenccio.Item
 {
-    protected override void TriggerEffect(Collider2D collider)
+    public class Heart : Item
     {
-        if (collider.CompareTag("Player"))
+        protected override void TriggerEffect(Collider2D collider)
         {
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.heartCollect, transform.position);
+            if (collider.CompareTag("Player"))
+            {
+                AudioManager.instance.PlayOneShot(FMODEvents.instance.heartCollect, transform.position);
+            }
+            base.TriggerEffect(collider);
         }
-        base.TriggerEffect(collider);
     }
 }

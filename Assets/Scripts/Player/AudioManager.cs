@@ -1,23 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 
-public class AudioManager : MonoBehaviour
+namespace Flamenccio.Effects.Audio
 {
-    public static AudioManager instance { get; private set; }
-
-    private void Awake()
+    public class AudioManager : MonoBehaviour
     {
-        if (instance != null)
+        public static AudioManager instance { get; private set; }
+
+        private void Awake()
         {
-            Debug.LogError("There is more than one AudioManager in the scene!");
+            if (instance != null)
+            {
+                Debug.LogError("There is more than one AudioManager in the scene!");
+            }
+            instance = this;
         }
-        instance = this;
-    }
 
-    public void PlayOneShot(EventReference sfx, Vector3 worldPos)
-    {
-        RuntimeManager.PlayOneShot(sfx, worldPos);
+        public void PlayOneShot(EventReference sfx, Vector3 worldPos)
+        {
+            RuntimeManager.PlayOneShot(sfx, worldPos);
+        }
     }
 }

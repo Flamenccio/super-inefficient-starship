@@ -1,9 +1,10 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
 using UnityEngine;
+using Flamenccio.Attack;
+using Flamenccio.Core;
+using Flamenccio.Effects; // ALL THE EFFECTS!
+using Flamenccio.Effects.Visual;
+using Flamenccio.Effects.Audio;
 
 namespace Enemy
 {
@@ -92,7 +93,6 @@ namespace Enemy
         }
         protected virtual void Die()
         {
-            //GameState.instance.IncreaseKill(); // increase amount of kill
             for (int i = 0; i < loot; i++)
             {
                 float randomAngle = UnityEngine.Random.Range(0f, 359f);

@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Agility_MovementSpeed : UnconditionalBuff
+namespace Flamenccio.Powerup
 {
-    public Agility_MovementSpeed()
+    public class Agility_MovementSpeed : UnconditionalBuff
     {
-        Name = "Thruster Upgrade";
-        Level = 1;
-        Class = BuffClass.Agility;
-        Func<int, float> f1 = (int level) => { return level * 0.10f; };
-        Desc = ("[LEVEL " + Level.ToString() + "]: Move " + f1(Level) + "% faster.");
-        buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, f1));
+        public Agility_MovementSpeed()
+        {
+            Name = "Thruster Upgrade";
+            Level = 1;
+            Class = BuffClass.Agility;
+            Func<int, float> f1 = (int level) => { return level * 0.10f; };
+            Desc = ("[LEVEL " + Level.ToString() + "]: Move " + f1(Level) + "% faster.");
+            buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, f1));
+        }
     }
 }

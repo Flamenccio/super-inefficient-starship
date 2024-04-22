@@ -1,25 +1,27 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBulletNormal : BulletControl
+namespace Flamenccio.Attack
 {
-    protected override void Startup()
+    public class EnemyBulletNormal : BulletControl
     {
-        ignoredTags = new List<string>()
+        protected override void Startup()
         {
-            "EBullet",
-            "Enemy",
-            "Background",
-            "Star",
-            "Footprint",
-            "Heart",
-            "MiniStar",
-            "Effects"
-        };
-    }
-    protected override void Trigger(Collider2D collider)
-    {
-        Destroy(this.gameObject);
+            ignoredTags = new List<string>()
+            {
+                "EBullet",
+                "Enemy",
+                "Background",
+                "Star",
+                "Footprint",
+                "Heart",
+                "MiniStar",
+                "Effects"
+            };
+        }
+        protected override void Trigger(Collider2D collider)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }

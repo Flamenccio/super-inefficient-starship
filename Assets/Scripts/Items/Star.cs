@@ -1,14 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using Flamenccio.Effects.Audio;
 
-public class Star : Item 
+namespace Flamenccio.Item
 {
-    [SerializeField] protected int val;
-    public int Value { get => val; }
-    protected override void CollectEffect(Transform player)
+    public class Star : Item
     {
-        AudioManager.instance.PlayOneShot(FMODEvents.instance.starCollect, transform.position);
+        [SerializeField] protected int val;
+        public int Value { get => val; }
+        protected override void CollectEffect(Transform player)
+        {
+            AudioManager.instance.PlayOneShot(FMODEvents.instance.starCollect, transform.position);
+        }
     }
 }
