@@ -42,22 +42,18 @@ namespace Flamenccio.HUD
 
         private void Awake()
         {
-            gState = GameState.instance;
+            gState = GameState.Instance;
             scoreDisplay.text = "0";
             levelupComponents.SetActive(false);
             vignette.color = new Color(255f, 0f, 0f, 0f);
             hurtLines.gameObject.SetActive(false);
             levelUpBackgroundSize = levelUpBackground.rectTransform.sizeDelta;
         }
-        private void Start()
-        {
-        }
-
         private void Update()
         {
             if (gState == null)
             {
-                gState = GameState.instance;
+                gState = GameState.Instance;
             }
 
             UpdateDisplays();

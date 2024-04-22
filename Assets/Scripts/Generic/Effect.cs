@@ -20,6 +20,7 @@ namespace Flamenccio.Effects.Visual
             {
                 End();
             }
+
             Behavior();
         }
         protected virtual void End()

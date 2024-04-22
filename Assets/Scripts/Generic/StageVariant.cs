@@ -8,6 +8,10 @@ namespace Flamenccio.LevelObject.Stages
     [CreateAssetMenu(fileName = "new stage variant", menuName = "Stage Variant", order = 0)]
     public class StageVariant : ScriptableObject
     {
+        public Sprite Sprite { get { return sprite; } }
+        public WallLayout SecondaryWallLayout { get { return secondaryWallLayout; } }
+        public List<LinkSet> Links { get { return linkSet; } }
+        public Variants Variant { get { return variant; } }
         public enum Variants
         {
             Normal = 0,
@@ -25,18 +29,14 @@ namespace Flamenccio.LevelObject.Stages
         [System.Serializable]
         public struct LinkSet
         {
-            [SerializeField] private Directions.directions linkDirection;
+            [SerializeField] private Directions.CardinalValues linkDirection;
             [SerializeField] private List<Variants> blackListedVariants;
-            public Directions.directions LinkDirection { get { return linkDirection; } }
+            public Directions.CardinalValues LinkDirection { get { return linkDirection; } }
             public List<Variants> BlackListedVariants { get { return blackListedVariants; } }
         }
         [SerializeField] private Sprite sprite;
         [SerializeField] private WallLayout secondaryWallLayout;
         [SerializeField] private List<LinkSet> linkSet = new();
         [SerializeField] private Variants variant;
-        public Sprite Sprite { get { return sprite; } }
-        public WallLayout SecondaryWallLayout { get { return secondaryWallLayout; } }
-        public List<LinkSet> Links { get { return linkSet; } }
-        public Variants Variant { get { return variant; } }
     }
 }

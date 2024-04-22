@@ -6,28 +6,6 @@ namespace Flamenccio.Powerup
 {
     public class PlayerAttributes : MonoBehaviour
     {
-        public enum Attribute
-        {
-            MaxAmmo,
-            MoveSpeed,
-            MaxHP,
-            KillPointBonus,
-            MainDamageBonus,
-        };
-        private float[] attributeBonuses; // array of total percent increase of each attribute
-        private uint alteredAttributes; // a bitmask representing what attributes have been temporarily altered
-
-        private int baseAmmo = 10;
-        private int baseMaxAmmo = 50;
-        private int baseMaxHP = 3;
-        private int baseKillPoints = 0;
-        private float baseKillPointBonus = 1.25f;
-        private float baseMoveSpeed = 4.8f;
-        private float baseMainWeaponDamageBonus = 0f;
-
-        private Dictionary<Attribute, double> attributeValues = new(); // current attribute values used for calculations and stuff
-        private Dictionary<Attribute, double> baseAttributeValues = new();
-
         public int Ammo { get; private set; }
         public int MaxAmmo { get => (int)attributeValues[Attribute.MaxAmmo]; private set => attributeValues[Attribute.MaxAmmo] = value; }
         public int HP { get; private set; }
@@ -53,6 +31,24 @@ namespace Flamenccio.Powerup
                 return SpecialChargeTimer / SpecialChargeCooldown;
             }
         }
+        public enum Attribute
+        {
+            MaxAmmo,
+            MoveSpeed,
+            MaxHP,
+            KillPointBonus,
+            MainDamageBonus,
+        };
+        private float[] attributeBonuses; // array of total percent increase of each attribute
+        private uint alteredAttributes; // a bitmask representing what attributes have been temporarily altered
+        private int baseAmmo = 10;
+        private int baseMaxAmmo = 50;
+        private int baseMaxHP = 3;
+        private float baseKillPointBonus = 1.25f;
+        private float baseMoveSpeed = 4.8f;
+        private float baseMainWeaponDamageBonus = 0f;
+        private Dictionary<Attribute, double> attributeValues = new(); // current attribute values used for calculations and stuff
+        private Dictionary<Attribute, double> baseAttributeValues = new();
 
         private void Start()
         {
@@ -108,6 +104,7 @@ namespace Flamenccio.Powerup
             {
                 return false;
             }
+
             Ammo -= ammo; // use ammo
             return true;
         }
@@ -118,6 +115,7 @@ namespace Flamenccio.Powerup
                 Ammo = MaxAmmo;
                 return;
             }
+
             Ammo += ammo;
         }
         public void AddKillPoints(int killPoints)
@@ -133,8 +131,8 @@ namespace Flamenccio.Powerup
         public bool ChangeLife(int life)
         {
             if (HP + life > MaxHP) return false;
-            HP = Mathf.Clamp(HP + life, 0, MaxHP);
 
+            HP = Mathf.Clamp(HP + life, 0, MaxHP);
             return true;
         }
         /// <summary>
@@ -143,11 +141,14 @@ namespace Flamenccio.Powerup
         public void RecompileBonus(Attribute a, List<BuffBase> b)
         {
             if ((alteredAttributes | ((uint)1 << (int)a)) == alteredAttributes) RestoreAttributeChange(a, b); // if this value is already changed, restore it.
+
             attributeBonuses[(int)a] = 0f;
+
             foreach (BuffBase bb in b)
             {
                 attributeBonuses[(int)a] = bb.GetPercentChangeOf(a);
             }
+            
             ApplyBonus(a);
         }
         /// <summary>
@@ -158,8 +159,6 @@ namespace Flamenccio.Powerup
             float bonus = attributeBonuses[(int)a]; // get the percent change for specific attribute
             baseAttributeValues.TryGetValue(a, out double y); // now get the base value for specific attribute
             attributeValues[a] = (1 + bonus) * y; // calculate final attribute value and apply it
-            Debug.Log(attributeValues[a]);
-            Debug.Log(MoveSpeed);
         }
         /// <summary>
         /// Temporarily change an attribute's value by some percent.<para>The final value is used in calculations.</para>
@@ -169,9 +168,10 @@ namespace Flamenccio.Powerup
         public void TemporaryAttributeChange(Attribute a, float percent)
         {
             int i = (int)a;
-            if ((alteredAttributes | ((uint)1 << i)) == alteredAttributes) return; // if this value is already changed, don't do anything.
-            attributeValues[a] *= percent; // change value
 
+            if ((alteredAttributes | ((uint)1 << i)) == alteredAttributes) return; // if this value is already changed, don't do anything.
+
+            attributeValues[a] *= percent; // change value
             alteredAttributes |= (uint)1 << i; // add attribute to bit mask
         }
         /// <summary>
@@ -186,6 +186,7 @@ namespace Flamenccio.Powerup
         public void RestoreAttributeChange(Attribute a, List<BuffBase> b)
         {
             int i = (int)a;
+
             if ((alteredAttributes & (1 << i)) == 0) return; // if this value has not been changed, don't do anything.
 
             alteredAttributes &= ~((uint)1 << i); // clear bit corresponding to affected attribute
@@ -194,21 +195,23 @@ namespace Flamenccio.Powerup
         public bool UseCharge(int amount)
         {
             if (SpecialCharges < amount) return false;
+
             SpecialCharges -= amount;
             return true;
         }
         public bool ReplenishCharge(int amount)
         {
             if (SpecialCharges + amount > MaxSpecialCharges) return false;
+
             SpecialCharges += amount;
             return true;
         }
         public bool SetCharges(int max, float cooldown)
         {
-            Debug.Log($"Max: {max}");
             MaxSpecialCharges = max;
             SpecialCharges = MaxSpecialCharges;
             SpecialChargeCooldown = cooldown;
+
             return true;
         }
         public void AddCharges(int amount)

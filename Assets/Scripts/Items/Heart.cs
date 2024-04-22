@@ -9,8 +9,9 @@ namespace Flamenccio.Item
         {
             if (collider.CompareTag("Player"))
             {
-                AudioManager.instance.PlayOneShot(FMODEvents.instance.heartCollect, transform.position);
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.heartCollect, transform.position);
             }
+
             base.TriggerEffect(collider);
         }
     }

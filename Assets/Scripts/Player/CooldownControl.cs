@@ -1,5 +1,0 @@
-
-// UNUSED!!
-public class CooldownControl
-{
-}

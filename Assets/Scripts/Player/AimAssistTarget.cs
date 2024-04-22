@@ -6,20 +6,10 @@ namespace Flamenccio.HUD
     public class AimAssistTarget : MonoBehaviour // this script controls the visuals for aim assist
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
-        public static AimAssistTarget instance;
         private Transform target;
 
         private void Awake()
         {
-            // URGENT does this class really need to be a singleton?
-            if (instance == null)
-            {
-                instance = this;
-            }
-            else
-            {
-                Destroy(this);
-            }
             Hide();
         }
         private void Update()
@@ -44,9 +34,8 @@ namespace Flamenccio.HUD
             if (this.target != target)
             {
                 this.target = target;
-                AudioManager.instance.PlayOneShot(FMODEvents.instance.crosshairsLockon, target.position);
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.crosshairsLockon, target.position);
             }
         }
-
     }
 }

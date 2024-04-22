@@ -10,18 +10,13 @@ namespace Flamenccio.Core
 {
     public class Spawner : MonoBehaviour
     {
-        // this class handles all spawning activity (enemies, walls, stages)
-        private int stages = 0;
-        private int walls = 0;
-        private const int MAX_WALLS = 10000;
-        private const int STAGE_LENGTH = 8;
-
         // prefabs
         [SerializeField] private GameObject stagePrefab;
         [SerializeField] private GameObject wallPrefab;
         [SerializeField] private GameObject starPrefab;
         [SerializeField] private GameObject heartPrefab;
         [SerializeField] private GameObject flyingStarPrefab;
+
         // other necessary classes/objects
         [SerializeField] private GameObject stageContainer;
         [SerializeField] private List<Stage> stageList = new();
@@ -34,6 +29,12 @@ namespace Flamenccio.Core
         [SerializeField] private LayerMask itemLayer; // layer of all items
         [SerializeField] private LayerMask raycastEnterLayer; // layer used for finding point in stage
         [SerializeField] private LayerMask raycastExitLayers; // layer of invisible walls
+
+        // this class handles all spawning activity (enemies, walls, stages)
+        private int stages = 0;
+        private int walls = 0;
+        private const int MAX_WALLS = 10000;
+        private const int STAGE_LENGTH = 8;
 
         private struct SpawnToolkit
         {
@@ -62,6 +63,7 @@ namespace Flamenccio.Core
         public void DecreaseWallCount()
         {
             if (walls <= 0) return;
+
             walls--;
         }
         public GameObject SpawnEnemy(int difficulty)
@@ -150,10 +152,6 @@ namespace Flamenccio.Core
 
             List<StageVariant.Variants> blacklisted = new(StageResources.Instance.GetStageVariant(toolkit.rootStage.Variant).Links.First(v => v.LinkDirection == localSpawnDirection.Direction).BlackListedVariants); // copy blacklisted variants of stage link in chosen direction
             List<StageVariant.Variants> variants = new(StageResources.Instance.GetVariantsExtendableInDirection(Directions.Instance.OppositeOf(localSpawnDirection.Direction)).Except(blacklisted)); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
-            foreach (StageVariant.Variants variant in variants)
-            {
-                Debug.Log($"{localSpawnDirection.Direction}: {variant}");
-            }
             StageVariant.Variants v = variants[Random.Range(1, variants.Count)]; // pull a random variant from the list (excluding NORMAL variant)
             newStage = Instantiate(stagePrefab, stageContainer.transform).GetComponent<Stage>(); // instantiate new stage
             newStage.UpdateVariant(v);
@@ -298,7 +296,7 @@ namespace Flamenccio.Core
             } while (ray.collider != null);
 
             root.gameObject.layer = LayerMask.NameToLayer("Background"); // return stage layer
-            int pairs = Mathf.FloorToInt(collisions.Count / 2);
+            int pairs = Mathf.FloorToInt(collisions.Count / 2f);
             int pair = Random.Range(0, pairs);
             return new Vector2(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin); // URGENT this causes a bug, but idk how...
         }

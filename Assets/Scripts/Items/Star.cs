@@ -5,11 +5,11 @@ namespace Flamenccio.Item
 {
     public class Star : Item
     {
-        [SerializeField] protected int val;
         public int Value { get => val; }
+        [SerializeField] protected int val;
         protected override void CollectEffect(Transform player)
         {
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.starCollect, transform.position);
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.starCollect, transform.position);
         }
     }
 }

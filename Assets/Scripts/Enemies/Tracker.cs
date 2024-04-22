@@ -8,6 +8,7 @@ namespace Enemy
 {
     public class Tracker : EnemyShootBase, IEnemy
     {
+        public int Tier { get => tier; }
         private enum EnemyState
         {
             Wander,
@@ -15,7 +16,6 @@ namespace Enemy
             Attack
         }
         // fields 
-        public int Tier { get => tier; }
         [SerializeField] private LayerMask wallsLayer;
         [SerializeField] private LayerMask wallLayer;
         [SerializeField] private LayerMask invisWallLayer;

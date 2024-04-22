@@ -21,7 +21,7 @@ namespace Flamenccio.Attack
         [SerializeField] protected GameObject impactEffect;
         [SerializeField] protected List<string> ignoredTags = new();
         [SerializeField] protected KnockbackMultipiers knockbackMultiplier;
-        protected CameraEffects cameraEff = CameraEffects.instance;
+        protected CameraEffects cameraEff = CameraEffects.Instance;
         protected Vector2 origin = Vector2.zero;
 
 

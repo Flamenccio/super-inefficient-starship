@@ -5,10 +5,8 @@ namespace Flamenccio.Item
     // base class for all in-game appearances of items.
     public class Item : MonoBehaviour
     {
-        [Tooltip("The effect that plays when the item is collected. Found in the particles folder.")]
         [SerializeField] protected GameObject collectEffect;
         [SerializeField] protected GameObject spawnEffect;
-
         /// <summary>
         /// Any additional effects that the item will do upon spawning.
         /// </summary>

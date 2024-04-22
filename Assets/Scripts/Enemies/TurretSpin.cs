@@ -9,24 +9,25 @@ namespace Enemy
         private int rotationDirection = 1;
         private readonly float[] angles = new float[4]
         {
-        45f,
-        135f,
-        225f,
-        315f
+            45f,
+            135f,
+            225f,
+            315f
         };
         protected override void OnSpawn()
         {
             tier = 3;
             rotationDirection = Mathf.RoundToInt(Mathf.Pow(-1, Random.Range(0, 2)));
-
         }
         protected override void Behavior()
         {
             rb.transform.Rotate(new Vector3(0f, 0f, rotationSpeed * rotationDirection));
+
             if (fireTimer >= fireRate)
             {
                 Attack();
             }
+
             base.Behavior();
         }
         protected void Attack()

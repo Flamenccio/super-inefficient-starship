@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Flamenccio.Attack
+namespace Flamenccio.Attack.Player
 {
     public class PlayerBullet : BulletControl
     {

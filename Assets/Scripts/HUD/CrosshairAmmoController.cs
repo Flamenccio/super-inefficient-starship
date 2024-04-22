@@ -5,10 +5,10 @@ namespace Flamenccio.HUD
 {
     public class CrosshairAmmoController : MonoBehaviour
     {
-        private TMP_Text display;
         [SerializeField] private Transform crosshairs;
-        private Vector3 offset = new(0f, -50f);
         [SerializeField] private Camera cam;
+        private TMP_Text display;
+        private Vector3 offset = new(0f, -50f);
         private void Start()
         {
             display = gameObject.GetComponent<TMP_Text>();

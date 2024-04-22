@@ -4,14 +4,14 @@ namespace Flamenccio.Effects.Visual
 {
     public class StarFly : MonoBehaviour
     {
-        private float turnSpeed;
+        [SerializeField] private Rigidbody2D rb;
+        [SerializeField] private GameObject trail;
         private float maxSpeed;
         private float speed = 0f;
         private Transform target;
         private float timer;
         private int loop = 0;
-        [SerializeField] private Rigidbody2D rb;
-        [SerializeField] private GameObject trail;
+
         private void Awake()
         {
             maxSpeed = 25;
@@ -25,7 +25,7 @@ namespace Flamenccio.Effects.Visual
         private void Update()
         {
             timer += Time.deltaTime;
-            turnSpeed = timer / 2f;
+            float turnSpeed = timer / 2f;
 
             if (target != null)
             {
@@ -33,6 +33,7 @@ namespace Flamenccio.Effects.Visual
                 rb.rotation = Mathf.LerpAngle(rb.rotation, targetAngle, turnSpeed);
                 rb.velocity = transform.right * speed;
             }
+
             Instantiate(trail, transform.position, Quaternion.identity);
         }
         private void OnTriggerEnter2D(Collider2D collision)

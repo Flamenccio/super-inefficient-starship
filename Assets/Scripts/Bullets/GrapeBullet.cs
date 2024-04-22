@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Utility;
 
-namespace Flamenccio.Attack
+namespace Flamenccio.Attack.Enemy
 {
     public class GrapeBullet : EnemyBulletNormal
     {
         [SerializeField] private GameObject littleGrape;
-        private List<Vector2> burstDirections = new()
+        private readonly List<Vector2> burstDirections = new()
         {
             new(1, 0),
             new(-1, 0),

@@ -5,22 +5,6 @@ namespace Flamenccio.Powerup.Weapon
 {
     public class WeaponBase : MonoBehaviour, IPowerup
     {
-        public enum WeaponType
-        {
-            Main,
-            Sub,
-            Special,
-            Support
-        };
-
-        protected WeaponType weaponType;
-        protected int cost = 1;
-        protected float cooldown;
-        protected float cooldownTimer;
-        protected float holdThreshold;
-        protected PlayerAttributes playerAtt;
-        public bool AimAssisted { get; protected set; } // whether the weapon should aim towards the aim assist target on TAP
-
         public string Name { get; protected set; }
         public string Desc { get; protected set; }
         public int Level { get; protected set; }
@@ -28,8 +12,22 @@ namespace Flamenccio.Powerup.Weapon
         public WeaponType Type { get => weaponType; }
         public int Cost { get => cost; }
         public float Cooldown { get => cooldown; }
+        public bool AimAssisted { get; protected set; } // whether the weapon should aim towards the aim assist target on TAP
         protected Func<int, bool> consumeAmmo;
-
+        public enum WeaponType
+        {
+            Main,
+            Sub,
+            Special,
+            Support
+        };
+        protected WeaponType weaponType;
+        protected int cost = 1;
+        protected float cooldown;
+        protected float cooldownTimer;
+        protected float holdThreshold;
+        protected PlayerAttributes playerAtt;
+        
         private void Awake()
         {
             Level = 1;
@@ -43,10 +41,12 @@ namespace Flamenccio.Powerup.Weapon
         protected virtual void Startup()
         {
             cooldownTimer = 0f;
-            if (!gameObject.TryGetComponent<PlayerAttributes>(out playerAtt))
+
+            if (!gameObject.TryGetComponent(out playerAtt))
             {
                 Debug.LogError("ERROR: could not find a PlayerAttributes class in player.");
             }
+
             consumeAmmo = playerAtt.UseAmmo;
         }
         public virtual void Run()
@@ -81,6 +81,7 @@ namespace Flamenccio.Powerup.Weapon
         public void LevelChange(int levels)
         {
             if (Level < -levels) return; // if applying this change makes the level negative, don't
+
             Level += levels;
         }
     }

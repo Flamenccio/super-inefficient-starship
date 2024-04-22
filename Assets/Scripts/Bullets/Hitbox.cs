@@ -6,7 +6,6 @@ namespace Flamenccio.Attack
     {
         // this is basically a generic circular static hitbox.
         // useful attacks that need a instantaneous hitbox (i.e., explosions) 
-
         // default attack type is neutral
         public enum AttackType
         {
@@ -14,11 +13,9 @@ namespace Flamenccio.Attack
             Player,
             Enemy,
         }
-
         [SerializeField] private AttackType type = AttackType.Neutral;
         [SerializeField] private float lifetime = 2f / 60f; // how long the hitbox will last. 2/60 second is default.
         [SerializeField] private float timer = 0f; // amount of time in seconds this hitbox has been active
-        private float radius = 1.0f;
         [SerializeField] private CircleCollider2D circleCollider;
 
         /// <summary>
@@ -34,7 +31,6 @@ namespace Flamenccio.Attack
             }
             if (radius > 0)
             {
-                this.radius = radius;
                 circleCollider.radius = radius;
             }
             if (damage > 0)

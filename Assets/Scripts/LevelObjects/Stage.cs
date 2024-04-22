@@ -6,21 +6,20 @@ namespace Flamenccio.LevelObject.Stages
 {
     public class Stage : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer spriteRen; // sprite renderer
-        [SerializeField] private GameObject invisibleWallPrefab; // prefab for invisible walls
-        [SerializeField] private GameObject stageLinkPrefab; // prefab for stage links
-        [SerializeField] private bool initialStage; // is this stage the first one in the level?
-
-        private StageVariant.Variants variant = StageVariant.Variants.Normal; // initialize the stage as a normal variant
-        private Sprite sprite; // sprite representing the stage
-        private Dictionary<Directions.directions, StageLink> links = new(); // a list of all stage links associated with their direction
-        private PolygonCollider2D polyCollider; // collider that conforms to sprite shape
-        private Mesh polymesh; // mesh for poly collider
         public StageVariant.Variants Variant { get { return variant; } }
         public Sprite Sprite { get { return sprite; } }
         public bool InitialStage { get { return initialStage; } }
         public Vector2 Extents { get => polymesh.bounds.extents; }
         public Vector2 Center { get => polymesh.bounds.center; }
+        [SerializeField] private SpriteRenderer spriteRen; // sprite renderer
+        [SerializeField] private GameObject invisibleWallPrefab; // prefab for invisible walls
+        [SerializeField] private GameObject stageLinkPrefab; // prefab for stage links
+        [SerializeField] private bool initialStage; // is this stage the first one in the level?
+        private StageVariant.Variants variant = StageVariant.Variants.Normal; // initialize the stage as a normal variant
+        private Sprite sprite; // sprite representing the stage
+        private Dictionary<Directions.CardinalValues, StageLink> links = new(); // a list of all stage links associated with their direction
+        private PolygonCollider2D polyCollider; // collider that conforms to sprite shape
+        private Mesh polymesh; // mesh for poly collider
         private void Awake()
         {
             if (initialStage) UpdateVariant(StageVariant.Variants.Normal);
@@ -34,7 +33,7 @@ namespace Flamenccio.LevelObject.Stages
         /// <param name="dir">Direction to extend in.</param>
         /// <param name="stage">Stage to extend to.</param>
         /// <returns>True if successful, false if unsuccessful</returns>
-        public bool Handshake(Directions.directions dir, Stage stage)
+        public bool Handshake(Directions.CardinalValues dir, Stage stage)
         {
             if (!LinkableInDirection(dir, stage.variant))
             {
@@ -95,33 +94,33 @@ namespace Flamenccio.LevelObject.Stages
 
                 switch (link.LinkDirection)
                 {
-                    case Directions.directions.North:
+                    case Directions.CardinalValues.North:
                         instance.Place(new Vector2(0, 9));
-                        instance.SpawnWall(PrimaryWall.orientation.Horizontal);
+                        instance.SpawnWall(PrimaryWall.Orientation.Horizontal);
                         break;
 
-                    case Directions.directions.East:
+                    case Directions.CardinalValues.East:
                         instance.Place(new Vector2(9, 0));
-                        instance.SpawnWall(PrimaryWall.orientation.Vertical);
+                        instance.SpawnWall(PrimaryWall.Orientation.Vertical);
                         break;
 
-                    case Directions.directions.South:
+                    case Directions.CardinalValues.South:
                         instance.Place(new Vector2(0, -9));
-                        instance.SpawnWall(PrimaryWall.orientation.Horizontal);
+                        instance.SpawnWall(PrimaryWall.Orientation.Horizontal);
                         break;
 
-                    case Directions.directions.West:
+                    case Directions.CardinalValues.West:
                         instance.Place(new Vector2(-9, 0));
-                        instance.SpawnWall(PrimaryWall.orientation.Vertical);
+                        instance.SpawnWall(PrimaryWall.Orientation.Vertical);
                         break;
                 }
             }
         }
-        public bool LinkableInDirection(Directions.directions dir)
+        public bool LinkableInDirection(Directions.CardinalValues dir)
         {
             return links.TryGetValue(dir, out StageLink x) && x.IsVacant();
         }
-        public bool LinkableInDirection(Directions.directions dir, StageVariant.Variants variant)
+        public bool LinkableInDirection(Directions.CardinalValues dir, StageVariant.Variants variant)
         {
             links.TryGetValue(dir, out StageLink s);
             bool t = false;
@@ -129,9 +128,9 @@ namespace Flamenccio.LevelObject.Stages
             return LinkableInDirection(dir) && t;
         }
         /// <summary>
-        /// Link a stage to this stage disregarding incompatible variants. 
+        /// Link a stage to this stage disregarding incompatible variants.
         /// </summary>
-        public bool LinkStageUnsafe(Directions.directions dir, Stage stage)
+        public bool LinkStageUnsafe(Directions.CardinalValues dir, Stage stage)
         {
             links.TryGetValue(dir, out StageLink l);
             if (l == null)
@@ -140,7 +139,7 @@ namespace Flamenccio.LevelObject.Stages
             }
             return l.PopulateLink(stage);
         }
-        private void CopyWallAttributes(SecondaryWall wall, WallLayout.invisibleWallAttributes attributes)
+        private void CopyWallAttributes(SecondaryWall wall, WallLayout.InvisibleWallAttributes attributes)
         {
             wall.relativePosition = attributes.Position;
             wall.xSize = attributes.XSize;
@@ -148,7 +147,7 @@ namespace Flamenccio.LevelObject.Stages
         }
         public void ScanNearbyStages()
         {
-            foreach (KeyValuePair<Directions.directions, StageLink> link in links)
+            foreach (KeyValuePair<Directions.CardinalValues, StageLink> link in links)
             {
                 link.Value.ScanNearbyStages();
             }

@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace Flamenccio.Attack
+namespace Flamenccio.Attack.Enemy
 {
     public class BounceBullet : EnemyBulletNormal
     {
-        private int bounces = 0;
         [SerializeField] private int maxBounces = 10;
         [SerializeField] private LayerMask wallsLayer;
+        private int bounces = 0;
 
         protected override void Behavior()
         {

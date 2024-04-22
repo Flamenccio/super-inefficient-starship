@@ -4,23 +4,21 @@ namespace Flamenccio.Utility.SpriteEffects
 {
     public class Pulse : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer spriteRen;
+        [SerializeField] private float brightnessFrequency = 2f;
+        [SerializeField] private float sizeFrequency = 2f;
+        [SerializeField] private float maxOpacity = 1;
+        [SerializeField] private float minOpacity = 0;
+        [SerializeField] private float maxSize = 1.0f;
+        [SerializeField] private float minSize = 0.25f;
+
         private float tBrightness;
         private float tSize;
-        [SerializeField] private SpriteRenderer spriteRen;
         private Color originalColor;
         private Color white = Color.white;
         private Color colorAmplitude;
-
-        [SerializeField] private float brightnessFrequency = 2f;
-        [SerializeField] private float maxOpacity = 1;
-        [SerializeField] private float minOpacity = 0;
         private float brightnessAmplitude;
-
-        [SerializeField] private float sizeFrequency = 2f;
-        [SerializeField] private float maxSize = 1.0f;
-        [SerializeField] private float minSize = 0.25f;
         private float sizeAmplitude;
-
         private float brightnessPeriod = 2 * Mathf.PI;
         private float sizePeriod = 2 * Mathf.PI;
 

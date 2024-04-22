@@ -9,14 +9,11 @@ namespace Flamenccio.HUD
         [SerializeField] private SpriteRenderer spriteRen;
         [SerializeField] private GameObject player;
         [SerializeField] private Camera cam;
-
-        private float distance = 0.0f;
         private const float moveSpeed = 0.1f;
-        private Vector2 newPosition = Vector2.zero;
         private Vector2 targetPosition = Vector2.zero;
         private const float NEAR_LIMIT = 5f; // the distance between the player and star where the goal arrow is completely transparent
         private const float FAR_LIMIT = 15f; // the minimum distance that the player must be in order for the arrow to be at full opacity 
-        private AllAngle pointAngle = new AllAngle();
+        private AllAngle pointAngle = new();
 
         private void Awake()
         {
@@ -28,7 +25,7 @@ namespace Flamenccio.HUD
         }
         private void FixedUpdate()
         {
-            distance = cam.orthographicSize - 3.0f;
+            float distance = cam.orthographicSize - 3.0f;
 
             // calculate the distance between the target and player
             float playerTargetDistance = Vector2.Distance(targetPosition, player.transform.position);
@@ -41,7 +38,7 @@ namespace Flamenccio.HUD
             transform.rotation = Quaternion.Euler(0f, 0f, pointAngle.Degree);
 
             // now set "newPosition" "distance" units away from the player in the direction of the target
-            newPosition = new Vector2(player.transform.position.x + (pointAngle.Vector.normalized.x * distance), player.transform.position.y + (pointAngle.Vector.normalized.y * distance));
+            Vector2 newPosition = new(player.transform.position.x + (pointAngle.Vector.normalized.x * distance), player.transform.position.y + (pointAngle.Vector.normalized.y * distance));
 
             // smoothly move from the player's position to "newPosition" defined by the PointAt method
             transform.position = new Vector2(Mathf.Lerp(transform.position.x, newPosition.x, moveSpeed), Mathf.Lerp(transform.position.y, newPosition.y, moveSpeed));

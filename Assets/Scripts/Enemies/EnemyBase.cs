@@ -26,13 +26,13 @@ namespace Enemy
         protected Transform player;
         protected GameState gameState;
         protected Sprite enemySprite;
-        protected const float FLASH_DURATION = 2f / 60f;
-        protected const float ATTACK_TELEGRAPH_DURATION = 12f / 60f;
         protected Rigidbody2D rb;
-        protected const float SLOW_UPDATE_FREQUENCY = 0.25f;
         protected float slowUpdateTimer = 0f;
         protected bool active = true; // is this enemy currently active?
         protected bool telegraphed = false; // so we only play the telegraph animation once
+        protected const float FLASH_DURATION = 2f / 60f;
+        protected const float ATTACK_TELEGRAPH_DURATION = 12f / 60f;
+        protected const float SLOW_UPDATE_FREQUENCY = 0.25f;
 
         protected override void Start()
         {
@@ -100,8 +100,8 @@ namespace Enemy
             }
 
             Instantiate(killEffect, transform.position, Quaternion.identity); // spawn kill effect
-            CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Normal, transform.position); // do a little shake
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.enemyKill, transform.position);
+            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Normal, transform.position); // do a little shake
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.enemyKill, transform.position);
             Destroy(gameObject); // destroy self
         }
         protected void Hurt(int damage)
@@ -109,9 +109,9 @@ namespace Enemy
             currentHP -= damage;
             if (currentHP > 0)
             {
-                AudioManager.instance.PlayOneShot(FMODEvents.instance.enemyHurt, transform.position);
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.enemyHurt, transform.position);
                 DamageFlash();
-                CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
+                CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
                 Instantiate(hitEffect, transform.position, Quaternion.identity);
             }
         }
@@ -128,6 +128,7 @@ namespace Enemy
             {
                 Hurt(collision.gameObject.GetComponent<BulletControl>().Damage);
             }
+
             Trigger(collision);
         }
         protected void DamageFlash()
@@ -149,7 +150,6 @@ namespace Enemy
             animator.SetBool("attack", true);
             yield return new WaitForSeconds(ATTACK_TELEGRAPH_DURATION);
             animator.SetBool("attack", false);
-
         }
     }
 }

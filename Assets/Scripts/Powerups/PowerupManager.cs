@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Powerup.Weapon;
+using Flamenccio.HUD;
 
 namespace Flamenccio.Powerup
 {
@@ -89,28 +90,34 @@ namespace Flamenccio.Powerup
         {
             playerAttributes = gameObject.GetComponent<PlayerAttributes>();
         }
-        private WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
+        private void AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
         {
-            WeaponMain temp = mainAttack;
-
             if (mainAttack != null)
             {
                 powerupUpdate -= mainAttack.Run;
                 Destroy(mainAttack); // replace scripts
             }
 
+            CrosshairsControl crosshairs = GetComponentInChildren<CrosshairsControl>(); // HACK this is temporary; put this somewhere else!
             mainAttack = main;
+
+            if (crosshairs == null)
+            {
+                Debug.LogError("Crosshairs not found!");
+            }
+            else
+            {
+                crosshairs.UpdateWeaponRange(mainAttack.GetWeaponRange());
+            }
+
             powerupUpdate += mainAttack.Run; // update delegates and stuff
             MainAttackTap = mainAttack.Tap;
             MainAttackHold = mainAttack.Hold;
             MainAttackHoldEnter = mainAttack.HoldEnter;
             MainAttackHoldExit = mainAttack.HoldExit;
-            return temp;
         }
-        private WeaponSub AddSub(WeaponSub sub) // same thing as above
+        private void AddSub(WeaponSub sub) // same thing as above
         {
-            WeaponSub temp = subAttack;
-
             if (subAttack != null)
             {
                 powerupUpdate -= subAttack.Run;
@@ -120,12 +127,9 @@ namespace Flamenccio.Powerup
             subAttack = sub;
             powerupUpdate += subAttack.Run;
             SubAttackTap = subAttack.Tap;
-            return temp;
         }
-        private WeaponSpecial AddSpecial(WeaponSpecial special)
+        private void AddSpecial(WeaponSpecial special)
         {
-            WeaponSpecial temp = specialAttack;
-
             if (specialAttack != null)
             {
                 powerupUpdate -= specialAttack.Run;
@@ -135,7 +139,6 @@ namespace Flamenccio.Powerup
             specialAttack = special;
             powerupUpdate += specialAttack.Run;
             SpecialAttackTap = specialAttack.Tap;
-            return temp;
         }
         public void AddWeapon(UnityEditor.MonoScript script)
         {
@@ -158,7 +161,7 @@ namespace Flamenccio.Powerup
             if (weaponClass == typeof(WeaponSub))
             {
                 AddSub(t as WeaponSub);
-                return;
+                return; // this is here for future weapon additions
             }
         }
         private void Update()

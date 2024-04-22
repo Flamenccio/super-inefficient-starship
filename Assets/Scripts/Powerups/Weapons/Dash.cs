@@ -25,7 +25,7 @@ namespace Flamenccio.Powerup.Weapon
             if (!PlayerMotion.Instance.RestrictMovement(DURATION)) return;
             float r = Mathf.Deg2Rad * moveAngleDeg;
             Vector2 v = new(Mathf.Cos(r), Mathf.Sin(r));
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDash, transform.position);
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerDash, transform.position);
             PlayerMotion.Instance.Move(v, SPEED, DURATION);
             cooldownTimer = 0f;
         }

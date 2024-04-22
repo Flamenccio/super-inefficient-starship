@@ -7,11 +7,10 @@ namespace Flamenccio.LevelObject.Stages
 {
     public class StageResources : MonoBehaviour
     {
-        //[SerializeField] private Stage mainScript; // the Stage script attached to this gameobject
-        private static List<StageVariant> stageVariants = new List<StageVariant>();
         public static StageResources Instance { get; private set; }
         public List<StageVariant.Variants> AllVariants { get; private set; }
         public List<StageVariant> StageVariants { get => stageVariants; }
+        private static List<StageVariant> stageVariants = new();
         private void Start()
         {
         }
@@ -37,7 +36,7 @@ namespace Flamenccio.LevelObject.Stages
             }
             return null;
         }
-        public bool HasLinkInDirection(StageVariant.Variants variant, Directions.directions dir)
+        public bool HasLinkInDirection(StageVariant.Variants variant, Directions.CardinalValues dir)
         {
             foreach (StageVariant.LinkSet ls in stageVariants[(int)variant].Links)
             {
@@ -48,10 +47,10 @@ namespace Flamenccio.LevelObject.Stages
             }
             return false;
         }
-        public List<StageVariant.Variants> GetVariantsExtendableInDirection(Directions.directions dir)
+        public List<StageVariant.Variants> GetVariantsExtendableInDirection(Directions.CardinalValues dir)
         {
             List<StageVariant.Variants> v = new();
-            foreach (StageVariant variant in stageVariants)
+            foreach (StageVariant variant in stageVariants) // TODO simplify loop
             {
                 if (HasLinkInDirection(variant.Variant, dir)) v.Add(variant.Variant);
             }

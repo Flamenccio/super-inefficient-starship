@@ -12,19 +12,19 @@ namespace Flamenccio.Powerup.Weapon
             weaponType = WeaponType.Main;
             base.Startup();
         }
-        protected int GetWeaponDamage()
+        public int GetWeaponDamage()
         {
             return mainAttack.GetComponent<BulletControl>().Damage;
         }
-        protected float GetWeaponRange()
+        public float GetWeaponRange()
         {
             return mainAttack.GetComponent<BulletControl>().Range;
         }
-        protected float GetWeaponSpeed()
+        public float GetWeaponSpeed()
         {
             return mainAttack.GetComponent<BulletControl>().Speed;
         }
-        protected float GetWeaponCooldown()
+        public float GetWeaponCooldown()
         {
             return Cooldown;
         }

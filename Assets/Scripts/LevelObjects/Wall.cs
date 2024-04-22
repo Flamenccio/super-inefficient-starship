@@ -39,7 +39,7 @@ namespace Flamenccio.LevelObject.Walls
                 {
                     if (level == 0)
                     {
-                        AudioManager.instance.PlayOneShot(FMODEvents.instance.wallDestroy, transform.position);
+                        AudioManager.Instance.PlayOneShot(FMODEvents.Instance.wallDestroy, transform.position);
                         Die();
                     }
                     Downgrade();

@@ -7,11 +7,11 @@ namespace Flamenccio.Core
 {
     public class EnemyList : MonoBehaviour
     {
+        public int MinimumEnemySpawningLevel { get => MINIMUM_ENEMY_SPAWNING_LEVEL; }
         private const int MAXIMUM_LEVEL = 20;
         private const int MINIMUM_ENEMY_SPAWNING_LEVEL = 1;
         private static List<GameObject> enemyList = new();
         private GameObject[][] enemyListTiered = new GameObject[MAXIMUM_LEVEL][];
-        public int MinimumEnemySpawningLevel { get => MINIMUM_ENEMY_SPAWNING_LEVEL; }
         private void Start()
         {
             enemyList.AddRange(Resources.LoadAll<GameObject>("Prefabs/Enemies"));
@@ -20,18 +20,18 @@ namespace Flamenccio.Core
             {
                 enemyListTiered[i] = new GameObject[10];
             }
+
             SortLists();
         }
         public GameObject GetRandomEnemy(int difficulty)
         {
             if (difficulty < MINIMUM_ENEMY_SPAWNING_LEVEL) return null; // don't spawn anything if level isn't high enough
             GameObject enemy;
-            int n = 0;
             int tier = UnityEngine.Random.Range(MINIMUM_ENEMY_SPAWNING_LEVEL, difficulty);
 
             while (true)
             {
-                n = FindEmptySlot(enemyListTiered[tier]);
+                int n = FindEmptySlot(enemyListTiered[tier]);
                 enemy = enemyListTiered[tier][UnityEngine.Random.Range(0, n)];
                 if (enemy == null)
                 {
@@ -45,7 +45,7 @@ namespace Flamenccio.Core
         {
             foreach (GameObject obj in enemyList)
             {
-                foreach (IEnemy ie in obj.GetComponents<MonoBehaviour>().OfType<IEnemy>())
+                foreach (IEnemy ie in obj.GetComponents<MonoBehaviour>().OfType<IEnemy>()) // TODO simplify loop
                 {
                     if (ie.Tier < 0) continue; // there are some enemies that have a tier lower than 0. These enemies are not meant to be spanwed naturally.
                                                // just find one and break the loop

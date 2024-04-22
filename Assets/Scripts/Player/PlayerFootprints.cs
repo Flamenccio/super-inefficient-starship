@@ -7,13 +7,11 @@ namespace Flamenccio.Core.Player
         [SerializeField] private GameObject footprintPrefab;
         private const int FOOTPRINT_AMOUNT = 10;
         private const float STEP_DISTANCE = 2.0f; // the distance needed to travel to leave one footprint
-
         private Footprint currentFootprint = null;
         private Footprint previousFootprint = null;
 
         private void Start()
         {
-
             for (int i = 0; i < FOOTPRINT_AMOUNT; i++)
             {
                 currentFootprint = Instantiate(footprintPrefab, transform.position, Quaternion.identity).GetComponent<Footprint>();
@@ -28,7 +26,6 @@ namespace Flamenccio.Core.Player
         }
         private void Update()
         {
-
             if (Vector2.Distance(transform.position, previousFootprint.transform.position) >= STEP_DISTANCE)
             {
                 Footprint bottomFootprint = currentFootprint.NextFootprint;

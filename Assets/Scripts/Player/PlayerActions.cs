@@ -9,12 +9,14 @@ namespace Flamenccio.Core.Player
 {
     public class PlayerActions : MonoBehaviour
     {
+        [SerializeField] private PowerupManager powerManager;
+        [SerializeField] private PlayerAttributes playerAtt;
+        [SerializeField] private AimAssist aimAssist;
         private enum AttackState
         {
             Tap,
             Hold,
         };
-
         private AttackState mainAttackState = AttackState.Tap;
         private AllAngle moveInput; // directional input
         private Vector2 aimInput;
@@ -24,19 +26,12 @@ namespace Flamenccio.Core.Player
         private float mainHold = 0.0f;
         private float acceleration = 1.0f;
         private float deceleration = 1.0f;
-        private float aimResponsiveness = 0.6f;
-
+        private readonly float aimResponsiveness = 0.6f;
         private const float HOLD_THRESHOLD = 0.50f;
-
-        [SerializeField] private PowerupManager powerManager;
-        [SerializeField] private PlayerAttributes playerAtt;
         private PlayerMotion playerMotion;
 
         public Rigidbody2D Rigidbody { get => rb; }
 
-        private void Awake()
-        {
-        }
         private void Start()
         {
             rb = gameObject.GetComponent<Rigidbody2D>();
@@ -77,15 +72,16 @@ namespace Flamenccio.Core.Player
             {
                 AttackTap(powerManager.MainAttackTap, powerManager.MainAttackAimAssisted);
             }
+
             mainPressed = context.ReadValueAsButton();
         }
         private void AttackWithAimAssist(Action<float, float, Vector2> attack)
         {
             float a;
 
-            if (AimAssist.instance.Target != null)
+            if (aimAssist.Target != null)
             {
-                GameObject t = AimAssist.instance.Target;
+                GameObject t = aimAssist.Target;
                 a = Mathf.Rad2Deg * Mathf.Atan2(t.transform.position.y - transform.position.y, t.transform.position.x - transform.position.x);
             }
             else
@@ -185,7 +181,7 @@ namespace Flamenccio.Core.Player
         {
             if (context.performed)
             {
-                BuffBase b = new Agility_MovementSpeed();
+                BuffBase b = new MovementSpeed();
                 powerManager.AddBuff(b);
             }
         }

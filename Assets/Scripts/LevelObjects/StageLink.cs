@@ -6,17 +6,17 @@ namespace Flamenccio.LevelObject.Stages
 {
     public class StageLink : MonoBehaviour
     {
-        [SerializeField] private List<StageVariant.Variants> blacklistedVariants = new List<StageVariant.Variants>();
+        public Stage ParentStage { get { return parentStage; } }
+        [SerializeField] private List<StageVariant.Variants> blacklistedVariants = new();
+        [SerializeField] private LayerMask STAGE_LAYER;
+        [SerializeField] private LayerMask STAGE_LINK_LAYER;
         private const int STAGE_LENGTH = 16; // length (and width) of a stage module. 
         private Vector2 OVERLAP_BOX_SIZE = new Vector2(STAGE_LENGTH / 2, STAGE_LENGTH / 2); // the size of the overlap box used to scan for nearby stages.
         private const float NEAR_SEARCH_RADIUS = 2.0f; // radius of circle used to search for nearby links.
         private Stage linkedStage = null;
         private PrimaryWall primaryWall = null;
-        private Directions.directions placement = Directions.directions.North;
+        private Directions.CardinalValues placement = Directions.CardinalValues.North;
         private Stage parentStage = null;
-        [SerializeField] private LayerMask STAGE_LAYER;
-        [SerializeField] private LayerMask STAGE_LINK_LAYER;
-        public Stage ParentStage { get { return parentStage; } }
 
         private void Awake()
         {
@@ -64,6 +64,7 @@ namespace Flamenccio.LevelObject.Stages
             {
                 return;
             }
+
             linkedStage = stage;
             primaryWall.DestroyWall();
         }
@@ -72,11 +73,11 @@ namespace Flamenccio.LevelObject.Stages
             return linkedStage == null;
         }
         // just a wrapper
-        public void SpawnWall(PrimaryWall.orientation orient)
+        public void SpawnWall(PrimaryWall.Orientation orient)
         {
             primaryWall.SpawnWall(orient);
         }
-        public void UpdateProperties(List<StageVariant.Variants> blacklist, Directions.directions dir)
+        public void UpdateProperties(List<StageVariant.Variants> blacklist, Directions.CardinalValues dir)
         {
             // we can't update the properties if the link is already in use
             if (linkedStage != null) return;
@@ -99,14 +100,13 @@ namespace Flamenccio.LevelObject.Stages
 
             // First pass: look for close stage links. If there are any, connect to them.
             Collider2D[] colliders = Physics2D.OverlapCircleAll((Vector2)gameObject.transform.position, NEAR_SEARCH_RADIUS, STAGE_LINK_LAYER);
-            foreach (Collider2D col in colliders)
+            foreach (Collider2D col in colliders) // TODO simplify loop
             {
                 if (col.gameObject.GetInstanceID() == gameObject.GetInstanceID()) // check if col is this game object
                 {
                     continue;
                 }
-                StageLink other = col.gameObject.GetComponent<StageLink>();
-                if (other == null) // check if this game object is a stage link
+                if (!col.gameObject.TryGetComponent<StageLink>(out var other)) // check if this game object is a stage link
                 {
                     continue;
                 }
@@ -122,7 +122,7 @@ namespace Flamenccio.LevelObject.Stages
 
             // Second pass: look for close stages. If there are any, connect both stages.
             colliders = Physics2D.OverlapBoxAll((Directions.Instance.DirectionsToVector2(placement) * (STAGE_LENGTH / 2)) + (Vector2)gameObject.transform.position, OVERLAP_BOX_SIZE, 0f, STAGE_LAYER);
-            foreach (Collider2D col in colliders)
+            foreach (Collider2D col in colliders) // TODO simplify loop
             {
                 if (col.gameObject.GetInstanceID() != parentStage.gameObject.GetInstanceID()) // if the collider is this link's associated stage, move on
                 {

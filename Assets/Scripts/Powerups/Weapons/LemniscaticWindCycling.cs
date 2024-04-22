@@ -1,5 +1,5 @@
 using UnityEngine;
-using Flamenccio.Attack;
+using Flamenccio.Attack.Player;
 using Flamenccio.Effects;
 using Flamenccio.Effects.Visual;
 using Flamenccio.Effects.Audio;
@@ -39,13 +39,13 @@ namespace Flamenccio.Powerup.Weapon
 
             if (!playerAtt.UseCharge(1)) return;
 
-            AudioManager.instance.PlayOneShot(FMODEvents.instance.playerSpecialBurst, transform.position);
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialBurst, transform.position);
             pm.RestrictAim(DURATION);
             pm.Blink(DURATION);
             rechargeUsed = false;
             Instantiate(shockwaveEffect, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
             attackInstance = Instantiate(attack, PlayerMotion.Instance.transform, false).GetComponent<LemniscaticWindCyclingBullet>();
-            CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, pm.transform.position);
+            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, pm.transform.position);
             float r = aimAngleDeg * Mathf.Deg2Rad;
             pm.Move(new Vector2(Mathf.Cos(r), Mathf.Sin(r)), SPEED, DURATION);
         }
@@ -53,7 +53,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (!rechargeUsed && attackInstance != null && attackInstance.EnemiesHit >= 3)
             {
-                AudioManager.instance.PlayOneShot(FMODEvents.instance.playerSpecialQue, transform.position);
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialQue, transform.position);
                 rechargeUsed = true;
                 playerAtt.ReplenishCharge(1);
             }
