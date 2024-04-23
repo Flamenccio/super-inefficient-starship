@@ -56,7 +56,6 @@ namespace Flamenccio.Core
         }
         private void Awake()
         {
-            Debug.Log("Awake called");
             stageList.Add(FindObjectOfType<Stage>());
             enemyList = gameObject.GetComponent<EnemyList>();
         }
@@ -122,7 +121,6 @@ namespace Flamenccio.Core
             // spawn a star at a random location
             SpawnToolkit tk = InitializeNewToolkit();
             tk.root = GenerateRandomRootStage(); // choose a root stage to spawn in
-            Debug.Log($"Number of stages: {stageList.Count}");
             tk.rootStage = stageList[tk.root];
             tk.globalSpawnCoords = FindPointInStage(tk.rootStage);
             tk.globalSpawnCoords = AlignPosition(tk.globalSpawnCoords);

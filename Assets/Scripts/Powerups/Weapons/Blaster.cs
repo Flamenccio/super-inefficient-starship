@@ -13,8 +13,6 @@ namespace Flamenccio.Powerup.Weapon
             Desc = "[TAP]: Fires a short-ranged bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
             Rarity = PowerupRarity.Common;
             cost = 1;
-            cooldown = 8f / 60f;
-            mainAttack = Resources.Load<GameObject>("Prefabs/Bullets/Player/Player");
         }
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {

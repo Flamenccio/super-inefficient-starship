@@ -22,10 +22,10 @@ namespace Flamenccio.Powerup.Weapon
             Support
         };
         protected WeaponType weaponType;
-        protected int cost = 1;
-        protected float cooldown;
+        [SerializeField] protected int cost = 1;
+        [SerializeField] protected float cooldown;
         protected float cooldownTimer;
-        protected float holdThreshold;
+        [SerializeField] protected float holdThreshold;
         protected PlayerAttributes playerAtt;
         
         private void Awake()
@@ -36,18 +36,18 @@ namespace Flamenccio.Powerup.Weapon
         }
         protected virtual void Start()
         {
+            playerAtt = GetComponentInParent<PlayerAttributes>();
+            if (playerAtt == null)
+            {
+                Debug.LogError("ERROR: could not find a PlayerAttributes class in player.");
+                return;
+            }
 
+            consumeAmmo = playerAtt.UseAmmo;
         }
         protected virtual void Startup()
         {
             cooldownTimer = 0f;
-
-            if (!gameObject.TryGetComponent(out playerAtt))
-            {
-                Debug.LogError("ERROR: could not find a PlayerAttributes class in player.");
-            }
-
-            consumeAmmo = playerAtt.UseAmmo;
         }
         public virtual void Run()
         {

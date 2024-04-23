@@ -5,8 +5,8 @@ namespace Flamenccio.Powerup.Weapon
 {
     public class WeaponMain : WeaponBase
     {
-        protected GameObject mainAttack;
         // parent class of all main weapons
+        [SerializeField] protected GameObject mainAttack;
         protected override void Startup()
         {
             weaponType = WeaponType.Main;

@@ -6,6 +6,7 @@ namespace Flamenccio.Core
 {
     public class CameraControl : MonoBehaviour
     {
+        [SerializeField] private Transform playerPosition;
         private Vector2 moveDir;
         private Vector2 aimDir;
         private Camera cam;
@@ -15,6 +16,7 @@ namespace Flamenccio.Core
         private float currentSize = 0.0f;
         private float previousSize = 0.0f;
         private float t = 0;
+        private bool interruptAdjustment = false;
         private const float CAMERA_SIZE_CHANGE = 0.5f; // amount to increase size by every time stage is expanded
         private const float CAMERA_MOVE_SPEED = 0.03f; // the speed the camera will move to its new location
         private const float PEEK_DISTANCE_Y = 4.0f; // the distance the camera will move in the direction the player is travelling (y axis)
@@ -23,9 +25,6 @@ namespace Flamenccio.Core
         private const float MAX_SIZE = 12.0f;
         private const float MINIMUM_SIZE_DIFFERENCE = 0.1f;
         private const float HURT_ZOOM_DURATION = 0.25f;
-        private bool interruptAdjustment = false;
-
-        [SerializeField] private Transform playerPosition;
 
         public void Awake()
         {
@@ -33,6 +32,7 @@ namespace Flamenccio.Core
             cam.orthographicSize = DEFAULT_SIZE;
             currentSize = DEFAULT_SIZE;
             previousSize = DEFAULT_SIZE;
+            Application.targetFrameRate = 60;
         }
         public void FixedUpdate()
         {

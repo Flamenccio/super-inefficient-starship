@@ -8,7 +8,7 @@ namespace Flamenccio.Powerup.Weapon
     {
         private const float DURATION = 5f / 60f;
         private const float SPEED = 50f;
-        private GameObject afterImage;
+        [SerializeField] private GameObject afterImage;
         protected override void Startup()
         {
             base.Startup();

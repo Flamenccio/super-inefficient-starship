@@ -5,7 +5,7 @@ using Flamenccio.Powerup;
 using Flamenccio.HUD;
 using Flamenccio.Effects.Visual;
 using Flamenccio.Effects;
-
+using UnityEngine.InputSystem;
 
 namespace Flamenccio.Core
 {
@@ -60,6 +60,7 @@ namespace Flamenccio.Core
         private void Start()
         {
             Time.timeScale = 1.0f;
+            spawnControl.SpawnStar();
         }
         private void Awake()
         {
@@ -74,7 +75,6 @@ namespace Flamenccio.Core
 
             mainTimer = maxTime;
             spawnControl = gameObject.GetComponent<Spawner>();
-            spawnControl.SpawnStar();
         }
         private void Update()
         {
@@ -256,6 +256,22 @@ namespace Flamenccio.Core
             yield return new WaitForSecondsRealtime(1.0f);
             Instance = null; // clear instance
             SceneManager.LoadScene(0);
+        }
+        public void OnPause(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                if (Time.timeScale == 0.0f)
+                {
+                    Time.timeScale = 1.0f;
+
+                }
+                else
+                {
+                    Time.timeScale = 0f;
+                }
+            }
+
         }
     }
 }

@@ -18,9 +18,14 @@ namespace Flamenccio.LevelObject.Stages
         {
             AllVariants = new(System.Enum.GetValues(typeof(StageVariant.Variants)).Cast<StageVariant.Variants>());
 
-            if (Instance != null) Destroy(Instance);
-
-            Instance = this;
+            if (Instance != null && Instance != this)
+            {
+                Destroy(Instance);
+            }
+            else
+            {
+                Instance = this;
+            }
 
             stageVariants.AddRange(Resources.LoadAll<StageVariant>("StageVariants")); // load all stagevariants here
             stageVariants.Sort((a, b) => (int)a.Variant < (int)b.Variant ? -1 : 1); // sort variants by variant

@@ -22,10 +22,13 @@ namespace Flamenccio.LevelObject.Stages
         private Mesh polymesh; // mesh for poly collider
         private void Awake()
         {
-            if (initialStage) UpdateVariant(StageVariant.Variants.Normal);
 
             polyCollider = gameObject.GetComponent<PolygonCollider2D>();
             polymesh = polyCollider.CreateMesh(true, true);
+        }
+        private void Start()
+        {
+            if (initialStage) UpdateVariant(StageVariant.Variants.Normal);
         }
         /// <summary>
         /// Request an extension handshake to this stage.
