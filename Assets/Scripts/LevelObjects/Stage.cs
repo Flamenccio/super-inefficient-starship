@@ -29,28 +29,6 @@ namespace Flamenccio.LevelObject.Stages
         {
             if (initialStage) UpdateVariant(StageVariant.Variants.Normal);
         }
-        /// <summary>
-        /// Request an extension handshake to this stage.
-        /// </summary>
-        /// <param name="dir">Direction to extend in.</param>
-        /// <param name="stage">Stage to extend to.</param>
-        /// <returns>True if successful, false if unsuccessful</returns>
-        public bool Handshake(Directions.CardinalValues dir, Stage stage)
-        {
-            if (!LinkableInDirection(dir, stage.variant))
-            {
-                return false; // if a stage link is not available in given direction, return false.
-            }
-            links.TryGetValue(dir, out StageLink s);
-            if (s != null)
-            {
-                return s.IsVacant(); // if the stage link exists in given direction, let the stage link decide. 
-            }
-            else
-            {
-                return false; // otherwise, not linkable in direction.
-            }
-        }
         public void UpdateVariant(StageVariant.Variants updatedVariant)
         {
             variant = updatedVariant;
@@ -73,12 +51,16 @@ namespace Flamenccio.LevelObject.Stages
         private void CommitUpdate()
         {
             StageVariant v = StageResources.Instance.GetStageVariant(variant); // retrieve the variant's template
-
-            // spawn secondary walls
+            BuildSecondaryWalls(v); // spawn secondary walls
+            BuildLinks(v); // spawn and place stage links (primary walls)
+        }
+        private void BuildSecondaryWalls(StageVariant variant)
+        {
             int i = 0;
-            if (v.SecondaryWallLayout != null)
+
+            if (variant.SecondaryWallLayout != null)
             {
-                foreach (var invisibleWallConfig in v.SecondaryWallLayout.Layout)
+                foreach (var invisibleWallConfig in variant.SecondaryWallLayout.Layout)
                 {
                     SecondaryWall instance = Instantiate(invisibleWallPrefab, transform).GetComponent<SecondaryWall>();
                     CopyWallAttributes(instance, invisibleWallConfig);
@@ -86,9 +68,10 @@ namespace Flamenccio.LevelObject.Stages
                     i++;
                 }
             }
-
-            // spawn and place stage links (primary walls)
-            foreach (var link in v.Links)
+        }
+        private void BuildLinks(StageVariant variant)
+        {
+            foreach (var link in variant.Links)
             {
                 StageLink instance = Instantiate(stageLinkPrefab, transform).GetComponent<StageLink>();
                 instance.UpdateProperties(link.BlackListedVariants, link.LinkDirection);
@@ -121,13 +104,6 @@ namespace Flamenccio.LevelObject.Stages
         public bool LinkableInDirection(Directions.CardinalValues dir)
         {
             return links.TryGetValue(dir, out StageLink x) && x.IsVacant();
-        }
-        public bool LinkableInDirection(Directions.CardinalValues dir, StageVariant.Variants variant)
-        {
-            links.TryGetValue(dir, out StageLink s);
-            bool t = false;
-            if (s != null) t = s.IsValidVariant(variant);
-            return LinkableInDirection(dir) && t;
         }
         /// <summary>
         /// Link a stage to this stage disregarding incompatible variants.
