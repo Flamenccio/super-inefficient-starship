@@ -8,7 +8,6 @@ namespace Flamenccio.Powerup.Weapon
 {
     public class LemniscaticWindCycling : WeaponSpecial
     {
-        private const int MAX_CHARGES = 2;
         [SerializeField] private GameObject shockwaveEffect;
         [SerializeField] private GameObject attack;
         private LemniscaticWindCyclingBullet attackInstance;
@@ -23,11 +22,6 @@ namespace Flamenccio.Powerup.Weapon
             Desc = "[TAP]: Rushes forward, dealing damage to any enemies in your path.\nIf at least 3 enemies are struck in one dash, grants 1 SPECIAL CHARGE.";
             Level = 1;
             Rarity = PowerupRarity.Rare;
-        }
-        protected override void Start()
-        {
-            base.Start();
-            playerAtt.SetCharges(MAX_CHARGES, cooldown);
         }
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {

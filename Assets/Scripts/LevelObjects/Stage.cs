@@ -22,7 +22,6 @@ namespace Flamenccio.LevelObject.Stages
         private Mesh polymesh; // mesh for poly collider
         private void Awake()
         {
-
             polyCollider = gameObject.GetComponent<PolygonCollider2D>();
             polymesh = polyCollider.CreateMesh(true, true);
         }
