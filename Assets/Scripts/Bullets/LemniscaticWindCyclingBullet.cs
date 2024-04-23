@@ -1,16 +1,17 @@
 using UnityEngine;
 
-namespace Flamenccio.Attack
+namespace Flamenccio.Attack.Player
 {
     public class LemniscaticWindCyclingBullet : PlayerBullet
     {
+        public int EnemiesHit { get; private set; }
         private float timer = 0f;
         private float maxTimer = 0.10f;
-        public int EnemiesHit { get; private set; }
 
         protected override void DeathTimer()
         {
             timer += Time.deltaTime;
+
             if (timer >= maxTimer)
             {
                 Destroy(gameObject);
@@ -18,6 +19,7 @@ namespace Flamenccio.Attack
         }
         protected override void Launch()
         {
+            // this bullet doesn't launch; it follows the player
         }
         protected override void Trigger(Collider2D collider)
         {

@@ -12,14 +12,10 @@ namespace Flamenccio.HUD
         private float age = 0f;
         private float flyingSpeed = 0.0f;
         private TMP_Text text;
-        private void Start()
-        {
-        }
         private void Awake()
         {
             text = gameObject.GetComponent<TMP_Text>();
             text.transform.localScale = new Vector3(5f, 5f);
-
         }
         private void Update()
         {
@@ -27,6 +23,7 @@ namespace Flamenccio.HUD
             {
                 text.transform.localScale -= new Vector3(0.5f, 0.5f);
             }
+
             float alpha = text.color.a;
             age += Time.deltaTime;
             transform.Translate(transform.up * flyingSpeed);
@@ -36,6 +33,7 @@ namespace Flamenccio.HUD
                 alpha -= FADEOUT_SPEED * Time.deltaTime;
                 text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
             }
+
             if (age >= LIFETIME) Destroy(gameObject);
         }
     }

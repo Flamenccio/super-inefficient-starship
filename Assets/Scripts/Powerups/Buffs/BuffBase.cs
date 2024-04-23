@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Flamenccio.Powerup
 {
@@ -13,7 +11,6 @@ namespace Flamenccio.Powerup
     };
     public class BuffBase : IPowerup
     {
-        protected List<StatBuff> buffs = new();
         public string Name { get; protected set; }
         public string Desc { get; protected set; }
         public int Level { get; protected set; }
@@ -21,6 +18,7 @@ namespace Flamenccio.Powerup
         public List<StatBuff> Buffs { get => buffs; }
         public BuffType Type { get; protected set; }
         public BuffClass Class { get; protected set; }
+        protected List<StatBuff> buffs = new();
 
         public class StatBuff
         {

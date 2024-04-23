@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Powerup.Weapon;
+using Flamenccio.HUD;
 
 namespace Flamenccio.Powerup
 {
@@ -24,10 +25,14 @@ namespace Flamenccio.Powerup
 
     public class PowerupManager : MonoBehaviour
     {
+        [SerializeField] private GameObject defaultMainWeapon;
+        [SerializeField] private GameObject defaultSubWeapon;
+        [SerializeField] private GameObject defaultSpecialWeapon;
         private WeaponMain mainAttack;
         private WeaponSub subAttack;
         private WeaponSpecial specialAttack;
         private Action powerupUpdate;
+        private List<GameObject> supportWeapons = new(Enum.GetNames(typeof(WeaponBase.WeaponType)).Length);
         private List<BuffBase> buffs = new();
         public List<BuffBase> Buffs { get => buffs; }
         public bool MainAttackAimAssisted
@@ -69,97 +74,107 @@ namespace Flamenccio.Powerup
 
         // SUPPORT ATTACK METHODS
 
-
-        [SerializeField][Tooltip("Path to default weapon.")] private UnityEditor.MonoScript defaultMain;
-        [SerializeField][Tooltip("Path to default sub weapon.")] private UnityEditor.MonoScript defaultSub;
-        [SerializeField] private UnityEditor.MonoScript debugSpecial; // gives special at start
         private PlayerAttributes playerAttributes;
 
         private void Awake()
         {
-            AddWeapon(defaultSub);
-            AddWeapon(defaultMain);
-
-            if (debugSpecial != null)
-            {
-                AddWeapon(debugSpecial);
-            }
         }
         private void Start()
         {
             playerAttributes = gameObject.GetComponent<PlayerAttributes>();
+            if (!AddWeapon(defaultMainWeapon)) Debug.LogError("Conflicting weapon type!");
+            if (!AddWeapon(defaultSubWeapon)) Debug.LogError("Conflicting weapon type!");
+            if (!AddWeapon(defaultSpecialWeapon)) Debug.LogError("Conflicting weapon type!");
         }
-        private WeaponMain AddMain(WeaponMain main) // replaces main weapon with given one. Returns previous main weapon.
+        private bool AddMain(GameObject main) // replaces main weapon with given one. Returns previous main weapon.
         {
-            WeaponMain temp = mainAttack;
-
             if (mainAttack != null)
             {
                 powerupUpdate -= mainAttack.Run;
-                Destroy(mainAttack); // replace scripts
+                Destroy(mainAttack.gameObject);
             }
 
-            mainAttack = main;
+            if (!main.TryGetComponent<WeaponMain>(out mainAttack)) return false;
+
+            CrosshairsControl crosshairs = GetComponentInChildren<CrosshairsControl>(); // HACK this is temporary; put this somewhere else!
+
+            
+            mainAttack = main.GetComponent<WeaponMain>();
             powerupUpdate += mainAttack.Run; // update delegates and stuff
             MainAttackTap = mainAttack.Tap;
             MainAttackHold = mainAttack.Hold;
             MainAttackHoldEnter = mainAttack.HoldEnter;
             MainAttackHoldExit = mainAttack.HoldExit;
-            return temp;
-        }
-        private WeaponSub AddSub(WeaponSub sub) // same thing as above
-        {
-            WeaponSub temp = subAttack;
+            
+            if (crosshairs == null)
+            {
+                Debug.LogError("Crosshairs not found!");
+            }
+            else
+            {
+                crosshairs.UpdateWeaponRange(mainAttack.GetWeaponRange());
+            }
 
+            return true;
+        }
+        private bool AddSub(GameObject sub) // same thing as above
+        {
             if (subAttack != null)
             {
                 powerupUpdate -= subAttack.Run;
-                Destroy(subAttack);
+                Destroy(subAttack.gameObject);
             }
 
-            subAttack = sub;
+            if (!sub.TryGetComponent<WeaponSub>(out subAttack)) return false;
+
+            subAttack = sub.GetComponent<WeaponSub>();
             powerupUpdate += subAttack.Run;
             SubAttackTap = subAttack.Tap;
-            return temp;
-        }
-        private WeaponSpecial AddSpecial(WeaponSpecial special)
-        {
-            WeaponSpecial temp = specialAttack;
 
+            return true;
+        }
+        private bool AddSpecial(GameObject special)
+        {
             if (specialAttack != null)
             {
                 powerupUpdate -= specialAttack.Run;
                 Destroy(specialAttack);
             }
 
-            specialAttack = special;
+            if (!special.TryGetComponent(out specialAttack)) return false;
+
+            specialAttack = special.GetComponent<WeaponSpecial>();
             powerupUpdate += specialAttack.Run;
             SpecialAttackTap = specialAttack.Tap;
-            return temp;
+
+            return true;
         }
-        public void AddWeapon(UnityEditor.MonoScript script)
+        public bool AddWeapon(GameObject weaponObjectPrefab)
         {
-            if (script == null) return;
+            if (weaponObjectPrefab == null) return false;
 
-            Type weaponType = script.GetClass();
-            Type weaponClass = weaponType.BaseType;
-            object t = gameObject.AddComponent(weaponType).GetComponent(weaponType);
+            if (!weaponObjectPrefab.TryGetComponent(out WeaponBase weaponBase))
+            {
+                Debug.Log("asdfasd");
+                return false;
+            }
 
-            if (weaponClass == typeof(WeaponSpecial))
+            GameObject weaponObjectInstance = Instantiate(weaponObjectPrefab, transform, false);
+
+            if (weaponBase is WeaponMain)
             {
-                AddSpecial(t as WeaponSpecial);
-                return;
+                return AddMain(weaponObjectInstance);
             }
-            if (weaponClass == typeof(WeaponMain))
+            else if (weaponBase is WeaponSub)
             {
-                AddMain(t as WeaponMain);
-                return;
+                return AddSub(weaponObjectInstance);
             }
-            if (weaponClass == typeof(WeaponSub))
+            else if (weaponBase is WeaponSpecial)
             {
-                AddSub(t as WeaponSub);
-                return;
+                return AddSpecial(weaponObjectInstance);
             }
+
+            return false;
         }
         private void Update()
         {

@@ -8,6 +8,13 @@ namespace Flamenccio.Effects
     /// </summary>
     public class PlayerMotion : MonoBehaviour
     {
+        public bool MovementRestricted { get => GetRestrictedBit(Restrictions.Movement); }
+        public bool ActionRestricted { get; private set; }
+        public bool AimRestricted { get => GetRestrictedBit(Restrictions.Aim); }
+        public static PlayerMotion Instance { get; private set; }
+        public Vector2 PlayerPosition { get => transform.position; }
+        public Transform PlayerTransform { get => transform; }
+        [SerializeField] private Rigidbody2D rb;
         private enum Restrictions
         {
             Movement,
@@ -15,17 +22,7 @@ namespace Flamenccio.Effects
             Ability
         }
         private const float KNOCKBACK_DURATION = 6f / 60f;
-        [SerializeField] private Rigidbody2D rb;
         private int playerRestrictions;
-        public bool MovementRestricted { get => GetRestrictedBit(Restrictions.Movement); }
-        public bool ActionRestricted { get; private set; }
-        public bool AimRestricted { get => GetRestrictedBit(Restrictions.Aim); }
-        public static PlayerMotion Instance { get; private set; }
-        public Vector2 PlayerPosition { get => transform.position; }
-        public Transform PlayerTransform { get => transform; }
-        private void Start()
-        {
-        }
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -36,6 +33,17 @@ namespace Flamenccio.Effects
             {
                 Instance = this;
             }
+
+            /*
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
+            }
+            */
         }
         /// <summary>
         /// Instantly and instantaneously moves player to given global coordinate.
@@ -60,7 +68,6 @@ namespace Flamenccio.Effects
         /// <param name="t">Time in seconds.</param>
         public bool RestrictMovement(float t)
         {
-            // TODO this will cause problems if two actions need to edit the same stat--please fix!
             if (MovementRestricted) return false;
             StartCoroutine(RestrictPlayer(t, Restrictions.Movement));
             return true;

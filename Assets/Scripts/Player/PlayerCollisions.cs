@@ -10,6 +10,7 @@ namespace Flamenccio.Core.Player
     public class PlayerCollisions : MonoBehaviour
     {
         [SerializeField] private GameState gState;
+        [SerializeField] private GameObject hitEffect;
         private PlayerActions pActions;
         private const float HURT_INVULN_DURATION = 10f / 60f;
         private bool invulnerable = false;
@@ -38,7 +39,8 @@ namespace Flamenccio.Core.Player
                 gState.RemoveLife(bullet.Damage);
                 Vector2 knockbackVector = CalculateKnockbackAngle(pActions.Rigidbody.velocity, collision.attachedRigidbody.velocity);
                 PlayerMotion.Instance.Knockback(knockbackVector, bullet.KnockbackMultiplier);
-                AudioManager.instance.PlayOneShot(FMODEvents.instance.playerHurt, transform.position);
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerHurt, transform.position);
+                Instantiate(hitEffect, transform.position, Quaternion.identity);
             }
             if (collision.CompareTag("Heart"))
             {

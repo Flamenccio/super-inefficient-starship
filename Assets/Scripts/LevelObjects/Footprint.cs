@@ -4,9 +4,6 @@ namespace Flamenccio.Core.Player
 {
     public class Footprint : MonoBehaviour
     {
-        private float age = 0f; // the age of the footprint in seconds
-        private Footprint nextFootprint = null;
-        private Footprint prevFootprint = null;
         public Footprint NextFootprint
         {
             get { return nextFootprint; }
@@ -16,6 +13,9 @@ namespace Flamenccio.Core.Player
             get { return prevFootprint; }
         }
         public float Age { get => age; }
+        private float age = 0f; // the age of the footprint in seconds
+        private Footprint nextFootprint = null;
+        private Footprint prevFootprint = null;
         public void ResetAge()
         {
             age = 0f;
@@ -24,12 +24,6 @@ namespace Flamenccio.Core.Player
         {
             transform.position = pos;
             ResetAge();
-        }
-        /// <summary>
-        /// updates the next footprint and returns the last footprint that was replaced
-        /// </summary>
-        private void Update()
-        {
         }
         /// <summary>
         /// udpates this footprint's next footprint and returns the footprint that was replaced

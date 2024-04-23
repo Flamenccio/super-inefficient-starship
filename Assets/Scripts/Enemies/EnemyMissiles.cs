@@ -10,6 +10,7 @@ namespace Enemy
         protected override void Attack()
         {
             if (player == null) return;
+
             if (Vector2.Distance(player.position, transform.position) < searchRadius)
             {
                 StartCoroutine(BurstAttack());

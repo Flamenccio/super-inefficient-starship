@@ -5,7 +5,7 @@ using Flamenccio.Powerup;
 using Flamenccio.HUD;
 using Flamenccio.Effects.Visual;
 using Flamenccio.Effects;
-
+using UnityEngine.InputSystem;
 
 namespace Flamenccio.Core
 {
@@ -13,7 +13,7 @@ namespace Flamenccio.Core
     {
         // this class coordinates all other management classes
 
-        public static GameState instance;
+        public static GameState Instance { get; private set; }
 
         // parameters
         private int progress = 0;
@@ -40,11 +40,8 @@ namespace Flamenccio.Core
         private GameObject heart;
         [SerializeField] private GoalArrowControl goalArrow;
         [SerializeField] private HUDControl hudControl;
-        [SerializeField] private GameObject hitEffect2;
         [SerializeField] private CameraControl cameraControl;
-        [SerializeField] private Transform player;
         [SerializeField] private PlayerAttributes playerAtt;
-        [SerializeField] private Camera cam;
 
         // debug stuff
         [SerializeField] private bool infiniteTime;
@@ -63,21 +60,21 @@ namespace Flamenccio.Core
         private void Start()
         {
             Time.timeScale = 1.0f;
+            spawnControl.SpawnStar();
         }
         private void Awake()
         {
-            if (instance != null && instance != this)
+            if (Instance != null && Instance != this)
             {
                 Destroy(this);
             }
             else
             {
-                instance = this;
+                Instance = this;
             }
 
             mainTimer = maxTime;
             spawnControl = gameObject.GetComponent<Spawner>();
-            spawnControl.SpawnStar();
         }
         private void Update()
         {
@@ -162,8 +159,7 @@ namespace Flamenccio.Core
         /// <returns>True if successful, false otherwise.</returns>
         public bool RemoveLife(int life)
         {
-            CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
-            Instantiate(hitEffect2, player.position, Quaternion.identity); // HACK maybe have something else do this
+            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position); // TODO maybe scale intensity with damage taken
             cameraControl.HurtZoom();
             hudControl.DisplayHurtLines();
             playerAtt.ChangeLife(-life);
@@ -258,8 +254,24 @@ namespace Flamenccio.Core
             yield return new WaitForSecondsRealtime(0.1f);
             Time.timeScale = 0.0f;
             yield return new WaitForSecondsRealtime(1.0f);
-            instance = null; // clear instance
+            Instance = null; // clear instance
             SceneManager.LoadScene(0);
+        }
+        public void OnPause(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                if (Time.timeScale == 0.0f)
+                {
+                    Time.timeScale = 1.0f;
+
+                }
+                else
+                {
+                    Time.timeScale = 0f;
+                }
+            }
+
         }
     }
 }

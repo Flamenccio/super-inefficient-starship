@@ -5,10 +5,10 @@ namespace Enemy
     public class TurretTrack : EnemyShootBase, IEnemy
     {
         // stays in place and fires at player
+        public int Tier { get => tier; }
         protected float faceAngle = 0.0f;
         protected float yDiff = 0.0f;
         protected float xDiff = 0.0f;
-        public int Tier { get => tier; }
         protected override void Behavior()
         {
             if (fireTimer >= fireRate) // attack periodically

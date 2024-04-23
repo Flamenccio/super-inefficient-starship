@@ -1,7 +1,7 @@
 using UnityEngine;
 using Flamenccio.Effects.Visual;
 
-namespace Flamenccio.Attack
+namespace Flamenccio.Attack.Enemy
 {
     public class Bomb : EnemyBulletNormal
     {
@@ -18,7 +18,7 @@ namespace Flamenccio.Attack
         {
             Instantiate(explosion, transform.position, Quaternion.identity); // spawn an explosion effect
             Instantiate(explosionHitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, 2f, damage, Hitbox.AttackType.Neutral, knockbackMultiplier); // spawn the actual hitbox
-            CameraEffects.instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Extreme, transform.position);
+            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Extreme, transform.position);
             base.Trigger(collider);
         }
     }

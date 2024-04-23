@@ -18,14 +18,18 @@ namespace Flamenccio.Effects.Audio
         [field: SerializeField] public EventReference wallDestroy { get; private set; }
         [field: SerializeField] public EventReference heartCollect { get; private set; }
         [field: SerializeField] public EventReference playerSpecialQue { get; private set; }
-        public static FMODEvents instance { get; private set; }
+        public static FMODEvents Instance { get; private set; }
         private void Awake()
         {
-            if (instance != null)
+            if (Instance != null && Instance != this)
             {
                 Debug.LogError("More than one instance of FMODEvents exists.");
+                Destroy(this);
             }
-            instance = this;
+            else
+            {
+                Instance = this;
+            }
         }
     }
 }

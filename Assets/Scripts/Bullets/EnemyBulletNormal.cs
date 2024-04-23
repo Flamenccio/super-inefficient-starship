@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Flamenccio.Attack
+namespace Flamenccio.Attack.Enemy
 {
     public class EnemyBulletNormal : BulletControl
     {

@@ -9,10 +9,10 @@ namespace Enemy
         [SerializeField] protected GameObject enemyBullet;
         [SerializeField] protected float searchRadius;
         [SerializeField] protected float fireRate;
-        private AllAngle aaFireDirection = new();
         protected float fireTimer = 0f;
-        private const float BULLET_OFFSET = 0.5f;
         protected float attackRange;
+        private AllAngle aaFireDirection = new();
+        private const float BULLET_OFFSET = 0.5f;
 
         protected override void OnSpawn()
         {
@@ -43,6 +43,7 @@ namespace Enemy
                 telegraphed = false;
                 fireTimer = 0f;
             }
+
             fireTimer += Time.deltaTime;
         }
     }
