@@ -6,7 +6,7 @@ namespace Flamenccio.Effects.Visual
     {
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] private GameObject trail;
-        private const float TRAIL_FREQUENCY = 2f / 60f; // every 12 frames a new trail spawns
+        private const float TRAIL_FREQUENCY = 1f / 60f; // every 12 frames a new trail spawns
         private float maxSpeed;
         private float speed = 0f;
         private Transform target;
