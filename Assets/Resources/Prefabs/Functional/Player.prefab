@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 4231892635959146387}
   - component: {fileID: 6512970577687625348}
   - component: {fileID: 7438514266558005631}
+  - component: {fileID: 1708049359961764838}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -334,6 +335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultMainWeapon: {fileID: 7804797723523311312, guid: bf20752d6dabed94d9a46cf26407e694, type: 3}
   defaultSubWeapon: {fileID: 5163691005034168489, guid: 251d4b1a7621d434d8fe3e41556afb97, type: 3}
+  defaultSpecialWeapon: {fileID: 0}
 --- !u!114 &7438514266558005631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +349,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 2152614155733082007}
+--- !u!114 &1708049359961764838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2152614155733082003}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae50bb5ab2b762c4dbea45bae44eb1e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3903149671148653018
 GameObject:
   m_ObjectHideFlags: 0

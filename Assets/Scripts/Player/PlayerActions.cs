@@ -29,11 +29,13 @@ namespace Flamenccio.Core.Player
         private readonly float aimResponsiveness = 0.6f;
         private const float HOLD_THRESHOLD = 0.50f;
         private PlayerMotion playerMotion;
+        private PlayerInput playerInput;
 
         public Rigidbody2D Rigidbody { get => rb; }
 
         private void Start()
         {
+            playerInput = GetComponent<PlayerInput>();
             rb = gameObject.GetComponent<Rigidbody2D>();
             acceleration = playerAtt.MoveSpeed / 4f;
             deceleration = playerAtt.MoveSpeed / 26f;
@@ -58,12 +60,14 @@ namespace Flamenccio.Core.Player
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            if (!playerMotion.MovementRestricted) moveInput.Vector = context.ReadValue<Vector2>(); // store the input vector
+            if (playerMotion.MovementRestricted) return;
+            moveInput.Vector = context.ReadValue<Vector2>(); // store the input vector
         }
 
         public void OnAim(InputAction.CallbackContext context)
         {
-            if (!playerMotion.AimRestricted) aimInput = context.ReadValue<Vector2>(); // store the input vector
+            if (playerMotion.AimRestricted) return;
+            aimInput = context.ReadValue<Vector2>(); // store the input vector
         }
 
         public void OnFire1(InputAction.CallbackContext context)
@@ -99,7 +103,7 @@ namespace Flamenccio.Core.Player
             }
             else
             {
-                attack?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position);
+                attack?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position); // TODO maybe avoid using delegates...
             }
         }
         private void Fire1Hold()
@@ -164,8 +168,8 @@ namespace Flamenccio.Core.Player
         }
         private void Aim()
         {
-            // if the player actively aiming, update the aim angle
-            // otherwise, update the aim angle to wherever the player is moving toward
+            if (playerInput.currentControlScheme.Equals("KBM")) MouseAim();
+
             if (aimInput != Vector2.zero)
             {
                 aimAngle.Degree = Mathf.LerpAngle(aimAngle.Degree, Mathf.Atan2(aimInput.y, aimInput.x) * Mathf.Rad2Deg, aimResponsiveness);
@@ -174,7 +178,7 @@ namespace Flamenccio.Core.Player
             {
                 aimAngle.Degree = Mathf.LerpAngle(aimAngle.Degree, Mathf.Atan2(moveInput.Vector.y, moveInput.Vector.x) * Mathf.Rad2Deg, aimResponsiveness);
             }
-            // turn the player to face the aim angle
+
             rb.rotation = Mathf.LerpAngle(rb.rotation, aimAngle.Degree, aimResponsiveness);
         }
         public void OnDebug1(InputAction.CallbackContext context)
@@ -184,6 +188,12 @@ namespace Flamenccio.Core.Player
                 BuffBase b = new MovementSpeed();
                 powerManager.AddBuff(b);
             }
+        }
+        private void MouseAim()
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log(mousePos);
+            aimInput = mousePos - (Vector2)transform.position;
         }
     }
 }
