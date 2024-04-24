@@ -15,7 +15,8 @@ namespace Flamenccio.Attack.Player
                 "Heart",
                 "MiniStar",
                 "Effects",
-                "PlayerIntangible"
+                "PlayerIntangible",
+                "Items",
             };
         }
     }

@@ -28,6 +28,7 @@ namespace Flamenccio.Powerup
         [SerializeField] private GameObject defaultMainWeapon;
         [SerializeField] private GameObject defaultSubWeapon;
         [SerializeField] private GameObject defaultSpecialWeapon;
+        [SerializeField] private CrosshairsControl crosshairsControl;
         private WeaponMain mainAttack;
         private WeaponSub subAttack;
         private WeaponSpecial specialAttack;
@@ -76,9 +77,6 @@ namespace Flamenccio.Powerup
 
         private PlayerAttributes playerAttributes;
 
-        private void Awake()
-        {
-        }
         private void Start()
         {
             playerAttributes = gameObject.GetComponent<PlayerAttributes>();
@@ -96,9 +94,6 @@ namespace Flamenccio.Powerup
 
             if (!main.TryGetComponent<WeaponMain>(out mainAttack)) return false;
 
-            CrosshairsControl crosshairs = GetComponentInChildren<CrosshairsControl>(); // HACK this is temporary; put this somewhere else!
-
-            
             mainAttack = main.GetComponent<WeaponMain>();
             powerupUpdate += mainAttack.Run; // update delegates and stuff
             MainAttackTap = mainAttack.Tap;
@@ -106,13 +101,13 @@ namespace Flamenccio.Powerup
             MainAttackHoldEnter = mainAttack.HoldEnter;
             MainAttackHoldExit = mainAttack.HoldExit;
             
-            if (crosshairs == null)
+            if (crosshairsControl == null)
             {
                 Debug.LogError("Crosshairs not found!");
             }
             else
             {
-                crosshairs.UpdateWeaponRange(mainAttack.GetWeaponRange());
+                crosshairsControl.UpdateWeaponRange(mainAttack.GetWeaponRange());
             }
 
             return true;
@@ -199,16 +194,20 @@ namespace Flamenccio.Powerup
         public bool RemoveBuff(BuffBase b)
         {
             int x = FindBuff(b);
+
             if (x < 0)
             {
                 return false;
             }
+
             buffs.RemoveAt(x);
             buffs.Sort((BuffBase a, BuffBase b) => a.Level < b.Level ? -1 : 1); // basically resort the list based on level: higher level buffs will be placed at the top.
+
             foreach (PlayerAttributes.Attribute a in b.GetAffectedAttributes())
             {
                 playerAttributes.RecompileBonus(a, buffs);
             }
+
             return true;
         }
         /// <summary>

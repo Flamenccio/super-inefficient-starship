@@ -6,11 +6,12 @@ namespace Flamenccio.Effects.Visual
     {
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] private GameObject trail;
-        private const float TRAIL_FREQUENCY = 12f; // every 12 frames a new trail spawns
+        private const float TRAIL_FREQUENCY = 1f / 60f; // every 12 frames a new trail spawns
         private float maxSpeed;
         private float speed = 0f;
         private Transform target;
         private float timer;
+        private float trailTimer;
         private int loop = 0;
 
         private void Awake()
@@ -26,6 +27,7 @@ namespace Flamenccio.Effects.Visual
         private void Update()
         {
             timer += Time.deltaTime;
+            trailTimer += Time.deltaTime;
             float turnSpeed = timer / 2f;
 
             if (target != null)
@@ -35,7 +37,11 @@ namespace Flamenccio.Effects.Visual
                 rb.velocity = transform.right * speed;
             }
 
-            if ((Mathf.Floor(timer) % TRAIL_FREQUENCY) == 0) Instantiate(trail, transform.position, Quaternion.identity);
+            if (trailTimer > TRAIL_FREQUENCY)
+            {
+                trailTimer = 0f;
+                Instantiate(trail, transform.position, Quaternion.identity);
+            }
         }
         private void OnTriggerEnter2D(Collider2D collision)
         {
