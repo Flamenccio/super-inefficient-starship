@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3440814663432809182}
   - component: {fileID: 3440814663432809181}
   - component: {fileID: 3440814663432809183}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: StarFlyTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,4 +97,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a41dc4bcfef95d42af6f8ffac9c4ec0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LIFETIME: 1
   spriteRen: {fileID: 3440814663432809181}

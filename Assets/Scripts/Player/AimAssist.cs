@@ -16,21 +16,22 @@ namespace Flamenccio.Core.Player
         private const float STARTING_OFFSET = 1f / 3f;
         private AllAngle angleRayB = new();
         private AllAngle angleRayC = new();
-        private Vector2 aimAngle = Vector2.zero; // where player is aiming
         private Vector2 offset; // displacement of starting position (to avoid clipping with wall if player is too close)
+        private InputManager input;
         private void Start()
         {
+            input = InputManager.Instance;
             CalculateConeAngles();
         }
         private void Update()
         {
-            if (aimAngle == Vector2.zero)
+            if (InputManager.Instance.CurrentScheme == InputManager.ControlScheme.KBM || input.AimInputVector == Vector2.zero)
             {
                 aimAssistTarget.Hide();
                 return;
             }
 
-            offset = aimAngle * STARTING_OFFSET;
+            offset = input.AimInputVector * STARTING_OFFSET;
             CastRays();
 
             if (Target != null)
@@ -48,7 +49,7 @@ namespace Flamenccio.Core.Player
         }
         private void CastRayA()
         {
-            RaycastHit2D ray = Physics2D.CircleCast(transform.position + (Vector3)offset, RAY_A_RADIUS, aimAngle, maxDist, obstacleLayers);
+            RaycastHit2D ray = Physics2D.CircleCast(transform.position + (Vector3)offset, RAY_A_RADIUS, input.AimInputVector, maxDist, obstacleLayers);
 
             if (ray.collider != null && IsInEnemyLayer(ray.collider.gameObject.layer))
             {
@@ -61,7 +62,7 @@ namespace Flamenccio.Core.Player
         }
         private void CastRayB()
         {
-            RaycastHit2D ray = CastAuxRays(maxDist, transform.position, offset, aimAngle, angleRayB, obstacleLayers);
+            RaycastHit2D ray = CastAuxRays(maxDist, transform.position, offset, input.AimInputVector, angleRayB, obstacleLayers);
 
             if (ray.collider != null && IsInEnemyLayer(ray.collider.gameObject.layer))
             {
@@ -74,14 +75,10 @@ namespace Flamenccio.Core.Player
         }
         private void CastRayC()
         {
-            RaycastHit2D ray = CastAuxRays(maxDist, transform.position, offset, aimAngle, angleRayC, obstacleLayers);
+            RaycastHit2D ray = CastAuxRays(maxDist, transform.position, offset, input.AimInputVector, angleRayC, obstacleLayers);
 
             if (ray.collider != null && IsInEnemyLayer(ray.collider.gameObject.layer)) Target = ray.collider.gameObject;
             else Target = null;
-        }
-        public void OnAim(InputAction.CallbackContext callbackContext)
-        {
-            aimAngle = callbackContext.ReadValue<Vector2>();
         }
         /// <summary>
         /// Casts two rays both offsetAngle degrees away from the originAngle.

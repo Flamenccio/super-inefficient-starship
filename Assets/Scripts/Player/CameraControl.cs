@@ -1,24 +1,27 @@
 using System.Collections;
-using UnityEngine.InputSystem;
 using UnityEngine;
+using Flamenccio.Utility;
+using UnityEngine.InputSystem;
 
 namespace Flamenccio.Core
 {
     public class CameraControl : MonoBehaviour
     {
         [SerializeField] private Transform playerPosition;
-        private Vector2 moveDir;
-        private Vector2 aimDir;
+        private InputManager input;
         private Camera cam;
         // modifies the camera's position from the player's position
-        private float cameraPositionModX = 0.0f;
-        private float cameraPositionModY = 0.0f;
+        private Vector2 cameraOffset = Vector2.zero;
         private float currentSize = 0.0f;
         private float previousSize = 0.0f;
         private float t = 0;
         private bool interruptAdjustment = false;
+        private float cameraMoveSpeed;
+
+        // CONSTANTS
         private const float CAMERA_SIZE_CHANGE = 0.5f; // amount to increase size by every time stage is expanded
-        private const float CAMERA_MOVE_SPEED = 0.03f; // the speed the camera will move to its new location
+        private const float CAMERA_MOVE_SPEED_GAMEPAD = 0.03f; // the speed the camera will move to its new location
+        private const float CAMERA_MOVE_SPEED_KBM = 0.08f;
         private const float PEEK_DISTANCE_Y = 4.0f; // the distance the camera will move in the direction the player is travelling (y axis)
         private const float PEEK_DISTANCE_X = 8.0f; // same thing but for x axis
         private const float DEFAULT_SIZE = 6.0f;
@@ -26,15 +29,25 @@ namespace Flamenccio.Core
         private const float MINIMUM_SIZE_DIFFERENCE = 0.1f;
         private const float HURT_ZOOM_DURATION = 0.25f;
 
-        public void Awake()
+        private void Awake()
         {
-            cam = gameObject.GetComponent<Camera>();
+            cam = Camera.main;
             cam.orthographicSize = DEFAULT_SIZE;
             currentSize = DEFAULT_SIZE;
             previousSize = DEFAULT_SIZE;
             Application.targetFrameRate = 60;
         }
+        private void Start()
+        {
+            input = InputManager.Instance;
+        }
         public void FixedUpdate()
+        {
+            if (input == null) input = InputManager.Instance;
+            UpdateSize();
+            UpdatePosition();
+        }
+        private void UpdateSize()
         {
             float sizeDifference = Mathf.Abs(currentSize - cam.orthographicSize);
 
@@ -47,33 +60,45 @@ namespace Flamenccio.Core
             {
                 t = 0;
             }
-
-            if (aimDir != Vector2.zero)
+        }
+        private void UpdatePosition()
+        {
+            switch (InputManager.Instance.CurrentScheme)
             {
-                cameraPositionModX = aimDir.x * PEEK_DISTANCE_X;
-                cameraPositionModY = aimDir.y * PEEK_DISTANCE_Y;
+                case InputManager.ControlScheme.KBM:
+                    UpdateCameraPositionKBM();
+                    break;
+                case InputManager.ControlScheme.XBOX:
+                    UpdateCameraPositionGamepad();
+                    break;
             }
-            else if (moveDir != Vector2.zero)
+
+            Vector3 cameraNewPosition = new(playerPosition.position.x + cameraOffset.x, playerPosition.position.y + cameraOffset.y, gameObject.transform.position.z);
+            gameObject.transform.position = new(Mathf.Lerp(transform.position.x, cameraNewPosition.x, cameraMoveSpeed), Mathf.Lerp(transform.position.y, cameraNewPosition.y, cameraMoveSpeed), cameraNewPosition.z);
+        }
+        private void UpdateCameraPositionKBM()
+        {
+            cameraOffset = Vector2.zero;
+            cameraMoveSpeed = CAMERA_MOVE_SPEED_KBM;
+        }
+        private void UpdateCameraPositionGamepad()
+        {
+            cameraMoveSpeed = CAMERA_MOVE_SPEED_GAMEPAD;
+            if (input.AimInputVector != Vector2.zero)
             {
-                cameraPositionModX = moveDir.x * (PEEK_DISTANCE_X - 4);
-                cameraPositionModY = moveDir.y * (PEEK_DISTANCE_Y - 1);
+                cameraOffset.x = input.AimInputVector.x * PEEK_DISTANCE_X;
+                cameraOffset.y = input.AimInputVector.y * PEEK_DISTANCE_Y;
+            }
+            else if (input.MoveInputVector != Vector2.zero)
+            {
+                cameraOffset.x = input.MoveInputVector.x * (PEEK_DISTANCE_X - 4);
+                cameraOffset.y = input.MoveInputVector.y * (PEEK_DISTANCE_Y - 1);
             }
             else // reset camera position
             {
-                cameraPositionModX = 0.0f;
-                cameraPositionModY = 0.0f;
+                cameraOffset = Vector2.zero;
             }
-
-            Vector3 cameraNewPosition = new(playerPosition.position.x + cameraPositionModX, playerPosition.position.y + cameraPositionModY, gameObject.transform.position.z);
-
-            gameObject.transform.position = new(Mathf.Lerp(transform.position.x, cameraNewPosition.x, CAMERA_MOVE_SPEED), Mathf.Lerp(transform.position.y, cameraNewPosition.y, CAMERA_MOVE_SPEED), cameraNewPosition.z);
         }
-
-        public void OnMove(InputAction.CallbackContext context)
-        {
-            moveDir = context.ReadValue<Vector2>();
-        }
-
         public void IncreaseCameraSize()
         {
             if (cam.orthographicSize >= MAX_SIZE) return;
@@ -96,10 +121,6 @@ namespace Flamenccio.Core
 
             cam.orthographicSize = Mathf.Lerp(newSize, normalSize, 1.0f);
             interruptAdjustment = false;
-        }
-        public void OnAim(InputAction.CallbackContext context)
-        {
-            aimDir = context.ReadValue<Vector2>();
         }
     }
 }

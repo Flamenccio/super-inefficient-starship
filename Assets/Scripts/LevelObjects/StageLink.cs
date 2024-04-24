@@ -11,7 +11,7 @@ namespace Flamenccio.LevelObject.Stages
         [SerializeField] private LayerMask STAGE_LAYER;
         [SerializeField] private LayerMask STAGE_LINK_LAYER;
         private const int STAGE_LENGTH = 16; // length (and width) of a stage module. 
-        private Vector2 OVERLAP_BOX_SIZE = new Vector2(STAGE_LENGTH / 2, STAGE_LENGTH / 2); // the size of the overlap box used to scan for nearby stages.
+        private Vector2 OVERLAP_BOX_SIZE = new(STAGE_LENGTH / 2, STAGE_LENGTH / 2); // the size of the overlap box used to scan for nearby stages.
         private const float NEAR_SEARCH_RADIUS = 2.0f; // radius of circle used to search for nearby links.
         private Stage linkedStage = null;
         private PrimaryWall primaryWall = null;

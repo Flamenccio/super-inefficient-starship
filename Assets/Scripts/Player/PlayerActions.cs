@@ -18,25 +18,25 @@ namespace Flamenccio.Core.Player
             Hold,
         };
         private AttackState mainAttackState = AttackState.Tap;
-        private AllAngle moveInput; // directional input
-        private Vector2 aimInput;
         private Rigidbody2D rb;
-        private AllAngle aimAngle; // this value is the dampened value of ainInput, which is the raw player input
+        private AllAngle rotationAngle; // used for rotating player sprite 
         private bool mainPressed = false;
         private float mainHold = 0.0f;
         private float acceleration = 1.0f;
         private float deceleration = 1.0f;
+        private float kbmFireTimer = 0f;
         private readonly float aimResponsiveness = 0.6f;
         private const float HOLD_THRESHOLD = 0.50f;
+        private const float KBM_FIRE_TIMER_MAX = 2.0f;
         private PlayerMotion playerMotion;
-        private PlayerInput playerInput;
+        private InputManager input;
 
         public Rigidbody2D Rigidbody { get => rb; }
 
         private void Start()
         {
-            playerInput = GetComponent<PlayerInput>();
             rb = gameObject.GetComponent<Rigidbody2D>();
+            input = InputManager.Instance;
             acceleration = playerAtt.MoveSpeed / 4f;
             deceleration = playerAtt.MoveSpeed / 26f;
             playerMotion = PlayerMotion.Instance;
@@ -55,25 +55,15 @@ namespace Flamenccio.Core.Player
         }
         private void Update()
         {
+            if (kbmFireTimer > 0f) kbmFireTimer -= Time.deltaTime;
+
             Fire1Hold();
         }
-
-        public void OnMove(InputAction.CallbackContext context)
-        {
-            if (playerMotion.MovementRestricted) return;
-            moveInput.Vector = context.ReadValue<Vector2>(); // store the input vector
-        }
-
-        public void OnAim(InputAction.CallbackContext context)
-        {
-            if (playerMotion.AimRestricted) return;
-            aimInput = context.ReadValue<Vector2>(); // store the input vector
-        }
-
         public void OnFire1(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
+                kbmFireTimer = KBM_FIRE_TIMER_MAX;
                 AttackTap(powerManager.MainAttackTap, powerManager.MainAttackAimAssisted);
             }
 
@@ -90,10 +80,10 @@ namespace Flamenccio.Core.Player
             }
             else
             {
-                a = aimAngle.Degree;
+                a = input.AimInputDegrees;
             }
 
-            attack?.Invoke(a, moveInput.Degree, transform.position);
+            attack?.Invoke(a, input.MoveInputDegrees, transform.position);
         }
         private void AttackTap(Action<float, float, Vector2> attack, bool aimAssist)
         {
@@ -103,23 +93,25 @@ namespace Flamenccio.Core.Player
             }
             else
             {
-                attack?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position); // TODO maybe avoid using delegates...
+                attack?.Invoke(input.AimInputDegrees, input.MoveInputDegrees, transform.position); // TODO maybe avoid using delegates...
             }
         }
         private void Fire1Hold()
         {
             if (mainPressed)
             {
+                kbmFireTimer = KBM_FIRE_TIMER_MAX;
+
                 if (mainHold >= HOLD_THRESHOLD)
                 {
                     if (mainAttackState == AttackState.Tap)
                     {
-                        powerManager.MainAttackHoldEnter?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position);
+                        powerManager.MainAttackHoldEnter?.Invoke(input.AimInputDegrees,input.MoveInputDegrees, transform.position);
                         mainAttackState = AttackState.Hold;
                     }
                     else
                     {
-                        powerManager.MainAttackHold?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position);
+                        powerManager.MainAttackHold?.Invoke(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
                     }
                 }
                 else
@@ -131,7 +123,7 @@ namespace Flamenccio.Core.Player
             {
                 if (mainAttackState == AttackState.Hold)
                 {
-                    powerManager.MainAttackHoldExit?.Invoke(aimAngle.Degree, moveInput.Degree, transform.position);
+                    powerManager.MainAttackHoldExit?.Invoke(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
                     mainAttackState = AttackState.Tap;
                 }
                 mainHold = 0f;
@@ -148,14 +140,15 @@ namespace Flamenccio.Core.Player
         {
             if (context.performed)
             {
+                kbmFireTimer = KBM_FIRE_TIMER_MAX;
                 AttackTap(powerManager.SpecialAttackTap, powerManager.SpecialAttackAimAssisted);
             }
         }
         private void Movement()
         {
-            if (moveInput.Vector != Vector2.zero) // if the player is providing direcitonal input:
+            if (input.MoveInputVector != Vector2.zero) // if the player is providing direcitonal input:
             {
-                Vector2 newVelocity = new((moveInput.Vector.x * acceleration) + rb.velocity.x, (moveInput.Vector.y * acceleration) + rb.velocity.y);
+                Vector2 newVelocity = new((input.MoveInputVector.x * acceleration) + rb.velocity.x, (input.MoveInputVector.y * acceleration) + rb.velocity.y);
 
                 newVelocity = Vector2.ClampMagnitude(newVelocity, playerAtt.MoveSpeed);
 
@@ -168,18 +161,38 @@ namespace Flamenccio.Core.Player
         }
         private void Aim()
         {
-            if (playerInput.currentControlScheme.Equals("KBM")) MouseAim();
-
-            if (aimInput != Vector2.zero)
+            if (input.CurrentScheme == InputManager.ControlScheme.XBOX)
             {
-                aimAngle.Degree = Mathf.LerpAngle(aimAngle.Degree, Mathf.Atan2(aimInput.y, aimInput.x) * Mathf.Rad2Deg, aimResponsiveness);
+                GamepadAim();
             }
-            else if (moveInput.Vector != Vector2.zero)
+            if (input.CurrentScheme == InputManager.ControlScheme.KBM)
             {
-                aimAngle.Degree = Mathf.LerpAngle(aimAngle.Degree, Mathf.Atan2(moveInput.Vector.y, moveInput.Vector.x) * Mathf.Rad2Deg, aimResponsiveness);
+                MouseAim();
+            }
+        }
+        private void GamepadAim()
+        {
+            if (input.AimInputVector != Vector2.zero)
+            {
+                rotationAngle.Degree = Mathf.LerpAngle(rotationAngle.Degree, input.AimInputDegrees, aimResponsiveness);
+            }
+            else if (input.MoveInputVector != Vector2.zero)
+            {
+                rotationAngle.Degree = Mathf.LerpAngle(rotationAngle.Degree, input.AimInputDegrees, aimResponsiveness);
             }
 
-            rb.rotation = Mathf.LerpAngle(rb.rotation, aimAngle.Degree, aimResponsiveness);
+        }
+        private void MouseAim()
+        {
+            if (kbmFireTimer > 0f)
+            {
+                rotationAngle.Degree = Mathf.LerpAngle(rotationAngle.Degree, input.AimInputDegrees, aimResponsiveness);
+                rb.rotation = Mathf.LerpAngle(rb.rotation, rotationAngle.Degree, aimResponsiveness);
+            }
+            else
+            {
+                rb.rotation = Mathf.LerpAngle(rb.rotation, input.MoveInputDegrees, aimResponsiveness);
+            }
         }
         public void OnDebug1(InputAction.CallbackContext context)
         {
@@ -188,12 +201,6 @@ namespace Flamenccio.Core.Player
                 BuffBase b = new MovementSpeed();
                 powerManager.AddBuff(b);
             }
-        }
-        private void MouseAim()
-        {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log(mousePos);
-            aimInput = mousePos - (Vector2)transform.position;
         }
     }
 }
