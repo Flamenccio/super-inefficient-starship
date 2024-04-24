@@ -178,9 +178,10 @@ namespace Flamenccio.Core.Player
             }
             else if (input.MoveInputVector != Vector2.zero)
             {
-                rotationAngle.Degree = Mathf.LerpAngle(rotationAngle.Degree, input.AimInputDegrees, aimResponsiveness);
+                rotationAngle.Degree = Mathf.LerpAngle(rotationAngle.Degree, input.MoveInputDegrees, aimResponsiveness);
             }
 
+            rb.rotation = Mathf.LerpAngle(rb.rotation, rotationAngle.Degree, aimResponsiveness);
         }
         private void MouseAim()
         {
