@@ -12,6 +12,7 @@ namespace Flamenccio.Utility
         public float MoveInputDegrees { get => moveInput.Degree; }
         public float MoveInputRadians { get => moveInput.Radian; }
         public Vector2 MoveInputVector { get => moveInput.Vector; }
+        public float MousePositionDistance { get; private set; }
         private AllAngle aimInput = new();
         private AllAngle moveInput = new();
         public enum ControlScheme
@@ -22,8 +23,6 @@ namespace Flamenccio.Utility
         public ControlScheme CurrentScheme { get; private set; }
         private void Awake()
         {
-            //UpdateControlScheme(GetComponent<PlayerInput>());
-
             if (Instance != null && Instance != this)
             {
                 Destroy(this);
@@ -48,6 +47,7 @@ namespace Flamenccio.Utility
         {
             if (input.currentControlScheme.Equals("XBOX"))
             {
+                MousePositionDistance = 100f;
                 CurrentScheme = ControlScheme.XBOX;
             }
             else if (input.currentControlScheme.Equals("KBM"))
@@ -69,6 +69,7 @@ namespace Flamenccio.Utility
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             aimInput.Vector = (mousePos - (Vector2)transform.position).normalized;
+            MousePositionDistance = Vector2.Distance(transform.position, mousePos);
         }
     }
 }
