@@ -190,7 +190,7 @@ namespace Flamenccio.Core.Player
                 rotationAngle.Degree = Mathf.LerpAngle(rotationAngle.Degree, input.AimInputDegrees, aimResponsiveness);
                 rb.rotation = Mathf.LerpAngle(rb.rotation, rotationAngle.Degree, aimResponsiveness);
             }
-            else
+            else if (input.MoveInputVector != Vector2.zero)
             {
                 rb.rotation = Mathf.LerpAngle(rb.rotation, input.MoveInputDegrees, aimResponsiveness);
             }
