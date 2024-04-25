@@ -1,3 +1,4 @@
+using Flamenccio.Core;
 using UnityEngine;
 
 namespace Flamenccio.Effects.Visual
@@ -6,7 +7,7 @@ namespace Flamenccio.Effects.Visual
     {
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] private GameObject trail;
-        private const float TRAIL_FREQUENCY = 1f / 60f; // every 12 frames a new trail spawns
+        private const float TRAIL_FREQUENCY = 1f / 60f;
         private float maxSpeed;
         private float speed = 0f;
         private Transform target;
@@ -26,6 +27,8 @@ namespace Flamenccio.Effects.Visual
         }
         private void Update()
         {
+            if (GameState.Instance.Paused) return;
+
             timer += Time.deltaTime;
             trailTimer += Time.deltaTime;
             float turnSpeed = timer / 2f;

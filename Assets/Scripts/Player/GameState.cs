@@ -14,6 +14,7 @@ namespace Flamenccio.Core
         // this class coordinates all other management classes
 
         public static GameState Instance { get; private set; }
+        public bool Paused { get; private set; }
 
         // parameters
         private int progress = 0;
@@ -75,6 +76,7 @@ namespace Flamenccio.Core
 
             mainTimer = maxTime;
             spawnControl = gameObject.GetComponent<Spawner>();
+            Paused = false;
         }
         private void Update()
         {
@@ -263,11 +265,12 @@ namespace Flamenccio.Core
             {
                 if (Time.timeScale == 0.0f)
                 {
+                    Paused = false;
                     Time.timeScale = 1.0f;
-
                 }
                 else
                 {
+                    Paused = true;
                     Time.timeScale = 0f;
                 }
             }

@@ -1,3 +1,4 @@
+using Flamenccio.Core;
 using System;
 using UnityEngine;
 
@@ -51,6 +52,7 @@ namespace Flamenccio.Powerup.Weapon
         }
         public virtual void Run()
         {
+
             if (cooldownTimer < cooldown)
             {
                 cooldownTimer += Time.deltaTime;
