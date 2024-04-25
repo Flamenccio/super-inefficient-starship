@@ -10,7 +10,7 @@ namespace Flamenccio.Core
         public int MinimumEnemySpawningLevel { get => MINIMUM_ENEMY_SPAWNING_LEVEL; }
         private const int MAXIMUM_LEVEL = 20;
         private const int MINIMUM_ENEMY_SPAWNING_LEVEL = 1;
-        private static List<GameObject> enemyList = new();
+        private List<GameObject> enemyList = new();
         private GameObject[][] enemyListTiered = new GameObject[MAXIMUM_LEVEL][];
         private void Start()
         {

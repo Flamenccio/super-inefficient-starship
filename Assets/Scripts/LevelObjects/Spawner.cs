@@ -53,11 +53,11 @@ namespace Flamenccio.Core
         private const float ENEMY_SPAWN_RADIUS = 5.0f; // the minimum space required between the player and enemy for it (the enemy) to spawn
         private void Start()
         {
+            stageList.Add(FindObjectOfType<Stage>());
+            enemyList = gameObject.GetComponent<EnemyList>();
         }
         private void Awake()
         {
-            stageList.Add(FindObjectOfType<Stage>());
-            enemyList = gameObject.GetComponent<EnemyList>();
         }
         public void DecreaseWallCount()
         {
@@ -150,6 +150,7 @@ namespace Flamenccio.Core
 
             List<StageVariant.Variants> blacklisted = new(StageResources.Instance.GetStageVariant(toolkit.rootStage.Variant).Links.First(v => v.LinkDirection == localSpawnDirection.Direction).BlackListedVariants); // copy blacklisted variants of stage link in chosen direction
             List<StageVariant.Variants> variants = new(StageResources.Instance.GetVariantsExtendableInDirection(Directions.Instance.OppositeOf(localSpawnDirection.Direction)).Except(blacklisted)); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
+            
             StageVariant.Variants v = variants[Random.Range(1, variants.Count)]; // pull a random variant from the list (excluding NORMAL variant)
             newStage = Instantiate(stagePrefab, stageContainer.transform).GetComponent<Stage>(); // instantiate new stage
             newStage.UpdateVariant(v);
