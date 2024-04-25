@@ -78,9 +78,7 @@ namespace Flamenccio.Core
             {
                 tk.spawnAttempts++;
                 tk.root = GenerateRandomRootStage(); // pick random root stage
-                tk.localSpawnCoords = GenerateLocalPosition(tk.root); // pick random local location
-                tk.globalSpawnCoords = tk.localSpawnCoords + (Vector2)stageList[tk.root].transform.position; // update the global position
-                tk.globalSpawnCoords = OffsetPosition(tk.globalSpawnCoords);
+                tk.globalSpawnCoords = GenerateGlobalPositionOnGrid(stageList[tk.root].transform, tk.root);
                 target = Physics2D.OverlapPoint(tk.globalSpawnCoords, wallLayer); // check if a wall is already at that location
 
                 if (target != null) continue;
@@ -123,7 +121,7 @@ namespace Flamenccio.Core
             tk.root = GenerateRandomRootStage(); // choose a root stage to spawn in
             tk.rootStage = stageList[tk.root];
             tk.globalSpawnCoords = FindPointInStage(tk.rootStage);
-            tk.globalSpawnCoords = AlignPosition(tk.globalSpawnCoords);
+            tk.globalSpawnCoords = AlignPosition(tk.globalSpawnCoords, tk.rootStage.transform);
             GameObject star = Instantiate(starPrefab, tk.rootStage.transform); // spawn the star
             star.transform.position = tk.globalSpawnCoords;
             return star;
@@ -150,7 +148,6 @@ namespace Flamenccio.Core
 
             List<StageVariant.Variants> blacklisted = new(StageResources.Instance.GetStageVariant(toolkit.rootStage.Variant).Links.First(v => v.LinkDirection == localSpawnDirection.Direction).BlackListedVariants); // copy blacklisted variants of stage link in chosen direction
             List<StageVariant.Variants> variants = new(StageResources.Instance.GetVariantsExtendableInDirection(Directions.Instance.OppositeOf(localSpawnDirection.Direction)).Except(blacklisted)); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
-            
             StageVariant.Variants v = variants[Random.Range(1, variants.Count)]; // pull a random variant from the list (excluding NORMAL variant)
             newStage = Instantiate(stagePrefab, stageContainer.transform).GetComponent<Stage>(); // instantiate new stage
             newStage.UpdateVariant(v);
@@ -171,8 +168,7 @@ namespace Flamenccio.Core
             Collider2D wall;
 
             // new method: attempt to find a nearby wall to spawn next to. if none is found, just place the wall
-            toolkit.localSpawnCoords = GenerateLocalPositionOnGrid(toolkit.root);
-            toolkit.globalSpawnCoords = toolkit.localSpawnCoords + (Vector2)toolkit.rootStage.transform.position;
+            toolkit.globalSpawnCoords = GenerateGlobalPositionOnGrid(toolkit.rootStage.transform, toolkit.root);
             wall = Physics2D.OverlapCircle(toolkit.globalSpawnCoords, 12.0f, wallLayer);
 
             if (wall != null)
@@ -212,7 +208,7 @@ namespace Flamenccio.Core
             toolkit.root = GenerateRandomRootStage(); // choose a root stage to spawn in
             toolkit.rootStage = stageList[toolkit.root];
             toolkit.globalSpawnCoords = FindPointInStage(toolkit.rootStage);
-            toolkit.globalSpawnCoords = AlignPosition(toolkit.globalSpawnCoords);
+            toolkit.globalSpawnCoords = AlignPosition(toolkit.globalSpawnCoords, toolkit.rootStage.transform);
 
             // spawn the heart 
             GameObject heart = Instantiate(heartPrefab, toolkit.rootStage.transform);
@@ -225,32 +221,37 @@ namespace Flamenccio.Core
             sf.FlyTo(target);
         }
         /// <summary>
-        /// Because the squares on the stage grid are offset by 0.5 units (the center of the grid is between the squares), we also need to offset each spawned entity and item by 0.5 units to perfectly fit the square.
+        /// Takes a global position and a parent transform and returns a modified global position where the coordinates are on a grid.
         /// </summary>
-        /// <param name="offset">Position to offset</param>
-        /// <returns>Returns a modified version of the given position.</returns>
-        private Vector2 OffsetPosition(Vector2 offset)
+        private Vector2 OffsetPosition(Vector2 globalPosition, Transform parent)
         {
+            if (parent == null) return Vector2.zero;
+
+            Vector2 localPosition = (Vector2)parent.position - globalPosition;
+
             // offset the spawn location so that the wall spawns in the right place (on square)
-            if (offset.x > 0) offset.x -= 0.5f;
-            if (offset.y > 0) offset.y -= 0.5f;
-            if (offset.x <= 0) offset.x += 0.5f;
-            if (offset.y <= 0) offset.y += 0.5f;
-            return offset;
+            if (localPosition.x > 0) localPosition.x -= 0.5f;
+            else localPosition.x += 0.5f;
+
+            if (localPosition.y > 0) localPosition.y -= 0.5f;
+            else localPosition.y += 0.5f;
+
+            return localPosition + (Vector2)parent.position;
         }
-        private Vector2 AlignPosition(Vector2 position)
+        private Vector2 AlignPosition(Vector2 globalPosition, Transform parent)
         {
-            Vector2 newPos = new(Mathf.Ceil(position.x), Mathf.Ceil(position.y));
-            return OffsetPosition(newPos);
+            Vector2 newPos = new(Mathf.Ceil(globalPosition.x), Mathf.Ceil(globalPosition.y));
+            return OffsetPosition(newPos, parent);
         }
         private Vector2 GenerateLocalPosition(int rootStage)
         {
             return new Vector2(Mathf.FloorToInt(Random.Range(-stageList[rootStage].Extents.x, stageList[rootStage].Extents.x)), Mathf.FloorToInt(Random.Range(-stageList[rootStage].Extents.y, stageList[rootStage].Extents.y)));
         }
-        private Vector2 GenerateLocalPositionOnGrid(int rootStage) // like GenerateLocalPosition, but returns coordinates aligned with grid.
+        private Vector2 GenerateGlobalPositionOnGrid(Transform parent, int root) // like GenerateLocalPosition, but returns coordinates aligned with grid.
         {
-            Vector2 v = GenerateLocalPosition(rootStage);
-            return OffsetPosition(v);
+            Vector2 v = GenerateLocalPosition(root);
+            Vector2 globalPosition = v + (Vector2)parent.position;
+            return OffsetPosition(globalPosition, parent);
         }
         private int GenerateRandomRootStage()
         {
@@ -297,7 +298,7 @@ namespace Flamenccio.Core
             root.gameObject.layer = LayerMask.NameToLayer("Background"); // return stage layer
             int pairs = Mathf.FloorToInt(collisions.Count / 2f);
             int pair = Random.Range(0, pairs);
-            return new Vector2(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin); // URGENT this causes a bug, but idk how...
+            return new Vector2(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin);
         }
     }
 }

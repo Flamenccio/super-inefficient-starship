@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using Flamenccio.Utility;
-using UnityEngine.InputSystem;
 
 namespace Flamenccio.Core
 {
@@ -44,6 +43,7 @@ namespace Flamenccio.Core
         public void FixedUpdate()
         {
             if (input == null) input = InputManager.Instance;
+
             UpdateSize();
             UpdatePosition();
         }
