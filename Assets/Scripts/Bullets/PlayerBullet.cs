@@ -17,6 +17,8 @@ namespace Flamenccio.Attack.Player
                 "Effects",
                 "PlayerIntangible",
                 "Items",
+                "ItemBox",
+                "PBullet",
             };
         }
     }

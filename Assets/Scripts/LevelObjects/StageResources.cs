@@ -28,12 +28,6 @@ namespace Flamenccio.LevelObject.Stages
             AllVariants = new(System.Enum.GetValues(typeof(StageVariant.Variants)).Cast<StageVariant.Variants>());
             stageVariants.AddRange(Resources.LoadAll<StageVariant>("StageVariants")); // load all stagevariants here
             stageVariants.Sort((a, b) => (int)a.Variant < (int)b.Variant ? -1 : 1); // sort variants by variant
-
-            // DEBUG
-            foreach (var variant in stageVariants)
-            {
-                Debug.Log(variant);
-            }
         }
         /// <summary>
         /// Returns a StageVariant matching the variant given.

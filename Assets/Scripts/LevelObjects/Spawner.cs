@@ -166,8 +166,6 @@ namespace Flamenccio.Core
             toolkit.root = GenerateRandomRootStage();
             toolkit.rootStage = stageList[toolkit.root];
             Collider2D wall;
-
-            // new method: attempt to find a nearby wall to spawn next to. if none is found, just place the wall
             toolkit.globalSpawnCoords = GenerateGlobalPositionOnGrid(toolkit.rootStage.transform, toolkit.root);
             wall = Physics2D.OverlapCircle(toolkit.globalSpawnCoords, 12.0f, wallLayer);
 
@@ -221,27 +219,19 @@ namespace Flamenccio.Core
             sf.FlyTo(target);
         }
         /// <summary>
-        /// Takes a global position and a parent transform and returns a modified global position where the coordinates are on a grid.
+        /// Takes a global position and returns it aligned with a grid.
         /// </summary>
-        private Vector2 OffsetPosition(Vector2 globalPosition, Transform parent)
+        private Vector2 AlignPosition(Vector2 globalPosition, Transform parent)
         {
             if (parent == null) return Vector2.zero;
 
-            Vector2 localPosition = (Vector2)parent.position - globalPosition;
-
-            // offset the spawn location so that the wall spawns in the right place (on square)
-            if (localPosition.x > 0) localPosition.x -= 0.5f;
-            else localPosition.x += 0.5f;
-
-            if (localPosition.y > 0) localPosition.y -= 0.5f;
-            else localPosition.y += 0.5f;
+            Vector2 discretePosition = new(Mathf.Floor(globalPosition.x), Mathf.Floor(globalPosition.y));
+            Vector2 localPosition = (Vector2)parent.position - discretePosition;
+            Debug.Log($"Local position: {localPosition}");
+            localPosition.x -= 0.5f;
+            localPosition.y -= 0.5f;
 
             return localPosition + (Vector2)parent.position;
-        }
-        private Vector2 AlignPosition(Vector2 globalPosition, Transform parent)
-        {
-            Vector2 newPos = new(Mathf.Ceil(globalPosition.x), Mathf.Ceil(globalPosition.y));
-            return OffsetPosition(newPos, parent);
         }
         private Vector2 GenerateLocalPosition(int rootStage)
         {
@@ -251,7 +241,7 @@ namespace Flamenccio.Core
         {
             Vector2 v = GenerateLocalPosition(root);
             Vector2 globalPosition = v + (Vector2)parent.position;
-            return OffsetPosition(globalPosition, parent);
+            return AlignPosition(globalPosition, parent);
         }
         private int GenerateRandomRootStage()
         {
