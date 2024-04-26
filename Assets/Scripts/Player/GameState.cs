@@ -106,7 +106,7 @@ namespace Flamenccio.Core
         public void CollectMiniStar(int value)
         {
             AddKillPoint(value);
-            spawnControl.SpawnFlyingStar(PlayerMotion.Instance.PlayerPosition, PlayerMotion.Instance.transform, hudControl.transform);
+            spawnControl.SpawnFlyingStar(PlayerMotion.Instance.PlayerPosition, PlayerMotion.Instance.transform);
         }
         public void AddKillPoint(int pt)
         {
