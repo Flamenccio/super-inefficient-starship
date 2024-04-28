@@ -24,6 +24,7 @@ namespace Flamenccio.LevelObject.Stages
             ChokepointSouth = 8,
             ChokepointEast = 9,
             ChokepointWest = 10,
+            CrookedHallwayRightLeft = 11,
         }
         [System.Serializable]
         public struct LinkSet

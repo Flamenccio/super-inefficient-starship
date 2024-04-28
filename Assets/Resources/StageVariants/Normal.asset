@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Normal
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 63fd8115dcf233c43bb756193bc64aa4, type: 3}
-  secondaryWallLayout: {fileID: 0}
+  secondaryWallLayout: {fileID: 11400000, guid: 9aa097f03df3746408b1c4f16f7de13a, type: 2}
   linkSet:
   - linkDirection: 0
     blackListedVariants: 

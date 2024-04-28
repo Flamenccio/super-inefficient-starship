@@ -11,15 +11,18 @@ namespace Flamenccio.LevelObject.Stages
         public bool InitialStage { get { return initialStage; } }
         public Vector2 Extents { get => polymesh.bounds.extents; }
         public Vector2 Center { get => polymesh.bounds.center; }
+
         [SerializeField] private SpriteRenderer spriteRen; // sprite renderer
         [SerializeField] private GameObject invisibleWallPrefab; // prefab for invisible walls
         [SerializeField] private GameObject stageLinkPrefab; // prefab for stage links
         [SerializeField] private bool initialStage; // is this stage the first one in the level?
+
         private StageVariant.Variants variant = StageVariant.Variants.Normal; // initialize the stage as a normal variant
         private Sprite sprite; // sprite representing the stage
         private Dictionary<Directions.CardinalValues, StageLink> links = new(); // a list of all stage links associated with their direction
         private PolygonCollider2D polyCollider; // collider that conforms to sprite shape
         private Mesh polymesh; // mesh for poly collider
+
         private void Awake()
         {
             polyCollider = gameObject.GetComponent<PolygonCollider2D>();
@@ -56,17 +59,12 @@ namespace Flamenccio.LevelObject.Stages
         }
         private void BuildSecondaryWalls(StageVariant variant)
         {
-            int i = 0;
+            if (variant.SecondaryWallLayout == null) return;
 
-            if (variant.SecondaryWallLayout != null)
+            foreach (var invisibleWallConfig in variant.SecondaryWallLayout.Layout)
             {
-                foreach (var invisibleWallConfig in variant.SecondaryWallLayout.Layout)
-                {
-                    SecondaryWall instance = Instantiate(invisibleWallPrefab, transform).GetComponent<SecondaryWall>();
-                    CopyWallAttributes(instance, invisibleWallConfig);
-                    instance.UpdateAttributes();
-                    i++;
-                }
+                SecondaryWall instance = Instantiate(invisibleWallPrefab, transform).GetComponent<SecondaryWall>();
+                instance.BuildWall(invisibleWallConfig);
             }
         }
         private void BuildLinks(StageVariant variant)
@@ -116,15 +114,6 @@ namespace Flamenccio.LevelObject.Stages
                 return false;
             }
             return l.PopulateLink(stage);
-        }
-        private void CopyWallAttributes(SecondaryWall wall, WallLayout.WallAttributes attributes)
-        {
-            // URGENT temporarily disabled
-            /*
-            wall.relativePosition = attributes.Position;
-            wall.xSize = attributes.XSize;
-            wall.ySize = attributes.YSize;
-            */
         }
         public void ScanNearbyStages()
         {

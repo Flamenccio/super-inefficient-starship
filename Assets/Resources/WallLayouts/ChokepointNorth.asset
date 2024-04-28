@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7526a2b97c861e54ba8a9b0854b981b5, type: 3}
   m_Name: ChokepointNorth
   m_EditorClassIdentifier: 
-  associatedVariant: 7
-  layout:
-  - xSize: 16
-    ySize: 2
-    position: {x: 0, y: 7}
-    permanence: 1
-  - xSize: 16
-    ySize: 10
-    position: {x: 0, y: -3}
-    permanence: 1
+  Layout:
+  - Shape: 0
+    SideLengths: {x: 16, y: 10}
+    Center: {x: 0, y: -3}
+    Vertices: []
+    Origin: {x: 0, y: 0}
+  - Shape: 0
+    SideLengths: {x: 16, y: 2}
+    Center: {x: 0, y: 7}
+    Vertices: []
+    Origin: {x: 0, y: 0}
+  AssociatedVariant: 7

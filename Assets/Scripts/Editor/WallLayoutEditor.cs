@@ -37,6 +37,8 @@ namespace Flamenccio.FlamenccioEditor // this is a really stupid name
             SerializedProperty shapeEnum = property.FindPropertyRelative("Shape");
             WallLayout.WallShape shape = (WallLayout.WallShape)shapeEnum.enumValueIndex;
 
+            verticesList.tooltip = "The first vertex must be (0,0)--move the collider around by changing the Origin property.";
+
             container.Add(shapeField);
             container.Add(centerField);
             container.Add(originField);
@@ -45,8 +47,6 @@ namespace Flamenccio.FlamenccioEditor // this is a really stupid name
 
             HideAll(container.Children());
             shapeField.style.display = DisplayStyle.Flex;
-
-            Debug.Log("huH");
 
             Action<WallLayout.WallShape> UpdateShapeDisplays = (s) =>
             {
