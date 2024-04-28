@@ -117,11 +117,14 @@ namespace Flamenccio.LevelObject.Stages
             }
             return l.PopulateLink(stage);
         }
-        private void CopyWallAttributes(SecondaryWall wall, WallLayout.InvisibleWallAttributes attributes)
+        private void CopyWallAttributes(SecondaryWall wall, WallLayout.WallAttributes attributes)
         {
+            // URGENT temporarily disabled
+            /*
             wall.relativePosition = attributes.Position;
             wall.xSize = attributes.XSize;
             wall.ySize = attributes.YSize;
+            */
         }
         public void ScanNearbyStages()
         {
