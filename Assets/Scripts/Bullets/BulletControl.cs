@@ -21,6 +21,7 @@ namespace Flamenccio.Attack
         [SerializeField] protected GameObject impactEffect;
         [SerializeField] protected List<string> ignoredTags = new();
         [SerializeField] protected KnockbackMultipiers knockbackMultiplier;
+        [SerializeField] protected int hp = 1;
         protected CameraEffects cameraEff = CameraEffects.Instance;
         protected Vector2 origin = Vector2.zero;
 
@@ -31,6 +32,7 @@ namespace Flamenccio.Attack
         public int KnockbackMultiplier { get => (int)knockbackMultiplier; }
         public float Range { get => maxDistance; }
         public float Speed { get => moveSpeed; }
+        public int HP { get => hp; }
 
         [SerializeField] protected Rigidbody2D rb;
 
@@ -73,7 +75,7 @@ namespace Flamenccio.Attack
         {
             Destroy(this.gameObject);
         }
-        protected virtual void Trigger(Collider2D collider)
+        protected virtual void Trigger(Collider2D collider) // TODO this should go into PlayerBullet
         {
             if (collider.gameObject.CompareTag("EBullet"))
             {
@@ -83,7 +85,10 @@ namespace Flamenccio.Attack
             {
                 Instantiate(impactEffect, transform.position, Quaternion.identity);
             }
-            Destroy(this.gameObject);
+            
+            if (hp <= 0) Destroy(this.gameObject);
+
+            hp--;
         }
 
         protected void OnCollisionEnter2D(Collision2D collision)

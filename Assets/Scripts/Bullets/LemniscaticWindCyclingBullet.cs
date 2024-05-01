@@ -6,13 +6,13 @@ namespace Flamenccio.Attack.Player
     {
         public int EnemiesHit { get; private set; }
         private float timer = 0f;
-        private float maxTimer = 0.10f;
+        private readonly float lifeTimer = 0.10f;
 
         protected override void DeathTimer()
         {
             timer += Time.deltaTime;
 
-            if (timer >= maxTimer)
+            if (timer >= lifeTimer)
             {
                 Destroy(gameObject);
             }
