@@ -10,6 +10,7 @@ namespace Flamenccio.Powerup.Weapon
     {
         [SerializeField] private GameObject shockwaveEffect;
         [SerializeField] private GameObject attack;
+        [SerializeField] private GameObject specialReplenishEffect;
         private LemniscaticWindCyclingBullet attackInstance;
         private bool rechargeUsed = false;
         private const float DURATION = 0.10f;
@@ -48,6 +49,7 @@ namespace Flamenccio.Powerup.Weapon
                 AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialQue, transform.position);
                 rechargeUsed = true;
                 playerAtt.ReplenishCharge(1);
+                Instantiate(specialReplenishEffect, PlayerMotion.Instance.transform);
             }
         }
     }
