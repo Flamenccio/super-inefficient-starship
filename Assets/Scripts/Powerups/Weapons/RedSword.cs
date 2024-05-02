@@ -33,6 +33,7 @@ namespace Flamenccio.Powerup.Weapon
             flip = !flip;
             cooldownTimer = 0f;
             RedSwordAttack inst = Instantiate(mainAttack, PlayerMotion.Instance.transform).GetComponent<RedSwordAttack>();
+            inst.transform.localPosition = new Vector2(SLASH_OFFSET, 0);
             inst.Flipped = flip;
         }
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
