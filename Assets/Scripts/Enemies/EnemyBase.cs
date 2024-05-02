@@ -18,8 +18,6 @@ namespace Enemy
         [SerializeField] protected float moveSpeed = 0f;
         [SerializeField] protected LayerMask playerLayer;
         [SerializeField] protected SpriteRenderer spriteRen;
-        [SerializeField] protected GameObject killEffect;
-        [SerializeField] protected GameObject hitEffect;
         [SerializeField] protected Animator animator;
         [SerializeField] protected GameObject miniStarPrefab;
         [SerializeField] protected float activeRange; // the player must be within range for this enemy to activate
@@ -99,7 +97,7 @@ namespace Enemy
                 Instantiate(miniStarPrefab, transform.position, Quaternion.Euler(0f, 0f, randomAngle));
             }
 
-            Instantiate(killEffect, transform.position, Quaternion.identity); // spawn kill effect
+            EffectManager.Instance.SpawnEffect(EffectManager.Effects.EnemyKill, transform.position);
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Normal, transform.position); // do a little shake
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.enemyKill, transform.position);
             Destroy(gameObject); // destroy self
@@ -112,7 +110,7 @@ namespace Enemy
                 AudioManager.Instance.PlayOneShot(FMODEvents.Instance.enemyHurt, transform.position);
                 DamageFlash();
                 CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
-                Instantiate(hitEffect, transform.position, Quaternion.identity);
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.EnemyHit, transform.position);
             }
         }
         /// <summary>

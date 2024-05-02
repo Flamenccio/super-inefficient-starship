@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 439820155804191655}
   - component: {fileID: 6298481370965533257}
   - component: {fileID: 342103236671325835}
+  - component: {fileID: 4389057581296021021}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -49,11 +50,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   goalArrow: {fileID: 0}
   hudControl: {fileID: 0}
-  hitEffect2: {fileID: 6901339793978723851, guid: 13805d7e337ce6945ac162b28f478c88, type: 3}
   cameraControl: {fileID: 0}
-  player: {fileID: 0}
   playerAtt: {fileID: 0}
-  cam: {fileID: 0}
   infiniteTime: 0
 --- !u!114 &439820155804191655
 MonoBehaviour:
@@ -116,4 +114,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ba04bcdd44281643b0f86b13f32a378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScript: {fileID: 0}
+--- !u!114 &4389057581296021021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4731174166187999380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c42071c4274795a41abee95c4c5997cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletParry: {fileID: 8596703315022740292, guid: 9bbb1de6277cc2e42bf8b447521a9a09, type: 3}
+  bulletImpact: {fileID: 5705401448773474299, guid: e20bac83db7a0f14d93f0809b1b1f3a4, type: 3}
+  explosion: {fileID: 5889722259713699865, guid: 9079724ab2fd8174ca550088253330ee, type: 3}
+  enemyHit: {fileID: 245488470297807647, guid: 4c81216f993a4a6459468c4f226759c2, type: 3}
+  enemyKill: {fileID: 5295943195373725499, guid: c3c38e79a55fecd4e820b845d8bb450a, type: 3}
+  specialReplenish: {fileID: 4606643216746805740, guid: c8138a6e706bfe44984bfe2b254d7210, type: 3}

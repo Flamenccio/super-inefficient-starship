@@ -17,8 +17,6 @@ namespace Flamenccio.Attack
         // default move speed
         [SerializeField] protected float moveSpeed = 20.0f;
         [SerializeField] protected float maxDistance = 1f;
-        [SerializeField] protected GameObject parryEffect;
-        [SerializeField] protected GameObject impactEffect;
         [SerializeField] protected List<string> ignoredTags = new();
         [SerializeField] protected KnockbackMultipiers knockbackMultiplier;
         [SerializeField] protected int hp = 1;
@@ -79,11 +77,13 @@ namespace Flamenccio.Attack
         {
             if (collider.gameObject.CompareTag("EBullet"))
             {
-                Instantiate(parryEffect, transform.position, Quaternion.identity);
+                //Instantiate(parryEffect, transform.position, Quaternion.identity);
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletParry, transform.position);
             }
             else
             {
-                Instantiate(impactEffect, transform.position, Quaternion.identity);
+                //Instantiate(impactEffect, transform.position, Quaternion.identity);
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletImpact, transform.position);
             }
             
             if (hp <= 0) Destroy(this.gameObject);

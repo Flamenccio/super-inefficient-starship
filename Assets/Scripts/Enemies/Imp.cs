@@ -1,5 +1,6 @@
 using UnityEngine;
 using Flamenccio.Attack;
+using Flamenccio.Effects.Visual;
 
 namespace Enemy
 {
@@ -18,7 +19,7 @@ namespace Enemy
             if (col.gameObject.CompareTag("Player"))
             {
                 // destroy this gameObject, but don't drop stars
-                Instantiate(killEffect, transform.position, Quaternion.identity); // spawn kill effects
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.EnemyKill, transform.position);
                 GameObject ouch = Instantiate(hitboxPrefab, transform.position, Quaternion.identity);
                 ouch.GetComponent<Hitbox>().EditProperties(0f, hitRadius, 0, Hitbox.AttackType.Enemy);
                 Destroy(gameObject); // destroy self
