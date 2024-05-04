@@ -75,17 +75,6 @@ namespace Flamenccio.Attack
         }
         protected virtual void Trigger(Collider2D collider) // TODO this should go into PlayerBullet
         {
-            if (collider.gameObject.CompareTag("EBullet"))
-            {
-                //Instantiate(parryEffect, transform.position, Quaternion.identity);
-                EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletParry, transform.position);
-            }
-            else
-            {
-                //Instantiate(impactEffect, transform.position, Quaternion.identity);
-                EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletImpact, transform.position);
-            }
-            
             if (hp <= 0) Destroy(this.gameObject);
 
             hp--;
