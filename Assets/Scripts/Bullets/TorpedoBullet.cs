@@ -7,7 +7,6 @@ namespace Flamenccio.Attack.Enemy
     public class TorpedoBullet : EnemyBulletNormal
     {
         [SerializeField] private LayerMask playerLayer;
-        [SerializeField] private GameObject afterimage;
         [SerializeField] private GameObject hitbox;
         private GameObject player;
         private float lifetime = 0f;
@@ -15,6 +14,12 @@ namespace Flamenccio.Attack.Enemy
         private const float SEARCH_RADIUS = 6f;
         private const float TURN_SPEED = 6f / 60f;
         private const float AFTERIMAGE_FREQUENCY = 3f / 60f;
+        private EffectManager effectManager;
+
+        private void Start()
+        {
+            effectManager = EffectManager.Instance;
+        }
         protected override void Behavior()
         {
             if (player == null)
@@ -38,7 +43,7 @@ namespace Flamenccio.Attack.Enemy
             if (afterimageTimer >= AFTERIMAGE_FREQUENCY)
             {
                 afterimageTimer = 0f;
-                Instantiate(afterimage, transform.position, Quaternion.identity);
+                effectManager.SpawnTrail(TrailPool.Trails.EnemyMissileTrail, transform.position);
             }
         }
         protected override void DeathTimer()

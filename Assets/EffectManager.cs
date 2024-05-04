@@ -12,12 +12,7 @@ namespace Flamenccio.Effects.Visual
             Explosion,
             EnemyHit,
             EnemyKill,
-            StarSpawn,
-            StarCollect,
-            WallSpawn,
-            ItemCollect,
-            ItemDestroy,
-            SpecialReplenish
+            SpecialReplenish,
         }
 
         public static EffectManager Instance { get; private set; }
@@ -29,6 +24,7 @@ namespace Flamenccio.Effects.Visual
         [SerializeField] private GameObject enemyHit;
         [SerializeField] private GameObject enemyKill;
         [SerializeField] private GameObject specialReplenish;
+        [SerializeField] private TrailPool trailPool;
 
         private void Awake()
         {
@@ -51,7 +47,6 @@ namespace Flamenccio.Effects.Visual
                 { Effects.EnemyKill, enemyKill },
                 { Effects.SpecialReplenish, specialReplenish },
             };
-
         }
         public void SpawnEffect(Effects effect, Transform parent)
         {
@@ -76,6 +71,11 @@ namespace Flamenccio.Effects.Visual
             }
 
             Instantiate(obj, origin, rotation);
+        }
+        public void SpawnTrail(TrailPool.Trails trail, Vector2 origin)
+        {
+            Trail t = trailPool.TrailsPool[trail].Get();
+            t.transform.position = origin;
         }
     }
 }

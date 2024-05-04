@@ -45,8 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cost: 0
-  cooldown: 1
+  cooldown: 0.5
   holdThreshold: 0
-  duration: 0.083333336
-  speed: 50
   afterImage: {fileID: 7310451257306078532, guid: 347bae39dfd536f4480a81b631b45266, type: 3}

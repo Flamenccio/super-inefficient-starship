@@ -6,7 +6,6 @@ namespace Flamenccio.Effects.Visual
     public class StarFly : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D rb;
-        [SerializeField] private GameObject trail;
         private const float TRAIL_FREQUENCY = 1f / 60f;
         private float maxSpeed;
         private float speed = 0f;
@@ -14,10 +13,15 @@ namespace Flamenccio.Effects.Visual
         private float timer;
         private float trailTimer;
         private int loop = 0;
+        private EffectManager effectManager;
 
         private void Awake()
         {
             maxSpeed = 25;
+        }
+        private void Start()
+        {
+            effectManager = EffectManager.Instance;
         }
         public void FlyTo(Transform v)
         {
@@ -43,7 +47,7 @@ namespace Flamenccio.Effects.Visual
             if (trailTimer > TRAIL_FREQUENCY)
             {
                 trailTimer = 0f;
-                Instantiate(trail, transform.position, Quaternion.identity);
+                effectManager.SpawnTrail(TrailPool.Trails.StarFlyTrail, transform.position);
             }
         }
         private void OnTriggerEnter2D(Collider2D collision)

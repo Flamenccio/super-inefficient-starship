@@ -34,7 +34,6 @@ namespace Flamenccio.Core
             cam.orthographicSize = DEFAULT_SIZE;
             currentSize = DEFAULT_SIZE;
             previousSize = DEFAULT_SIZE;
-            Application.targetFrameRate = 60;
         }
         private void Start()
         {

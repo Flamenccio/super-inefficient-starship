@@ -85,10 +85,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a880bf525ba3ec048aa1db2495464828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4
+  moveSpeed: 8
   maxDistance: 10
-  parryEffect: {fileID: 8596703315022740292, guid: 9bbb1de6277cc2e42bf8b447521a9a09, type: 3}
-  impactEffect: {fileID: 5705401448773474299, guid: e20bac83db7a0f14d93f0809b1b1f3a4, type: 3}
   ignoredTags: []
   knockbackMultiplier: 10
   hp: 20
