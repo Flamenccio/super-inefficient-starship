@@ -64,5 +64,9 @@ namespace Flamenccio.Effects.Visual
             screenShakeMagnitudeDecay = screenShakeMagnitude / SCREEN_SHAKE_DURATION;
             screenShakeTime = SCREEN_SHAKE_DURATION;
         }
+        public void CutToPosition(Vector3 position)
+        {
+            Camera.main.transform.position = position;
+        }
     }
 }

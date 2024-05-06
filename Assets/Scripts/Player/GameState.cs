@@ -29,6 +29,7 @@ namespace Flamenccio.Core
         private const int MIN_LEVEL_WALL_UPGRADE = 12; // the minimum level required for level 2 walls to start spawning
         private const float CHANCE_WALL_UPGRADE = 0.5f;
         private const int MIN_LEVEL_ENEMY_SPAWN = 0;
+        private const int MIN_LEVEL_PORTAL_SPAWN = 6;
 
         // timers
         private float maxTime = BASE_TIME;
@@ -119,6 +120,12 @@ namespace Flamenccio.Core
 
             difficulty++; // increase difficulty
             heart = spawnControl.SpawnHeart();
+
+            if (difficulty >= MIN_LEVEL_PORTAL_SPAWN)
+            {
+                spawnControl.SpawnPortal();
+            }
+
             spawnControl.SpawnStage(); // spawn another stage
 
             if (wallFrequency > MAX_WALL_FREQUENCY) // increase wall frequency
@@ -129,6 +136,7 @@ namespace Flamenccio.Core
             waveSpawnAmount = EnemyWaveLevel();
             maxTime += MAX_TIME_INCREASE; // increase the maximum time
             hudControl.DisplayLevelUpText(difficulty); // display on HUD
+
 
             if (progress >= DifficultyCurve(difficulty + 1)) // level up again, if necessary
             {

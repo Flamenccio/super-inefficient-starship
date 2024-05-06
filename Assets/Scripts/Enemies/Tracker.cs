@@ -182,7 +182,7 @@ namespace Enemy
             checkTimer = CHECK_TIMER_MAX;
             Collider2D playerScan = Physics2D.OverlapCircle(transform.position, RADAR_RADIUS, playerLayer);
 
-            if (playerScan.gameObject != null)
+            if (playerScan != null)
             {
                 float distanceToPlayer = Vector2.Distance(transform.position, playerScan.transform.position);
 

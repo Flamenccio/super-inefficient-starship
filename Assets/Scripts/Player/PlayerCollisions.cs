@@ -4,6 +4,7 @@ using Flamenccio.Item;
 using Flamenccio.Attack;
 using Flamenccio.Effects.Audio;
 using Flamenccio.Effects;
+using Flamenccio.LevelObject;
 
 namespace Flamenccio.Core.Player
 {
@@ -26,11 +27,13 @@ namespace Flamenccio.Core.Player
                 // add point
                 gState.ReplenishTimer();
                 gState.CollectStar(collision.GetComponent<Star>().Value);
+                return;
             }
             if (collision.CompareTag("MiniStar"))
             {
                 gState.ReplenishTimer(0.5f);
                 gState.CollectMiniStar(collision.GetComponent<MiniStar>().Value);
+                return;
             }
             if ((collision.CompareTag("EBullet") || collision.CompareTag("NBullet")) && !invulnerable)
             {
@@ -41,10 +44,26 @@ namespace Flamenccio.Core.Player
                 PlayerMotion.Instance.Knockback(knockbackVector, bullet.KnockbackMultiplier);
                 AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerHurt, transform.position);
                 Instantiate(hitEffect, transform.position, Quaternion.identity);
+                return;
             }
             if (collision.CompareTag("Heart"))
             {
                 gState.ReplenishLife(1);
+                return;
+            }
+        }
+        public void OnTriggerStay2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Portal"))
+            {
+                Portal p = collision.gameObject.GetComponent<Portal>();
+                Transform d = p.GetDestination();
+
+                if (d == null) return;
+
+                if (!p.TriggerCooldown()) return;
+
+                PlayerMotion.Instance.TeleportTo(d.position);
             }
         }
         private IEnumerator HurtInvuln()

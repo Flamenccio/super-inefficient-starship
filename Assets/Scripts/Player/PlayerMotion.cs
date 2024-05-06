@@ -1,3 +1,5 @@
+using Flamenccio.Core;
+using Flamenccio.Effects.Visual;
 using System.Collections;
 using UnityEngine;
 
@@ -52,6 +54,7 @@ namespace Flamenccio.Effects
         public void TeleportTo(Vector2 coord)
         {
             transform.position = coord;
+            CameraEffects.Instance.CutToPosition(new Vector3(coord.x, coord.y, -10));
         }
         /// <summary>
         /// Instantly and instantaneously moves player to position relative to some transform.

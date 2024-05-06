@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "DEBUG: add buff",
+                    "name": "Debugger",
                     "type": "Button",
                     "id": "eb82c898-e237-43fd-9814-d4430e7f72ed",
                     "expectedControlType": "Button",
@@ -375,6 +375,17 @@
                     "processors": "",
                     "groups": "KBM",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f9c3c4b0-158b-47c1-82de-b618bd8efd13",
+                    "path": "<Keyboard>/slash",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM;XBOX",
+                    "action": "Debugger",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

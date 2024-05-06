@@ -72,10 +72,11 @@ namespace Flamenccio.Effects.Visual
 
             Instantiate(obj, origin, rotation);
         }
-        public void SpawnTrail(TrailPool.Trails trail, Vector2 origin)
+        public Trail SpawnTrail(TrailPool.Trails trail, Vector2 origin)
         {
             Trail t = trailPool.TrailsPool[trail].Get();
             t.transform.position = origin;
+            return t;
         }
     }
 }
