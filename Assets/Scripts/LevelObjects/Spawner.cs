@@ -279,7 +279,6 @@ namespace Flamenccio.Core
             portal2.PortalColor = newColor;
 
             watch.Stop();
-            UnityEngine.Debug.Log(watch.Elapsed);
         }
         /// <summary>
         /// Takes a global position and returns it aligned with a grid.
