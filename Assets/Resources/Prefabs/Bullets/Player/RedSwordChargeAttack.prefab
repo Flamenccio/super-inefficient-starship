@@ -90,6 +90,8 @@ MonoBehaviour:
   ignoredTags: []
   knockbackMultiplier: 10
   hp: 20
+  rotationIsStatic: 1
+  canIgnoreStageEdge: 1
   damage: 1
   rb: {fileID: 3418487867427910734}
   slashHitbox: {fileID: 3418487867427910733}

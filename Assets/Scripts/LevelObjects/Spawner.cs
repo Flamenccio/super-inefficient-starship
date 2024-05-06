@@ -6,6 +6,7 @@ using Flamenccio.LevelObject.Stages;
 using Flamenccio.LevelObject;
 using Flamenccio.LevelObject.Walls;
 using Flamenccio.Effects.Visual;
+using System.Diagnostics;
 
 namespace Flamenccio.Core
 {
@@ -37,6 +38,7 @@ namespace Flamenccio.Core
         private int walls = 0;
         private const int MAX_WALLS = 10000;
         private const int STAGE_LENGTH = 8;
+        private const float MIN_PORTAL_DISTANCE = 16f;
 
         private struct SpawnToolkit
         {
@@ -224,8 +226,11 @@ namespace Flamenccio.Core
         {
             if (stages < 2) return;
 
+            Stopwatch watch = new();
+            watch.Start();
+
             bool spawnReady = false;
-            int target1 = GenerateRandomRootStage();
+            int target1;
             int target2;
 
             Stage target1Transform = null;
@@ -233,6 +238,7 @@ namespace Flamenccio.Core
 
             do
             {
+                target1 = GenerateRandomRootStage();
                 target2 = GenerateRandomRootStage();
 
                 if (target2 == target1) continue; 
@@ -240,7 +246,7 @@ namespace Flamenccio.Core
                 target1Transform = stageList[target1].GetComponent<Stage>();
                 target2Transform = stageList[target2].GetComponent<Stage>();
 
-                if (Vector2.Distance(target1Transform.transform.position, target2Transform.transform.position) < 8f) continue;
+                if (Vector2.Distance(target1Transform.transform.position, target2Transform.transform.position) < MIN_PORTAL_DISTANCE) continue;
 
                 spawnReady = true;
 
@@ -259,7 +265,7 @@ namespace Flamenccio.Core
                 target1local = GlobalToLocalPosition(NormalizePosition(FindPointInStage(target1Transform)), target1Transform.transform.position);
                 target2local = GlobalToLocalPosition(NormalizePosition(FindPointInStage(target2Transform)), target2Transform.transform.position);
 
-                if (Vector2.Distance(LocalToGlobalPosition(target1local, target1Transform.transform.position), LocalToGlobalPosition(target2local, target2Transform.transform.position)) >= 8f) spawnReady = true;
+                if (Vector2.Distance(LocalToGlobalPosition(target1local, target1Transform.transform.position), LocalToGlobalPosition(target2local, target2Transform.transform.position)) >= MIN_PORTAL_DISTANCE) spawnReady = true;
 
             } while (!spawnReady);
 
@@ -271,6 +277,9 @@ namespace Flamenccio.Core
             portal2.SetDestination(portal1);
             portal1.PortalColor = newColor;
             portal2.PortalColor = newColor;
+
+            watch.Stop();
+            UnityEngine.Debug.Log(watch.Elapsed);
         }
         /// <summary>
         /// Takes a global position and returns it aligned with a grid.

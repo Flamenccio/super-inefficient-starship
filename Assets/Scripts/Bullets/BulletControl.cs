@@ -20,12 +20,12 @@ namespace Flamenccio.Attack
         [SerializeField] protected List<string> ignoredTags = new();
         [SerializeField] protected KnockbackMultipiers knockbackMultiplier;
         [SerializeField] protected int hp = 1;
+        [SerializeField] protected bool rotationIsStatic = true;
+        [SerializeField] protected bool canIgnoreStageEdge = false;
+        [SerializeField] protected int damage = 1; // default damage
         protected CameraEffects cameraEff = CameraEffects.Instance;
         protected Vector2 origin = Vector2.zero;
 
-
-        // default damage
-        [SerializeField] protected int damage = 1;
         public int Damage { get => damage; }
         public int KnockbackMultiplier { get => (int)knockbackMultiplier; }
         public float Range { get => maxDistance; }
@@ -50,7 +50,7 @@ namespace Flamenccio.Attack
             {
                 rb.velocity = transform.right * moveSpeed;
             }
-            rb.transform.rotation = Quaternion.identity;
+            if (rotationIsStatic) rb.transform.rotation = Quaternion.identity;
         }
 
         protected void FixedUpdate()
@@ -75,9 +75,10 @@ namespace Flamenccio.Attack
         }
         protected virtual void Trigger(Collider2D collider) // TODO this should go into PlayerBullet
         {
-            if (hp <= 0) Destroy(this.gameObject);
+            if (collider.CompareTag("PrimaryWall") && !canIgnoreStageEdge) hp = 0;
+            else if (!collider.CompareTag("PrimaryWall")) hp--;
 
-            hp--;
+            if (hp <= 0) Destroy(this.gameObject);
         }
 
         protected void OnCollisionEnter2D(Collision2D collision)
