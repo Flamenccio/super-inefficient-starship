@@ -158,7 +158,9 @@ namespace Flamenccio.Powerup
         {
             float bonus = attributeBonuses[(int)a]; // get the percent change for specific attribute
             baseAttributeValues.TryGetValue(a, out double y); // now get the base value for specific attribute
-            attributeValues[a] = (1 + bonus) * y; // calculate final attribute value and apply it
+
+            if (a == Attribute.MaxHP) attributeValues[a] = y + bonus; // max hp is a simple integer value; calculate differently
+            else attributeValues[a] = (1 + bonus) * y; // calculate final attribute value and apply it
         }
         /// <summary>
         /// Temporarily change an attribute's value by some percent.<para>The final value is used in calculations.</para>

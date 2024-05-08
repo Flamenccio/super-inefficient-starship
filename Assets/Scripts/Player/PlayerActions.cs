@@ -207,7 +207,7 @@ namespace Flamenccio.Core.Player
         {
             if (context.performed)
             {
-                BuffBase b = new MovementSpeed();
+                BuffBase b = new HealthBoost();
                 powerManager.AddBuff(b);
             }
         }

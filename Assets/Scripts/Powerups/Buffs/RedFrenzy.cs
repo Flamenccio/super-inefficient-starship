@@ -1,8 +1,3 @@
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Flamenccio.Powerup
 {
     public class RedFrenzy : UnconditionalBuff

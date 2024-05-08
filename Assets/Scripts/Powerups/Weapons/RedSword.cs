@@ -9,6 +9,7 @@ namespace Flamenccio.Powerup.Weapon
         [SerializeField] private GameObject chargeAttack;
         private const float SLASH_OFFSET = 1f;
         private bool flip = false;
+
         protected override void Startup()
         {
             base.Startup();
