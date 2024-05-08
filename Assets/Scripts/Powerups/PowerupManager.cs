@@ -26,12 +26,14 @@ namespace Flamenccio.Powerup
     public class PowerupManager : MonoBehaviour
     {
         [SerializeField] private GameObject defaultMainWeapon;
-        [SerializeField] private GameObject defaultSubWeapon;
+        [SerializeField] private GameObject defaultDefenseWeapon;
         [SerializeField] private GameObject defaultSpecialWeapon;
+        [SerializeField] private GameObject defaultSubWeapon;
         [SerializeField] private CrosshairsControl crosshairsControl;
         private WeaponMain mainAttack;
         private WeaponSub subAttack;
         private WeaponSpecial specialAttack;
+        private WeaponDefense defenseAttack;
         private Action powerupUpdate;
         private List<GameObject> supportWeapons = new(Enum.GetNames(typeof(WeaponBase.WeaponType)).Length);
         private List<BuffBase> buffs = new();
@@ -60,6 +62,14 @@ namespace Flamenccio.Powerup
                 return specialAttack.AimAssisted;
             }
         }
+        public bool DefenseAttackAimAssisted
+        {
+            get
+            {
+                if (defenseAttack == null) return false;
+                return defenseAttack.AimAssisted;
+            }
+        }
 
         // MAIN ATTACK METHODS
         public Action<float, float, Vector2> MainAttackTap { get; private set; }
@@ -75,14 +85,18 @@ namespace Flamenccio.Powerup
 
         // SUPPORT ATTACK METHODS
 
+        // DEFENSE ATTACK METHODS
+        public Action<float, float, Vector2> DefenseAttackTap { get; private set; }
+
         private PlayerAttributes playerAttributes;
 
         private void Start()
         {
             playerAttributes = gameObject.GetComponent<PlayerAttributes>();
             if (!AddWeapon(defaultMainWeapon)) Debug.LogError("Conflicting weapon type!");
-            if (!AddWeapon(defaultSubWeapon)) Debug.LogError("Conflicting weapon type!");
+            if (!AddWeapon(defaultDefenseWeapon)) Debug.LogError("Conflicting weapon type!");
             if (!AddWeapon(defaultSpecialWeapon)) Debug.LogError("Conflicting weapon type!");
+            if (!AddWeapon(defaultSubWeapon)) Debug.LogError("Conflicting weapon type!");
         }
         private bool AddMain(GameObject main) // replaces main weapon with given one. Returns previous main weapon.
         {
@@ -94,7 +108,6 @@ namespace Flamenccio.Powerup
 
             if (!main.TryGetComponent<WeaponMain>(out mainAttack)) return false;
 
-            mainAttack = main.GetComponent<WeaponMain>();
             powerupUpdate += mainAttack.Run; // update delegates and stuff
             MainAttackTap = mainAttack.Tap;
             MainAttackHold = mainAttack.Hold;
@@ -122,7 +135,6 @@ namespace Flamenccio.Powerup
 
             if (!sub.TryGetComponent<WeaponSub>(out subAttack)) return false;
 
-            subAttack = sub.GetComponent<WeaponSub>();
             powerupUpdate += subAttack.Run;
             SubAttackTap = subAttack.Tap;
 
@@ -138,19 +150,33 @@ namespace Flamenccio.Powerup
 
             if (!special.TryGetComponent(out specialAttack)) return false;
 
-            specialAttack = special.GetComponent<WeaponSpecial>();
             powerupUpdate += specialAttack.Run;
             SpecialAttackTap = specialAttack.Tap;
 
             return true;
         }
+        private bool AddDefense(GameObject defense)
+        {
+            if (defenseAttack != null)
+            {
+                powerupUpdate -= defenseAttack.Run;
+                Destroy(defenseAttack);
+            }
+
+            if (!defense.TryGetComponent(out defenseAttack)) return false;
+
+            powerupUpdate += defenseAttack.Run;
+            DefenseAttackTap = defenseAttack.Tap;
+
+            return true;
+        }
+
         public bool AddWeapon(GameObject weaponObjectPrefab)
         {
             if (weaponObjectPrefab == null) return false;
 
             if (!weaponObjectPrefab.TryGetComponent(out WeaponBase weaponBase))
             {
-                Debug.Log("asdfasd");
                 return false;
             }
 
@@ -167,6 +193,10 @@ namespace Flamenccio.Powerup
             else if (weaponBase is WeaponSpecial)
             {
                 return AddSpecial(weaponObjectInstance);
+            }
+            else if (weaponBase is WeaponDefense)
+            {
+                return AddDefense(weaponObjectInstance);
             }
 
             return false;
@@ -227,4 +257,4 @@ namespace Flamenccio.Powerup
             return -1; // if there is no buff that exists
         }
     }
-}
+} 

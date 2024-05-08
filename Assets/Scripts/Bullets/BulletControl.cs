@@ -36,6 +36,7 @@ namespace Flamenccio.Attack
 
         protected void Awake()
         {
+            cameraEff = CameraEffects.Instance;
             origin = transform.position;
             Startup();
             Launch();
@@ -73,10 +74,10 @@ namespace Flamenccio.Attack
         {
             Destroy(this.gameObject);
         }
-        protected virtual void Trigger(Collider2D collider) // TODO this should go into PlayerBullet
+        protected virtual void Trigger(Collider2D collider)
         {
-            if (collider.CompareTag("PrimaryWall") && !canIgnoreStageEdge) hp = 0;
-            else if (!collider.CompareTag("PrimaryWall")) hp--;
+            if ((collider.CompareTag("PrimaryWall") || collider.CompareTag("InvisibleWall")) && !canIgnoreStageEdge) hp = 0;
+            else if (!collider.CompareTag("PrimaryWall") && !collider.CompareTag("InvisibleWall")) hp--;
 
             if (hp <= 0) Destroy(this.gameObject);
         }
@@ -98,11 +99,15 @@ namespace Flamenccio.Attack
         }
         private bool IgnoreTags(string compareTag)
         {
+            return ignoredTags.Contains(compareTag);
+
+            /*
             foreach (string tag in ignoredTags)
             {
                 if (compareTag.Equals(tag)) return true;
             }
             return false;
+            */
         }
     }
 }

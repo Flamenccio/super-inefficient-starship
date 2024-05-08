@@ -89,6 +89,15 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sub"",
+                    ""type"": ""Button"",
+                    ""id"": ""296362b7-ef15-461f-9ac8-7472491f365a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -370,7 +379,7 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b86af4e0-ce2a-499c-90c7-0088cbecee7c"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Mouse>/middleButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KBM"",
@@ -408,6 +417,28 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""KBM;XBOX"",
                     ""action"": ""Debugger"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ea8392d-c524-4f9f-8fac-fc71e6b48a68"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Sub"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d8973322-24dd-49fe-8dfa-ac0eed95dcb5"",
+                    ""path"": ""<XInputController>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XBOX"",
+                    ""action"": ""Sub"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -453,6 +484,7 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
         m_Game_Debugger = m_Game.FindAction("Debugger", throwIfNotFound: true);
         m_Game_Special = m_Game.FindAction("Special", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
+        m_Game_Sub = m_Game.FindAction("Sub", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -519,6 +551,7 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Debugger;
     private readonly InputAction m_Game_Special;
     private readonly InputAction m_Game_Pause;
+    private readonly InputAction m_Game_Sub;
     public struct GameActions
     {
         private @PlayerControl m_Wrapper;
@@ -530,6 +563,7 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
         public InputAction @Debugger => m_Wrapper.m_Game_Debugger;
         public InputAction @Special => m_Wrapper.m_Game_Special;
         public InputAction @Pause => m_Wrapper.m_Game_Pause;
+        public InputAction @Sub => m_Wrapper.m_Game_Sub;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -560,6 +594,9 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
                 @Pause.started -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
+                @Sub.started -= m_Wrapper.m_GameActionsCallbackInterface.OnSub;
+                @Sub.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnSub;
+                @Sub.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnSub;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -585,6 +622,9 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @Sub.started += instance.OnSub;
+                @Sub.performed += instance.OnSub;
+                @Sub.canceled += instance.OnSub;
             }
         }
     }
@@ -616,5 +656,6 @@ public partial class @PlayerControl : IInputActionCollection2, IDisposable
         void OnDebugger(InputAction.CallbackContext context);
         void OnSpecial(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnSub(InputAction.CallbackContext context);
     }
 }

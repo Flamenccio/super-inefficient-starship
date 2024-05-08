@@ -9,7 +9,6 @@ namespace Flamenccio.Powerup.Weapon
         [SerializeField] private int ChargeCost = 1;
         protected override void Startup()
         {
-            AimAssisted = true;
             base.Startup();
             Name = "Blaster";
             Desc = "[TAP]: Fires a short-ranged bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";

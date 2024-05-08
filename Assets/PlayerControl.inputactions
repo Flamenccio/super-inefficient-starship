@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Sub",
+                    "type": "Button",
+                    "id": "296362b7-ef15-461f-9ac8-7472491f365a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -348,7 +357,7 @@
                 {
                     "name": "",
                     "id": "b86af4e0-ce2a-499c-90c7-0088cbecee7c",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<Mouse>/middleButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "KBM",
@@ -386,6 +395,28 @@
                     "processors": "",
                     "groups": "KBM;XBOX",
                     "action": "Debugger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6ea8392d-c524-4f9f-8fac-fc71e6b48a68",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Sub",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d8973322-24dd-49fe-8dfa-ac0eed95dcb5",
+                    "path": "<XInputController>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XBOX",
+                    "action": "Sub",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

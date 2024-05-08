@@ -35,17 +35,6 @@ namespace Flamenccio.Effects
             {
                 Instance = this;
             }
-
-            /*
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this);
-            }
-            else
-            {
-                Instance = this;
-            }
-            */
         }
         /// <summary>
         /// Instantly and instantaneously moves player to given global coordinate.

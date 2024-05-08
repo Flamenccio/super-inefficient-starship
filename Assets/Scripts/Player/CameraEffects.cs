@@ -29,7 +29,7 @@ namespace Flamenccio.Effects.Visual
             Strong,
             Extreme
         };
-        private void Start()
+        private void Awake()
         {
             if (Instance != null && Instance != this)
             {
@@ -39,6 +39,9 @@ namespace Flamenccio.Effects.Visual
             {
                 Instance = this;
             }
+        }
+        private void Start()
+        {
         }
         private void Update()
         {

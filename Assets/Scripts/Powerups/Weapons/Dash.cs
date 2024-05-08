@@ -4,7 +4,7 @@ using Flamenccio.Effects;
 
 namespace Flamenccio.Powerup.Weapon
 {
-    public class Dash : WeaponSub
+    public class Dash : WeaponDefense
     {
         private const float DURATION = 5f / 60f;
         private const float SPEED = 50f;

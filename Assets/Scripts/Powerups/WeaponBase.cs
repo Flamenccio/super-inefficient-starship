@@ -13,31 +13,34 @@ namespace Flamenccio.Powerup.Weapon
         public WeaponType Type { get => weaponType; }
         public int Cost { get => cost; }
         public float Cooldown { get => cooldown; }
-        public bool AimAssisted { get; protected set; } // whether the weapon should aim towards the aim assist target on TAP
-        protected Func<int, bool> consumeAmmo;
+        public bool AimAssisted { get => aimAssisted; } // whether the weapon should aim towards the aim assist target on TAP
         public enum WeaponType
         {
             Main,
             Sub,
             Special,
+            Defense,
             Support
         };
-        protected WeaponType weaponType;
         [SerializeField] protected int cost = 1;
         [SerializeField] protected float cooldown;
-        protected float cooldownTimer;
         [SerializeField] protected float holdThreshold;
+        [SerializeField] protected bool aimAssisted = false;
+        [SerializeField] protected GameObject mainAttack;
+        protected Func<int, bool> consumeAmmo;
+        protected WeaponType weaponType;
+        protected float cooldownTimer;
         protected PlayerAttributes playerAtt;
         
         private void Awake()
         {
             Level = 1;
-            AimAssisted = false;
             Startup();
         }
         protected virtual void Start()
         {
             playerAtt = GetComponentInParent<PlayerAttributes>();
+
             if (playerAtt == null)
             {
                 Debug.LogError("ERROR: could not find a PlayerAttributes class in player.");

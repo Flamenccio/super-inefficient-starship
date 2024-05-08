@@ -129,11 +129,11 @@ namespace Flamenccio.Core.Player
                 mainHold = 0f;
             }
         }
-        public void OnFire2(InputAction.CallbackContext context)
+        public void OnDefense(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
-                AttackTap(powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
+                AttackTap(powerManager.DefenseAttackTap, powerManager.DefenseAttackAimAssisted);
             }
         }
         public void OnSpecial(InputAction.CallbackContext context)
@@ -142,6 +142,14 @@ namespace Flamenccio.Core.Player
             {
                 kbmFireTimer = KBM_FIRE_TIMER_MAX;
                 AttackTap(powerManager.SpecialAttackTap, powerManager.SpecialAttackAimAssisted);
+            }
+        }
+        public void OnSub(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                kbmFireTimer = KBM_FIRE_TIMER_MAX;
+                AttackTap(powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
             }
         }
         private void Movement()
