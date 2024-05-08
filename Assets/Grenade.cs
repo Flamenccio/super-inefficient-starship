@@ -12,6 +12,11 @@ namespace Flamenccio.Attack.Player
         private float maxLife = 1.5f;
         [SerializeField] private Animator animator;
 
+        protected override void Startup()
+        {
+            base.Startup();
+            ignoredTags.Add("EBullet");
+        }
         protected override void Launch()
         {
             rb.AddForce(transform.right * Speed, ForceMode2D.Impulse);
