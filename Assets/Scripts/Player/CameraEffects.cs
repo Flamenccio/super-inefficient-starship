@@ -1,3 +1,4 @@
+using Flamenccio.Core;
 using UnityEngine;
 
 namespace Flamenccio.Effects.Visual
@@ -42,6 +43,8 @@ namespace Flamenccio.Effects.Visual
         }
         private void Start()
         {
+            GameEventManager.OnEnemyHit += (v) => ScreenShake(ScreenShakeIntensity.Weak, v.position);
+            GameEventManager.OnEnemyKilled += (v) => ScreenShake(ScreenShakeIntensity.Normal, v);
         }
         private void Update()
         {

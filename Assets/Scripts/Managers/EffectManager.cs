@@ -1,3 +1,4 @@
+using Flamenccio.Core;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,6 +48,11 @@ namespace Flamenccio.Effects.Visual
                 { Effects.EnemyKill, enemyKill },
                 { Effects.SpecialReplenish, specialReplenish },
             };
+        }
+        private void Start()
+        {
+            GameEventManager.OnEnemyKilled += (v) => SpawnEffect(Effects.EnemyKill, v);
+            GameEventManager.OnEnemyHit += (v) => SpawnEffect(Effects.EnemyHit, v);
         }
         public void SpawnEffect(Effects effect, Transform parent)
         {

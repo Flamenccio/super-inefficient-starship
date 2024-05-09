@@ -3,8 +3,6 @@ using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.Core;
 using Flamenccio.Effects; // ALL THE EFFECTS!
-using Flamenccio.Effects.Visual;
-using Flamenccio.Effects.Audio;
 
 namespace Enemy
 {
@@ -68,9 +66,6 @@ namespace Enemy
                 Behavior();
                 Animation();
             }
-
-            HealthCheck();
-
             if (slowUpdateTimer >= SLOW_UPDATE_FREQUENCY)
             {
                 slowUpdateTimer = 0f;
@@ -97,9 +92,7 @@ namespace Enemy
                 Instantiate(miniStarPrefab, transform.position, Quaternion.Euler(0f, 0f, randomAngle));
             }
 
-            EffectManager.Instance.SpawnEffect(EffectManager.Effects.EnemyKill, transform.position);
-            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Normal, transform.position); // do a little shake
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.enemyKill, transform.position);
+            GameEventManager.OnEnemyKilled(transform.position);
             Destroy(gameObject); // destroy self
         }
         protected void Hurt(int damage)
@@ -107,11 +100,10 @@ namespace Enemy
             currentHP -= damage;
             if (currentHP > 0)
             {
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.enemyHurt, transform.position);
                 DamageFlash();
-                CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
-                EffectManager.Instance.SpawnEffect(EffectManager.Effects.EnemyHit, transform.position);
+                GameEventManager.OnEnemyHit(transform);
             }
+            HealthCheck();
         }
         /// <summary>
         /// Called every 0.25 seconds.

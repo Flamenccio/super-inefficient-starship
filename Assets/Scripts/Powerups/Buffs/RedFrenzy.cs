@@ -7,7 +7,7 @@ namespace Flamenccio.Powerup
             Name = "Red Frenzy";
             Desc = "Successfully slaying enemies in quick succession increaes movement speed.\nGetting hit with Red Frenzy causes you to lose all stacks.\n";
             Level = 1;
-            static float f(int level) => level * 0.08f;
+            static float f(int level) => level * 0.02f;
             buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, f));
         }
     }

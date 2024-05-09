@@ -1,4 +1,5 @@
 using Flamenccio.Attack.Player;
+using Flamenccio.Core;
 using Flamenccio.Effects;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace Flamenccio.Powerup.Weapon
         [SerializeField] private GameObject chargeAttack;
         private const float SLASH_OFFSET = 1f;
         private bool flip = false;
+        private int kills = 0;
+        private PowerupManager powerupManager;
 
         protected override void Startup()
         {
@@ -18,6 +21,33 @@ namespace Flamenccio.Powerup.Weapon
             Level = 1;
             Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;
+        }
+        protected override void Start()
+        {
+            base.Start();
+
+            GameEventManager.OnEnemyKilled += (_) => IncreaseKill();
+            GameEventManager.OnPlayerHit += (_) => ResetKill();
+        }
+        private void OnEnable()
+        {
+            powerupManager = GetComponentInParent<PowerupManager>();
+        }
+        private void OnDestroy()
+        {
+            GameEventManager.OnEnemyKilled -= (_) => IncreaseKill();
+            GameEventManager.OnPlayerHit -= (_) => ResetKill();
+        }
+        private void IncreaseKill()
+        {
+            kills++;
+            BuffBase b = new RedFrenzy();
+            powerupManager.AddBuff(b);
+        }
+        private void ResetKill()
+        {
+            kills = 0;
+            powerupManager.RemoveBuff(new RedFrenzy());
         }
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {

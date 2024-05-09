@@ -38,6 +38,7 @@ namespace Flamenccio.Core
         private void Start()
         {
             input = InputManager.Instance;
+            GameEventManager.OnPlayerHit += (_) => HurtZoom();
         }
         public void FixedUpdate()
         {

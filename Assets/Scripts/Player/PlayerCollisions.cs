@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using Flamenccio.Item;
 using Flamenccio.Attack;
-using Flamenccio.Effects.Audio;
 using Flamenccio.Effects;
 using Flamenccio.LevelObject;
 
@@ -42,8 +41,8 @@ namespace Flamenccio.Core.Player
                 gState.RemoveLife(bullet.Damage);
                 Vector2 knockbackVector = CalculateKnockbackAngle(pActions.Rigidbody.velocity, collision.attachedRigidbody.velocity);
                 PlayerMotion.Instance.Knockback(knockbackVector, bullet.KnockbackMultiplier);
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerHurt, transform.position);
                 Instantiate(hitEffect, transform.position, Quaternion.identity);
+                GameEventManager.OnPlayerHit(transform);
                 return;
             }
             if (collision.CompareTag("Heart"))

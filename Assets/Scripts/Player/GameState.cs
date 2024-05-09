@@ -111,7 +111,6 @@ namespace Flamenccio.Core
         }
         public void AddKillPoint(int pt)
         {
-
             playerAtt.AddKillPoints(pt);
         }
         private void LevelUp()
@@ -170,7 +169,6 @@ namespace Flamenccio.Core
         public bool RemoveLife(int life)
         {
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position); // TODO maybe scale intensity with damage taken
-            cameraControl.HurtZoom();
             hudControl.DisplayHurtLines();
             playerAtt.ChangeLife(-life);
 
