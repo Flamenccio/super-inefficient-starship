@@ -51,8 +51,8 @@ namespace Flamenccio.Effects.Visual
         }
         private void Start()
         {
-            GameEventManager.OnEnemyKilled += (v) => SpawnEffect(Effects.EnemyKill, v);
-            GameEventManager.OnEnemyHit += (v) => SpawnEffect(Effects.EnemyHit, v);
+            GameEventManager.OnEnemyKilled += (v) => SpawnEffect(Effects.EnemyKill, v.EventOrigin);
+            GameEventManager.OnEnemyHit += (v) => SpawnEffect(Effects.EnemyHit, v.EventOrigin);
         }
         public void SpawnEffect(Effects effect, Transform parent)
         {

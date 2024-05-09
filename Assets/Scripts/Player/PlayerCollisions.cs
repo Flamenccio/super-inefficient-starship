@@ -42,7 +42,14 @@ namespace Flamenccio.Core.Player
                 Vector2 knockbackVector = CalculateKnockbackAngle(pActions.Rigidbody.velocity, collision.attachedRigidbody.velocity);
                 PlayerMotion.Instance.Knockback(knockbackVector, bullet.KnockbackMultiplier);
                 Instantiate(hitEffect, transform.position, Quaternion.identity);
-                GameEventManager.OnPlayerHit(transform);
+
+                GameEventInfo info = new()
+                {
+                    EventTriggerer = transform,
+                    Value = bullet.Damage
+                };
+
+                GameEventManager.OnPlayerHit(info);
                 return;
             }
             if (collision.CompareTag("Heart"))

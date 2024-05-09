@@ -43,8 +43,8 @@ namespace Flamenccio.Effects.Visual
         }
         private void Start()
         {
-            GameEventManager.OnEnemyHit += (v) => ScreenShake(ScreenShakeIntensity.Weak, v.position);
-            GameEventManager.OnEnemyKilled += (v) => ScreenShake(ScreenShakeIntensity.Normal, v);
+            GameEventManager.OnEnemyHit += (v) => ScreenShake(ScreenShakeIntensity.Weak, v.EventOrigin);
+            GameEventManager.OnEnemyKilled += (v) => ScreenShake(ScreenShakeIntensity.Normal, v.EventOrigin);
         }
         private void Update()
         {
