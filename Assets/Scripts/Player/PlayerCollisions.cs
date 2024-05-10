@@ -9,14 +9,9 @@ namespace Flamenccio.Core.Player
 {
     public class PlayerCollisions : MonoBehaviour
     {
-        private PlayerActions pActions;
         private const float HURT_INVULN_DURATION = 10f / 60f;
         private bool invulnerable = false;
 
-        private void Awake()
-        {
-            pActions = gameObject.GetComponent<PlayerActions>();
-        }
         public void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.CompareTag("Star"))
@@ -33,7 +28,7 @@ namespace Flamenccio.Core.Player
             {
                 StartCoroutine(HurtInvuln());
                 BulletControl bullet = collision.GetComponent<BulletControl>();
-                Vector2 knockbackVector = CalculateKnockbackAngle(pActions.Rigidbody.velocity, collision.attachedRigidbody.velocity);
+                Vector2 knockbackVector = CalculateKnockbackAngle(PlayerMotion.Instance.PlayerVelocity, collision.attachedRigidbody.velocity);
                 PlayerMotion.Instance.Knockback(knockbackVector, bullet.KnockbackMultiplier);
                 GameEventManager.OnPlayerHit(GameEventManager.CreateGameEvent(bullet.Damage, transform));
                 return;

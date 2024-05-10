@@ -10,9 +10,11 @@ namespace Enemy
         [SerializeField] private GameObject hitboxPrefab;
         [SerializeField] private float hitRadius = 1.0f;
         private const float TURNING_SPEED = 0.01f;
+        private float ENRAGED_SPEED;
         protected override void OnSpawn()
         {
             searchRadius = 100f; // huuuge search radius, basically inescapable (like responsibility)
+            ENRAGED_SPEED = moveSpeed * 2;
         }
         protected override void Trigger(Collider2D col)
         {
@@ -32,6 +34,10 @@ namespace Enemy
             float faceAngle = Mathf.LerpAngle(transform.rotation.eulerAngles.z, Mathf.Atan2(yDiff, xDiff) * Mathf.Rad2Deg, TURNING_SPEED);
             transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, faceAngle));
             rb.velocity = new Vector2(transform.right.x * moveSpeed, transform.right.y * moveSpeed);
+        }
+        public void Enrage()
+        {
+            moveSpeed = ENRAGED_SPEED;
         }
     }
 }
