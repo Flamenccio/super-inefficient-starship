@@ -1,5 +1,6 @@
 using UnityEngine;
 using Flamenccio.Attack;
+using Flamenccio.Effects.Visual;
 
 namespace Enemy
 {
@@ -9,16 +10,18 @@ namespace Enemy
         [SerializeField] private GameObject hitboxPrefab;
         [SerializeField] private float hitRadius = 1.0f;
         private const float TURNING_SPEED = 0.01f;
+        private float ENRAGED_SPEED;
         protected override void OnSpawn()
         {
             searchRadius = 100f; // huuuge search radius, basically inescapable (like responsibility)
+            ENRAGED_SPEED = moveSpeed * 2;
         }
         protected override void Trigger(Collider2D col)
         {
             if (col.gameObject.CompareTag("Player"))
             {
                 // destroy this gameObject, but don't drop stars
-                Instantiate(killEffect, transform.position, Quaternion.identity); // spawn kill effects
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.EnemyKill, transform.position);
                 GameObject ouch = Instantiate(hitboxPrefab, transform.position, Quaternion.identity);
                 ouch.GetComponent<Hitbox>().EditProperties(0f, hitRadius, 0, Hitbox.AttackType.Enemy);
                 Destroy(gameObject); // destroy self
@@ -31,6 +34,10 @@ namespace Enemy
             float faceAngle = Mathf.LerpAngle(transform.rotation.eulerAngles.z, Mathf.Atan2(yDiff, xDiff) * Mathf.Rad2Deg, TURNING_SPEED);
             transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, faceAngle));
             rb.velocity = new Vector2(transform.right.x * moveSpeed, transform.right.y * moveSpeed);
+        }
+        public void Enrage()
+        {
+            moveSpeed = ENRAGED_SPEED;
         }
     }
 }

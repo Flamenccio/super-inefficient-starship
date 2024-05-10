@@ -19,6 +19,7 @@ TagManager:
   - Effect
   - NBullet
   - ItemBox
+  - Portal
   layers:
   - Default
   - TransparentFX

@@ -49,6 +49,12 @@ namespace Flamenccio.HUD
             hurtLines.gameObject.SetActive(false);
             levelUpBackgroundSize = levelUpBackground.rectTransform.sizeDelta;
         }
+        private void Start()
+        {
+            // subscribe to events
+            GameEventManager.OnLevelUp += (x) => DisplayLevelUpText(Mathf.FloorToInt(x.Value));
+            GameEventManager.OnPlayerHit += (_) => DisplayHurtLines();
+        }
         private void Update()
         {
             if (gState == null)

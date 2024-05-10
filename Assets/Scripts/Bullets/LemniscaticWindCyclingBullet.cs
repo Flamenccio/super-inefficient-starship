@@ -1,3 +1,4 @@
+using Flamenccio.Effects.Visual;
 using UnityEngine;
 
 namespace Flamenccio.Attack.Player
@@ -6,13 +7,13 @@ namespace Flamenccio.Attack.Player
     {
         public int EnemiesHit { get; private set; }
         private float timer = 0f;
-        private float maxTimer = 0.10f;
+        private readonly float lifeTimer = 0.10f;
 
         protected override void DeathTimer()
         {
             timer += Time.deltaTime;
 
-            if (timer >= maxTimer)
+            if (timer >= lifeTimer)
             {
                 Destroy(gameObject);
             }
@@ -25,11 +26,11 @@ namespace Flamenccio.Attack.Player
         {
             if (collider.gameObject.CompareTag("EBullet"))
             {
-                Instantiate(parryEffect, transform.position, Quaternion.identity);
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletParry, transform.position);
             }
             else
             {
-                Instantiate(impactEffect, transform.position, Quaternion.identity);
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletImpact, transform.position);
             }
             if (collider.gameObject.CompareTag("Enemy"))
             {

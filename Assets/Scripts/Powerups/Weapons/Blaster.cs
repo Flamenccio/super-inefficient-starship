@@ -5,9 +5,10 @@ namespace Flamenccio.Powerup.Weapon
 {
     public class Blaster : WeaponMain
     {
+        [SerializeField] private GameObject chargeAttack;
+        [SerializeField] private int ChargeCost = 1;
         protected override void Startup()
         {
-            AimAssisted = true;
             base.Startup();
             Name = "Blaster";
             Desc = "[TAP]: Fires a short-ranged bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
@@ -23,6 +24,13 @@ namespace Flamenccio.Powerup.Weapon
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerShoot, transform.position);
             Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
             cooldownTimer = 0f;
+        }
+        public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
+        {
+            if (!consumeAmmo(ChargeCost)) return;
+
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialBurst, transform.position);
+            Instantiate(chargeAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
         }
     }
 }

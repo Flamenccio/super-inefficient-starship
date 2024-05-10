@@ -95,7 +95,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3247408391109038382}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -138,9 +138,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 60
   maxDistance: 6.5
-  parryEffect: {fileID: 8596703315022740292, guid: 9bbb1de6277cc2e42bf8b447521a9a09, type: 3}
-  impactEffect: {fileID: 5705401448773474299, guid: e20bac83db7a0f14d93f0809b1b1f3a4, type: 3}
   ignoredTags: []
   knockbackMultiplier: 0
+  hp: 1
+  rotationIsStatic: 1
   damage: 1
   rb: {fileID: 3247408391109038378}

@@ -169,8 +169,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2152614155733081992}
-        m_TargetAssemblyTypeName: PlayerActions, Assembly-CSharp
-        m_MethodName: OnFire2
+        m_TargetAssemblyTypeName: Flamenccio.Core.Player.PlayerActions, Assembly-CSharp
+        m_MethodName: OnDefense
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -206,6 +206,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 4a53c86d-c377-4041-8f46-538ec36bceac
     m_ActionName: Game/Pause[/XInputControllerWindows/start,/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2152614155733081992}
+        m_TargetAssemblyTypeName: Flamenccio.Core.Player.PlayerActions, Assembly-CSharp
+        m_MethodName: OnSub
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 296362b7-ef15-461f-9ac8-7472491f365a
+    m_ActionName: Game/Sub[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Game
@@ -297,8 +313,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultMainWeapon: {fileID: 7804797723523311312, guid: bf20752d6dabed94d9a46cf26407e694, type: 3}
-  defaultSubWeapon: {fileID: 5163691005034168489, guid: 251d4b1a7621d434d8fe3e41556afb97, type: 3}
+  defaultDefenseWeapon: {fileID: 0}
   defaultSpecialWeapon: {fileID: 0}
+  defaultSubWeapon: {fileID: 5163691005034168489, guid: 251d4b1a7621d434d8fe3e41556afb97, type: 3}
+  crosshairsControl: {fileID: 0}
 --- !u!114 &7438514266558005631
 MonoBehaviour:
   m_ObjectHideFlags: 0

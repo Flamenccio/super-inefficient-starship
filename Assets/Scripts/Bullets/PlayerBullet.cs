@@ -1,4 +1,5 @@
 using UnityEngine;
+using Flamenccio.Effects.Visual;
 
 namespace Flamenccio.Attack.Player
 {
@@ -17,7 +18,21 @@ namespace Flamenccio.Attack.Player
                 "Effects",
                 "PlayerIntangible",
                 "Items",
+                "ItemBox",
+                "PBullet",
             };
+        }
+        protected override void Trigger(Collider2D collider)
+        {
+            if (collider.gameObject.CompareTag("EBullet"))
+            {
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletParry, transform.position);
+            }
+            else
+            {
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletImpact, transform.position);
+            }
+            base.Trigger(collider);
         }
     }
 }

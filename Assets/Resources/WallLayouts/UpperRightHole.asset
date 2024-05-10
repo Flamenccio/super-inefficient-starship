@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7526a2b97c861e54ba8a9b0854b981b5, type: 3}
   m_Name: UpperRightHole
   m_EditorClassIdentifier: 
-  associatedVariant: 2
-  layout:
-  - xSize: 8
-    ySize: 8
-    position: {x: 4, y: 4}
-    permanence: 1
+  Layout:
+  - Shape: 0
+    SideLengths: {x: 8, y: 8}
+    Center: {x: 4, y: 4}
+    Vertices: []
+    Origin: {x: 0, y: 0}
+  AssociatedVariant: 2

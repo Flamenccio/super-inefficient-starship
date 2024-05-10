@@ -4,10 +4,12 @@ using Flamenccio.Effects;
 
 namespace Flamenccio.Powerup.Weapon
 {
-    public class Dash : WeaponSub
+    public class Dash : WeaponDefense
     {
         private const float DURATION = 5f / 60f;
         private const float SPEED = 50f;
+        private const float TRAIL_FREQUENCY = 1f / 60f;
+        private float trailTimer = 0f;
         [SerializeField] private GameObject afterImage;
         protected override void Startup()
         {
@@ -32,9 +34,20 @@ namespace Flamenccio.Powerup.Weapon
         public override void Run()
         {
             base.Run();
+
             if (cooldownTimer <= DURATION)
             {
-                Instantiate(afterImage, transform.position, Quaternion.Euler(transform.rotation.eulerAngles));
+                if (trailTimer >= TRAIL_FREQUENCY)
+                {
+                    Instantiate(afterImage, transform.position, Quaternion.Euler(transform.rotation.eulerAngles));
+                    trailTimer = 0f;
+                }
+
+                trailTimer += Time.deltaTime;
+            }
+            else
+            {
+                trailTimer = 0f;
             }
         }
     }

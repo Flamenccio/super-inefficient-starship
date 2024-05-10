@@ -1,3 +1,4 @@
+using Flamenccio.Effects.Visual;
 using UnityEngine;
 
 namespace Flamenccio.Item

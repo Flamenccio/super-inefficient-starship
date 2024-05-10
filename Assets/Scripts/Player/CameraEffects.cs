@@ -1,3 +1,4 @@
+using Flamenccio.Core;
 using UnityEngine;
 
 namespace Flamenccio.Effects.Visual
@@ -29,7 +30,7 @@ namespace Flamenccio.Effects.Visual
             Strong,
             Extreme
         };
-        private void Start()
+        private void Awake()
         {
             if (Instance != null && Instance != this)
             {
@@ -39,6 +40,11 @@ namespace Flamenccio.Effects.Visual
             {
                 Instance = this;
             }
+        }
+        private void Start()
+        {
+            GameEventManager.OnEnemyHit += (v) => ScreenShake(ScreenShakeIntensity.Weak, v.EventOrigin);
+            GameEventManager.OnEnemyKill += (v) => ScreenShake(ScreenShakeIntensity.Normal, v.EventOrigin);
         }
         private void Update()
         {
@@ -63,6 +69,10 @@ namespace Flamenccio.Effects.Visual
             screenShakeMagnitude = Mathf.Clamp(scaledMagnitude, 0f, screenShakeMagnitude);
             screenShakeMagnitudeDecay = screenShakeMagnitude / SCREEN_SHAKE_DURATION;
             screenShakeTime = SCREEN_SHAKE_DURATION;
+        }
+        public void CutToPosition(Vector3 position)
+        {
+            Camera.main.transform.position = position;
         }
     }
 }

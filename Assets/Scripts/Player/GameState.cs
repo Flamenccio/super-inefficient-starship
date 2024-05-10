@@ -14,6 +14,7 @@ namespace Flamenccio.Core
         // this class coordinates all other management classes
 
         public static GameState Instance { get; private set; }
+        public bool Paused { get; private set; }
 
         // parameters
         private int progress = 0;
@@ -28,6 +29,7 @@ namespace Flamenccio.Core
         private const int MIN_LEVEL_WALL_UPGRADE = 12; // the minimum level required for level 2 walls to start spawning
         private const float CHANCE_WALL_UPGRADE = 0.5f;
         private const int MIN_LEVEL_ENEMY_SPAWN = 0;
+        private const int MIN_LEVEL_PORTAL_SPAWN = 6;
 
         // timers
         private float maxTime = BASE_TIME;
@@ -40,7 +42,6 @@ namespace Flamenccio.Core
         private GameObject heart;
         [SerializeField] private GoalArrowControl goalArrow;
         [SerializeField] private HUDControl hudControl;
-        [SerializeField] private CameraControl cameraControl;
         [SerializeField] private PlayerAttributes playerAtt;
 
         // debug stuff
@@ -61,6 +62,12 @@ namespace Flamenccio.Core
         {
             Time.timeScale = 1.0f;
             spawnControl.SpawnStar();
+
+            // subscribe to events
+            GameEventManager.OnStarCollect += (x) => CollectStar(Mathf.FloorToInt(x.Value));
+            GameEventManager.OnMiniStarCollect += (x) => CollectMiniStar(Mathf.FloorToInt(x.Value));
+            GameEventManager.OnPlayerHit += (x) => RemoveLife(Mathf.FloorToInt(x.Value));
+            GameEventManager.OnHeartCollect += (x) => ReplenishLife(Mathf.FloorToInt(x.Value));
         }
         private void Awake()
         {
@@ -75,6 +82,7 @@ namespace Flamenccio.Core
 
             mainTimer = maxTime;
             spawnControl = gameObject.GetComponent<Spawner>();
+            Paused = false;
         }
         private void Update()
         {
@@ -97,18 +105,19 @@ namespace Flamenccio.Core
             int total = Mathf.FloorToInt(playerAtt.KillPoints * playerAtt.KillPointBonus) + value; // calculate total points gained
             SpawnEnemies(); // spawn more enemies with an additional amount based on the amount of kill points obtained
             ResetKills();
+            ReplenishTimer();
             GameObject star = spawnControl.SpawnStar();
             goalArrow.PointAt(star);
             AddPoints(total); // add points to current points
         }
         public void CollectMiniStar(int value)
         {
+            ReplenishTimer(0.5f);
             AddKillPoint(value);
-            spawnControl.SpawnFlyingStar(PlayerMotion.Instance.PlayerPosition, PlayerMotion.Instance.transform, hudControl.transform);
+            spawnControl.SpawnFlyingStar(PlayerMotion.Instance.PlayerPosition, PlayerMotion.Instance.transform);
         }
         public void AddKillPoint(int pt)
         {
-
             playerAtt.AddKillPoints(pt);
         }
         private void LevelUp()
@@ -117,6 +126,12 @@ namespace Flamenccio.Core
 
             difficulty++; // increase difficulty
             heart = spawnControl.SpawnHeart();
+
+            if (difficulty >= MIN_LEVEL_PORTAL_SPAWN)
+            {
+                spawnControl.SpawnPortal();
+            }
+
             spawnControl.SpawnStage(); // spawn another stage
 
             if (wallFrequency > MAX_WALL_FREQUENCY) // increase wall frequency
@@ -126,14 +141,13 @@ namespace Flamenccio.Core
 
             waveSpawnAmount = EnemyWaveLevel();
             maxTime += MAX_TIME_INCREASE; // increase the maximum time
-            hudControl.DisplayLevelUpText(difficulty); // display on HUD
 
             if (progress >= DifficultyCurve(difficulty + 1)) // level up again, if necessary
             {
                 LevelUp();
             }
 
-            cameraControl.IncreaseCameraSize();
+            GameEventManager.OnLevelUp(GameEventManager.CreateGameEvent(difficulty, PlayerMotion.Instance.transform));
         }
         /// <summary>
         /// Remove points from player
@@ -160,8 +174,6 @@ namespace Flamenccio.Core
         public bool RemoveLife(int life)
         {
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position); // TODO maybe scale intensity with damage taken
-            cameraControl.HurtZoom();
-            hudControl.DisplayHurtLines();
             playerAtt.ChangeLife(-life);
 
             if (playerAtt.HP == 0)
@@ -263,11 +275,12 @@ namespace Flamenccio.Core
             {
                 if (Time.timeScale == 0.0f)
                 {
+                    Paused = false;
                     Time.timeScale = 1.0f;
-
                 }
                 else
                 {
+                    Paused = true;
                     Time.timeScale = 0f;
                 }
             }

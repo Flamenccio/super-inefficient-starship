@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Utility;
@@ -25,6 +24,7 @@ namespace Flamenccio.LevelObject.Stages
             ChokepointSouth = 8,
             ChokepointEast = 9,
             ChokepointWest = 10,
+            CrookedHallwayRightLeft = 11,
         }
         [System.Serializable]
         public struct LinkSet

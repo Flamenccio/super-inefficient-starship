@@ -9,7 +9,6 @@ namespace Flamenccio.Powerup.Weapon
     public class LemniscaticWindCycling : WeaponSpecial
     {
         [SerializeField] private GameObject shockwaveEffect;
-        [SerializeField] private GameObject attack;
         private LemniscaticWindCyclingBullet attackInstance;
         private bool rechargeUsed = false;
         private const float DURATION = 0.10f;
@@ -17,7 +16,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            AimAssisted = true;
             Name = "Burst";
             Desc = "[TAP]: Rushes forward, dealing damage to any enemies in your path.\nIf at least 3 enemies are struck in one dash, grants 1 SPECIAL CHARGE.";
             Level = 1;
@@ -36,7 +34,7 @@ namespace Flamenccio.Powerup.Weapon
             pm.Blink(DURATION);
             rechargeUsed = false;
             Instantiate(shockwaveEffect, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
-            attackInstance = Instantiate(attack, PlayerMotion.Instance.transform, false).GetComponent<LemniscaticWindCyclingBullet>();
+            attackInstance = Instantiate(mainAttack, PlayerMotion.Instance.transform, false).GetComponent<LemniscaticWindCyclingBullet>();
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, pm.transform.position);
             float r = aimAngleDeg * Mathf.Deg2Rad;
             pm.Move(new Vector2(Mathf.Cos(r), Mathf.Sin(r)), SPEED, DURATION);
@@ -48,6 +46,7 @@ namespace Flamenccio.Powerup.Weapon
                 AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialQue, transform.position);
                 rechargeUsed = true;
                 playerAtt.ReplenishCharge(1);
+                EffectManager.Instance.SpawnEffect(EffectManager.Effects.SpecialReplenish, PlayerMotion.Instance.transform);
             }
         }
     }

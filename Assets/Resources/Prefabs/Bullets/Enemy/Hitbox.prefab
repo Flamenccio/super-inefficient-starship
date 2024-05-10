@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1239980288682230598}
   - component: {fileID: 5867855997567678068}
   - component: {fileID: -4380405137467399319}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Hitbox
   m_TagString: EBullet
   m_Icon: {fileID: 0}
@@ -48,12 +48,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 0
   maxDistance: 1
-  parryEffect: {fileID: 0}
-  impactEffect: {fileID: 0}
   ignoredTags: []
   knockbackMultiplier: 10
+  hp: 1
+  rotationIsStatic: 1
+  canIgnoreStageEdge: 0
   damage: 1
   rb: {fileID: 5867855997567678068}
+  type: 0
   circleCollider: {fileID: -4380405137467399319}
 --- !u!50 &5867855997567678068
 Rigidbody2D:
@@ -63,7 +65,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1239980288682230593}
-  m_BodyType: 2
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -83,7 +85,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1239980288682230593}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1

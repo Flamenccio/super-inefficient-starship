@@ -1,5 +1,6 @@
 using UnityEngine;
 using FMODUnity;
+using Flamenccio.Core;
 
 namespace Flamenccio.Effects.Audio
 {
@@ -9,14 +10,6 @@ namespace Flamenccio.Effects.Audio
 
         private void Awake()
         {
-            /*
-            if (Instance != null)
-            {
-                Debug.LogError("There is more than one AudioManager in the scene!");
-            }
-            Instance = this;
-            */
-            
             if (Instance != null && Instance != this)
             {
                 Destroy(this);
@@ -27,7 +20,12 @@ namespace Flamenccio.Effects.Audio
             }
 
         }
-
+        private void Start()
+        {
+            GameEventManager.OnEnemyHit += (v) => PlayOneShot(FMODEvents.Instance.enemyHurt, v.EventOrigin);
+            GameEventManager.OnEnemyKill += (v) => PlayOneShot(FMODEvents.Instance.enemyKill, v.EventOrigin);
+            GameEventManager.OnPlayerHit += (v) => PlayOneShot(FMODEvents.Instance.playerHurt, v.EventOrigin);
+        }
         public void PlayOneShot(EventReference sfx, Vector3 worldPos)
         {
             RuntimeManager.PlayOneShot(sfx, worldPos);

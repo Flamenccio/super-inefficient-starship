@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Enemy
@@ -13,6 +14,7 @@ namespace Enemy
         private const int SPAWN_COUNT = 4; // the number of imps to spawn.
         private const int ANIM_FRAME_RATE = 12;
         private const int ANIM_TOTAL_FRAMES = 6;
+        private Action spawnerKilled;
 
         protected override void OnSpawn()
         {
@@ -31,14 +33,20 @@ namespace Enemy
 
                 for (int i = 0; i < SPAWN_COUNT; i++)
                 {
-                    float xOff = Random.Range(-SPAWN_OFFSET, SPAWN_OFFSET + 1);
-                    float yOff = Random.Range(-SPAWN_OFFSET, SPAWN_OFFSET + 1);
+                    float xOff = UnityEngine.Random.Range(-SPAWN_OFFSET, SPAWN_OFFSET + 1);
+                    float yOff = UnityEngine.Random.Range(-SPAWN_OFFSET, SPAWN_OFFSET + 1);
                     Vector2 offset = new(xOff, yOff);
-                    Instantiate(impPrefab, transform.position + (Vector3)offset, Quaternion.Euler(0f, 0f, Random.Range(0f, 360f))); // spawn in an imp at randomized offset and rotation.
+                    Imp inst = Instantiate(impPrefab, transform.position + (Vector3)offset, Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0f, 360f))).GetComponent<Imp>(); // spawn in an imp at randomized offset and rotation.
+                    spawnerKilled += inst.Enrage;
                 }
             }
 
             timer += Time.deltaTime;
+        }
+        protected override void Die()
+        {
+            spawnerKilled();
+            base.Die();
         }
     }
 }

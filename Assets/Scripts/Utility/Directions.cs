@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,10 +44,7 @@ namespace Flamenccio.Utility
     }
     public class Directions
     {
-        static Directions() { }
-        private Directions() { }
-        public static Directions Instance { get; } = new Directions();
-        public Dictionary<int, Vector2> DirectionDictionary { get; } = new()
+        public static Dictionary<int, Vector2> DirectionDictionary { get; } = new()
         {
             [0] = new Vector2(0, 0),
             [1] = new Vector2(1, -1),
@@ -60,7 +56,7 @@ namespace Flamenccio.Utility
             [7] = new Vector2(-1, 1),
             [8] = new Vector2(1, 0),
         };
-        public Vector2[] CardinalVectors { get; } = new Vector2[4]
+        public static Vector2[] CardinalVectors { get; } = new Vector2[4]
         {
             new(0,1),
             new(1,0),
@@ -83,7 +79,7 @@ namespace Flamenccio.Utility
                 readonly get { return vector; }
                 set
                 {
-                    if (!Instance.IsCardinal(value))
+                    if (!IsCardinal(value))
                     {
                         vector = Vector2.up;
                         direction = CardinalValues.North;
@@ -91,7 +87,7 @@ namespace Flamenccio.Utility
                     }
                     vector = value;
                     vector.Normalize();
-                    direction = Instance.VectorToDirection(vector);
+                    direction = VectorToDirection(vector);
                 }
             }
             public CardinalValues Direction
@@ -100,7 +96,7 @@ namespace Flamenccio.Utility
                 set
                 {
                     direction = value;
-                    vector = Instance.DirectionsToVector2(direction);
+                    vector = DirectionsToVector2(direction);
                 }
             }
         }
@@ -109,7 +105,7 @@ namespace Flamenccio.Utility
         /// </summary>
         /// <param name="dir">Direction to convert.</param>
         /// <returns>Returns a normalized Vector2 value.</returns>
-        public Vector2 DirectionsToVector2(CardinalValues dir)
+        public static Vector2 DirectionsToVector2(CardinalValues dir)
         {
             return dir switch
             {
@@ -125,7 +121,7 @@ namespace Flamenccio.Utility
         /// </summary>
         /// <param name="dir">Direction (integer) to convert.</param>
         /// <returns>Returns a normalized Vector2 value.</returns>
-        public Vector2 IntToVector2(int dir)
+        public static Vector2 IntToVector2(int dir)
         {
             return dir switch
             {
@@ -136,26 +132,26 @@ namespace Flamenccio.Utility
                 _ => Vector2.zero,
             };
         }
-        public CardinalValues OppositeOf(int dir)
+        public static CardinalValues OppositeOf(int dir)
         {
             return (CardinalValues)((dir + 2) % 4);
         }
-        public CardinalValues OppositeOf(CardinalValues dir)
+        public static CardinalValues OppositeOf(CardinalValues dir)
         {
             return (CardinalValues)(((int)dir + 2) % 4);
         }
-        public CardinalValues IntToDirection(int dir)
+        public static CardinalValues IntToDirection(int dir)
         {
             return (CardinalValues)(dir % 4);
         }
-        public int DirectionToInt(CardinalValues dir)
+        public static int DirectionToInt(CardinalValues dir)
         {
             return (int)dir;
         }
         /// <summary>
         /// if the given vector is not a cardinal, returns north
         /// </summary>
-        public CardinalValues VectorToDirection(Vector2 dir)
+        public static CardinalValues VectorToDirection(Vector2 dir)
         {
             dir.Normalize();
             for (int i = 0; i < (int)CardinalValues.West + 1; i++)
@@ -167,11 +163,11 @@ namespace Flamenccio.Utility
             }
             return CardinalValues.North;
         }
-        public CardinalValues RandomDirection()
+        public static CardinalValues RandomDirection()
         {
             return (CardinalValues)Random.Range(0, System.Enum.GetNames(typeof(Directions.CardinalValues)).Length);
         }
-        public bool IsCardinal(Vector2 vector)
+        public static bool IsCardinal(Vector2 vector)
         {
             vector.Normalize();
             foreach (Vector2 v in CardinalVectors)

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7526a2b97c861e54ba8a9b0854b981b5, type: 3}
   m_Name: Normal
   m_EditorClassIdentifier: 
-  associatedVariant: 0
-  layout: []
+  Layout: []
+  AssociatedVariant: 0

@@ -17,25 +17,26 @@ namespace Flamenccio.Attack
         // default move speed
         [SerializeField] protected float moveSpeed = 20.0f;
         [SerializeField] protected float maxDistance = 1f;
-        [SerializeField] protected GameObject parryEffect;
-        [SerializeField] protected GameObject impactEffect;
         [SerializeField] protected List<string> ignoredTags = new();
         [SerializeField] protected KnockbackMultipiers knockbackMultiplier;
+        [SerializeField] protected int hp = 1;
+        [SerializeField] protected bool rotationIsStatic = true;
+        [SerializeField] protected bool canIgnoreStageEdge = false;
+        [SerializeField] protected int damage = 1; // default damage
         protected CameraEffects cameraEff = CameraEffects.Instance;
         protected Vector2 origin = Vector2.zero;
 
-
-        // default damage
-        [SerializeField] protected int damage = 1;
         public int Damage { get => damage; }
         public int KnockbackMultiplier { get => (int)knockbackMultiplier; }
         public float Range { get => maxDistance; }
         public float Speed { get => moveSpeed; }
+        public int HP { get => hp; }
 
         [SerializeField] protected Rigidbody2D rb;
 
         protected void Awake()
         {
+            cameraEff = CameraEffects.Instance;
             origin = transform.position;
             Startup();
             Launch();
@@ -50,7 +51,7 @@ namespace Flamenccio.Attack
             {
                 rb.velocity = transform.right * moveSpeed;
             }
-            rb.transform.rotation = Quaternion.identity;
+            if (rotationIsStatic) rb.transform.rotation = Quaternion.identity;
         }
 
         protected void FixedUpdate()
@@ -75,15 +76,10 @@ namespace Flamenccio.Attack
         }
         protected virtual void Trigger(Collider2D collider)
         {
-            if (collider.gameObject.CompareTag("EBullet"))
-            {
-                Instantiate(parryEffect, transform.position, Quaternion.identity);
-            }
-            else
-            {
-                Instantiate(impactEffect, transform.position, Quaternion.identity);
-            }
-            Destroy(this.gameObject);
+            if ((collider.CompareTag("PrimaryWall") || collider.CompareTag("InvisibleWall")) && !canIgnoreStageEdge) hp = 0;
+            else if (!collider.CompareTag("PrimaryWall") && !collider.CompareTag("InvisibleWall")) hp--;
+
+            if (hp <= 0) Destroy(this.gameObject);
         }
 
         protected void OnCollisionEnter2D(Collision2D collision)
@@ -103,11 +99,15 @@ namespace Flamenccio.Attack
         }
         private bool IgnoreTags(string compareTag)
         {
+            return ignoredTags.Contains(compareTag);
+
+            /*
             foreach (string tag in ignoredTags)
             {
                 if (compareTag.Equals(tag)) return true;
             }
             return false;
+            */
         }
     }
 }

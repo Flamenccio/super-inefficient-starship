@@ -1,13 +1,13 @@
 using System.Collections;
 using UnityEngine;
 using Flamenccio.Utility;
-using UnityEngine.InputSystem;
+using Flamenccio.Effects;
 
 namespace Flamenccio.Core
 {
     public class CameraControl : MonoBehaviour
     {
-        [SerializeField] private Transform playerPosition;
+        private Transform playerPosition;
         private InputManager input;
         private Camera cam;
         // modifies the camera's position from the player's position
@@ -35,15 +35,19 @@ namespace Flamenccio.Core
             cam.orthographicSize = DEFAULT_SIZE;
             currentSize = DEFAULT_SIZE;
             previousSize = DEFAULT_SIZE;
-            Application.targetFrameRate = 60;
         }
         private void Start()
         {
             input = InputManager.Instance;
+            playerPosition = PlayerMotion.Instance.transform;
+
+            GameEventManager.OnPlayerHit += (_) => HurtZoom();
+            GameEventManager.OnLevelUp += (_) => IncreaseCameraSize();
         }
         public void FixedUpdate()
         {
             if (input == null) input = InputManager.Instance;
+
             UpdateSize();
             UpdatePosition();
         }

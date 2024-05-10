@@ -83,7 +83,7 @@ namespace Flamenccio.Core.Player
                 a = input.AimInputDegrees;
             }
 
-            attack?.Invoke(a, input.MoveInputDegrees, transform.position);
+            attack(a, input.MoveInputDegrees, transform.position);
         }
         private void AttackTap(Action<float, float, Vector2> attack, bool aimAssist)
         {
@@ -93,7 +93,7 @@ namespace Flamenccio.Core.Player
             }
             else
             {
-                attack?.Invoke(input.AimInputDegrees, input.MoveInputDegrees, transform.position); // TODO maybe avoid using delegates...
+                attack(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
             }
         }
         private void Fire1Hold()
@@ -106,12 +106,12 @@ namespace Flamenccio.Core.Player
                 {
                     if (mainAttackState == AttackState.Tap)
                     {
-                        powerManager.MainAttackHoldEnter?.Invoke(input.AimInputDegrees,input.MoveInputDegrees, transform.position);
+                        powerManager.MainAttackHoldEnter(input.AimInputDegrees,input.MoveInputDegrees, transform.position);
                         mainAttackState = AttackState.Hold;
                     }
                     else
                     {
-                        powerManager.MainAttackHold?.Invoke(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
+                        powerManager.MainAttackHold(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
                     }
                 }
                 else
@@ -123,17 +123,17 @@ namespace Flamenccio.Core.Player
             {
                 if (mainAttackState == AttackState.Hold)
                 {
-                    powerManager.MainAttackHoldExit?.Invoke(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
+                    powerManager.MainAttackHoldExit(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
                     mainAttackState = AttackState.Tap;
                 }
                 mainHold = 0f;
             }
         }
-        public void OnFire2(InputAction.CallbackContext context)
+        public void OnDefense(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
-                AttackTap(powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
+                AttackTap(powerManager.DefenseAttackTap, powerManager.DefenseAttackAimAssisted);
             }
         }
         public void OnSpecial(InputAction.CallbackContext context)
@@ -142,6 +142,14 @@ namespace Flamenccio.Core.Player
             {
                 kbmFireTimer = KBM_FIRE_TIMER_MAX;
                 AttackTap(powerManager.SpecialAttackTap, powerManager.SpecialAttackAimAssisted);
+            }
+        }
+        public void OnSub(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                kbmFireTimer = KBM_FIRE_TIMER_MAX;
+                AttackTap(powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
             }
         }
         private void Movement()
@@ -190,7 +198,7 @@ namespace Flamenccio.Core.Player
                 rotationAngle.Degree = Mathf.LerpAngle(rotationAngle.Degree, input.AimInputDegrees, aimResponsiveness);
                 rb.rotation = Mathf.LerpAngle(rb.rotation, rotationAngle.Degree, aimResponsiveness);
             }
-            else
+            else if (input.MoveInputVector != Vector2.zero)
             {
                 rb.rotation = Mathf.LerpAngle(rb.rotation, input.MoveInputDegrees, aimResponsiveness);
             }
@@ -199,7 +207,7 @@ namespace Flamenccio.Core.Player
         {
             if (context.performed)
             {
-                BuffBase b = new MovementSpeed();
+                BuffBase b = new HealthBoost();
                 powerManager.AddBuff(b);
             }
         }

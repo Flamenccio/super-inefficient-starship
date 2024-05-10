@@ -3,8 +3,6 @@ using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.Core;
 using Flamenccio.Effects; // ALL THE EFFECTS!
-using Flamenccio.Effects.Visual;
-using Flamenccio.Effects.Audio;
 
 namespace Enemy
 {
@@ -18,8 +16,6 @@ namespace Enemy
         [SerializeField] protected float moveSpeed = 0f;
         [SerializeField] protected LayerMask playerLayer;
         [SerializeField] protected SpriteRenderer spriteRen;
-        [SerializeField] protected GameObject killEffect;
-        [SerializeField] protected GameObject hitEffect;
         [SerializeField] protected Animator animator;
         [SerializeField] protected GameObject miniStarPrefab;
         [SerializeField] protected float activeRange; // the player must be within range for this enemy to activate
@@ -70,9 +66,6 @@ namespace Enemy
                 Behavior();
                 Animation();
             }
-
-            HealthCheck();
-
             if (slowUpdateTimer >= SLOW_UPDATE_FREQUENCY)
             {
                 slowUpdateTimer = 0f;
@@ -99,9 +92,7 @@ namespace Enemy
                 Instantiate(miniStarPrefab, transform.position, Quaternion.Euler(0f, 0f, randomAngle));
             }
 
-            Instantiate(killEffect, transform.position, Quaternion.identity); // spawn kill effect
-            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Normal, transform.position); // do a little shake
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.enemyKill, transform.position);
+            GameEventManager.OnEnemyKill(GameEventManager.CreateGameEvent(transform.position));
             Destroy(gameObject); // destroy self
         }
         protected void Hurt(int damage)
@@ -109,11 +100,10 @@ namespace Enemy
             currentHP -= damage;
             if (currentHP > 0)
             {
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.enemyHurt, transform.position);
                 DamageFlash();
-                CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
-                Instantiate(hitEffect, transform.position, Quaternion.identity);
+                GameEventManager.OnEnemyHit(GameEventManager.CreateGameEvent(transform));
             }
+            HealthCheck();
         }
         /// <summary>
         /// Called every 0.25 seconds.

@@ -1,3 +1,4 @@
+using Flamenccio.Effects.Visual;
 using System.Collections;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace Flamenccio.Effects
         public static PlayerMotion Instance { get; private set; }
         public Vector2 PlayerPosition { get => transform.position; }
         public Transform PlayerTransform { get => transform; }
+        public Vector2 PlayerVelocity { get => rb.velocity; }
         [SerializeField] private Rigidbody2D rb;
         private enum Restrictions
         {
@@ -33,17 +35,6 @@ namespace Flamenccio.Effects
             {
                 Instance = this;
             }
-
-            /*
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this);
-            }
-            else
-            {
-                Instance = this;
-            }
-            */
         }
         /// <summary>
         /// Instantly and instantaneously moves player to given global coordinate.
@@ -52,6 +43,7 @@ namespace Flamenccio.Effects
         public void TeleportTo(Vector2 coord)
         {
             transform.position = coord;
+            CameraEffects.Instance.CutToPosition(new Vector3(coord.x, coord.y, -10));
         }
         /// <summary>
         /// Instantly and instantaneously moves player to position relative to some transform.
