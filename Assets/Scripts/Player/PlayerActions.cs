@@ -83,7 +83,7 @@ namespace Flamenccio.Core.Player
                 a = input.AimInputDegrees;
             }
 
-            attack?.Invoke(a, input.MoveInputDegrees, transform.position);
+            attack(a, input.MoveInputDegrees, transform.position);
         }
         private void AttackTap(Action<float, float, Vector2> attack, bool aimAssist)
         {
@@ -93,7 +93,7 @@ namespace Flamenccio.Core.Player
             }
             else
             {
-                attack?.Invoke(input.AimInputDegrees, input.MoveInputDegrees, transform.position); // TODO maybe avoid using delegates...
+                attack(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
             }
         }
         private void Fire1Hold()
@@ -106,12 +106,12 @@ namespace Flamenccio.Core.Player
                 {
                     if (mainAttackState == AttackState.Tap)
                     {
-                        powerManager.MainAttackHoldEnter?.Invoke(input.AimInputDegrees,input.MoveInputDegrees, transform.position);
+                        powerManager.MainAttackHoldEnter(input.AimInputDegrees,input.MoveInputDegrees, transform.position);
                         mainAttackState = AttackState.Hold;
                     }
                     else
                     {
-                        powerManager.MainAttackHold?.Invoke(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
+                        powerManager.MainAttackHold(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
                     }
                 }
                 else
@@ -123,7 +123,7 @@ namespace Flamenccio.Core.Player
             {
                 if (mainAttackState == AttackState.Hold)
                 {
-                    powerManager.MainAttackHoldExit?.Invoke(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
+                    powerManager.MainAttackHoldExit(input.AimInputDegrees, input.MoveInputDegrees, transform.position);
                     mainAttackState = AttackState.Tap;
                 }
                 mainHold = 0f;

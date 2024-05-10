@@ -27,7 +27,7 @@ namespace Flamenccio.Core
     {
         /*
         these events should be common--no highly specific events unless ABSOLUTELY needed.
-            "highly specific" events would be something like "player kills this specific enemy"
+            "highly specific" events would be something like "player kills this specific enemy" or "player uses this specific weapon."
         these events must be interactions between game objects: player interaction is already handled by input
         */
 

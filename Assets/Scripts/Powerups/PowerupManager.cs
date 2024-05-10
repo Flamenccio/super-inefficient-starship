@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Powerup.Weapon;
 using Flamenccio.HUD;
+using Unity.VisualScripting;
 
 namespace Flamenccio.Powerup
 {
@@ -72,21 +73,21 @@ namespace Flamenccio.Powerup
         }
 
         // MAIN ATTACK METHODS
-        public Action<float, float, Vector2> MainAttackTap { get; private set; }
-        public Action<float, float, Vector2> MainAttackHold { get; private set; }
-        public Action<float, float, Vector2> MainAttackHoldEnter { get; private set; }
-        public Action<float, float, Vector2> MainAttackHoldExit { get; private set; }
+        private Action<float, float, Vector2> mainAttackTap;
+        private Action<float, float, Vector2> mainAttackHold;
+        private Action<float, float, Vector2> mainAttackHoldEnter;
+        private Action<float, float, Vector2> mainAttackHoldExit;
 
         // SUB ATTACK METHODS
-        public Action<float, float, Vector2> SubAttackTap { get; private set; }
+        private Action<float, float, Vector2> subAttackTap;
 
         // SPECIAL ATTACK METHODS
-        public Action<float, float, Vector2> SpecialAttackTap { get; private set; }
+        private Action<float, float, Vector2> specialAttackTap;
 
         // SUPPORT ATTACK METHODS
 
         // DEFENSE ATTACK METHODS
-        public Action<float, float, Vector2> DefenseAttackTap { get; private set; }
+        private Action<float, float, Vector2> defenseAttackTap;
 
         private PlayerAttributes playerAttributes;
 
@@ -109,10 +110,10 @@ namespace Flamenccio.Powerup
             if (!main.TryGetComponent<WeaponMain>(out mainAttack)) return false;
 
             powerupUpdate += mainAttack.Run; // update delegates and stuff
-            MainAttackTap = mainAttack.Tap;
-            MainAttackHold = mainAttack.Hold;
-            MainAttackHoldEnter = mainAttack.HoldEnter;
-            MainAttackHoldExit = mainAttack.HoldExit;
+            mainAttackTap = mainAttack.Tap;
+            mainAttackHold = mainAttack.Hold;
+            mainAttackHoldEnter = mainAttack.HoldEnter;
+            mainAttackHoldExit = mainAttack.HoldExit;
             
             if (crosshairsControl == null)
             {
@@ -136,7 +137,7 @@ namespace Flamenccio.Powerup
             if (!sub.TryGetComponent<WeaponSub>(out subAttack)) return false;
 
             powerupUpdate += subAttack.Run;
-            SubAttackTap = subAttack.Tap;
+            subAttackTap = subAttack.Tap;
 
             return true;
         }
@@ -151,7 +152,7 @@ namespace Flamenccio.Powerup
             if (!special.TryGetComponent(out specialAttack)) return false;
 
             powerupUpdate += specialAttack.Run;
-            SpecialAttackTap = specialAttack.Tap;
+            specialAttackTap = specialAttack.Tap;
 
             return true;
         }
@@ -166,7 +167,7 @@ namespace Flamenccio.Powerup
             if (!defense.TryGetComponent(out defenseAttack)) return false;
 
             powerupUpdate += defenseAttack.Run;
-            DefenseAttackTap = defenseAttack.Tap;
+            defenseAttackTap = defenseAttack.Tap;
 
             return true;
         }
@@ -256,5 +257,33 @@ namespace Flamenccio.Powerup
             }
             return -1; // if there is no buff that exists
         }
+        public void MainAttackTap(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            mainAttackTap?.Invoke(aimAngle, moveAngle, origin);
+        }
+        public void MainAttackHold(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            mainAttackHold?.Invoke(aimAngle, moveAngle, origin);
+        }
+        public void MainAttackHoldEnter(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            mainAttackHoldEnter?.Invoke(aimAngle, moveAngle, origin);
+        }
+        public void MainAttackHoldExit(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            mainAttackHoldExit?.Invoke(aimAngle, moveAngle, origin);
+        }
+        public void SubAttackTap(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            subAttackTap?.Invoke(aimAngle, moveAngle, origin);
+        }
+        public void SpecialAttackTap(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            specialAttackTap?.Invoke(aimAngle, moveAngle, origin);
+        }
+        public void DefenseAttackTap(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            defenseAttackTap?.Invoke(aimAngle, moveAngle, origin);
+        }
     }
-} 
+}
