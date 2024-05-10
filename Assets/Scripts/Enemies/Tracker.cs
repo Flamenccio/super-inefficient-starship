@@ -230,12 +230,19 @@ namespace Enemy
 
             if (behaviorState != EnemyState.Attack) return;
 
+
             faceDirection.Vector = target.transform.position - transform.position;
             Attack(target.transform.position);
         }
         private void AttackCheck()
         {
             if (checkTimer > 0f || behaviorState != EnemyState.Attack) return;
+
+            if (target == null)
+            {
+                behaviorState = EnemyState.Chase;
+                return;
+            }
 
             checkTimer = CHECK_TIMER_MAX;
             float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);

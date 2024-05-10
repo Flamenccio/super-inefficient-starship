@@ -19,18 +19,20 @@ namespace Flamenccio.Attack
         [SerializeField] protected float maxDistance = 1f;
         [SerializeField] protected List<string> ignoredTags = new();
         [SerializeField] protected KnockbackMultipiers knockbackMultiplier;
-        [SerializeField] protected int hp = 1;
+        [SerializeField] protected int durability = 1;
         [SerializeField] protected bool rotationIsStatic = true;
         [SerializeField] protected bool canIgnoreStageEdge = false;
-        [SerializeField] protected int damage = 1; // default damage
+        [SerializeField] protected int playerDamage = 1; // default damage done to player
+        [SerializeField] protected int objectDamage = 1; // default damage done to object
         protected CameraEffects cameraEff = CameraEffects.Instance;
         protected Vector2 origin = Vector2.zero;
 
-        public int Damage { get => damage; }
+        public int PlayerDamage { get => playerDamage; }
+        public int ObjectDamage { get => objectDamage; }
         public int KnockbackMultiplier { get => (int)knockbackMultiplier; }
         public float Range { get => maxDistance; }
         public float Speed { get => moveSpeed; }
-        public int HP { get => hp; }
+        public int Durability { get => durability; }
 
         [SerializeField] protected Rigidbody2D rb;
 
@@ -76,10 +78,10 @@ namespace Flamenccio.Attack
         }
         protected virtual void Trigger(Collider2D collider)
         {
-            if ((collider.CompareTag("PrimaryWall") || collider.CompareTag("InvisibleWall")) && !canIgnoreStageEdge) hp = 0;
-            else if (!collider.CompareTag("PrimaryWall") && !collider.CompareTag("InvisibleWall")) hp--;
+            if ((collider.CompareTag("PrimaryWall") || collider.CompareTag("InvisibleWall")) && !canIgnoreStageEdge) durability = 0;
+            else if (!collider.CompareTag("PrimaryWall") && !collider.CompareTag("InvisibleWall")) durability--;
 
-            if (hp <= 0) Destroy(this.gameObject);
+            if (durability <= 0) Destroy(this.gameObject);
         }
 
         protected void OnCollisionEnter2D(Collision2D collision)

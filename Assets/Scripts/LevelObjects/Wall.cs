@@ -33,7 +33,7 @@ namespace Flamenccio.LevelObject.Walls
         {
             if (IsDangerousTag(collision.gameObject.tag))
             {
-                currentHP -= collision.GetComponent<BulletControl>().Damage;
+                currentHP -= collision.GetComponent<BulletControl>().ObjectDamage;
                 if (currentHP <= 0)
                 {
                     if (level == 0)

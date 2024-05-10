@@ -117,6 +117,7 @@ namespace Flamenccio.LevelObject.Stages
                 // otherwise, it should be ok
                 ForcePopulateLink(other.ParentStage); // populate this link with the other stage 
                 other.ForcePopulateLink(ParentStage); // populate the other link with this stage
+                Debug.Log($"{ParentStage.gameObject.GetInstanceID()} => {other.ParentStage.gameObject.GetInstanceID()}");
                 return;
             }
 
@@ -129,6 +130,7 @@ namespace Flamenccio.LevelObject.Stages
                     Stage other = col.gameObject.GetComponent<Stage>();
                     ForcePopulateLink(other);
                     other.LinkStageUnsafe(Directions.OppositeOf(placement), ParentStage);
+                    Debug.Log($"{ParentStage.gameObject.GetInstanceID()} => {other.gameObject.GetInstanceID()}");
                     return;
                 }
             }

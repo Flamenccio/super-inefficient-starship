@@ -39,7 +39,7 @@ namespace Flamenccio.Attack
             }
             if (damage > 0)
             {
-                this.damage = damage;
+                this.playerDamage = damage;
             }
 
             timer = 0; // reset the timer just in case

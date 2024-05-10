@@ -12,7 +12,7 @@ namespace Flamenccio.Powerup.Weapon
         }
         public int GetWeaponDamage()
         {
-            return mainAttack.GetComponent<BulletControl>().Damage;
+            return mainAttack.GetComponent<BulletControl>().PlayerDamage;
         }
         public float GetWeaponRange()
         {

@@ -122,11 +122,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 3
   maxDistance: 20
-  parryEffect: {fileID: 0}
-  impactEffect: {fileID: 0}
   ignoredTags: []
   knockbackMultiplier: 0
-  damage: 1
+  durability: 1
+  rotationIsStatic: 1
+  canIgnoreStageEdge: 0
+  playerDamage: 1
+  objectDamage: 0
   rb: {fileID: 711440149623194904}
 --- !u!50 &711440149623194904
 Rigidbody2D:

@@ -30,7 +30,7 @@ namespace Flamenccio.Core.Player
                 BulletControl bullet = collision.GetComponent<BulletControl>();
                 Vector2 knockbackVector = CalculateKnockbackAngle(PlayerMotion.Instance.PlayerVelocity, collision.attachedRigidbody.velocity);
                 PlayerMotion.Instance.Knockback(knockbackVector, bullet.KnockbackMultiplier);
-                GameEventManager.OnPlayerHit(GameEventManager.CreateGameEvent(bullet.Damage, transform));
+                GameEventManager.OnPlayerHit(GameEventManager.CreateGameEvent(bullet.PlayerDamage, transform));
                 return;
             }
             if (collision.CompareTag("Heart"))
@@ -71,7 +71,7 @@ namespace Flamenccio.Core.Player
         /// <returns>the resulting vector</returns>
         private Vector2 CalculateKnockback(Vector2 playerVelocity, Vector2 attackerVelocity, float multiplier)
         {
-            if (multiplier == 0) return new Vector2(0, 0);
+            if (multiplier == 0f) return new Vector2(0, 0);
 
             Vector2 pVelocityInversion = new(-playerVelocity.x, -playerVelocity.y);
             Vector2 knockback = pVelocityInversion + attackerVelocity;
