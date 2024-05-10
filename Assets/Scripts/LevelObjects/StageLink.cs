@@ -121,14 +121,14 @@ namespace Flamenccio.LevelObject.Stages
             }
 
             // Second pass: look for close stages. If there are any, connect both stages.
-            colliders = Physics2D.OverlapBoxAll((Directions.Instance.DirectionsToVector2(placement) * (STAGE_LENGTH / 2)) + (Vector2)gameObject.transform.position, OVERLAP_BOX_SIZE, 0f, STAGE_LAYER);
+            colliders = Physics2D.OverlapBoxAll((Directions.DirectionsToVector2(placement) * (STAGE_LENGTH / 2)) + (Vector2)gameObject.transform.position, OVERLAP_BOX_SIZE, 0f, STAGE_LAYER);
             foreach (Collider2D col in colliders) // TODO simplify loop
             {
                 if (col.gameObject.GetInstanceID() != parentStage.gameObject.GetInstanceID()) // if the collider is this link's associated stage, move on
                 {
                     Stage other = col.gameObject.GetComponent<Stage>();
                     ForcePopulateLink(other);
-                    other.LinkStageUnsafe(Directions.Instance.OppositeOf(placement), ParentStage);
+                    other.LinkStageUnsafe(Directions.OppositeOf(placement), ParentStage);
                     return;
                 }
             }

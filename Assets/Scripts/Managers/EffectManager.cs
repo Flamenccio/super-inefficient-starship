@@ -14,6 +14,7 @@ namespace Flamenccio.Effects.Visual
             EnemyHit,
             EnemyKill,
             SpecialReplenish,
+            PlayerHit,
         }
 
         public static EffectManager Instance { get; private set; }
@@ -25,6 +26,7 @@ namespace Flamenccio.Effects.Visual
         [SerializeField] private GameObject enemyHit;
         [SerializeField] private GameObject enemyKill;
         [SerializeField] private GameObject specialReplenish;
+        [SerializeField] private GameObject playerHit;
         [SerializeField] private TrailPool trailPool;
 
         private void Awake()
@@ -47,12 +49,15 @@ namespace Flamenccio.Effects.Visual
                 { Effects.EnemyHit, enemyHit },
                 { Effects.EnemyKill, enemyKill },
                 { Effects.SpecialReplenish, specialReplenish },
+                { Effects.PlayerHit, playerHit },
             };
         }
         private void Start()
         {
-            GameEventManager.OnEnemyKilled += (v) => SpawnEffect(Effects.EnemyKill, v.EventOrigin);
+            // subscribe to events
+            GameEventManager.OnEnemyKill += (v) => SpawnEffect(Effects.EnemyKill, v.EventOrigin);
             GameEventManager.OnEnemyHit += (v) => SpawnEffect(Effects.EnemyHit, v.EventOrigin);
+            GameEventManager.OnPlayerHit += (v) => SpawnEffect(Effects.PlayerHit, v.EventTriggerer);
         }
         public void SpawnEffect(Effects effect, Transform parent)
         {

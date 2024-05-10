@@ -92,12 +92,7 @@ namespace Enemy
                 Instantiate(miniStarPrefab, transform.position, Quaternion.Euler(0f, 0f, randomAngle));
             }
 
-            GameEventInfo info = new()
-            {
-                EventOrigin = transform.position
-            };
-
-            GameEventManager.OnEnemyKilled(info);
+            GameEventManager.OnEnemyKill(GameEventManager.CreateGameEvent(transform.position));
             Destroy(gameObject); // destroy self
         }
         protected void Hurt(int damage)
@@ -106,13 +101,7 @@ namespace Enemy
             if (currentHP > 0)
             {
                 DamageFlash();
-
-                GameEventInfo info = new()
-                {
-                    EventTriggerer = transform
-                };
-
-                GameEventManager.OnEnemyHit(info);
+                GameEventManager.OnEnemyHit(GameEventManager.CreateGameEvent(transform));
             }
             HealthCheck();
         }

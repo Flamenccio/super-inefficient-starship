@@ -42,7 +42,6 @@ namespace Flamenccio.Core
         private GameObject heart;
         [SerializeField] private GoalArrowControl goalArrow;
         [SerializeField] private HUDControl hudControl;
-        [SerializeField] private CameraControl cameraControl;
         [SerializeField] private PlayerAttributes playerAtt;
 
         // debug stuff
@@ -63,6 +62,12 @@ namespace Flamenccio.Core
         {
             Time.timeScale = 1.0f;
             spawnControl.SpawnStar();
+
+            // subscribe to events
+            GameEventManager.OnStarCollect += (x) => CollectStar(Mathf.FloorToInt(x.Value));
+            GameEventManager.OnMiniStarCollect += (x) => CollectMiniStar(Mathf.FloorToInt(x.Value));
+            GameEventManager.OnPlayerHit += (x) => RemoveLife(Mathf.FloorToInt(x.Value));
+            GameEventManager.OnHeartCollect += (x) => ReplenishLife(Mathf.FloorToInt(x.Value));
         }
         private void Awake()
         {
@@ -100,12 +105,14 @@ namespace Flamenccio.Core
             int total = Mathf.FloorToInt(playerAtt.KillPoints * playerAtt.KillPointBonus) + value; // calculate total points gained
             SpawnEnemies(); // spawn more enemies with an additional amount based on the amount of kill points obtained
             ResetKills();
+            ReplenishTimer();
             GameObject star = spawnControl.SpawnStar();
             goalArrow.PointAt(star);
             AddPoints(total); // add points to current points
         }
         public void CollectMiniStar(int value)
         {
+            ReplenishTimer(0.5f);
             AddKillPoint(value);
             spawnControl.SpawnFlyingStar(PlayerMotion.Instance.PlayerPosition, PlayerMotion.Instance.transform);
         }
@@ -134,15 +141,13 @@ namespace Flamenccio.Core
 
             waveSpawnAmount = EnemyWaveLevel();
             maxTime += MAX_TIME_INCREASE; // increase the maximum time
-            hudControl.DisplayLevelUpText(difficulty); // display on HUD
-
 
             if (progress >= DifficultyCurve(difficulty + 1)) // level up again, if necessary
             {
                 LevelUp();
             }
 
-            cameraControl.IncreaseCameraSize();
+            GameEventManager.OnLevelUp(GameEventManager.CreateGameEvent(difficulty, PlayerMotion.Instance.transform));
         }
         /// <summary>
         /// Remove points from player
@@ -169,7 +174,6 @@ namespace Flamenccio.Core
         public bool RemoveLife(int life)
         {
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position); // TODO maybe scale intensity with damage taken
-            hudControl.DisplayHurtLines();
             playerAtt.ChangeLife(-life);
 
             if (playerAtt.HP == 0)

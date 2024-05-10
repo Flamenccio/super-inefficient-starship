@@ -22,20 +22,15 @@ namespace Flamenccio.Powerup.Weapon
             Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;
         }
-        protected override void Start()
-        {
-            base.Start();
-
-            GameEventManager.OnEnemyKilled += (_) => IncreaseKill();
-            GameEventManager.OnPlayerHit += (_) => ResetKill();
-        }
         private void OnEnable()
         {
             powerupManager = GetComponentInParent<PowerupManager>();
+            GameEventManager.OnEnemyKill += (_) => IncreaseKill();
+            GameEventManager.OnPlayerHit += (_) => ResetKill();
         }
         private void OnDestroy()
         {
-            GameEventManager.OnEnemyKilled -= (_) => IncreaseKill();
+            GameEventManager.OnEnemyKill -= (_) => IncreaseKill();
             GameEventManager.OnPlayerHit -= (_) => ResetKill();
         }
         private void IncreaseKill()

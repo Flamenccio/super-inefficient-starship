@@ -1,16 +1,17 @@
 using UnityEngine;
 using Flamenccio.Utility;
+using Flamenccio.Effects;
 
 namespace Flamenccio.HUD
 {
     public class CrosshairsControl : MonoBehaviour
     {
-        [SerializeField] private Transform player;
         [SerializeField] private Sprite inactiveSprite;
         [SerializeField] private Sprite activeSprite;
         [SerializeField] private Sprite lockedonSprite;
         [SerializeField] private LayerMask destructableLayers; // objects that the bullet can destroy
         [SerializeField] private LayerMask obstacleLayers; // objects that the bullet can't destroy, but will be blocked by
+        private Transform player;
         private SpriteRenderer spriteRen;
         private Color visible = Color.white;
         private Color invisible = new(1f, 1f, 1f, 0f);
@@ -29,6 +30,7 @@ namespace Flamenccio.HUD
         }
         private void Start()
         {
+            player = PlayerMotion.Instance.transform;
             input = InputManager.Instance;
             newDistance = maxDistance;
         }

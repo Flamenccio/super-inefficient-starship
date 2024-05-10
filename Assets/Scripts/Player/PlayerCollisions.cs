@@ -9,8 +9,6 @@ namespace Flamenccio.Core.Player
 {
     public class PlayerCollisions : MonoBehaviour
     {
-        [SerializeField] private GameState gState;
-        [SerializeField] private GameObject hitEffect;
         private PlayerActions pActions;
         private const float HURT_INVULN_DURATION = 10f / 60f;
         private bool invulnerable = false;
@@ -23,38 +21,26 @@ namespace Flamenccio.Core.Player
         {
             if (collision.CompareTag("Star"))
             {
-                // add point
-                gState.ReplenishTimer();
-                gState.CollectStar(collision.GetComponent<Star>().Value);
+                GameEventManager.OnStarCollect(GameEventManager.CreateGameEvent(collision.GetComponent<Star>().Value, collision.transform.position));
                 return;
             }
             if (collision.CompareTag("MiniStar"))
             {
-                gState.ReplenishTimer(0.5f);
-                gState.CollectMiniStar(collision.GetComponent<MiniStar>().Value);
+                GameEventManager.OnMiniStarCollect(GameEventManager.CreateGameEvent(collision.GetComponent<MiniStar>().Value, collision.transform.position));
                 return;
             }
             if ((collision.CompareTag("EBullet") || collision.CompareTag("NBullet")) && !invulnerable)
             {
-                BulletControl bullet = collision.GetComponent<BulletControl>();
                 StartCoroutine(HurtInvuln());
-                gState.RemoveLife(bullet.Damage);
+                BulletControl bullet = collision.GetComponent<BulletControl>();
                 Vector2 knockbackVector = CalculateKnockbackAngle(pActions.Rigidbody.velocity, collision.attachedRigidbody.velocity);
                 PlayerMotion.Instance.Knockback(knockbackVector, bullet.KnockbackMultiplier);
-                Instantiate(hitEffect, transform.position, Quaternion.identity);
-
-                GameEventInfo info = new()
-                {
-                    EventTriggerer = transform,
-                    Value = bullet.Damage
-                };
-
-                GameEventManager.OnPlayerHit(info);
+                GameEventManager.OnPlayerHit(GameEventManager.CreateGameEvent(bullet.Damage, transform));
                 return;
             }
             if (collision.CompareTag("Heart"))
             {
-                gState.ReplenishLife(1);
+                GameEventManager.OnHeartCollect(GameEventManager.CreateGameEvent(1f, transform));
                 return;
             }
         }

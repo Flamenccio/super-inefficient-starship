@@ -144,17 +144,17 @@ namespace Flamenccio.Core
                 toolkit.root = GenerateRandomRootStage();
                 toolkit.rootStage = stageList[toolkit.root]; // get stage from stage number
                 toolkit.rootStage.ScanNearbyStages(); // make sure things are connected
-                localSpawnDirection.Direction = Directions.Instance.RandomDirection();
+                localSpawnDirection.Direction = Directions.RandomDirection();
                 toolkit.spawnReady = toolkit.rootStage.LinkableInDirection(localSpawnDirection.Direction); // check if the root stage can be extended in direction
             } while (!toolkit.spawnReady);
 
             List<StageVariant.Variants> blacklisted = new(StageResources.Instance.GetStageVariant(toolkit.rootStage.Variant).Links.First(v => v.LinkDirection == localSpawnDirection.Direction).BlackListedVariants); // copy blacklisted variants of stage link in chosen direction
-            List<StageVariant.Variants> variants = new(StageResources.Instance.GetVariantsExtendableInDirection(Directions.Instance.OppositeOf(localSpawnDirection.Direction)).Except(blacklisted)); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
+            List<StageVariant.Variants> variants = new(StageResources.Instance.GetVariantsExtendableInDirection(Directions.OppositeOf(localSpawnDirection.Direction)).Except(blacklisted)); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
             StageVariant.Variants v = variants[Random.Range(1, variants.Count)]; // pull a random variant from the list (excluding NORMAL variant)
             newStage = Instantiate(stagePrefab, stageContainer.transform).GetComponent<Stage>(); // instantiate new stage
             newStage.UpdateVariant(v);
             toolkit.rootStage.LinkStageUnsafe(localSpawnDirection.Direction, newStage);
-            newStage.LinkStageUnsafe(Directions.Instance.OppositeOf(localSpawnDirection.Direction), toolkit.rootStage);
+            newStage.LinkStageUnsafe(Directions.OppositeOf(localSpawnDirection.Direction), toolkit.rootStage);
             toolkit.globalSpawnCoords = (Vector2)toolkit.rootStage.transform.position + (STAGE_LENGTH * 2 * localSpawnDirection.Vector);
             newStage.transform.position = toolkit.globalSpawnCoords; // place the new stage in the right place
             newStage.ScanNearbyStages(); // scan for nearby stages
@@ -173,7 +173,7 @@ namespace Flamenccio.Core
 
             if (wall != null) // spawn adjacent to an existing wall
             {
-                Vector2 offset = Directions.Instance.DirectionDictionary[Random.Range(1, 8)];
+                Vector2 offset = Directions.DirectionDictionary[Random.Range(1, 8)];
                 toolkit.globalSpawnCoords = (Vector2)wall.transform.position + offset;
             }
 
