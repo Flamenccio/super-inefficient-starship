@@ -47,6 +47,7 @@ MonoBehaviour:
   cost: 1
   cooldown: 0.13333334
   holdThreshold: 0
+  aimAssisted: 1
   mainAttack: {fileID: 3247408391109038382, guid: 82b9c0481752dbb47b8c0cfff92d0c6b, type: 3}
   chargeAttack: {fileID: 5748844518406190761, guid: 88ef974b8a9d69b47b6087b1cd716dd9, type: 3}
   ChargeCost: 2
