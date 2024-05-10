@@ -36,7 +36,6 @@ namespace Flamenccio.Core.Player
             if (collision.CompareTag("Heart"))
             {
                 GameEventManager.OnHeartCollect(GameEventManager.CreateGameEvent(1f, transform));
-                return;
             }
         }
         public void OnTriggerStay2D(Collider2D collision)

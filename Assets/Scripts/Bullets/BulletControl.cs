@@ -70,7 +70,6 @@ namespace Flamenccio.Attack
         }
         protected virtual void Behavior()
         {
-
         }
         protected virtual void Collide(Collision2D collision)
         {
@@ -102,14 +101,6 @@ namespace Flamenccio.Attack
         private bool IgnoreTags(string compareTag)
         {
             return ignoredTags.Contains(compareTag);
-
-            /*
-            foreach (string tag in ignoredTags)
-            {
-                if (compareTag.Equals(tag)) return true;
-            }
-            return false;
-            */
         }
     }
 }

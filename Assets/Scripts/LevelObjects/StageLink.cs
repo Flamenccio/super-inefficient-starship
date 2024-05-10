@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Utility;
+using System.Linq;
 
 namespace Flamenccio.LevelObject.Stages
 {
@@ -100,40 +101,31 @@ namespace Flamenccio.LevelObject.Stages
 
             // First pass: look for close stage links. If there are any, connect to them.
             Collider2D[] colliders = Physics2D.OverlapCircleAll((Vector2)gameObject.transform.position, NEAR_SEARCH_RADIUS, STAGE_LINK_LAYER);
-            foreach (Collider2D col in colliders) // TODO simplify loop
-            {
-                if (col.gameObject.GetInstanceID() == gameObject.GetInstanceID()) // check if col is this game object
+
+            colliders
+                .Select(col => col.gameObject.TryGetComponent<StageLink>(out var other) ? (Collider2D: col, Other: other) : (null, null))
+                .Where(pair => pair.Collider2D != null && pair.Other != null &&
+                (pair.Collider2D.gameObject.GetInstanceID() != pair.Other.gameObject.GetInstanceID()) &&
+                (gameObject.GetInstanceID() != pair.Collider2D.gameObject.GetInstanceID()))
+                .ToList()
+                .ForEach(i =>
                 {
-                    continue;
-                }
-                if (!col.gameObject.TryGetComponent<StageLink>(out var other)) // check if this game object is a stage link
-                {
-                    continue;
-                }
-                if (other.ParentStage.gameObject.GetInstanceID() == parentStage.gameObject.GetInstanceID()) // check if parent of this stage link is the same as this one
-                {
-                    continue;
-                }
-                // otherwise, it should be ok
-                ForcePopulateLink(other.ParentStage); // populate this link with the other stage 
-                other.ForcePopulateLink(ParentStage); // populate the other link with this stage
-                Debug.Log($"{ParentStage.gameObject.GetInstanceID()} => {other.ParentStage.gameObject.GetInstanceID()}");
-                return;
-            }
+                    ForcePopulateLink(i.Other.ParentStage);
+                    i.Other.ForcePopulateLink(ParentStage);
+                    Debug.Log($"{ParentStage.gameObject.GetInstanceID()} => {i.Other.ParentStage.gameObject.GetInstanceID()}");
+                });
 
             // Second pass: look for close stages. If there are any, connect both stages.
             colliders = Physics2D.OverlapBoxAll((Directions.DirectionsToVector2(placement) * (STAGE_LENGTH / 2)) + (Vector2)gameObject.transform.position, OVERLAP_BOX_SIZE, 0f, STAGE_LAYER);
-            foreach (Collider2D col in colliders) // TODO simplify loop
-            {
-                if (col.gameObject.GetInstanceID() != parentStage.gameObject.GetInstanceID()) // if the collider is this link's associated stage, move on
-                {
-                    Stage other = col.gameObject.GetComponent<Stage>();
-                    ForcePopulateLink(other);
-                    other.LinkStageUnsafe(Directions.OppositeOf(placement), ParentStage);
-                    Debug.Log($"{ParentStage.gameObject.GetInstanceID()} => {other.gameObject.GetInstanceID()}");
-                    return;
-                }
-            }
+
+            colliders
+                .Where(col => col.gameObject.GetInstanceID() != ParentStage.gameObject.GetInstanceID())
+                .ToList()
+                .ForEach(i => {
+                    Stage o = i.gameObject.GetComponent<Stage>();
+                    ForcePopulateLink(o);
+                    o.LinkStageUnsafe(Directions.OppositeOf(placement), ParentStage);
+            });
         }
     }
 }

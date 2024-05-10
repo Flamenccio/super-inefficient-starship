@@ -230,7 +230,6 @@ namespace Enemy
 
             if (behaviorState != EnemyState.Attack) return;
 
-
             faceDirection.Vector = target.transform.position - transform.position;
             Attack(target.transform.position);
         }

@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using Flamenccio.Powerup;
 using Flamenccio.Core;
+using System.Linq;
 
 namespace Flamenccio.HUD
 {
@@ -32,7 +33,6 @@ namespace Flamenccio.HUD
 
         private bool vignetteCrossfading = false;
         private int levelUpAnimating = 0;
-        private int currentCharge = 0;
         private GameState gState;
         private List<UnityEngine.UI.Image> specialCharges = new();
         private const float SPECIAL_CHARGE_LOCAL_Y_OFFSET = -140f;
@@ -112,7 +112,7 @@ namespace Flamenccio.HUD
         {
             if (playerAtt.MaxSpecialCharges == 0) return;
 
-            currentCharge = playerAtt.SpecialCharges;
+            int currentCharge = playerAtt.SpecialCharges;
 
             if (specialCharges.Count != playerAtt.MaxSpecialCharges) // update max special charge count if necessary
             {
@@ -191,11 +191,7 @@ namespace Flamenccio.HUD
             }
 
             float xOffset = amount * (SPECIAL_CHARGE_DISTANCE / 2f);
-
-            foreach (var img in specialCharges)
-            {
-                img.transform.localPosition = new Vector2(img.transform.localPosition.x - xOffset, SPECIAL_CHARGE_LOCAL_Y_OFFSET);
-            }
+            specialCharges.ForEach(img => img.transform.localPosition = new Vector2(img.transform.localPosition.x - xOffset, SPECIAL_CHARGE_LOCAL_Y_OFFSET));
         }
         private void RemoveSpecialCharges(int amount)
         {
@@ -212,11 +208,7 @@ namespace Flamenccio.HUD
             }
 
             float xOffset = amount * (SPECIAL_CHARGE_DISTANCE / 2f);
-
-            foreach (var img in specialCharges)
-            {
-                img.transform.localPosition = new Vector2(img.transform.localPosition.x + xOffset, SPECIAL_CHARGE_LOCAL_Y_OFFSET); // move things back
-            }
+            specialCharges.ForEach(img => img.transform.localPosition = new Vector2(img.transform.localPosition.x + xOffset, SPECIAL_CHARGE_LOCAL_Y_OFFSET));
         }
         private void ClearSpecialCharges()
         {
