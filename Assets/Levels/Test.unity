@@ -779,6 +779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7003d3795eb2adf4281cfbf527bd5a10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gState: {fileID: 1212784811}
   scoreDisplay: {fileID: 1930978011}
   timeDisplay: {fileID: 1463932236}
   progressDisplay: {fileID: 1738169123}

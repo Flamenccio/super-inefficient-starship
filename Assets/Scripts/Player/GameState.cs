@@ -13,8 +13,7 @@ namespace Flamenccio.Core
     {
         // this class coordinates all other management classes
 
-        public static GameState Instance { get; private set; }
-        public bool Paused { get; private set; }
+        public static bool Paused { get; private set; }
 
         // parameters
         private int progress = 0;
@@ -28,7 +27,7 @@ namespace Flamenccio.Core
         private const float MAX_WALL_FREQUENCY = 1.0f;
         private const int MIN_LEVEL_WALL_UPGRADE = 12; // the minimum level required for level 2 walls to start spawning
         private const float CHANCE_WALL_UPGRADE = 0.5f;
-        private const int MIN_LEVEL_ENEMY_SPAWN = 0;
+        private const int MIN_LEVEL_ENEMY_SPAWN = 1;
         private const int MIN_LEVEL_PORTAL_SPAWN = 6;
 
         // timers
@@ -71,18 +70,10 @@ namespace Flamenccio.Core
         }
         private void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this);
-            }
-            else
-            {
-                Instance = this;
-            }
-
             mainTimer = maxTime;
             spawnControl = gameObject.GetComponent<Spawner>();
             Paused = false;
+            Debug.Log($"diff = {difficulty}");
         }
         private void Update()
         {
@@ -266,8 +257,8 @@ namespace Flamenccio.Core
             yield return new WaitForSecondsRealtime(0.1f);
             Time.timeScale = 0.0f;
             yield return new WaitForSecondsRealtime(1.0f);
-            Instance = null; // clear instance
-            SceneManager.LoadScene(0);
+            GameEventManager.ClearAllEvents();
+            SceneManager.LoadScene(0, LoadSceneMode.Single);
         }
         public void OnPause(InputAction.CallbackContext context)
         {
@@ -284,7 +275,6 @@ namespace Flamenccio.Core
                     Time.timeScale = 0f;
                 }
             }
-
         }
     }
 }

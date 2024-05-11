@@ -11,6 +11,7 @@ namespace Flamenccio.HUD
 {
     public class HUDControl : MonoBehaviour
     {
+        [SerializeField] private GameState gState;
         // hud elements
         [SerializeField] private TMP_Text scoreDisplay;
         [SerializeField] private TMP_Text timeDisplay;
@@ -33,7 +34,6 @@ namespace Flamenccio.HUD
 
         private bool vignetteCrossfading = false;
         private int levelUpAnimating = 0;
-        private GameState gState;
         private List<UnityEngine.UI.Image> specialCharges = new();
         private const float SPECIAL_CHARGE_LOCAL_Y_OFFSET = -140f;
         private const float SPECIAL_CHARGE_DISTANCE = 18f;
@@ -42,7 +42,6 @@ namespace Flamenccio.HUD
 
         private void Awake()
         {
-            gState = GameState.Instance;
             scoreDisplay.text = "0";
             levelupComponents.SetActive(false);
             vignette.color = new Color(255f, 0f, 0f, 0f);
@@ -57,11 +56,6 @@ namespace Flamenccio.HUD
         }
         private void Update()
         {
-            if (gState == null)
-            {
-                gState = GameState.Instance;
-            }
-
             UpdateDisplays();
             UpdateVignette();
             UpdateLevelUpBanner();

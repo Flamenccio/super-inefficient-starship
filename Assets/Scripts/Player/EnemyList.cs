@@ -45,6 +45,15 @@ namespace Flamenccio.Core
         {
             foreach (GameObject obj in enemyList)
             {
+                var list = obj.GetComponents<MonoBehaviour>().OfType<IEnemy>();
+                int tier = list
+                    .Select(ie => ie.Tier)
+                    .Where(t => t > 0)
+                    .ToList()[0];
+                int free = FindEmptySlot(enemyListTiered[tier]);
+                enemyListTiered[tier][free] = obj;
+
+                /*
                 foreach (IEnemy ie in obj.GetComponents<MonoBehaviour>().OfType<IEnemy>()) // TODO simplify loop
                 {
                     if (ie.Tier < 0) continue; // there are some enemies that have a tier lower than 0. These enemies are not meant to be spanwed naturally.
@@ -53,6 +62,7 @@ namespace Flamenccio.Core
                     enemyListTiered[ie.Tier][freeSlot] = obj;
                     break;
                 }
+                */
             }
         }
         /// <summary>
