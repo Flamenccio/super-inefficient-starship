@@ -15,7 +15,7 @@ namespace Flamenccio.Attack.Player
                 "Footprint",
                 "Heart",
                 "MiniStar",
-                "Effects",
+                "Effect",
                 "PlayerIntangible",
                 "Items",
                 "ItemBox",
@@ -24,6 +24,8 @@ namespace Flamenccio.Attack.Player
         }
         protected override void Trigger(Collider2D collider)
         {
+            Debug.Log(collider.gameObject);
+
             if (collider.gameObject.CompareTag("EBullet"))
             {
                 EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletParry, transform.position);

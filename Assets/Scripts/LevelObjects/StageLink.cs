@@ -112,7 +112,6 @@ namespace Flamenccio.LevelObject.Stages
                 {
                     ForcePopulateLink(i.Other.ParentStage);
                     i.Other.ForcePopulateLink(ParentStage);
-                    Debug.Log($"{ParentStage.gameObject.GetInstanceID()} => {i.Other.ParentStage.gameObject.GetInstanceID()}");
                 });
 
             // Second pass: look for close stages. If there are any, connect both stages.
