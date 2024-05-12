@@ -92,17 +92,12 @@ namespace Flamenccio.Core
         }
         public static void ClearAllEvents()
         {
-            FieldInfo[] fields = typeof(GameEventManager).GetFields(BindingFlags.Public | BindingFlags.Static);
+            var fields = typeof(GameEventManager).GetProperties(BindingFlags.Static | BindingFlags.Public);
 
             fields
-                .Where(i => i.FieldType == typeof(Action<GameEventInfo>))
+                .Where(f => f.PropertyType == typeof(Action<GameEventInfo>))
                 .ToList()
-                .ForEach(j => Debug.Log(j));
-
-            fields
-                .Where(i => i.FieldType == typeof(Action<GameEventInfo>))
-                .ToList()
-                .ForEach(j => j.SetValue(null, null));
+                .ForEach(f => f.SetValue(null, (Action<GameEventInfo>)((_) => { })));
         }
     }
 }

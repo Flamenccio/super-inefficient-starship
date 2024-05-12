@@ -5,7 +5,6 @@ using UnityEngine;
 using TMPro;
 using Flamenccio.Powerup;
 using Flamenccio.Core;
-using System.Linq;
 
 namespace Flamenccio.HUD
 {

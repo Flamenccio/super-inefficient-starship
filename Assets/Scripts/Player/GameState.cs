@@ -73,7 +73,6 @@ namespace Flamenccio.Core
             mainTimer = maxTime;
             spawnControl = gameObject.GetComponent<Spawner>();
             Paused = false;
-            Debug.Log($"diff = {difficulty}");
         }
         private void Update()
         {
@@ -226,6 +225,7 @@ namespace Flamenccio.Core
         /// </summary>
         private void SpawnEnemies()
         {
+            Debug.Log(difficulty);
             if (difficulty < MIN_LEVEL_ENEMY_SPAWN) return; // if level is not high enough, don't do anything
 
             int kp = playerAtt.KillPoints;
@@ -258,7 +258,8 @@ namespace Flamenccio.Core
             Time.timeScale = 0.0f;
             yield return new WaitForSecondsRealtime(1.0f);
             GameEventManager.ClearAllEvents();
-            SceneManager.LoadScene(0, LoadSceneMode.Single);
+            SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }
         public void OnPause(InputAction.CallbackContext context)
         {

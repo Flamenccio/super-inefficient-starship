@@ -22,7 +22,7 @@ namespace Flamenccio.Core
 
         // other necessary classes/objects
         [SerializeField] private GameObject stageContainer;
-        [SerializeField] private List<Stage> stageList = new();
+        private List<Stage> stageList = new();
         private EnemyList enemyList;
 
         // layer masks
@@ -57,9 +57,11 @@ namespace Flamenccio.Core
         private const float ENEMY_SPAWN_RADIUS = 5.0f; // the minimum space required between the player and enemy for it (the enemy) to spawn
         private void Start()
         {
+        }
+        private void Awake()
+        {
             stageList.Add(FindObjectOfType<Stage>());
             enemyList = gameObject.GetComponent<EnemyList>();
-
             stageList.ForEach(s => UnityEngine.Debug.Log(s));
         }
         public void DecreaseWallCount()
@@ -70,7 +72,6 @@ namespace Flamenccio.Core
         }
         public GameObject SpawnEnemy(int difficulty)
         {
-            UnityEngine.Debug.Log(difficulty);
             // if the level is too low to spawn anything, return nothing
             if (difficulty < enemyList.MinimumEnemySpawningLevel) return null;
 
@@ -83,7 +84,7 @@ namespace Flamenccio.Core
                 tk.spawnAttempts++;
                 tk.root = GenerateRandomRootStage(); // pick random root stage
                 tk.rootStage = stageList[tk.root];
-                tk.globalSpawnCoords = GenerateGlobalPositionOnGrid(stageList[tk.root].transform, tk.rootStage); // URGENT this line breaks when a new game is loaded
+                tk.globalSpawnCoords = GenerateGlobalPositionOnGrid(stageList[tk.root].transform, tk.rootStage);
                 target = Physics2D.OverlapPoint(tk.globalSpawnCoords, wallLayer); // check if a wall is already at that location
 
                 if (target != null) continue;
