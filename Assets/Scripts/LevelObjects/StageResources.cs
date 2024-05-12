@@ -58,12 +58,7 @@ namespace Flamenccio.LevelObject.Stages
                 .Where(variant => HasLinkInDirection(variant.Variant, dir))
                 .ToList()
                 .ForEach(variant => v.Add(variant.Variant));
-            /*
-            foreach (StageVariant variant in stageVariants)
-            {
-                if (HasLinkInDirection(variant.Variant, dir)) v.Add(variant.Variant);
-            }
-            */
+
             return v;
         }
     }
