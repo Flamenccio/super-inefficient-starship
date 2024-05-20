@@ -19,7 +19,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (cooldownTimer < cooldown) return; // don't do anything if on cooldown
 
-            if (!consumeAmmo(cost)) return; // don't do anything if there is not enough ammo
+            if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap)) return; // don't do anything if there is not enough ammo
 
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerShoot, transform.position);
             Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
@@ -27,7 +27,7 @@ namespace Flamenccio.Powerup.Weapon
         }
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (!consumeAmmo(ChargeCost)) return;
+            if (!consumeAmmo(ChargeCost, PlayerAttributes.AmmoUsage.MainHoldExit)) return;
 
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialBurst, transform.position);
             Instantiate(chargeAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));

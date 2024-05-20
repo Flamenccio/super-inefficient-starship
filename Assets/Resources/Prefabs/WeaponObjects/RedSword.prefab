@@ -44,8 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f5bf8c239e8e1940895b6730aa4d9fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 1
+  cost: 4
   cooldown: 0.16666667
   holdThreshold: 0.25
+  aimAssisted: 0
   mainAttack: {fileID: 4987484921250193485, guid: 8ebe98b6deb844546855cec568b0162c, type: 3}
+  chargedCost: 0
   chargeAttack: {fileID: 3418487867427910732, guid: 077588bf23001814891653c965531ce7, type: 3}

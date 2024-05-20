@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Powerup.Weapon;
 using Flamenccio.HUD;
-using Unity.VisualScripting;
+using Flamenccio.Powerup.Buff;
 
 namespace Flamenccio.Powerup
 {
@@ -13,7 +13,6 @@ namespace Flamenccio.Powerup
         string Desc { get; }
         int Level { get; }
         PowerupRarity Rarity { get; }
-        void LevelChange(int l);
         void Run();
     }
     public enum PowerupRarity
@@ -26,6 +25,8 @@ namespace Flamenccio.Powerup
 
     public class PowerupManager : MonoBehaviour
     {
+        // TODO this seems to be doing too much at once. Maybe split the class into a WeaponManager and BuffManager classes
+
         [SerializeField] private GameObject defaultMainWeapon;
         [SerializeField] private GameObject defaultDefenseWeapon;
         [SerializeField] private GameObject defaultSpecialWeapon;
@@ -206,17 +207,42 @@ namespace Flamenccio.Powerup
         {
             powerupUpdate?.Invoke();
         }
-        public void AddBuff(BuffBase b)
+        public void AddBuff(Type buffType)
         {
-            int x = FindBuff(b);
-            if (x < 0)
+            if (!buffType.IsSubclassOf(typeof(BuffBase))) return;
+
+            BuffBase buffInstance;
+
+            if (buffType.IsSubclassOf(typeof(ConditionalBuff)))
             {
-                buffs.Add(b); // if there is no existing duplciate, add it
+                Action<List<PlayerAttributes.Attribute>> x = LevelBuff;
+                buffInstance = Activator.CreateInstance(buffType, new object[] { playerAttributes, x }) as BuffBase;
             }
             else
             {
-                buffs[x].LevelChange(1); // if there is an existing duplicate level up
+                buffInstance = Activator.CreateInstance<BuffBase>();
             }
+
+            AddBuff(buffInstance);
+        }
+        public void AddBuff(BuffBase b)
+        {
+            int x = FindBuff(b);
+
+            if (x < 0)
+            {
+                buffs.Add(b); // if there is no existing duplciate, add it
+
+                if (b is ConditionalBuff)
+                {
+                    powerupUpdate += (b as ConditionalBuff).Run;
+                }
+            }
+            else
+            {
+                buffs[x].LevelUp(); // if there is an existing duplicate level up
+            }
+
             foreach (PlayerAttributes.Attribute a in b.GetAffectedAttributes())
             {
                 playerAttributes.RecompileBonus(a, buffs);
@@ -231,10 +257,42 @@ namespace Flamenccio.Powerup
                 return false;
             }
 
+            if (b is ConditionalBuff)
+            {
+                powerupUpdate -= (b as ConditionalBuff).Run;
+            }
+
+            buffs[x].OnDestroy();
             buffs.RemoveAt(x);
-            buffs.Sort((BuffBase a, BuffBase b) => a.Level < b.Level ? -1 : 1); // basically resort the list based on level: higher level buffs will be placed at the top.
+            buffs.Sort((BuffBase a, BuffBase b) => a.Level < b.Level ? -1 : 1); // basically re-sort the list based on level: higher level buffs will be placed at the top.
 
             foreach (PlayerAttributes.Attribute a in b.GetAffectedAttributes())
+            {
+                playerAttributes.RecompileBonus(a, buffs);
+            }
+
+            return true;
+        }
+        public bool RemoveBuff(Type buffType)
+        {
+            if (!buffType.IsSubclassOf(typeof(BuffBase))) return false;
+
+            int x = FindBuff(buffType);
+
+            if (x < 0) return false;
+
+            BuffBase remove = buffs[x];
+
+            if (remove is ConditionalBuff)
+            {
+                powerupUpdate -= (remove as ConditionalBuff).Run;
+            }
+
+            remove.OnDestroy();
+            buffs.RemoveAt(x);
+            buffs.Sort((BuffBase a, BuffBase b) => a.Level < b.Level ? -1 : 1); // basically re-sort the list based on level: higher level buffs will be placed at the top.
+
+            foreach (PlayerAttributes.Attribute a in remove.GetAffectedAttributes())
             {
                 playerAttributes.RecompileBonus(a, buffs);
             }
@@ -246,16 +304,33 @@ namespace Flamenccio.Powerup
         /// </summary>
         private int FindBuff(BuffBase b)
         {
+            return FindBuff(b.Name);
+        }
+        private int FindBuff(string buffName)
+        {
             int i = 0;
             foreach (BuffBase bb in buffs)
             {
-                if (bb.Name.Equals(b.Name))
+                if (bb.Name.Equals(buffName))
                 {
                     return i;
                 }
                 i++;
             }
-            return -1; // if there is no buff that exists
+            return -1;
+        }
+        private int FindBuff(Type buffType)
+        {
+            int i = 0;
+            foreach (BuffBase bb in buffs)
+            {
+                if (bb.GetType() == buffType)
+                {
+                    return i;
+                }
+                i++;
+            }
+            return -1;
         }
         public void MainAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
@@ -284,6 +359,13 @@ namespace Flamenccio.Powerup
         public void DefenseAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             defenseAttackTap?.Invoke(aimAngle, moveAngle, origin);
+        }
+        private void LevelBuff(List<PlayerAttributes.Attribute> affectedAttributes)
+        {
+            foreach (var attribute in affectedAttributes)
+            {
+                playerAttributes.RecompileBonus(attribute, Buffs);
+            }
         }
     }
 }

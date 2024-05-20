@@ -116,7 +116,7 @@ namespace Enemy
         {
             if (collision.gameObject.CompareTag("PBullet") || collision.gameObject.CompareTag("NBullet"))
             {
-                Hurt(collision.gameObject.GetComponent<BulletControl>().Damage);
+                Hurt(collision.gameObject.GetComponent<BulletControl>().PlayerDamage);
             }
 
             Trigger(collision);

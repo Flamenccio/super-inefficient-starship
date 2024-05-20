@@ -14,7 +14,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            afterImage = Resources.Load<GameObject>("Prefabs/Effects/Afterimage");
             Desc = "[TAP]: Quickly move a set distance in direction you are moving in.";
             Name = "Dash";
             cooldown = 1.0f;

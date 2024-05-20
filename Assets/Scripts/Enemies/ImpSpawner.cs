@@ -45,7 +45,7 @@ namespace Enemy
         }
         protected override void Die()
         {
-            spawnerKilled();
+            spawnerKilled?.Invoke();
             base.Die();
         }
     }

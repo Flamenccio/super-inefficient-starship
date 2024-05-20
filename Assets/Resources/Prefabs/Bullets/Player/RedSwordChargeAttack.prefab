@@ -89,10 +89,11 @@ MonoBehaviour:
   maxDistance: 10
   ignoredTags: []
   knockbackMultiplier: 10
-  hp: 20
+  durability: 10
   rotationIsStatic: 1
   canIgnoreStageEdge: 1
-  damage: 1
+  playerDamage: 1
+  objectDamage: 1
   rb: {fileID: 3418487867427910734}
   slashHitbox: {fileID: 3418487867427910733}
 --- !u!212 &3418487867427910730

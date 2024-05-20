@@ -124,7 +124,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.2
 --- !u!114 &1613613872814323932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,8 +149,11 @@ MonoBehaviour:
   - Effects
   - PlayerIntangible
   knockbackMultiplier: 0
-  hp: 1
-  damage: 1
+  durability: 1
+  rotationIsStatic: 1
+  canIgnoreStageEdge: 0
+  playerDamage: 1
+  objectDamage: 1
   rb: {fileID: 1613613872814323935}
 --- !u!114 &6190220621728304489
 MonoBehaviour:
@@ -168,6 +171,9 @@ MonoBehaviour:
   maxDistance: 10
   ignoredTags: []
   knockbackMultiplier: 0
-  hp: 1
-  damage: 1
+  durability: 1
+  rotationIsStatic: 1
+  canIgnoreStageEdge: 0
+  playerDamage: 1
+  objectDamage: 1
   rb: {fileID: 1613613872814323935}

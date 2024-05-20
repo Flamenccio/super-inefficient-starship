@@ -57,7 +57,7 @@ namespace Flamenccio.Attack.Enemy
         protected override void Trigger(Collider2D collider)
         {
             EffectManager.Instance.SpawnEffect(EffectManager.Effects.Explosion, transform.position);
-            Instantiate(hitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, 2f, damage, Hitbox.AttackType.Enemy, KnockbackMultipiers.High);
+            Instantiate(hitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, 2f, playerDamage, Hitbox.AttackType.Enemy, KnockbackMultipiers.High);
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Strong, transform.position);
             base.Trigger(collider);
         }

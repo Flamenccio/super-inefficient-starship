@@ -44,7 +44,7 @@ namespace Flamenccio.Attack.Player
         private void Detonate()
         {
             cameraEff.ScreenShake(CameraEffects.ScreenShakeIntensity.Extreme, transform.position);
-            Instantiate(hitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, explosionRadius, damage, Hitbox.AttackType.Player, knockbackMultiplier);
+            Instantiate(hitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, explosionRadius, playerDamage, Hitbox.AttackType.Player, knockbackMultiplier);
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }

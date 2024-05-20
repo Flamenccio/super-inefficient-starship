@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace Flamenccio.Core
@@ -23,7 +25,7 @@ namespace Flamenccio.Core
         public Vector2 EventOrigin { get; set; } // if the transform is not available (e.g. when the game object is destroyed), use this
         private Transform eventTriggerer;
     }
-    public class GameEventManager : MonoBehaviour
+    public static class GameEventManager
     {
         /*
         these events should be common--no highly specific events unless ABSOLUTELY needed.
@@ -86,6 +88,15 @@ namespace Flamenccio.Core
             {
                 EventOrigin = origin,
             };
+        }
+        public static void ClearAllEvents()
+        {
+            var fields = typeof(GameEventManager).GetProperties(BindingFlags.Static | BindingFlags.Public);
+
+            fields
+                .Where(f => f.PropertyType == typeof(Action<GameEventInfo>))
+                .ToList()
+                .ForEach(f => f.SetValue(null, (Action<GameEventInfo>)((_) => { })));
         }
     }
 }

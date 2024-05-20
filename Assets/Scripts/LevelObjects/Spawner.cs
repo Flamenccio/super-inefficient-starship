@@ -22,7 +22,7 @@ namespace Flamenccio.Core
 
         // other necessary classes/objects
         [SerializeField] private GameObject stageContainer;
-        [SerializeField] private List<Stage> stageList = new();
+        private List<Stage> stageList = new();
         private EnemyList enemyList;
 
         // layer masks
@@ -57,8 +57,12 @@ namespace Flamenccio.Core
         private const float ENEMY_SPAWN_RADIUS = 5.0f; // the minimum space required between the player and enemy for it (the enemy) to spawn
         private void Start()
         {
+        }
+        private void Awake()
+        {
             stageList.Add(FindObjectOfType<Stage>());
             enemyList = gameObject.GetComponent<EnemyList>();
+            stageList.ForEach(s => UnityEngine.Debug.Log(s));
         }
         public void DecreaseWallCount()
         {

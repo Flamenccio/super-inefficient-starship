@@ -31,7 +31,7 @@ namespace Flamenccio.Effects.Visual
         }
         private void Update()
         {
-            if (GameState.Instance.Paused) return;
+            if (GameState.Paused) return;
 
             timer += Time.deltaTime;
             trailTimer += Time.deltaTime;

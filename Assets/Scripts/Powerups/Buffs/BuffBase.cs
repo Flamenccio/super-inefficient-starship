@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Flamenccio.Powerup
+namespace Flamenccio.Powerup.Buff
 {
     public enum BuffClass
     {
@@ -13,12 +13,24 @@ namespace Flamenccio.Powerup
     {
         public string Name { get; protected set; }
         public string Desc { get; protected set; }
-        public int Level { get; protected set; }
+        public int Level
+        {
+            get => level;
+            set
+            {
+                if (value < 0) return;
+
+                int copy = level;
+                level = value;
+                OnLevelChange(value, copy);
+            }
+        }
         public PowerupRarity Rarity { get; protected set; }
         public List<StatBuff> Buffs { get => buffs; }
         public BuffType Type { get; protected set; }
         public BuffClass Class { get; protected set; }
         protected List<StatBuff> buffs = new();
+        private int level;
 
         public class StatBuff
         {
@@ -40,11 +52,6 @@ namespace Flamenccio.Powerup
         {
             // this function is meant to be run in Update()
         }
-        public void LevelChange(int levels)
-        {
-            if (Level < -levels) return; // if applying this change makes the level negative, don't
-            Level += levels;
-        }
         public virtual float GetPercentChangeOf(PlayerAttributes.Attribute a)
         {
             float total = 0f;
@@ -65,6 +72,28 @@ namespace Flamenccio.Powerup
                 temp.Add(buff.affectedAttribute);
             }
             return temp;
+        }
+        /// <summary>
+        /// This method is called <b>before</b> this buff's level changes.
+        /// </summary>
+        protected virtual void OnLevelChange(int newLevel, int oldLevel)
+        {
+
+        }
+        public void LevelUp()
+        {
+            Level++;
+        }
+        /// <summary>
+        /// This method is called when this buff is removed from the buff list.
+        /// </summary>
+        public virtual void OnDestroy()
+        {
+
+        }
+        protected virtual void OnCreate()
+        {
+
         }
     }
 }

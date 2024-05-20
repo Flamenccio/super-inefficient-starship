@@ -31,9 +31,9 @@ namespace Flamenccio.LevelObject.Walls
         }
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (IsDangerousTag(collision.gameObject.tag))
+            if (dangerousTags.Contains(collision.gameObject.tag))
             {
-                currentHP -= collision.GetComponent<BulletControl>().Damage;
+                currentHP -= collision.GetComponent<BulletControl>().ObjectDamage;
                 if (currentHP <= 0)
                 {
                     if (level == 0)
@@ -44,18 +44,6 @@ namespace Flamenccio.LevelObject.Walls
                     Downgrade();
                 }
             }
-        }
-        // is the game object with the given tag able to destroy this one?
-        private bool IsDangerousTag(string tag)
-        {
-            foreach (string tag2 in dangerousTags)
-            {
-                if (tag.Equals(tag2))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
         public void Die()
         {

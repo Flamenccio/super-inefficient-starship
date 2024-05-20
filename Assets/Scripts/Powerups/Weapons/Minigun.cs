@@ -19,7 +19,6 @@ namespace Flamenccio.Powerup.Weapon
             Rarity = PowerupRarity.Common;
             cooldown = 0.5f;
             cost = 1;
-            mainAttack = Resources.Load<GameObject>("Prefabs/Bullets/Player/PlayerMini");
         }
         public override void Hold(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
@@ -27,7 +26,7 @@ namespace Flamenccio.Powerup.Weapon
             {
                 if (rounds <= 0)
                 {
-                    if (!consumeAmmo(cost))
+                    if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainHold))
                     {
                         return;
                     }

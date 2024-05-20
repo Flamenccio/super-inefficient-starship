@@ -16,7 +16,7 @@ namespace Flamenccio.Attack.Enemy
                 "Footprint",
                 "Heart",
                 "MiniStar",
-                "Effects"
+                "Effect"
             };
         }
         protected override void Trigger(Collider2D collider)

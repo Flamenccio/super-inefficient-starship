@@ -1,14 +1,82 @@
-namespace Flamenccio.Powerup
+using Flamenccio.Core;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Flamenccio.Powerup.Buff
 {
-    public class RedFrenzy : UnconditionalBuff
+    public class RedFrenzy : ConditionalBuff
     {
-        public RedFrenzy()
+        private float drainTimer = 0f;
+        private float drainTime = 1f;
+        private AmmoCostModifier localAmmoCostModifier;
+        public RedFrenzy(PlayerAttributes p, Action<List<PlayerAttributes.Attribute>> a)
+        {
+            levelBuff = a;
+            attributes = p;
+            OnCreate();
+        }
+        protected override void OnCreate()
         {
             Name = "Red Frenzy";
-            Desc = "Successfully slaying enemies in quick succession increaes movement speed.\nGetting hit with Red Frenzy causes you to lose all stacks.\n";
-            Level = 1;
-            static float f(int level) => level * 0.02f;
-            buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, f));
+            Desc = "Defeating enemies grants stacks Red Frenzy.\nEach stack of Red Frenzy removes the cost of using Red Sword and boosts movement speed by 2%.\nYour ammo will drain over time; the rate increases with the number of stacks.\nGetting hit or dropping below 30% ammo removes all stacks.";
+            static float SpeedBuff(int level) => level * 0.02f;
+            buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, SpeedBuff));
+            GameEventManager.OnPlayerHit += (_) => Deactivate();
+            GameEventManager.OnEnemyKill += (_) => LevelUp();
+            attributes.AddAmmo(attributes.MaxAmmo);
+            localAmmoCostModifier = attributes.AddLocalAmmoCostModifier(PlayerAttributes.AmmoUsage.MainTap, false);
+        }
+        private float DrainSpeed(int level)
+        {
+            return Mathf.Clamp(2f / Mathf.Ceil(level / 8f), 0.4f, 2.0f);
+        }
+        public override void Run()
+        {
+            if (Level == 0) return;
+
+            float ammoFill = attributes.Ammo / (float)attributes.MaxAmmo;
+
+            if (ammoFill < 0.3f)
+            {
+                Level = 0;
+                drainTimer = 0f;
+                return;
+            }
+
+            if (drainTimer >= drainTime)
+            {
+                attributes.UseAmmo(1);
+                drainTimer = 0f;
+            }
+            else
+            {
+                drainTimer += Time.deltaTime;
+            }
+        }
+        protected override void OnLevelChange(int newLevel, int oldLevel)
+        {
+            if (oldLevel == 0) // this means that the level BEFORE the change is 0
+            {
+                localAmmoCostModifier.SetMultiplier(0);
+            }
+            if (newLevel > 0)
+            {
+                drainTime = DrainSpeed(Level);
+            }
+            else if (newLevel == 0)
+            {
+                localAmmoCostModifier.ResetMultiplier();
+            }
+
+            levelBuff?.Invoke(GetAffectedAttributes());
+        }
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            GameEventManager.OnPlayerHit -= (_) => Deactivate();
+            GameEventManager.OnEnemyKill -= (_) => LevelUp();
+            attributes.RemoveLocalAmmoCostModifier(localAmmoCostModifier);
         }
     }
 }

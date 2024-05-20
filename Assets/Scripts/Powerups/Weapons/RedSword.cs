@@ -2,6 +2,7 @@ using Flamenccio.Attack.Player;
 using Flamenccio.Core;
 using Flamenccio.Effects;
 using UnityEngine;
+using Flamenccio.Powerup.Buff;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -25,24 +26,23 @@ namespace Flamenccio.Powerup.Weapon
         private void OnEnable()
         {
             powerupManager = GetComponentInParent<PowerupManager>();
+            powerupManager.AddBuff(typeof(RedFrenzy));
             GameEventManager.OnEnemyKill += (_) => IncreaseKill();
             GameEventManager.OnPlayerHit += (_) => ResetKill();
         }
         private void OnDestroy()
         {
+            powerupManager.RemoveBuff(typeof(RedFrenzy));
             GameEventManager.OnEnemyKill -= (_) => IncreaseKill();
             GameEventManager.OnPlayerHit -= (_) => ResetKill();
         }
         private void IncreaseKill()
         {
             kills++;
-            BuffBase b = new RedFrenzy();
-            powerupManager.AddBuff(b);
         }
         private void ResetKill()
         {
             kills = 0;
-            powerupManager.RemoveBuff(new RedFrenzy());
         }
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
@@ -50,7 +50,7 @@ namespace Flamenccio.Powerup.Weapon
 
             if (!flip)
             {
-                if (!consumeAmmo(Cost)) // must check sequentially
+                if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap)) // must check sequentially
                 {
                     return;
                 }
@@ -64,7 +64,7 @@ namespace Flamenccio.Powerup.Weapon
         }
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (!consumeAmmo(Cost))
+            if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainHoldExit))
             {
                 return;
             }
