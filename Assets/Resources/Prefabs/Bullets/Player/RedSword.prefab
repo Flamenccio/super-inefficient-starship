@@ -124,8 +124,11 @@ MonoBehaviour:
   maxDistance: 2
   ignoredTags: []
   knockbackMultiplier: 10
-  hp: 1
-  damage: 2
+  durability: 100
+  rotationIsStatic: 1
+  canIgnoreStageEdge: 1
+  playerDamage: 2
+  objectDamage: 2
   rb: {fileID: 4987484921250193494}
   hitCollider: {fileID: 4987484921250193495}
   spriteRen: {fileID: 4987484921250193483}

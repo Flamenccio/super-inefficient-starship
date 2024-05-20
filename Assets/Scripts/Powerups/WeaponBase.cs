@@ -27,7 +27,7 @@ namespace Flamenccio.Powerup.Weapon
         [SerializeField] protected float holdThreshold;
         [SerializeField] protected bool aimAssisted = false;
         [SerializeField] protected GameObject mainAttack;
-        protected Func<int, bool> consumeAmmo;
+        protected Func<int, PlayerAttributes.AmmoUsage, bool> consumeAmmo;
         protected WeaponType weaponType;
         protected float cooldownTimer;
         protected PlayerAttributes playerAtt;
@@ -83,11 +83,5 @@ namespace Flamenccio.Powerup.Weapon
         /// The player effect that is called <b>once</b> when player exits hold attack.
         /// </summary>
         public virtual void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin) { }
-        public void LevelChange(int levels)
-        {
-            if (Level < -levels) return; // if applying this change makes the level negative, don't
-
-            Level += levels;
-        }
     }
 }

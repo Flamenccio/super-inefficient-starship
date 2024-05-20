@@ -59,7 +59,6 @@ namespace Flamenccio.Core
         public static Action<GameEventInfo> OnLevelUp { get; set; }
         public static Action<GameEventInfo> OnHealthReplenish { get; set; }
         public static Action<GameEventInfo> OnPointGain { get; set; }
-
         public static GameEventInfo CreateGameEvent(float value, Transform triggerer)
         {
             return new()

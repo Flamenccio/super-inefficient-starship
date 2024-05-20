@@ -5,6 +5,8 @@ namespace Flamenccio.Powerup.Weapon
 {
     public class WeaponMain : WeaponBase
     {
+        public int ChargedCost { get => chargedCost; }
+        [SerializeField] protected int chargedCost = 0;
         protected override void Startup()
         {
             weaponType = WeaponType.Main;

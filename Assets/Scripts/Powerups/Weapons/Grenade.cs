@@ -14,7 +14,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (cooldownTimer < cooldown) return;
 
-            if (!consumeAmmo(cost)) return;
+            if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.SubTap)) return;
 
             Instantiate(mainAttack, transform.position, Quaternion.Euler(0f, 0f, aimAngleDeg));
             cooldownTimer = 0f;

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Flamenccio.Powerup.Buff;
+using UnityEditor;
+using System.Linq;
 
 namespace Flamenccio.Powerup
 {
@@ -20,6 +23,7 @@ namespace Flamenccio.Powerup
         public int MaxSpecialCharges { get; private set; }
         public float SpecialChargeTimer { get; private set; }
         public float SpecialChargeCooldown { get; private set; }
+
         public float SpecialChargeProgress
         {
             get
@@ -31,6 +35,7 @@ namespace Flamenccio.Powerup
                 return SpecialChargeTimer / SpecialChargeCooldown;
             }
         }
+
         public enum Attribute
         {
             MaxAmmo,
@@ -39,6 +44,16 @@ namespace Flamenccio.Powerup
             KillPointBonus,
             MainDamageBonus,
         };
+
+        public enum AmmoUsage
+        {
+            MainTap,
+            MainHold,
+            MainHoldExit,
+            MainHoldEnter,
+            SubTap
+        };
+
         private float[] attributeBonuses; // array of total percent increase of each attribute
         private uint alteredAttributes; // a bitmask representing what attributes have been temporarily altered
         private int baseAmmo = 10;
@@ -49,16 +64,19 @@ namespace Flamenccio.Powerup
         private float baseMainWeaponDamageBonus = 0f;
         private Dictionary<Attribute, double> attributeValues = new(); // current attribute values used for calculations and stuff
         private Dictionary<Attribute, double> baseAttributeValues = new();
+        private Dictionary<AmmoUsage, AmmoCostModifier> ammoCostModifiers = new();
+        private Dictionary<AmmoUsage, AmmoCostModifier> localAmmoCostModifiers = new();
 
         private void Start()
         {
-
         }
+
         private void Awake()
         {
             attributeBonuses = new float[Enum.GetNames(typeof(Attribute)).Length];
 
-            MaxHP = baseMaxHP; // default values
+            // set default values
+            MaxHP = baseMaxHP;
             HP = MaxHP;
             MoveSpeed = baseMoveSpeed;
             KillPointBonus = baseKillPointBonus;
@@ -75,11 +93,17 @@ namespace Flamenccio.Powerup
             baseAttributeValues.Add(Attribute.KillPointBonus, baseKillPointBonus);
             baseAttributeValues.Add(Attribute.MainDamageBonus, baseMainWeaponDamageBonus);
 
+            for (int i = 0; i < Enum.GetValues(typeof(AmmoUsage)).Length; i++)
+            {
+                ammoCostModifiers.Add((AmmoUsage)i, new());
+            }
+
             foreach (Attribute a in baseAttributeValues.Keys)
             {
                 attributeValues[a] = baseAttributeValues[a];
             }
         }
+
         private void Update()
         {
             // automatically replenish charges
@@ -98,6 +122,11 @@ namespace Flamenccio.Powerup
                 ReplenishCharge(1);
             }
         }
+
+        /// <summary>
+        /// Use ammo.
+        /// </summary>
+        /// <returns><b>True</b> if there is enough ammo, <b>false</b> if there is not enough ammo.</returns>
         public bool UseAmmo(int ammo)
         {
             if (Ammo < ammo)
@@ -108,26 +137,49 @@ namespace Flamenccio.Powerup
             Ammo -= ammo; // use ammo
             return true;
         }
-        public void AddAmmo(int ammo)
+
+        /// <summary>
+        /// Use ammo, but also apply cost scaling depending on what's using it.
+        /// </summary>
+        /// <param name="usage">Weapon that's using the ammo.</param>
+        /// <returns><b>True</b> if there is enough ammo, <b>false</b> if there is not enough ammo.</returns>
+        public bool UseAmmo(int ammo, AmmoUsage usage)
         {
-            if (Ammo + ammo > MaxAmmo)
+            int final;
+
+            if (!localAmmoCostModifiers.TryGetValue(usage, out AmmoCostModifier modifier))
             {
-                Ammo = MaxAmmo;
-                return;
+                ammoCostModifiers.TryGetValue(usage, out modifier);
             }
 
-            Ammo += ammo;
+            final = modifier.GetFinalCost(ammo);
+
+            if (final > Ammo) return false;
+
+            Ammo -= final;
+
+            return true;
         }
+
+        public void AddAmmo(int ammo)
+        {
+            Ammo += ammo;
+
+            if (Ammo > MaxAmmo) Ammo = MaxAmmo;
+        }
+
         public void AddKillPoints(int killPoints)
         {
             KillPoints += killPoints;
         }
+
         public int UseKillPoints()
         {
             int x = KillPoints;
             KillPoints = 0;
             return x;
         }
+
         public bool ChangeLife(int life)
         {
             if (HP + life > MaxHP) return false;
@@ -135,6 +187,7 @@ namespace Flamenccio.Powerup
             HP = Mathf.Clamp(HP + life, 0, MaxHP);
             return true;
         }
+
         /// <summary>
         /// Takes some attribute <b>a</b> and a list of buffs <b>b</b>. From the list, recalculates attribute bonus. Also applies the bonus to the attribute.
         /// </summary>
@@ -148,9 +201,10 @@ namespace Flamenccio.Powerup
             {
                 attributeBonuses[(int)a] = bb.GetPercentChangeOf(a);
             }
-            
+
             ApplyBonus(a);
         }
+
         /// <summary>
         /// Changes the actual attribute value based on current attribute bonuses.
         /// </summary>
@@ -162,6 +216,7 @@ namespace Flamenccio.Powerup
             if (a == Attribute.MaxHP) attributeValues[a] = y + bonus; // max hp is a simple integer value; calculate differently
             else attributeValues[a] = (1 + bonus) * y; // calculate final attribute value and apply it
         }
+
         /// <summary>
         /// Temporarily change an attribute's value by some percent.<para>The final value is used in calculations.</para>
         /// </summary>
@@ -176,6 +231,7 @@ namespace Flamenccio.Powerup
             attributeValues[a] *= percent; // change value
             alteredAttributes |= (uint)1 << i; // add attribute to bit mask
         }
+
         /// <summary>
         /// Restore an attribute's original value if it was temporarily changed.
         /// </summary>
@@ -185,6 +241,7 @@ namespace Flamenccio.Powerup
             PowerupManager p = gameObject.GetComponent<PowerupManager>(); // cheat a little
             RestoreAttributeChange(a, p.Buffs);
         }
+
         public void RestoreAttributeChange(Attribute a, List<BuffBase> b)
         {
             int i = (int)a;
@@ -194,6 +251,7 @@ namespace Flamenccio.Powerup
             alteredAttributes &= ~((uint)1 << i); // clear bit corresponding to affected attribute
             RecompileBonus(a, b);
         }
+
         public bool UseCharge(int amount)
         {
             if (SpecialCharges < amount) return false;
@@ -201,6 +259,7 @@ namespace Flamenccio.Powerup
             SpecialCharges -= amount;
             return true;
         }
+
         public bool ReplenishCharge(int amount)
         {
             if (SpecialCharges + amount > MaxSpecialCharges) return false;
@@ -208,6 +267,7 @@ namespace Flamenccio.Powerup
             SpecialCharges += amount;
             return true;
         }
+
         public bool SetCharges(int max, float cooldown)
         {
             MaxSpecialCharges = max;
@@ -216,13 +276,57 @@ namespace Flamenccio.Powerup
 
             return true;
         }
+
         public void AddCharges(int amount)
         {
             MaxSpecialCharges += amount;
         }
+
         public void RemoveCharges()
         {
             SetCharges(0, 0);
+        }
+
+        public AmmoCostModifier GetAmmoCostModifier(AmmoUsage attack)
+        {
+            return ammoCostModifiers[attack];
+        }
+
+        /// <summary>
+        /// Creates a new local ammo modifier.
+        /// </summary>
+        /// <param name="attack">The attack the modifier will affect.</param>
+        /// <param name="forceAdd">Should we replace a local modifier of the same attack, if it exists?</param>
+        /// <returns><b>null</b> when unsuccessful; the new modifier when successful.</returns>
+        public AmmoCostModifier AddLocalAmmoCostModifier(AmmoUsage attack, bool forceAdd)
+        {
+            if (localAmmoCostModifiers.ContainsKey(attack))
+            {
+                if (!forceAdd) return null;
+
+                localAmmoCostModifiers.Remove(attack);
+            }
+
+            AmmoCostModifier newModifier = new();
+            localAmmoCostModifiers.Add(attack, newModifier);
+
+            return newModifier;
+        }
+
+        public bool RemoveLocalAmmoCostModifier(AmmoCostModifier modifier)
+        {
+            if (localAmmoCostModifiers.ContainsValue(modifier))
+            {
+                var x = localAmmoCostModifiers
+                    .First(x => x.Value == modifier)
+                    .Key;
+
+                localAmmoCostModifiers.Remove(x);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
