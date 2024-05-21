@@ -238,7 +238,7 @@ namespace Flamenccio.Powerup
         /// <param name="a"></param>
         public void RestoreAttributeChange(Attribute a)
         {
-            PowerupManager p = gameObject.GetComponent<PowerupManager>(); // cheat a little
+            BuffManager p = gameObject.GetComponent<BuffManager>(); // cheat a little
             RestoreAttributeChange(a, p.Buffs);
         }
 

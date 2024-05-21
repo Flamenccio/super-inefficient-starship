@@ -20,6 +20,8 @@ GameObject:
   - component: {fileID: 6512970577687625348}
   - component: {fileID: 7438514266558005631}
   - component: {fileID: 1708049359961764838}
+  - component: {fileID: 8907782104821334261}
+  - component: {fileID: 2738776170154378731}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -254,8 +256,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e2f1d387b63e44ba8cb71162871d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gState: {fileID: 0}
-  hitEffect: {fileID: 6901339793978723851, guid: 13805d7e337ce6945ac162b28f478c88, type: 3}
 --- !u!114 &2152614155733081996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,11 +312,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01e314d5bc8b08349b11f90518ae3ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMainWeapon: {fileID: 7804797723523311312, guid: bf20752d6dabed94d9a46cf26407e694, type: 3}
-  defaultDefenseWeapon: {fileID: 0}
-  defaultSpecialWeapon: {fileID: 0}
-  defaultSubWeapon: {fileID: 5163691005034168489, guid: 251d4b1a7621d434d8fe3e41556afb97, type: 3}
-  crosshairsControl: {fileID: 0}
 --- !u!114 &7438514266558005631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,6 +335,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae50bb5ab2b762c4dbea45bae44eb1e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8907782104821334261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2152614155733082003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2a66823477bd84a872d3d00fe605c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultMainWeapon: {fileID: 7804797723523311312, guid: bf20752d6dabed94d9a46cf26407e694, type: 3}
+  defaultDefenseWeapon: {fileID: 5163691005034168489, guid: 251d4b1a7621d434d8fe3e41556afb97, type: 3}
+  defaultSpecialWeapon: {fileID: 6837751821844069354, guid: d3885b906de45aa4c86b15ea5ba6669b, type: 3}
+  defaultSubWeapon: {fileID: 2565327453990794691, guid: e48b95a14099b4c46acc8bbc682853e4, type: 3}
+  crosshairsControl: {fileID: 0}
+--- !u!114 &2738776170154378731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2152614155733082003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4627a05ec43bfcb4bbbb0a7b0e354d84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6295218573008761567
