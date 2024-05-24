@@ -53,8 +53,21 @@ namespace Flamenccio.HUD
         /// <param name="size">The <b>font size</b> of the text.</param>
         public void DisplayText(string content, Vector2 worldPosition, Color color, float duration, float size, FloatingTextControl.TextAnimation enterAnimation, FloatingTextControl.TextAnimation exitAnimation)
         {
+            DisplayText(content, worldPosition, color, duration, size, enterAnimation, exitAnimation, false);
+        }
+
+        /// <summary>
+        /// Spawn floating text with specified paramters.
+        /// </summary>
+        /// <param name="content">What the text will say.</param>
+        /// <param name="worldPosition">Where in the game world the text will spawn.</param>
+        /// <param name="color">The color of the text.</param>
+        /// <param name="duration">How long the text will last before disappearing.</param>
+        /// <param name="size">The <b>font size</b> of the text.</param>
+        /// <param name="stayInWorldPosition">Will this text keep its world position after it spawns?</param>
+        public void DisplayText(string content, Vector2 worldPosition, Color color, float duration, float size, FloatingTextControl.TextAnimation enterAnimation, FloatingTextControl.TextAnimation exitAnimation, bool stayInWorldPosition)
+        {
             Vector2 screenPosition = Camera.main.WorldToScreenPoint(worldPosition);
-            //var instance = Instantiate(floatTextPrefab, screenPosition, Quaternion.identity, canvasTransform).GetComponent<FloatingTextControl>();
             var instance = Instantiate(floatTextPrefab, canvasTransform, true).GetComponent<FloatingTextControl>();
             instance.transform.position = screenPosition;
             instance.TargetColor = color;
@@ -63,6 +76,7 @@ namespace Flamenccio.HUD
             instance.EnterAnimation = enterAnimation;
             instance.ExitAnimation = exitAnimation;
             instance.TextContent = content;
+            instance.SpawnInGameWorld = stayInWorldPosition;
             instance.PlayAnimation();
         }
 

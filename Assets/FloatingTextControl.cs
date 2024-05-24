@@ -1,3 +1,4 @@
+using Flamenccio.Effects;
 using System;
 using TMPro;
 using UnityEngine;
@@ -77,6 +78,17 @@ namespace Flamenccio.HUD
 
             }
         }
+        public bool SpawnInGameWorld 
+        {
+            get => spawnInGameWorld;
+            set
+            {
+                if (!playingAnimation)
+                {
+                    spawnInGameWorld = value;
+                }
+            }
+        }
         private enum AnimationState
         {
             Enter,
@@ -92,6 +104,7 @@ namespace Flamenccio.HUD
         private float duration;
         private Color targetColor;
         private float targetFontSize;
+        private Vector2 worldOrigin; // origin of text in game world
         private const float ENTER_DURATION = 0.1f;
         private const float EXIT_DURATION = 0.1f;
         private const float MIN_DURATION_SECONDS = 0.5f;
@@ -100,6 +113,7 @@ namespace Flamenccio.HUD
 
         private Action EnterAnimationAction;
         private Action ExitAnimationAction;
+        private bool spawnInGameWorld;
 
         private void Awake()
         {
@@ -109,12 +123,21 @@ namespace Flamenccio.HUD
             textObject = GetComponent<TMP_Text>();
             Duration = 1.0f;
             textObject.rectTransform.localScale = Vector3.one;
+            SpawnInGameWorld = false;
+        }
+
+        private void Start()
+        {
+            var pos = Camera.main.ScreenToWorldPoint(transform.position);
+            worldOrigin = new(pos.x, pos.y);
         }
 
         private void Update()
         {
             textObject.text = TextContent;
             textObject.color = new(TargetColor.r, TargetColor.g, TargetColor.b, textObject.color.a);
+
+            if (SpawnInGameWorld) transform.position = Camera.main.WorldToScreenPoint(worldOrigin);
 
             if (!playingAnimation) return;
 
@@ -150,7 +173,6 @@ namespace Flamenccio.HUD
                     ExitAnimationAction?.Invoke();
                     break;
             }
-
         }
 
         public void PlayAnimation()
@@ -237,8 +259,8 @@ namespace Flamenccio.HUD
         }
         private void ZoomOutExit()
         {
-            float deltaSize = (TargetFontSize - MAX_FONT_SIZE) / EXIT_DURATION;
-            textObject.fontSize -= deltaSize * Time.deltaTime;
+            float deltaSize = (MIN_FONT_SIZE - TargetFontSize) / ENTER_DURATION;
+            textObject.fontSize += deltaSize * Time.deltaTime;
         }
         private void ZoomInExit()
         {

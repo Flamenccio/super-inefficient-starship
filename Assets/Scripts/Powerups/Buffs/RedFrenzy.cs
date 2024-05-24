@@ -1,4 +1,6 @@
 using Flamenccio.Core;
+using Flamenccio.Effects;
+using Flamenccio.HUD;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +26,7 @@ namespace Flamenccio.Powerup.Buff
             buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, SpeedBuff));
             GameEventManager.OnPlayerHit += (_) => Deactivate();
             GameEventManager.OnEnemyKill += (_) => LevelUp();
+            GameEventManager.OnEnemyKill += (x) => ShowLevelText(x.EventOrigin);
             attributes.AddAmmo(attributes.MaxAmmo);
             localAmmoCostModifier = attributes.AddLocalAmmoCostModifier(PlayerAttributes.AmmoUsage.MainTap, false);
         }
@@ -76,7 +79,24 @@ namespace Flamenccio.Powerup.Buff
             base.OnDestroy();
             GameEventManager.OnPlayerHit -= (_) => Deactivate();
             GameEventManager.OnEnemyKill -= (_) => LevelUp();
+            GameEventManager.OnEnemyKill -= (x) => ShowLevelText(x.EventOrigin);
             attributes.RemoveLocalAmmoCostModifier(localAmmoCostModifier);
+        }
+        private void ShowLevelText(Vector2 pos)
+        {
+            if (Level > 0)
+            {
+                FloatingTextManager.Instance.DisplayText(Level.ToString(), pos, Color.red, 1.0f, 20.0f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.Fade, true);
+            }
+        }
+        protected override void Deactivate()
+        {
+            if (Level > 0)
+            {
+                FloatingTextManager.Instance.DisplayText("FRENZY LOST", PlayerMotion.Instance.PlayerPosition, Color.red, 1.0f, 30.0f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.Fade, true);
+            }
+
+            base.Deactivate();
         }
     }
 }
