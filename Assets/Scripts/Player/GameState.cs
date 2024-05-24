@@ -40,7 +40,6 @@ namespace Flamenccio.Core
         private Spawner spawnControl;
         private GameObject heart;
         [SerializeField] private GoalArrowControl goalArrow;
-        [SerializeField] private HUDControl hudControl;
         [SerializeField] private PlayerAttributes playerAtt;
 
         // debug stuff
@@ -83,7 +82,8 @@ namespace Flamenccio.Core
         {
             playerAtt.AddAmmo(addPoints);
             progress += addPoints;
-            hudControl.DisplayScoreFlyText(addPoints);
+            //floatingTextManager.DisplayAmmoText(addPoints);
+            FloatingTextManager.Instance.DisplayAmmoText(addPoints);
 
             if (progress >= DifficultyCurve(difficulty + 1)) // level up
             {
@@ -181,7 +181,8 @@ namespace Flamenccio.Core
                 return;
             }
 
-            hudControl.DisplayHealthFlyText(life);
+            //hudControl.DisplayHealthFlyText(life);
+            FloatingTextManager.Instance.DisplayHealthText(life);
         }
 
         /// <summary>

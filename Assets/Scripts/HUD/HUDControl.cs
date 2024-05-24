@@ -10,6 +10,8 @@ namespace Flamenccio.HUD
 {
     public class HUDControl : MonoBehaviour
     {
+        // TODO this class has too much responsibility 
+
         [SerializeField] private GameState gState;
         // hud elements
         [SerializeField] private TMP_Text scoreDisplay;
@@ -101,6 +103,42 @@ namespace Flamenccio.HUD
                 levelUpBackground.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(levelUpBackground.rectTransform.sizeDelta.x, 0.0f, Time.deltaTime * 6), levelUpBackgroundSize.y);
             }
         }
+        public void DisplayLevelUpText(int level)
+        {
+            StartCoroutine(LevelUpTextAnimation(level));
+        }
+        public void DisplayHurtLines()
+        {
+            StartCoroutine(HurtLinesAnimation());
+        }
+
+        #region flying text
+        public void DisplayScoreFlyText(int score)
+        {
+            string text = $"+{score}";
+            DisplayFlyText(text, Color.yellow, scoreDisplay.transform.position);
+        }
+        public void DisplayHealthFlyText(int healthGained)
+        {
+            string text = $"+{healthGained}";
+            DisplayFlyText(text, Color.green, hpDisplay.transform.position);
+        }
+        private void DisplayFlyText(string text, Color color, Vector2 position)
+        {
+            GameObject instance = Instantiate(scoreFlyText, position, Quaternion.identity, transform);
+            instance.transform.position = position;
+            TMP_Text instanceTMP = instance.GetComponent<TMP_Text>();
+            instanceTMP.text = text;
+            instanceTMP.color = color;
+        }
+        #endregion
+
+        public static void DisplayFloatingText(Vector2 worldPosition, string text, float size)
+        {
+            Vector2 screenPosition = Camera.main.WorldToScreenPoint(worldPosition);
+        }
+
+        #region special charges
         private void UpdateSpecialChargeHUD()
         {
             if (playerAtt.MaxSpecialCharges == 0) return;
@@ -141,24 +179,6 @@ namespace Flamenccio.HUD
 
             specialCharges[currentCharge].sprite = specialChargeUsed;
             specialCharges[currentCharge - 1].sprite = specialChargeFilled;
-        }
-        public void DisplayLevelUpText(int level)
-        {
-            StartCoroutine(LevelUpTextAnimation(level));
-        }
-        public void DisplayHurtLines()
-        {
-            StartCoroutine(HurtLinesAnimation());
-        }
-        public void DisplayScoreFlyText(int score)
-        {
-            string text = $"+{score}";
-            DisplayFlyText(text, Color.yellow, scoreDisplay.transform.position);
-        }
-        public void DisplayHealthFlyText(int healthGained)
-        {
-            string text = $"+{healthGained}";
-            DisplayFlyText(text, Color.green, hpDisplay.transform.position);
         }
         private void AddSpecialCharges(int amount)
         {
@@ -212,14 +232,9 @@ namespace Flamenccio.HUD
 
             specialCharges.Clear();
         }
-        private void DisplayFlyText(string text, Color color, Vector2 position)
-        {
-            GameObject instance = Instantiate(scoreFlyText, position, Quaternion.identity, transform);
-            instance.transform.position = position;
-            TMP_Text instanceTMP = instance.GetComponent<TMP_Text>();
-            instanceTMP.text = text;
-            instanceTMP.color = color;
-        }
+        #endregion
+
+
         private IEnumerator LevelUpTextAnimation(int level)
         {
             levelupComponents.SetActive(true);

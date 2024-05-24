@@ -16,6 +16,8 @@ namespace Flamenccio.Powerup.Buff
         }
         public void SetMultiplier(int newMultiplier)
         {
+            if (newMultiplier < 0) return;
+
             multiplier = newMultiplier;
         }
         public void SetOffset(int newOffset)
