@@ -6,16 +6,22 @@ using Flamenccio.Core.Player;
 
 namespace Enemy
 {
+    /// <summary>
+    /// Controls an enemy. Searches for the player and follows them if they are in range.
+    /// <para>When the player is in line of sight and in range, fires periodically.</para>
+    /// </summary>
     public class Tracker : EnemyShootBase, IEnemy
     {
         public int Tier { get => tier; }
+
         private enum EnemyState
         {
             Wander,
             Chase,
             Attack
         }
-        // fields 
+
+        // fields
         [SerializeField] private LayerMask wallsLayer;
         [SerializeField] private LayerMask wallLayer;
         [SerializeField] private LayerMask invisWallLayer;
@@ -50,9 +56,11 @@ namespace Enemy
                 case EnemyState.Wander:
                     WanderState();
                     break;
+
                 case EnemyState.Chase:
                     ChaseState();
                     break;
+
                 case EnemyState.Attack:
                     AttackState();
                     break;
@@ -62,11 +70,13 @@ namespace Enemy
             behaviorTimer -= Time.deltaTime;
             checkTimer -= Time.deltaTime;
         }
+
         private void Attack(Vector2 position)
         {
             if (fireTimer >= fireRate) Fire(position);
             base.Behavior();
         }
+
         /// <summary>
         /// Finds and returns the closest footprint.
         /// </summary>
@@ -91,6 +101,7 @@ namespace Enemy
 
             return closestFootprint;
         }
+
         private float CorrectPath(Vector2 normalVector, Vector2 rigidbodyVector)
         {
             AllAngle angle = new()
@@ -100,6 +111,7 @@ namespace Enemy
 
             return angle.Degree;
         }
+
         private void ClearPath()
         {
             List<Collider2D> walls = new(Physics2D.OverlapCircleAll(transform.position, 2.0f, wallLayer));
@@ -109,11 +121,13 @@ namespace Enemy
                 wall.GetComponent<Wall>().Die();
             }
         }
+
         private void WanderState()
         {
             WanderCheck();
             WanderBehavior();
         }
+
         private void WanderBehavior()
         {
             rb.velocity = travelDirection.Vector.normalized * moveSpeed;
@@ -124,6 +138,7 @@ namespace Enemy
             behaviorTimer = Random.Range(WANDER_BEHAVIOR_TIMER_MIN, WANDER_BEHAVIOR_TIMER_MAX);
             travelDirection.Degree = Random.Range(0f, 360f);
         }
+
         private void WanderCheck()
         {
             if (checkTimer > 0f || behaviorState != EnemyState.Wander) return;
@@ -160,11 +175,13 @@ namespace Enemy
                 }
             }
         }
+
         private void ChaseState()
         {
             ChaseCheck();
             ChaseBehavior();
         }
+
         private void ChaseBehavior()
         {
             if (behaviorTimer > 0f || behaviorState != EnemyState.Chase) return;
@@ -175,6 +192,7 @@ namespace Enemy
             faceDirection.Degree = travelDirection.Degree;
             rb.velocity = travelDirection.Vector.normalized * moveSpeed;
         }
+
         private void ChaseCheck()
         {
             if (checkTimer > 0f || behaviorState != EnemyState.Chase) return;
@@ -208,7 +226,6 @@ namespace Enemy
             if (IsInLineOfSight(transform, target.transform, distanceToFootprint, invisWallLayer, footprintLayer))
             {
                 if (distanceToFootprint <= FOOTPRINT_DISTANCE_MIN) target = currentFootprint.NextFootprint.gameObject;
-
                 else if (distanceToFootprint >= FOOTPRINT_DISTANCE_MAX) target = currentFootprint.PrevFootprint != null ? currentFootprint.PrevFootprint.gameObject : null;
             }
             else
@@ -218,11 +235,13 @@ namespace Enemy
 
             if (target == null) ChangeState(EnemyState.Wander);
         }
+
         private void AttackState()
         {
             AttackCheck();
             AttackBehavior();
         }
+
         private void AttackBehavior() // unlike the other states, this one is run every frame
         {
             rb.velocity = Vector2.zero;
@@ -233,6 +252,7 @@ namespace Enemy
             faceDirection.Vector = target.transform.position - transform.position;
             Attack(target.transform.position);
         }
+
         private void AttackCheck()
         {
             if (checkTimer > 0f || behaviorState != EnemyState.Attack) return;
@@ -251,11 +271,13 @@ namespace Enemy
             target = SearchFootprint();
             ChangeState(EnemyState.Chase);
         }
+
         private void ChangeState(EnemyState state)
         {
             behaviorTimer = 0f;
             behaviorState = state;
         }
+
         private bool IsInLineOfSight(Transform origin, Transform target, float maxDist, LayerMask obstructingLayers, LayerMask targetLayers)
         {
             Vector2 dir = target.position - origin.position;

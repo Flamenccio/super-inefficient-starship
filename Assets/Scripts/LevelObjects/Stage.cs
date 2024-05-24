@@ -4,6 +4,9 @@ using Flamenccio.Utility;
 
 namespace Flamenccio.LevelObject.Stages
 {
+    /// <summary>
+    /// Controls behavior of a stage object.
+    /// </summary>
     public class Stage : MonoBehaviour
     {
         public StageVariant.Variants Variant { get { return variant; } }
@@ -28,10 +31,15 @@ namespace Flamenccio.LevelObject.Stages
             polyCollider = gameObject.GetComponent<PolygonCollider2D>();
             polymesh = polyCollider.CreateMesh(true, true);
         }
+
         private void Start()
         {
             if (initialStage) UpdateVariant(StageVariant.Variants.Normal);
         }
+
+        /// <summary>
+        /// Change this stage's variant to the one given.
+        /// </summary>
         public void UpdateVariant(StageVariant.Variants updatedVariant)
         {
             variant = updatedVariant;
@@ -57,6 +65,7 @@ namespace Flamenccio.LevelObject.Stages
             BuildSecondaryWalls(v); // spawn secondary walls
             BuildLinks(v); // spawn and place stage links (primary walls)
         }
+
         private void BuildSecondaryWalls(StageVariant variant)
         {
             if (variant.SecondaryWallLayout == null) return;
@@ -67,6 +76,7 @@ namespace Flamenccio.LevelObject.Stages
                 instance.BuildWall(invisibleWallConfig);
             }
         }
+
         private void BuildLinks(StageVariant variant)
         {
             foreach (var link in variant.Links)
@@ -99,22 +109,27 @@ namespace Flamenccio.LevelObject.Stages
                 }
             }
         }
+
         public bool LinkableInDirection(Directions.CardinalValues dir)
         {
             return links.TryGetValue(dir, out StageLink x) && x.IsVacant();
         }
+
         /// <summary>
         /// Link a stage to this stage disregarding incompatible variants.
         /// </summary>
         public bool LinkStageUnsafe(Directions.CardinalValues dir, Stage stage)
         {
             links.TryGetValue(dir, out StageLink l);
+
             if (l == null)
             {
                 return false;
             }
+
             return l.PopulateLink(stage);
         }
+
         public void ScanNearbyStages()
         {
             foreach (KeyValuePair<Directions.CardinalValues, StageLink> link in links)

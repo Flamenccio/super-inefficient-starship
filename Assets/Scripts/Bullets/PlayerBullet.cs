@@ -3,6 +3,9 @@ using Flamenccio.Effects.Visual;
 
 namespace Flamenccio.Attack.Player
 {
+    /// <summary>
+    /// Base class for all player attacks.
+    /// </summary>
     public class PlayerBullet : BulletControl
     {
         protected override void Startup()
@@ -22,10 +25,9 @@ namespace Flamenccio.Attack.Player
                 "PBullet",
             };
         }
+
         protected override void Trigger(Collider2D collider)
         {
-            Debug.Log(collider.gameObject);
-
             if (collider.gameObject.CompareTag("EBullet"))
             {
                 EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletParry, transform.position);
@@ -34,6 +36,7 @@ namespace Flamenccio.Attack.Player
             {
                 EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletImpact, transform.position);
             }
+
             base.Trigger(collider);
         }
     }

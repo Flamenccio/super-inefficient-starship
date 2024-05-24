@@ -10,11 +10,13 @@ namespace Flamenccio.HUD
 {
     public class HUDControl : MonoBehaviour
     {
-        // TODO this class has too much responsibility 
+        // TODO old
 
         [SerializeField] private GameState gState;
+
         // hud elements
         [SerializeField] private TMP_Text scoreDisplay;
+
         [SerializeField] private TMP_Text timeDisplay;
         [SerializeField] private TMP_Text progressDisplay;
         [SerializeField] private TMP_Text killPointsDisplay;
@@ -49,12 +51,14 @@ namespace Flamenccio.HUD
             hurtLines.gameObject.SetActive(false);
             levelUpBackgroundSize = levelUpBackground.rectTransform.sizeDelta;
         }
+
         private void Start()
         {
             // subscribe to events
             GameEventManager.OnLevelUp += (x) => DisplayLevelUpText(Mathf.FloorToInt(x.Value));
             GameEventManager.OnPlayerHit += (_) => DisplayHurtLines();
         }
+
         private void Update()
         {
             UpdateDisplays();
@@ -62,6 +66,7 @@ namespace Flamenccio.HUD
             UpdateLevelUpBanner();
             UpdateSpecialChargeHUD();
         }
+
         private void UpdateDisplays()
         {
             // update score and timers
@@ -73,6 +78,7 @@ namespace Flamenccio.HUD
             killPointsDisplay.text = $"+{playerAtt.KillPoints}";
             killPointBonusDisplay.text = $"x{playerAtt.KillPointBonus}";
         }
+
         private void UpdateVignette()
         {
             // fade vignette in as time starts to run out
@@ -91,6 +97,7 @@ namespace Flamenccio.HUD
                 vignette.CrossFadeAlpha(0f, 1.0f, false);
             }
         }
+
         private void UpdateLevelUpBanner()
         {
             // level up text animations
@@ -103,26 +110,31 @@ namespace Flamenccio.HUD
                 levelUpBackground.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(levelUpBackground.rectTransform.sizeDelta.x, 0.0f, Time.deltaTime * 6), levelUpBackgroundSize.y);
             }
         }
+
         public void DisplayLevelUpText(int level)
         {
             StartCoroutine(LevelUpTextAnimation(level));
         }
+
         public void DisplayHurtLines()
         {
             StartCoroutine(HurtLinesAnimation());
         }
 
         #region flying text
+
         public void DisplayScoreFlyText(int score)
         {
             string text = $"+{score}";
             DisplayFlyText(text, Color.yellow, scoreDisplay.transform.position);
         }
+
         public void DisplayHealthFlyText(int healthGained)
         {
             string text = $"+{healthGained}";
             DisplayFlyText(text, Color.green, hpDisplay.transform.position);
         }
+
         private void DisplayFlyText(string text, Color color, Vector2 position)
         {
             GameObject instance = Instantiate(scoreFlyText, position, Quaternion.identity, transform);
@@ -131,7 +143,8 @@ namespace Flamenccio.HUD
             instanceTMP.text = text;
             instanceTMP.color = color;
         }
-        #endregion
+
+        #endregion flying text
 
         public static void DisplayFloatingText(Vector2 worldPosition, string text, float size)
         {
@@ -139,6 +152,7 @@ namespace Flamenccio.HUD
         }
 
         #region special charges
+
         private void UpdateSpecialChargeHUD()
         {
             if (playerAtt.MaxSpecialCharges == 0) return;
@@ -180,6 +194,7 @@ namespace Flamenccio.HUD
             specialCharges[currentCharge].sprite = specialChargeUsed;
             specialCharges[currentCharge - 1].sprite = specialChargeFilled;
         }
+
         private void AddSpecialCharges(int amount)
         {
             amount = Mathf.Abs(amount);
@@ -206,6 +221,7 @@ namespace Flamenccio.HUD
             float xOffset = amount * (SPECIAL_CHARGE_DISTANCE / 2f);
             specialCharges.ForEach(img => img.transform.localPosition = new Vector2(img.transform.localPosition.x - xOffset, SPECIAL_CHARGE_LOCAL_Y_OFFSET));
         }
+
         private void RemoveSpecialCharges(int amount)
         {
             amount = Mathf.Abs(amount); // amount must be nonnegative for this to work
@@ -223,6 +239,7 @@ namespace Flamenccio.HUD
             float xOffset = amount * (SPECIAL_CHARGE_DISTANCE / 2f);
             specialCharges.ForEach(img => img.transform.localPosition = new Vector2(img.transform.localPosition.x + xOffset, SPECIAL_CHARGE_LOCAL_Y_OFFSET));
         }
+
         private void ClearSpecialCharges()
         {
             foreach (var img in specialCharges)
@@ -232,8 +249,8 @@ namespace Flamenccio.HUD
 
             specialCharges.Clear();
         }
-        #endregion
 
+        #endregion special charges
 
         private IEnumerator LevelUpTextAnimation(int level)
         {
@@ -242,12 +259,14 @@ namespace Flamenccio.HUD
             yield return new WaitForSeconds(1.5f);
             levelupComponents.SetActive(false);
         }
+
         private IEnumerator HurtLinesAnimation()
         {
             hurtLines.gameObject.SetActive(true);
             yield return new WaitForSecondsRealtime(0.1f);
             hurtLines.gameObject.SetActive(false);
         }
+
         private string CorrectTimerDisplay(float num)
         {
             string result = num.ToString("F" + 2);

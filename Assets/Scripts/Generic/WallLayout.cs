@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Flamenccio.LevelObject.Stages
 {
+    /// <summary>
+    /// A "blueprint" that tells where to place stage walls.
+    /// </summary>
     [CreateAssetMenu(fileName = "Empty Layout", menuName = "Invisible Wall Layout", order = 0)]
     public class WallLayout : ScriptableObject
     {

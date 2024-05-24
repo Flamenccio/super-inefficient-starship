@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Flamenccio.Effects.Visual
 {
+    /// <summary>
+    /// Controls and manages all effects from a portal.
+    /// </summary>
     public class PortalEffects : MonoBehaviour
     {
         public Transform Destination { get; set; }

@@ -3,10 +3,13 @@ using UnityEngine;
 
 namespace Enemy
 {
+    /// <summary>
+    /// Controls an enemy. Periodically fires four normal enemy bullets.
+    /// </summary>
     public class TurretStatic : EnemyShootBase, IEnemy
     {
         public int Tier { get => tier; }
-        [Tooltip("Where to fire bullets (in degrees).")] [SerializeField] private List<float> angles = new();
+        [Tooltip("Where to fire bullets (in degrees).")][SerializeField] private List<float> angles = new();
 
         protected override void Behavior()
         {
@@ -18,6 +21,7 @@ namespace Enemy
 
             base.Behavior();
         }
+
         protected void Attack()
         {
             foreach (float angle in angles)

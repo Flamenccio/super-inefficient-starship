@@ -3,18 +3,24 @@ using UnityEngine;
 
 namespace Enemy
 {
+    /// <summary>
+    /// Controls an enemy. Periodically spawns 4 imps. When destroyed, drops mini stars based on amount of imps spawned, and enrages all the imps it spawned.
+    /// </summary>
     public class ImpSpawner : EnemyBase, IEnemy
     {
-        public int Tier { get { return tier; } }
+        public int Tier
+        { get { return tier; } }
+
         [SerializeField] private GameObject impPrefab;
-        private const int SPAWN_OFFSET = 5; // possible absolute value amount representing x and y offset imp spawn locations.
-        private const float SPAWN_FREQUENCY = 3.0f; // the amount of time in seconds between each spawn tick.
+
         private float timer = 0f;
         private int impsSpawned = 0;
+        private Action spawnerKilled;
+        private const int SPAWN_OFFSET = 5; // possible absolute value amount representing x and y offset imp spawn locations.
+        private const float SPAWN_FREQUENCY = 3.0f; // the amount of time in seconds between each spawn tick.
         private const int SPAWN_COUNT = 4; // the number of imps to spawn.
         private const int ANIM_FRAME_RATE = 12;
         private const int ANIM_TOTAL_FRAMES = 6;
-        private Action spawnerKilled;
 
         protected override void OnSpawn()
         {
@@ -23,6 +29,7 @@ namespace Enemy
             float animTimeScale = SPAWN_FREQUENCY / baseAnimTime;
             animator.speed = 1f / animTimeScale;
         }
+
         protected override void Behavior()
         {
             if (timer >= SPAWN_FREQUENCY)
@@ -43,6 +50,7 @@ namespace Enemy
 
             timer += Time.deltaTime;
         }
+
         protected override void Die()
         {
             spawnerKilled?.Invoke();

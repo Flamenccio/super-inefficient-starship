@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace Flamenccio.Attack.Enemy
 {
-    public class EnemyBulletNormal : BulletControl
+    /// <summary>
+    /// Base class for all enemy attacks.
+    /// </summary>
+    public class EnemyBulletBase : BulletControl
     {
         protected override void Startup()
         {
@@ -19,6 +22,7 @@ namespace Flamenccio.Attack.Enemy
                 "Effect"
             };
         }
+
         protected override void Trigger(Collider2D collider)
         {
             Destroy(this.gameObject);

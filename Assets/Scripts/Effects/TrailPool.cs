@@ -6,8 +6,12 @@ namespace Flamenccio.Effects.Visual
 {
     public interface ITrailPool
     {
+        /// <summary>
+        /// The object pool this object belongs to.
+        /// </summary>
         ObjectPool<Trail> Pool { get; set; }
     }
+
     public class TrailPool : MonoBehaviour
     {
         public enum Trails
@@ -16,15 +20,18 @@ namespace Flamenccio.Effects.Visual
             EnemyMissileTrail,
             PortalTrail,
         }
+
         [SerializeField] private GameObject starFlyTrailPrefab;
         [SerializeField] private GameObject enemyMissileTrailPrefab;
         [SerializeField] private GameObject portalTrailPrefab;
+
         private const int DEFAULT_STAR_TRAIL = 20;
         private const int MAX_STAR_FLY_TRAIL = 40;
         private const int DEFAULT_E_MISSILE_TRAIL = 20;
         private const int MAX_E_MISSILE_TRAIL = 40;
         private const int DEFAULT_PORTAL_TRAIL = 10;
         private const int MAX_PORTAL_TRAIL = 50;
+
         private ObjectPool<Trail> starTrailPool;
         private ObjectPool<Trail> enemyMissileTrailPool;
         private ObjectPool<Trail> portalTrailPool;
@@ -41,34 +48,39 @@ namespace Flamenccio.Effects.Visual
             trails.Add(Trails.EnemyMissileTrail, enemyMissileTrailPool);
             trails.Add(Trails.PortalTrail, portalTrailPool);
         }
+
         private Trail CreateStarTrail()
         {
             Trail t = Instantiate(starFlyTrailPrefab).GetComponent<Trail>();
             t.Pool = starTrailPool;
             return t;
         }
+
         private Trail CreateEnemyMissileTrail()
         {
             Trail t = Instantiate(enemyMissileTrailPrefab).GetComponent<Trail>();
             t.Pool = enemyMissileTrailPool;
             return t;
         }
+
         private Trail CreatePortalTrail()
         {
             Trail t = Instantiate(portalTrailPrefab).GetComponent<Trail>();
             t.Pool = enemyMissileTrailPool;
             return t;
         }
+
         private void GetTrail(Trail s)
         {
-            s.transform.position = Vector2.zero;
-            s.transform.rotation = Quaternion.identity;
+            s.transform.SetPositionAndRotation(Vector2.zero, Quaternion.identity);
             s.gameObject.SetActive(true);
         }
+
         private void ReleaseTrail(Trail s)
         {
             s.gameObject.SetActive(false);
         }
+
         private void DestroyTrail(Trail s)
         {
             Destroy(s.gameObject);

@@ -25,6 +25,10 @@ namespace Flamenccio.Core
         public Vector2 EventOrigin { get; set; } // if the transform is not available (e.g. when the game object is destroyed), use this
         private Transform eventTriggerer;
     }
+
+    /// <summary>
+    /// Manages game events: delegates where classes can subscribe to and invoke.
+    /// </summary>
     public static class GameEventManager
     {
         /*

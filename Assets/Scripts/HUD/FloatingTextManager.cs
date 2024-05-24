@@ -15,6 +15,7 @@ namespace Flamenccio.HUD
         [SerializeField] private Transform hpLocation;
         [SerializeField] private Transform ammoLocation;
         [SerializeField] private Transform canvasTransform;
+
         private readonly Color defaultColor = Color.white;
         private readonly float defaultSize = 20.0f;
         private readonly float defaultDuration = 1.0f;
@@ -30,7 +31,6 @@ namespace Flamenccio.HUD
             {
                 Instance = this;
             }
-            
         }
 
         /// <summary>

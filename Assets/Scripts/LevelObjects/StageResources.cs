@@ -5,15 +5,16 @@ using Flamenccio.Utility;
 
 namespace Flamenccio.LevelObject.Stages
 {
+    /// <summary>
+    /// Stuff used to spawn and build a stage.
+    /// </summary>
     public class StageResources : MonoBehaviour
     {
         public static StageResources Instance { get; private set; }
         public List<StageVariant.Variants> AllVariants { get; private set; }
         public List<StageVariant> StageVariants { get => stageVariants; }
         private List<StageVariant> stageVariants = new();
-        private void Start()
-        {
-        }
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -29,6 +30,7 @@ namespace Flamenccio.LevelObject.Stages
             stageVariants.AddRange(Resources.LoadAll<StageVariant>("StageVariants")); // load all stagevariants here
             stageVariants.Sort((a, b) => (int)a.Variant < (int)b.Variant ? -1 : 1); // sort variants by variant
         }
+
         /// <summary>
         /// Returns a StageVariant matching the variant given.
         /// </summary>
@@ -40,22 +42,30 @@ namespace Flamenccio.LevelObject.Stages
             }
             return null;
         }
-        public bool HasLinkInDirection(StageVariant.Variants variant, Directions.CardinalValues dir)
+
+        /// <summary>
+        /// Does the given variant have an existing link in given direction?
+        /// </summary>
+        public bool HasLinkInDirection(StageVariant.Variants variant, Directions.CardinalValues direction)
         {
             foreach (StageVariant.LinkSet ls in stageVariants[(int)variant].Links)
             {
-                if (ls.LinkDirection == dir)
+                if (ls.LinkDirection == direction)
                 {
                     return true;
                 }
             }
             return false;
         }
-        public List<StageVariant.Variants> GetVariantsExtendableInDirection(Directions.CardinalValues dir)
+
+        /// <summary>
+        /// Retrives a list of stage variants that can be extended in the given direction.
+        /// </summary>
+        public List<StageVariant.Variants> GetVariantsExtendableInDirection(Directions.CardinalValues direction)
         {
             List<StageVariant.Variants> v = new();
             StageVariants
-                .Where(variant => HasLinkInDirection(variant.Variant, dir))
+                .Where(variant => HasLinkInDirection(variant.Variant, direction))
                 .ToList()
                 .ForEach(variant => v.Add(variant.Variant));
 

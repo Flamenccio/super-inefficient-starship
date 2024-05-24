@@ -4,9 +4,12 @@ using Flamenccio.Effects.Visual;
 
 namespace Flamenccio.Attack
 {
+    /// <summary>
+    /// Base class for all attacks.
+    /// </summary>
     public class BulletControl : MonoBehaviour
     {
-        public enum KnockbackMultipiers
+        public enum KnockbackPower
         {
             None = 0,
             Low = 10,
@@ -14,19 +17,6 @@ namespace Flamenccio.Attack
             High = 20,
             Extreme = 25
         }
-        // default move speed
-        [SerializeField] protected float moveSpeed = 20.0f;
-        [SerializeField] protected float maxDistance = 1f;
-        [SerializeField] protected List<string> ignoredTags = new();
-        [SerializeField] protected KnockbackMultipiers knockbackMultiplier;
-        [SerializeField] protected int durability = 1;
-        [SerializeField] protected bool rotationIsStatic = true;
-        [SerializeField] protected bool canIgnoreStageEdge = false;
-        [SerializeField] protected int playerDamage = 1; // default damage done to player
-        [SerializeField] protected int objectDamage = 1; // default damage done to object
-        protected CameraEffects cameraEff = CameraEffects.Instance;
-        protected Vector2 origin = Vector2.zero;
-
         public int PlayerDamage { get => playerDamage; }
         public int ObjectDamage { get => objectDamage; }
         public int KnockbackMultiplier { get => (int)knockbackMultiplier; }
@@ -34,7 +24,20 @@ namespace Flamenccio.Attack
         public float Speed { get => moveSpeed; }
         public int Durability { get => durability; }
 
+
+        [SerializeField] protected float moveSpeed = 20.0f; // default move speed
+        [SerializeField] protected float maxDistance = 1f;
+        [SerializeField] protected List<string> ignoredTags = new();
+        [SerializeField] protected KnockbackPower knockbackMultiplier;
+        [SerializeField] protected int durability = 1; // number of entities bullet can touch before destroying
+        [SerializeField] protected bool rotationIsStatic = true;
+        [SerializeField] protected bool canIgnoreStageEdge = false;
+        [SerializeField] protected int playerDamage = 1; // default damage done to player
+        [SerializeField] protected int objectDamage = 1; // default damage done to object
         [SerializeField] protected Rigidbody2D rb;
+
+        protected CameraEffects cameraEff = CameraEffects.Instance;
+        protected Vector2 origin = Vector2.zero;
 
         protected void Awake()
         {
@@ -43,16 +46,22 @@ namespace Flamenccio.Attack
             Startup();
             Launch();
         }
-        protected virtual void Startup()
-        {
-            // additional startup behaviors
-        }
+
+        /// <summary>
+        /// Additional behaviors that is called on Awake().
+        /// </summary>
+        protected virtual void Startup() { }
+
+        /// <summary>
+        /// Called right after Startup().
+        /// </summary>
         protected virtual void Launch()
         {
             if (rb.bodyType != RigidbodyType2D.Static)
             {
                 rb.velocity = transform.right * moveSpeed;
             }
+
             if (rotationIsStatic) rb.transform.rotation = Quaternion.identity;
         }
 
@@ -61,6 +70,10 @@ namespace Flamenccio.Attack
             Behavior();
             DeathTimer();
         }
+
+        /// <summary>
+        /// Run on FixedUpdate().
+        /// </summary>
         protected virtual void DeathTimer()
         {
             if (Vector2.Distance(transform.position, origin) >= maxDistance)
@@ -68,13 +81,23 @@ namespace Flamenccio.Attack
                 Destroy(this.gameObject);
             }
         }
-        protected virtual void Behavior()
-        {
-        }
+
+        /// <summary>
+        /// How the bullet will behave. Runs on FixedUpdate().
+        /// </summary>
+        protected virtual void Behavior() { }
+
+        /// <summary>
+        /// Behavior that happens when this bullet collides with a game object whose tag isn't ignored.
+        /// </summary>
         protected virtual void Collide(Collision2D collision)
         {
             Destroy(this.gameObject);
         }
+
+        /// <summary>
+        /// Behavior that happens when this bullet enters a trigger with a game object whose tag isn't ignored.
+        /// </summary>
         protected virtual void Trigger(Collider2D collider)
         {
             if ((collider.CompareTag("PrimaryWall") || collider.CompareTag("InvisibleWall")) && !canIgnoreStageEdge) durability = 0;
@@ -98,6 +121,7 @@ namespace Flamenccio.Attack
                 Trigger(collision);
             }
         }
+
         private bool IgnoreTags(string compareTag)
         {
             return ignoredTags.Contains(compareTag);

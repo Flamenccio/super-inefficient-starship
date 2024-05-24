@@ -2,7 +2,10 @@ using UnityEngine;
 
 namespace Flamenccio.Attack.Enemy
 {
-    public class BounceBullet : EnemyBulletNormal
+    /// <summary>
+    /// Controls bouncing enemy bullets. Bounces off of obstacles at most 10 times.
+    /// </summary>
+    public class BounceBullet : EnemyBulletBase
     {
         [SerializeField] private int maxBounces = 10;
         [SerializeField] private LayerMask wallsLayer;
@@ -22,10 +25,10 @@ namespace Flamenccio.Attack.Enemy
             rb.velocity = Vector2.Reflect(rb.velocity, cast.normal);
             bounces++;
         }
+
         protected override void Collide(Collision2D collision)
         {
             // do nothing
         }
-
     }
 }

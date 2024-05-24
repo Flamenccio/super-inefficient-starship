@@ -1,4 +1,3 @@
-using Flamenccio.Effects;
 using System;
 using TMPro;
 using UnityEngine;
@@ -17,11 +16,13 @@ namespace Flamenccio.HUD
             ZoomOut,
             ZoomIn,
         }
+
         public string TextContent
         {
             get;
             set;
         }
+
         public float TargetFontSize
         {
             get => targetFontSize;
@@ -33,6 +34,7 @@ namespace Flamenccio.HUD
                 }
             }
         }
+
         public Color TargetColor
         {
             get => targetColor;
@@ -44,6 +46,7 @@ namespace Flamenccio.HUD
                 }
             }
         }
+
         public float Duration
         {
             get => duration;
@@ -55,6 +58,7 @@ namespace Flamenccio.HUD
                 }
             }
         }
+
         public TextAnimation EnterAnimation
         {
             get => enterAnimation;
@@ -66,6 +70,7 @@ namespace Flamenccio.HUD
                 }
             }
         }
+
         public TextAnimation ExitAnimation
         {
             get => exitAnimation;
@@ -75,10 +80,10 @@ namespace Flamenccio.HUD
                 {
                     exitAnimation = value;
                 }
-
             }
         }
-        public bool SpawnInGameWorld 
+
+        public bool SpawnInGameWorld
         {
             get => spawnInGameWorld;
             set
@@ -89,12 +94,14 @@ namespace Flamenccio.HUD
                 }
             }
         }
+
         private enum AnimationState
         {
             Enter,
             Intermediate,
             Exit,
         };
+
         private TMP_Text textObject;
         private bool playingAnimation = false;
         private float lifeTimer = 0f;
@@ -137,12 +144,24 @@ namespace Flamenccio.HUD
             textObject.text = TextContent;
             textObject.color = new(TargetColor.r, TargetColor.g, TargetColor.b, textObject.color.a);
 
-            if (SpawnInGameWorld) transform.position = Camera.main.WorldToScreenPoint(worldOrigin);
+            if (SpawnInGameWorld) transform.position = Camera.main.WorldToScreenPoint(worldOrigin); // TODO temporary
 
             if (!playingAnimation) return;
 
             lifeTimer += Time.deltaTime;
 
+            UpdateAnimationState();
+
+            if (lifeTimer >= Duration)
+            {
+                Destroy(gameObject);
+            }
+
+            PlayAnimationState();
+        }
+
+        private void UpdateAnimationState()
+        {
             if (lifeTimer <= ENTER_DURATION)
             {
                 state = AnimationState.Enter;
@@ -155,20 +174,20 @@ namespace Flamenccio.HUD
             {
                 state = AnimationState.Intermediate;
             }
+        }
 
-            if (lifeTimer >= Duration)
-            {
-                Destroy(gameObject);
-            }
-
+        private void PlayAnimationState()
+        {
             switch (state)
             {
                 case AnimationState.Enter:
                     EnterAnimationAction?.Invoke();
                     break;
+
                 case AnimationState.Intermediate:
                     textObject.fontSize = TargetFontSize;
                     break;
+
                 case AnimationState.Exit:
                     ExitAnimationAction?.Invoke();
                     break;
@@ -185,9 +204,11 @@ namespace Flamenccio.HUD
                 case TextAnimation.Fade:
                     textObject.alpha = 0.0f;
                     break;
+
                 case TextAnimation.ZoomOut:
                     textObject.fontSize = MAX_FONT_SIZE;
                     break;
+
                 case TextAnimation.ZoomIn:
                     textObject.fontSize = MIN_FONT_SIZE;
                     break;
@@ -198,12 +219,15 @@ namespace Flamenccio.HUD
             {
                 case TextAnimation.None:
                     break;
+
                 case TextAnimation.Fade:
                     EnterAnimationAction = FadeIn;
                     break;
+
                 case TextAnimation.ZoomOut:
                     EnterAnimationAction = ZoomOutEnter;
                     break;
+
                 case TextAnimation.ZoomIn:
                     EnterAnimationAction = ZoomInEnter;
                     break;
@@ -214,12 +238,15 @@ namespace Flamenccio.HUD
             {
                 case TextAnimation.None:
                     break;
+
                 case TextAnimation.Fade:
                     ExitAnimationAction = FadeOut;
                     break;
+
                 case TextAnimation.ZoomOut:
                     ExitAnimationAction = ZoomOutExit;
                     break;
+
                 case TextAnimation.ZoomIn:
                     ExitAnimationAction = ZoomInExit;
                     break;
@@ -229,11 +256,14 @@ namespace Flamenccio.HUD
         }
 
         #region text effects
+
         #region entrance effects
+
         private void FadeIn()
         {
             textObject.alpha += (1f / ENTER_DURATION) * Time.deltaTime;
         }
+
         private void ZoomOutEnter()
         {
             if (textObject.fontSize <= TargetFontSize)
@@ -244,6 +274,7 @@ namespace Flamenccio.HUD
             float deltaSize = (TargetFontSize - MAX_FONT_SIZE) / ENTER_DURATION;
             textObject.fontSize += deltaSize * Time.deltaTime;
         }
+
         private void ZoomInEnter()
         {
             if (textObject.fontSize >= TargetFontSize)
@@ -254,23 +285,30 @@ namespace Flamenccio.HUD
             float deltaSize = (MIN_FONT_SIZE - TargetFontSize) / ENTER_DURATION;
             textObject.fontSize -= deltaSize * Time.deltaTime;
         }
-        #endregion
+
+        #endregion entrance effects
+
         #region exit effects
+
         private void FadeOut()
         {
             textObject.alpha -= (1f / EXIT_DURATION) * Time.deltaTime;
         }
+
         private void ZoomOutExit()
         {
             float deltaSize = (MIN_FONT_SIZE - TargetFontSize) / ENTER_DURATION;
             textObject.fontSize += deltaSize * Time.deltaTime;
         }
+
         private void ZoomInExit()
         {
             float deltaSize = (MIN_FONT_SIZE - TargetFontSize) / ENTER_DURATION;
             textObject.fontSize -= deltaSize * Time.deltaTime;
         }
-        #endregion
-        #endregion
+
+        #endregion exit effects
+
+        #endregion text effects
     }
 }

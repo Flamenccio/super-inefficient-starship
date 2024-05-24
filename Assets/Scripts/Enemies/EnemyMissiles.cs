@@ -3,10 +3,14 @@ using UnityEngine;
 
 namespace Enemy
 {
+    /// <summary>
+    /// Controls an enemy. Aims at player and periodically fires a barrage of missiles.
+    /// </summary>
     public class EnemyMissiles : TurretTrack, IEnemy
     {
         private const float BURST_INTERVAL = 0.50f; // the amount of time between each shot in burst
         private const int BURST_AMOUNT = 3;
+
         protected override void Attack()
         {
             if (player == null) return;
@@ -16,6 +20,7 @@ namespace Enemy
                 StartCoroutine(BurstAttack());
             }
         }
+
         private IEnumerator BurstAttack()
         {
             for (int i = 0; i < BURST_AMOUNT; i++)

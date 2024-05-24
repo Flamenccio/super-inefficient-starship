@@ -18,6 +18,7 @@ namespace Flamenccio.HUD
         [SerializeField] private Transform specialChargeContainer;
         [SerializeField] private PlayerAttributes playerAtt;
         [SerializeField] private Image specialChargePrefab;
+
         private List<SpecialChargeHUDControl> specialCharges = new();
         private const float SPECIAL_CHARGE_LOCAL_Y_OFFSET = -140f;
         private const float SPECIAL_CHARGE_DISTANCE = 18f;

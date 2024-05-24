@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Flamenccio.Attack.Player
 {
+    /// <summary>
+    /// Controls a player bullet. Moves slowly and continuously deals damage to obstacles and enemies in its path.
+    /// </summary>
     public class RedSwordChargeAttack : PlayerBullet
     {
         [SerializeField] private CircleCollider2D slashHitbox;
@@ -22,6 +25,7 @@ namespace Flamenccio.Attack.Player
                 attackTimer += Time.deltaTime;
             }
         }
+
         private IEnumerator Slash()
         {
             slashHitbox.enabled = true;

@@ -8,23 +8,29 @@ namespace Flamenccio.Item
     {
         [SerializeField] protected GameObject collectEffect;
         [SerializeField] protected GameObject spawnEffect;
+
         /// <summary>
         /// Any additional effects that the item will do upon spawning.
         /// </summary>
         protected virtual void SpawnEffect() { }
+
         /// <summary>
         /// Any additional effects that the item will do upon collection (entering trigger collision with player).
         /// </summary>
         protected virtual void CollectEffect(Transform player) { }
+
         /// <summary>
         /// Any additional effects that will happen constantly (on FixedUpdate).
         /// </summary>
         protected virtual void ConstantEffect() { }
+
         /// <summary>
         /// Any additional effects that the item will do upon entering a trigger collision with any gameObject.
         /// </summary>
         protected virtual void TriggerEffect(Collider2D collider) { }
+
         protected virtual void CollisionEffect(Collision2D collision) { }
+
         protected void Awake()
         {
             if (spawnEffect != null)
@@ -33,6 +39,7 @@ namespace Flamenccio.Item
             }
             SpawnEffect();
         }
+
         protected void OnTriggerEnter2D(Collider2D collision)
         {
             TriggerEffect(collision);
@@ -46,10 +53,12 @@ namespace Flamenccio.Item
                 Destroy(gameObject);
             }
         }
+
         protected void OnCollisionEnter2D(Collision2D collision)
         {
             CollisionEffect(collision);
         }
+
         protected void FixedUpdate()
         {
             ConstantEffect();

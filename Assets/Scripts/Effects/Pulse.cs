@@ -37,6 +37,7 @@ namespace Flamenccio.Utility.SpriteEffects
             minSize = Mathf.Abs(minSize);
             sizeAmplitude = (maxSize - minSize) / 2;
         }
+
         private void Update()
         {
             tBrightness += Time.deltaTime;
@@ -44,11 +45,24 @@ namespace Flamenccio.Utility.SpriteEffects
             tSize += Time.deltaTime;
             tSize %= sizePeriod;
 
-            transform.localScale = new((sizeAmplitude * Mathf.Sin(sizeFrequency * tSize)) + (maxSize - sizeAmplitude), (sizeAmplitude * Mathf.Sin(sizeFrequency * tSize)) + (maxSize - sizeAmplitude));
+            // modify scale
+            transform.localScale = new
+                ((sizeAmplitude * Mathf.Sin(sizeFrequency * tSize)) + (maxSize - sizeAmplitude),
+                (sizeAmplitude * Mathf.Sin(sizeFrequency * tSize)) + (maxSize - sizeAmplitude));
 
-            spriteRen.color = new(spriteRen.color.r, spriteRen.color.g, spriteRen.color.b, (brightnessAmplitude * Mathf.Cos(brightnessFrequency * tBrightness)) + (maxOpacity - brightnessAmplitude));
+            // modify alpha
+            spriteRen.color = new
+                (spriteRen.color.r,
+                spriteRen.color.g,
+                spriteRen.color.b,
+                (brightnessAmplitude * Mathf.Cos(brightnessFrequency * tBrightness)) + (maxOpacity - brightnessAmplitude));
 
-            spriteRen.color = new((colorAmplitude.r * Mathf.Cos(sizeFrequency * tSize)) + (white.r - colorAmplitude.r), (colorAmplitude.g * Mathf.Cos(sizeFrequency * tSize)) + (white.g - colorAmplitude.g), (colorAmplitude.b * Mathf.Cos(sizeFrequency * tSize)) + (white.b - colorAmplitude.b), spriteRen.color.a);
+            // modify r, g, and b
+            spriteRen.color = new
+                ((colorAmplitude.r * Mathf.Cos(sizeFrequency * tSize)) + (white.r - colorAmplitude.r),
+                (colorAmplitude.g * Mathf.Cos(sizeFrequency * tSize)) + (white.g - colorAmplitude.g),
+                (colorAmplitude.b * Mathf.Cos(sizeFrequency * tSize)) + (white.b - colorAmplitude.b),
+                spriteRen.color.a);
         }
     }
 }

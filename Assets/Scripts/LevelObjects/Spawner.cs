@@ -10,6 +10,9 @@ using System.Diagnostics;
 
 namespace Flamenccio.Core
 {
+    /// <summary>
+    /// Manages spawning of objects, enemies, and stages.
+    /// </summary>
     public class Spawner : MonoBehaviour
     {
         // prefabs
@@ -33,7 +36,6 @@ namespace Flamenccio.Core
         [SerializeField] private LayerMask raycastEnterLayer; // layer used for finding point in stage
         [SerializeField] private LayerMask raycastExitLayers; // layer of invisible walls
 
-        // this class handles all spawning activity (enemies, walls, stages)
         private int stages = 0;
         private int walls = 0;
         private const int MAX_WALLS = 10000;
@@ -50,26 +52,27 @@ namespace Flamenccio.Core
             public int spawnAttempts;
             public Collider2D stageCheck;
         }
+
         // properties
         public int Stages { get => stages; }
 
         // constants
         private const float ENEMY_SPAWN_RADIUS = 5.0f; // the minimum space required between the player and enemy for it (the enemy) to spawn
-        private void Start()
-        {
-        }
+
         private void Awake()
         {
             stageList.Add(FindObjectOfType<Stage>());
             enemyList = gameObject.GetComponent<EnemyList>();
             stageList.ForEach(s => UnityEngine.Debug.Log(s));
         }
+
         public void DecreaseWallCount()
         {
             if (walls <= 0) return;
 
             walls--;
         }
+
         public GameObject SpawnEnemy(int difficulty)
         {
             // if the level is too low to spawn anything, return nothing
@@ -164,6 +167,7 @@ namespace Flamenccio.Core
             newStage.ScanNearbyStages(); // scan for nearby stages
             stageList.Add(newStage); // add the new stage to the stage list
         }
+
         public void SpawnWall(int wallLevel)
         {
             if (walls >= MAX_WALLS) return;
@@ -205,6 +209,7 @@ namespace Flamenccio.Core
             instance.transform.position = toolkit.globalSpawnCoords;
             walls++; // increase wall count
         }
+
         public GameObject SpawnHeart()
         {
             SpawnToolkit toolkit = InitializeNewToolkit();
@@ -213,16 +218,18 @@ namespace Flamenccio.Core
             toolkit.globalSpawnCoords = FindPointInStage(toolkit.rootStage);
             toolkit.globalSpawnCoords = AlignPosition(toolkit.globalSpawnCoords);
 
-            // spawn the heart 
+            // spawn the heart
             GameObject heart = Instantiate(heartPrefab, toolkit.rootStage.transform);
             heart.transform.position = toolkit.globalSpawnCoords;
             return heart;
         }
+
         public void SpawnFlyingStar(Vector2 origin, Transform target)
         {
             StarFly sf = Instantiate(flyingStarPrefab, origin, Quaternion.identity).GetComponent<StarFly>();
             sf.FlyTo(target);
         }
+
         /// <summary>
         /// Spawns <b>two</b> portals.
         /// </summary>
@@ -245,7 +252,7 @@ namespace Flamenccio.Core
                 target1 = GenerateRandomRootStage();
                 target2 = GenerateRandomRootStage();
 
-                if (target2 == target1) continue; 
+                if (target2 == target1) continue;
 
                 target1Transform = stageList[target1].GetComponent<Stage>();
                 target2Transform = stageList[target2].GetComponent<Stage>();
@@ -253,7 +260,6 @@ namespace Flamenccio.Core
                 if (Vector2.Distance(target1Transform.transform.position, target2Transform.transform.position) < MIN_PORTAL_DISTANCE) continue;
 
                 spawnReady = true;
-
             } while (!spawnReady);
 
             float hue = Random.Range(0f, 1f);
@@ -270,7 +276,6 @@ namespace Flamenccio.Core
                 target2local = GlobalToLocalPosition(NormalizePosition(FindPointInStage(target2Transform)), target2Transform.transform.position);
 
                 if (Vector2.Distance(LocalToGlobalPosition(target1local, target1Transform.transform.position), LocalToGlobalPosition(target2local, target2Transform.transform.position)) >= MIN_PORTAL_DISTANCE) spawnReady = true;
-
             } while (!spawnReady);
 
             Portal portal1 = Instantiate(portalPrefab, target1Transform.transform, false).GetComponent<Portal>();
@@ -284,6 +289,7 @@ namespace Flamenccio.Core
 
             watch.Stop();
         }
+
         /// <summary>
         /// Takes a global position and returns it aligned with a grid.
         /// </summary>
@@ -291,22 +297,26 @@ namespace Flamenccio.Core
         {
             return NormalizePosition(globalPosition);
         }
+
         private Vector2 GenerateLocalPositionOnGrid(Stage rootStage)
         {
             float xCoordinate = Random.Range(-rootStage.Extents.x, rootStage.Extents.x);
             float yCoordinate = Random.Range(-rootStage.Extents.y, rootStage.Extents.y);
             return NormalizePosition(new(xCoordinate, yCoordinate));
         }
+
         private Vector2 GenerateGlobalPositionOnGrid(Transform parent, Stage root)
         {
             Vector2 v = GenerateLocalPositionOnGrid(root);
             Vector2 globalPosition = LocalToGlobalPosition(v, (Vector2)parent.position);
             return globalPosition;
         }
+
         private int GenerateRandomRootStage()
         {
             return Random.Range(0, stageList.Count);
         }
+
         private SpawnToolkit InitializeNewToolkit()
         {
             return new()
@@ -320,6 +330,7 @@ namespace Flamenccio.Core
                 stageCheck = null
             };
         }
+
         /// <summary>
         /// Returns a random point inside polygon defined by stage. This method should only be used if an item MUST be spawned (e.g. star, hearts).
         /// </summary>
@@ -351,16 +362,19 @@ namespace Flamenccio.Core
             Vector2 randomizedPosition = new(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin);
             return randomizedPosition;
         }
+
         // these two methods exist because I'm stupid and can't remember how to convert
         private Vector2 GlobalToLocalPosition(Vector2 globalPosition, Vector2 origin)
         {
             return globalPosition - origin;
         }
+
         private Vector2 NormalizePosition(Vector2 position)
         {
             Vector2 p = new(Mathf.Floor(position.x) + 0.5f, Mathf.Floor(position.y) + 0.5f);
             return p;
         }
+
         private Vector2 LocalToGlobalPosition(Vector2 localPosition, Vector2 origin)
         {
             return origin + localPosition;

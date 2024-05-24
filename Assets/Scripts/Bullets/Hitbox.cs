@@ -2,28 +2,33 @@ using UnityEngine;
 
 namespace Flamenccio.Attack
 {
+    /// <summary>
+    /// Controls a circular hitbox. It's size, lifetime, and affiliation can be edited. 
+    /// <para>By default, its affiliation is neutral.</para>
+    /// </summary>
     public class Hitbox : BulletControl
     {
-        // this is basically a generic circular static hitbox.
-        // useful attacks that need a instantaneous hitbox (i.e., explosions) 
-        // default attack type is neutral
-        public enum AttackType
+        public enum HitboxAffiliation
         {
             Neutral,
             Player,
             Enemy,
         }
-        [SerializeField] private AttackType type = AttackType.Neutral;
+
+        [SerializeField] private HitboxAffiliation type = HitboxAffiliation.Neutral;
         [SerializeField] private CircleCollider2D circleCollider;
         private float lifetime = 2f / 60f; // how long the hitbox will last. 2/60 second is default.
         private float timer = 0f; // amount of time in seconds this hitbox has been active
 
         /// <summary>
-        /// <para>If lifetime is less than or equal to 0, default lifetime is kept.</para>
-        /// <para>If radius is less than or equal to 0, default radius is kept.</para>
-        /// <para>If damage is less than or equal to 0, default damage is kept.</para>
+        /// Edit the properties of this hitbox.
         /// </summary>
-        public void EditProperties(float lifetime, float radius, int damage, AttackType attackType, KnockbackMultipiers knockback)
+        /// <param name="lifetime">If <= 0, uses default lifetime (2/60th of a second).</param>
+        /// <param name="radius">If <= 0, uses default radius (1 unit).</param>
+        /// <param name="damage">If <= 0, uses default damage (1 damage).</param>
+        /// <param name="attackType">The source of the hitbox.</param>
+        /// <param name="knockback">Power of knockback.</param>
+        public void EditProperties(float lifetime, float radius, int damage, HitboxAffiliation attackType, KnockbackPower knockback)
         {
             type = attackType;
             ChangeAttackType(attackType);
@@ -45,10 +50,19 @@ namespace Flamenccio.Attack
             timer = 0; // reset the timer just in case
             Activate();
         }
-        public void EditProperties(float lifetime, float radius, int damage, AttackType attackType)
+
+        /// <summary>
+        /// Edit the properties of this hitbox using default knockback power.
+        /// </summary>
+        /// <param name="lifetime">If <= 0, uses default lifetime (2/60th of a second).</param>
+        /// <param name="radius">If <= 0, uses default radius (1 unit).</param>
+        /// <param name="damage">If <= 0, uses default damage (1 damage).</param>
+        /// <param name="attackType">The source of the hitbox.</param>
+        public void EditProperties(float lifetime, float radius, int damage, HitboxAffiliation attackType)
         {
             EditProperties(lifetime, radius, damage, attackType, knockbackMultiplier);
         }
+
         protected override void Behavior()
         {
             if (!circleCollider.enabled) return;
@@ -57,34 +71,41 @@ namespace Flamenccio.Attack
             {
                 Destroy(gameObject);
             }
+
             timer += Time.deltaTime;
         }
-        private void ChangeAttackType(AttackType attackType)
+
+        private void ChangeAttackType(HitboxAffiliation attackType)
         {
             switch (attackType)
             {
-                case AttackType.Neutral:
+                case HitboxAffiliation.Neutral:
                     gameObject.tag = "NBullet";
-                    gameObject.layer = LayerMask.NameToLayer("Default"); // TODO temporary
+                    gameObject.layer = LayerMask.NameToLayer("Default"); // TODO temporary layer.
                     break;
-                case AttackType.Enemy:
+
+                case HitboxAffiliation.Enemy:
                     gameObject.tag = "EBullet";
                     gameObject.layer = LayerMask.NameToLayer("Enemies");
                     break;
-                case AttackType.Player:
+
+                case HitboxAffiliation.Player:
                     gameObject.tag = "PBullet";
                     gameObject.layer = LayerMask.NameToLayer("PlayerBullet");
                     break;
             }
         }
+
         protected override void Collide(Collision2D collision)
         {
             // don't do anything on collisions
         }
+
         protected override void Trigger(Collider2D collider)
         {
             // don't do anything on triggers
         }
+
         public void Activate()
         {
             circleCollider.enabled = true;

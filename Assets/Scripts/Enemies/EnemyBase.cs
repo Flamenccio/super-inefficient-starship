@@ -10,6 +10,10 @@ namespace Enemy
     {
         int Tier { get; }
     }
+
+    /// <summary>
+    /// Base class for all enemies.
+    /// </summary>
     public class EnemyBase : Destructables
     {
         [SerializeField] protected int tier;
@@ -35,30 +39,33 @@ namespace Enemy
             rb = gameObject.GetComponent<Rigidbody2D>();
             player = PlayerMotion.Instance.transform;
         }
+
         protected void Awake()
         {
             currentHP = maxHP;
             OnSpawn();
         }
-        protected virtual void OnSpawn()
-        {
 
-        }
         /// <summary>
-        /// The actions that the enemy will perform. This happens under Update()
+        /// Called under Awake().
         /// </summary>
-        protected virtual void Behavior()
-        {
-            // stuff to do
-        }
-        protected virtual void Animation()
-        {
+        protected virtual void OnSpawn() { }
 
-        }
-        protected virtual void Trigger(Collider2D col)
-        {
-            // additional checks for OnTriggerEnter
-        }
+        /// <summary>
+        /// The actions that the enemy will perform. This happens under FixedUpdate() and only when the enemy is active.
+        /// </summary>
+        protected virtual void Behavior() { }
+
+        /// <summary>
+        /// The animations that the enemy will perform. This happens under FixedUpdate() and only when the enemy is active.
+        /// </summary>
+        protected virtual void Animation() { }
+
+        /// <summary>
+        /// The behavior that happens when the the enemy enters a trigger.
+        /// </summary>
+        protected virtual void Trigger(Collider2D col) { }
+
         protected void FixedUpdate()
         {
             if (active)
@@ -76,6 +83,7 @@ namespace Enemy
                 slowUpdateTimer += Time.fixedDeltaTime;
             }
         }
+
         protected void HealthCheck()
         {
             // if the enemy's health reaches 0,
@@ -84,6 +92,7 @@ namespace Enemy
                 Die();
             }
         }
+
         protected virtual void Die()
         {
             for (int i = 0; i < loot; i++)
@@ -95,6 +104,7 @@ namespace Enemy
             GameEventManager.OnEnemyKill(GameEventManager.CreateGameEvent(transform.position));
             Destroy(gameObject); // destroy self
         }
+
         protected void Hurt(int damage)
         {
             currentHP -= damage;
@@ -105,6 +115,7 @@ namespace Enemy
             }
             HealthCheck();
         }
+
         /// <summary>
         /// Called every 0.25 seconds.
         /// </summary>
@@ -112,6 +123,7 @@ namespace Enemy
         {
             active = Vector2.Distance(transform.position, player.position) <= activeRange;
         }
+
         protected void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.CompareTag("PBullet") || collision.gameObject.CompareTag("NBullet"))
@@ -121,10 +133,12 @@ namespace Enemy
 
             Trigger(collision);
         }
+
         protected void DamageFlash()
         {
             StartCoroutine(DamageFlashAnimation());
         }
+
         protected IEnumerator DamageFlashAnimation()
         {
             for (int i = 0; i < 3; i++)
@@ -135,6 +149,7 @@ namespace Enemy
                 yield return new WaitForSeconds(FLASH_DURATION);
             }
         }
+
         protected IEnumerator AttackTelegraph()
         {
             animator.SetBool("attack", true);
