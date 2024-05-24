@@ -229,13 +229,10 @@ namespace Flamenccio.HUD
         }
 
         #region text effects
+        #region entrance effects
         private void FadeIn()
         {
             textObject.alpha += (1f / ENTER_DURATION) * Time.deltaTime;
-        }
-        private void FadeOut()
-        {
-            textObject.alpha -= (1f / EXIT_DURATION) * Time.deltaTime;
         }
         private void ZoomOutEnter()
         {
@@ -257,6 +254,12 @@ namespace Flamenccio.HUD
             float deltaSize = (MIN_FONT_SIZE - TargetFontSize) / ENTER_DURATION;
             textObject.fontSize -= deltaSize * Time.deltaTime;
         }
+        #endregion
+        #region exit effects
+        private void FadeOut()
+        {
+            textObject.alpha -= (1f / EXIT_DURATION) * Time.deltaTime;
+        }
         private void ZoomOutExit()
         {
             float deltaSize = (MIN_FONT_SIZE - TargetFontSize) / ENTER_DURATION;
@@ -267,6 +270,7 @@ namespace Flamenccio.HUD
             float deltaSize = (MIN_FONT_SIZE - TargetFontSize) / ENTER_DURATION;
             textObject.fontSize -= deltaSize * Time.deltaTime;
         }
+        #endregion
         #endregion
     }
 }

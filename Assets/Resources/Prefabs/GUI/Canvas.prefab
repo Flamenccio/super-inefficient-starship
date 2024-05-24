@@ -981,7 +981,6 @@ GameObject:
   - component: {fileID: 3170281523715618984}
   - component: {fileID: 3170281523715618985}
   - component: {fileID: 3170281523715618986}
-  - component: {fileID: 3170281523715618998}
   - component: {fileID: 2880037905118490111}
   - component: {fileID: 5980844017105631493}
   - component: {fileID: 67518169173334557}
@@ -1080,37 +1079,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &3170281523715618998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3170281523715618987}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7003d3795eb2adf4281cfbf527bd5a10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gState: {fileID: 0}
-  scoreDisplay: {fileID: 3170281524601225436}
-  timeDisplay: {fileID: 3170281523992508235}
-  progressDisplay: {fileID: 3170281524794046756}
-  killPointsDisplay: {fileID: 3170281523356285268}
-  killPointBonusDisplay: {fileID: 3170281523774057780}
-  levelDisplay: {fileID: 3170281524314132783}
-  hpDisplay: {fileID: 3170281523893398565}
-  vignette: {fileID: 3170281524575924052}
-  levelUpBackground: {fileID: 3170281524206840538}
-  hurtLines: {fileID: 3170281524669933827}
-  specialChargePrefab: {fileID: 8251036543049618617, guid: 098799065a400534cacc502219242e3f, type: 3}
-  specialChargeUsed: {fileID: 984585435, guid: 8337c218fb298ae479ed2254a3c29a6d, type: 3}
-  specialChargeFilled: {fileID: 466437769, guid: 8337c218fb298ae479ed2254a3c29a6d, type: 3}
-  levelupComponents: {fileID: 3170281523205940189}
-  specialChargeContainer: {fileID: 3170281524768703502}
-  scoreFlyText: {fileID: 70070448150687359, guid: 637f4f8a5688ec44f8d208f1e31a0603, type: 3}
-  crosshairAmmo: {fileID: 3170281524063628758}
-  playerAtt: {fileID: 0}
 --- !u!114 &2880037905118490111
 MonoBehaviour:
   m_ObjectHideFlags: 0
