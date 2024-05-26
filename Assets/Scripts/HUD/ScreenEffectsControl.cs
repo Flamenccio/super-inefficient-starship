@@ -20,6 +20,7 @@ namespace Flamenccio.HUD
 
         private void Start()
         {
+            hurtLines.gameObject.SetActive(false);
             GameEventManager.OnPlayerHit += (_) => DisplayHurtLines();
         }
 

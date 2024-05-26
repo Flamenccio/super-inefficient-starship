@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Flamenccio.Effects.Visual
 {
+    /// <summary>
+    /// Controls visual camera effects like screen shakes.
+    /// <para>Allows other classes to trigger these effects.</para>
+    /// </summary>
     public class CameraEffects : MonoBehaviour
     {
         public static CameraEffects Instance { get; private set; }
@@ -15,6 +19,7 @@ namespace Flamenccio.Effects.Visual
         private float screenShakeTime = 0f; // when this is above 0f, screenshake occurs.
         private float screenShakeMagnitude = 0f;
         private float screenShakeMagnitudeDecay = 0f;
+
         private readonly float[] screenShakeIntesities =
         {
             SCREEN_SHAKE_WEAK,
@@ -30,6 +35,7 @@ namespace Flamenccio.Effects.Visual
             Strong,
             Extreme
         };
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -41,11 +47,13 @@ namespace Flamenccio.Effects.Visual
                 Instance = this;
             }
         }
+
         private void Start()
         {
             GameEventManager.OnEnemyHit += (v) => ScreenShake(ScreenShakeIntensity.Weak, v.EventOrigin);
             GameEventManager.OnEnemyKill += (v) => ScreenShake(ScreenShakeIntensity.Normal, v.EventOrigin);
         }
+
         private void Update()
         {
             if (screenShakeTime > 0f)
@@ -61,6 +69,7 @@ namespace Flamenccio.Effects.Visual
                 screenShakeTime = 0f;
             }
         }
+
         public void ScreenShake(CameraEffects.ScreenShakeIntensity intensity, Vector2 source)
         {
             float distance = Mathf.Abs(Vector2.Distance(source, PlayerMotion.Instance.transform.position));
@@ -70,6 +79,7 @@ namespace Flamenccio.Effects.Visual
             screenShakeMagnitudeDecay = screenShakeMagnitude / SCREEN_SHAKE_DURATION;
             screenShakeTime = SCREEN_SHAKE_DURATION;
         }
+
         public void CutToPosition(Vector3 position)
         {
             Camera.main.transform.position = position;

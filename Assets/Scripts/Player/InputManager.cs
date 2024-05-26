@@ -1,3 +1,4 @@
+using Flamenccio.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,12 +16,15 @@ namespace Flamenccio.Utility
         public float MousePositionDistance { get; private set; }
         private AllAngle aimInput = new();
         private AllAngle moveInput = new();
+
         public enum ControlScheme
         {
             KBM,
             XBOX
         };
+
         public ControlScheme CurrentScheme { get; private set; }
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -32,6 +36,7 @@ namespace Flamenccio.Utility
                 Instance = this;
             }
         }
+
         private void Update()
         {
             if (CurrentScheme == ControlScheme.KBM)
@@ -39,10 +44,12 @@ namespace Flamenccio.Utility
                 MouseAim();
             }
         }
+
         public void OnControlSchemeChange(PlayerInput input)
         {
             UpdateControlScheme(input);
         }
+
         private void UpdateControlScheme(PlayerInput input)
         {
             if (input.currentControlScheme.Equals("XBOX"))
@@ -54,17 +61,22 @@ namespace Flamenccio.Utility
             {
                 CurrentScheme = ControlScheme.KBM;
             }
+
+            //GameEventManager.OnControlSchemeChange(CurrentScheme);
         }
+
         public void OnAim(InputAction.CallbackContext context)
         {
             if (CurrentScheme == ControlScheme.KBM) return;
 
             aimInput.Vector = context.ReadValue<Vector2>();
         }
+
         public void OnMove(InputAction.CallbackContext context)
         {
             moveInput.Vector = context.ReadValue<Vector2>();
         }
+
         private void MouseAim()
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

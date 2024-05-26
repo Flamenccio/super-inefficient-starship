@@ -2,23 +2,27 @@ using System.Collections;
 using UnityEngine;
 using Flamenccio.Utility;
 using Flamenccio.Effects;
+using UnityEngine.InputSystem;
+using System;
 
 namespace Flamenccio.Core
 {
+    /// <summary>
+    /// Controls movement of the camera.
+    /// </summary>
     public class CameraControl : MonoBehaviour
     {
         private Transform playerPosition;
         private InputManager input;
         private Camera cam;
-        // modifies the camera's position from the player's position
-        private Vector2 cameraOffset = Vector2.zero;
+        private Vector2 cameraOffset = Vector2.zero; // modifies the camera's position from the player's position
         private float currentSize = 0.0f;
         private float previousSize = 0.0f;
         private float t = 0;
         private bool interruptAdjustment = false;
         private float cameraMoveSpeed;
+        private Action UpdateCameraPosition;
 
-        // CONSTANTS
         private const float CAMERA_SIZE_CHANGE = 0.5f; // amount to increase size by every time stage is expanded
         private const float CAMERA_MOVE_SPEED_GAMEPAD = 0.03f; // the speed the camera will move to its new location
         private const float CAMERA_MOVE_SPEED_KBM = 0.08f;
@@ -36,6 +40,7 @@ namespace Flamenccio.Core
             currentSize = DEFAULT_SIZE;
             previousSize = DEFAULT_SIZE;
         }
+
         private void Start()
         {
             input = InputManager.Instance;
@@ -43,14 +48,17 @@ namespace Flamenccio.Core
 
             GameEventManager.OnPlayerHit += (_) => HurtZoom();
             GameEventManager.OnLevelUp += (_) => IncreaseCameraSize();
+            GameEventManager.OnControlSchemeChange += (x) => UpdateControlScheme(x);
         }
-        public void FixedUpdate()
+
+        private void FixedUpdate()
         {
             if (input == null) input = InputManager.Instance;
 
             UpdateSize();
             UpdatePosition();
         }
+
         private void UpdateSize()
         {
             float sizeDifference = Mathf.Abs(currentSize - cam.orthographicSize);
@@ -65,26 +73,37 @@ namespace Flamenccio.Core
                 t = 0;
             }
         }
+
         private void UpdatePosition()
         {
-            switch (InputManager.Instance.CurrentScheme)
-            {
-                case InputManager.ControlScheme.KBM:
-                    UpdateCameraPositionKBM();
-                    break;
-                case InputManager.ControlScheme.XBOX:
-                    UpdateCameraPositionGamepad();
-                    break;
-            }
+            // TODO temporary
+            UpdateControlScheme(InputManager.Instance.CurrentScheme);
+            UpdateCameraPosition?.Invoke();
 
             Vector3 cameraNewPosition = new(playerPosition.position.x + cameraOffset.x, playerPosition.position.y + cameraOffset.y, gameObject.transform.position.z);
             gameObject.transform.position = new(Mathf.Lerp(transform.position.x, cameraNewPosition.x, cameraMoveSpeed), Mathf.Lerp(transform.position.y, cameraNewPosition.y, cameraMoveSpeed), cameraNewPosition.z);
         }
+
+        private void UpdateControlScheme(InputManager.ControlScheme scheme)
+        {
+            switch (scheme)
+            {
+                case InputManager.ControlScheme.KBM:
+                    UpdateCameraPosition = UpdateCameraPositionKBM;
+                    break;
+
+                case InputManager.ControlScheme.XBOX:
+                    UpdateCameraPosition = UpdateCameraPositionGamepad;
+                    break;
+            }
+        }
+
         private void UpdateCameraPositionKBM()
         {
             cameraOffset = Vector2.zero;
             cameraMoveSpeed = CAMERA_MOVE_SPEED_KBM;
         }
+
         private void UpdateCameraPositionGamepad()
         {
             cameraMoveSpeed = CAMERA_MOVE_SPEED_GAMEPAD;
@@ -103,6 +122,7 @@ namespace Flamenccio.Core
                 cameraOffset = Vector2.zero;
             }
         }
+
         public void IncreaseCameraSize()
         {
             if (cam.orthographicSize >= MAX_SIZE) return;
@@ -110,10 +130,12 @@ namespace Flamenccio.Core
             previousSize = cam.orthographicSize;
             currentSize = cam.orthographicSize + CAMERA_SIZE_CHANGE;
         }
+
         public void HurtZoom()
         {
             StartCoroutine(HurtZoomAnimation());
         }
+
         private IEnumerator HurtZoomAnimation()
         {
             interruptAdjustment = true;

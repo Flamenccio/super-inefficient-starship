@@ -5,6 +5,9 @@ using Enemy;
 
 namespace Flamenccio.Core
 {
+    /// <summary>
+    /// Manages a list of enemies that are spawned during normal gameplay.
+    /// </summary>
     public class EnemyList : MonoBehaviour
     {
         public int MinimumEnemySpawningLevel { get => MINIMUM_ENEMY_SPAWNING_LEVEL; }
@@ -12,6 +15,7 @@ namespace Flamenccio.Core
         private const int MINIMUM_ENEMY_SPAWNING_LEVEL = 1;
         private List<GameObject> enemyList = new();
         private GameObject[][] enemyListTiered = new GameObject[MAXIMUM_LEVEL][];
+
         private void Start()
         {
             enemyList.AddRange(Resources.LoadAll<GameObject>("Prefabs/Enemies"));
@@ -23,9 +27,11 @@ namespace Flamenccio.Core
 
             SortLists();
         }
+
         public GameObject GetRandomEnemy(int difficulty)
         {
             if (difficulty < MINIMUM_ENEMY_SPAWNING_LEVEL) return null; // don't spawn anything if level isn't high enough
+
             GameObject enemy;
             int tier = UnityEngine.Random.Range(MINIMUM_ENEMY_SPAWNING_LEVEL, difficulty);
 
@@ -41,6 +47,7 @@ namespace Flamenccio.Core
                 return enemy;
             }
         }
+
         private void SortLists()
         {
             foreach (GameObject obj in enemyList)
@@ -58,8 +65,9 @@ namespace Flamenccio.Core
                 enemyListTiered[tier][free] = obj;
             }
         }
+
         /// <summary>
-        /// finds an empty slot in the given variant dimension of a given tier 
+        /// finds an empty slot in the given variant dimension of a given tier
         /// </summary>
         /// <param name="array">the tier </param>
         /// <returns>the index of the free slot; -1 if there are no free slots</returns>
@@ -73,6 +81,7 @@ namespace Flamenccio.Core
             }
             return -1;
         }
+
         public GameObject GetPrefab(int difficulty, int random)
         {
             if (random >= enemyListTiered[difficulty].Length)
@@ -81,6 +90,7 @@ namespace Flamenccio.Core
             }
             return enemyListTiered[difficulty][random];
         }
+
         public int GetTierCount(int tier)
         {
             return FindEmptySlot(enemyListTiered[tier]);

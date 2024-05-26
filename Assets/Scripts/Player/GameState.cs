@@ -9,19 +9,22 @@ using UnityEngine.InputSystem;
 
 namespace Flamenccio.Core
 {
+    /// <summary>
+    /// Keeps track of the current game state and updates other classes accordingly.
+    /// </summary>
     public class GameState : MonoBehaviour
     {
-        // this class coordinates all other management classes
-
         public static bool Paused { get; private set; }
 
         // parameters
         private int progress = 0;
+
         private int difficulty = 0;
         private int waveSpawnAmount = 1;
 
         // constants
         private const float MAX_TIME_INCREASE = 0.5f;
+
         private const float BASE_TIME = 10.0f;
         private const float INCREASE_WALL_FREQUENCY = 0.25f;
         private const float MAX_WALL_FREQUENCY = 1.0f;
@@ -32,12 +35,14 @@ namespace Flamenccio.Core
 
         // timers
         private float maxTime = BASE_TIME;
+
         private float mainTimer = 0.0f;
         private float wallFrequency = 3.0f;
         private float wallTimer = 0.0f;
 
         // other necessary classes
         private Spawner spawnControl;
+
         private GameObject heart;
         [SerializeField] private GoalArrowControl goalArrow;
         [SerializeField] private PlayerAttributes playerAtt;
@@ -53,6 +58,7 @@ namespace Flamenccio.Core
                 return temp / 100f;
             }
         }
+
         public int Level { get => difficulty; }
         public int Progress { get => progress; }
 
@@ -67,22 +73,24 @@ namespace Flamenccio.Core
             GameEventManager.OnPlayerHit += (x) => RemoveLife(Mathf.FloorToInt(x.Value));
             GameEventManager.OnHeartCollect += (x) => ReplenishLife(Mathf.FloorToInt(x.Value));
         }
+
         private void Awake()
         {
             mainTimer = maxTime;
             spawnControl = gameObject.GetComponent<Spawner>();
             Paused = false;
         }
+
         private void Update()
         {
             MainTimer();
             WallTimer();
         }
+
         public void AddPoints(int addPoints)
         {
             playerAtt.AddAmmo(addPoints);
             progress += addPoints;
-            //floatingTextManager.DisplayAmmoText(addPoints);
             FloatingTextManager.Instance.DisplayAmmoText(addPoints);
 
             if (progress >= DifficultyCurve(difficulty + 1)) // level up
@@ -90,6 +98,7 @@ namespace Flamenccio.Core
                 LevelUp();
             }
         }
+
         public void CollectStar(int value)
         {
             int total = Mathf.FloorToInt(playerAtt.KillPoints * playerAtt.KillPointBonus) + value; // calculate total points gained
@@ -100,16 +109,19 @@ namespace Flamenccio.Core
             goalArrow.PointAt(star);
             AddPoints(total); // add points to current points
         }
+
         public void CollectMiniStar(int value)
         {
             ReplenishTimer(0.5f);
             AddKillPoint(value);
             spawnControl.SpawnFlyingStar(PlayerMotion.Instance.PlayerPosition, PlayerMotion.Instance.transform);
         }
+
         public void AddKillPoint(int pt)
         {
             playerAtt.AddKillPoints(pt);
         }
+
         private void LevelUp()
         {
             if (heart != null) Destroy(heart);
@@ -139,6 +151,7 @@ namespace Flamenccio.Core
 
             GameEventManager.OnLevelUp(GameEventManager.CreateGameEvent(difficulty, PlayerMotion.Instance.transform));
         }
+
         /// <summary>
         /// Remove points from player
         /// </summary>
@@ -148,14 +161,17 @@ namespace Flamenccio.Core
         {
             return playerAtt.UseAmmo(points);
         }
+
         public void ReplenishTimer()
         {
             mainTimer = maxTime;
         }
+
         public void ReplenishTimer(float t)
         {
             mainTimer += t;
         }
+
         /// <summary>
         /// Remove life from player
         /// </summary>
@@ -173,6 +189,7 @@ namespace Flamenccio.Core
 
             return true;
         }
+
         public void ReplenishLife(int life)
         {
             if (!playerAtt.ChangeLife(life))
@@ -181,7 +198,6 @@ namespace Flamenccio.Core
                 return;
             }
 
-            //hudControl.DisplayHealthFlyText(life);
             FloatingTextManager.Instance.DisplayHealthText(life);
         }
 
@@ -194,6 +210,7 @@ namespace Flamenccio.Core
         {
             return Mathf.CeilToInt(2 * Mathf.Pow(nextLevel, 11f / 5f));
         }
+
         private void MainTimer()
         {
             if (infiniteTime) return;
@@ -206,6 +223,7 @@ namespace Flamenccio.Core
                 mainTimer = 0.0f;
             }
         }
+
         private void WallTimer()
         {
             if (wallTimer >= wallFrequency)
@@ -221,6 +239,7 @@ namespace Flamenccio.Core
 
             wallTimer += Time.deltaTime;
         }
+
         /// <summary>
         /// spawn a wave of enemies defined by waveSpawnAmount PLUS an amount based on the amount of killPoints obtained
         /// </summary>
@@ -241,18 +260,22 @@ namespace Flamenccio.Core
                 spawnControl.SpawnEnemy(difficulty);
             }
         }
+
         private int EnemyWaveLevel()
         {
             return Mathf.CeilToInt(Mathf.Sqrt(difficulty) / 2f) + 1;
         }
+
         public void GameOver()
         {
             StartCoroutine(Reload());
         }
+
         public void ResetKills()
         {
             playerAtt.UseKillPoints();
         }
+
         private IEnumerator Reload()
         {
             yield return new WaitForSecondsRealtime(0.1f);
@@ -262,6 +285,7 @@ namespace Flamenccio.Core
             SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }
+
         public void OnPause(InputAction.CallbackContext context)
         {
             if (context.performed)

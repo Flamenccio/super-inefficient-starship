@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Flamenccio.Effects.Visual
 {
+    /// <summary>
+    /// A trail effect that appears on the player when they use a dash.
+    /// </summary>
     public class Afterimage : MonoBehaviour
     {
         [SerializeField] private float LIFETIME = 1.0f;

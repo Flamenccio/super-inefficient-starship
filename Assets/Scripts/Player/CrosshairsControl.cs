@@ -4,6 +4,9 @@ using Flamenccio.Effects;
 
 namespace Flamenccio.HUD
 {
+    /// <summary>
+    /// Controls a "cursor" of where the player's attack will go.
+    /// </summary>
     public class CrosshairsControl : MonoBehaviour
     {
         [SerializeField] private Sprite inactiveSprite;
@@ -28,12 +31,14 @@ namespace Flamenccio.HUD
             spriteRen = gameObject.GetComponent<SpriteRenderer>();
             spriteRen.sprite = inactiveSprite;
         }
+
         private void Start()
         {
             player = PlayerMotion.Instance.transform;
             input = InputManager.Instance;
             newDistance = maxDistance;
         }
+
         private void Update()
         {
             Vector2 aimInputVector = input.AimInputVector;
@@ -77,12 +82,14 @@ namespace Flamenccio.HUD
                 transform.position = player.transform.position;
             }
         }
+
         private bool IsInLayerMask(int layer, LayerMask mask) // checks if layer integer value is in a layerMask
         {
             int temp = (1 << layer); // convert the layer integer to a bit map
             if (mask == (temp | mask)) return true; // if the result of (temp | mask) is the same as mask, then we can say that layer is in mask.
             return false;
         }
+
         public void UpdateWeaponRange(float range)
         {
             maxDistance = range;

@@ -3,7 +3,10 @@ using Flamenccio.Effects.Audio;
 
 namespace Flamenccio.HUD
 {
-    public class AimAssistTarget : MonoBehaviour // this script controls the visuals for aim assist
+    /// <summary>
+    /// Controls the visuals for aim assist.
+    /// </summary>
+    public class AimAssistTarget : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
         private Transform target;
@@ -12,6 +15,7 @@ namespace Flamenccio.HUD
         {
             Hide();
         }
+
         private void Update()
         {
             if (target != null)
@@ -25,10 +29,19 @@ namespace Flamenccio.HUD
                 Hide();
             }
         }
+
+        /// <summary>
+        /// Hide the aim assist target.
+        /// </summary>
         public void Hide()
         {
             target = null;
         }
+
+        /// <summary>
+        /// Place the aim assist target on some transform.
+        /// </summary>
+        /// <param name="target">The transform for the aim assist target to follow.</param>
         public void Show(Transform target)
         {
             if (this.target != target)
