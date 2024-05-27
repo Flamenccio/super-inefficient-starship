@@ -67,25 +67,22 @@ namespace Flamenccio.HUD
         private void ChangeTransparency(float distance)
         {
             float scaledDistance = (distance - NEAR_LIMIT) / (FAR_LIMIT - NEAR_LIMIT);
+
             if (distance < NEAR_LIMIT)
             {
                 Hide();
                 return;
             }
+
             if (distance > FAR_LIMIT)
             {
                 Display();
             }
+
             if (distance <= FAR_LIMIT && distance >= NEAR_LIMIT)
             {
                 spriteRen.color = new Color(1f, 1f, 1f, scaledDistance);
             }
-        }
-
-        private IEnumerator Dissappear()
-        {
-            yield return new WaitForSeconds(2f);
-            Hide();
         }
     }
 }

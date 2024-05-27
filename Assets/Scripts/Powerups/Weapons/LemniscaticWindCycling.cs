@@ -6,6 +6,9 @@ using Flamenccio.Effects.Audio;
 
 namespace Flamenccio.Powerup.Weapon
 {
+    /// <summary>
+    /// A special weapon dash attack that replenishes a special charge if at least 3 enemies are hit in a dash.
+    /// </summary>
     public class LemniscaticWindCycling : WeaponSpecial
     {
         [SerializeField] private GameObject shockwaveEffect;
@@ -13,6 +16,7 @@ namespace Flamenccio.Powerup.Weapon
         private bool rechargeUsed = false;
         private const float DURATION = 0.10f;
         private const float SPEED = 50f;
+
         protected override void Startup()
         {
             base.Startup();
@@ -21,6 +25,7 @@ namespace Flamenccio.Powerup.Weapon
             Level = 1;
             Rarity = PowerupRarity.Rare;
         }
+
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             PlayerMotion pm = PlayerMotion.Instance;
@@ -39,6 +44,7 @@ namespace Flamenccio.Powerup.Weapon
             float r = aimAngleDeg * Mathf.Deg2Rad;
             pm.Move(new Vector2(Mathf.Cos(r), Mathf.Sin(r)), SPEED, DURATION);
         }
+
         public override void Run()
         {
             if (!rechargeUsed && attackInstance != null && attackInstance.EnemiesHit >= 3)

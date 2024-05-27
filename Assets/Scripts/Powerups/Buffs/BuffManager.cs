@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Flamenccio.Powerup.Buff
 {
+    /// <summary>
+    /// Manages the player's buffs.
+    /// </summary>
     public class BuffManager : MonoBehaviour
     {
         public List<BuffBase> Buffs { get => buffs; }
@@ -22,6 +25,12 @@ namespace Flamenccio.Powerup.Buff
         }
 
         #region add buff methods
+
+        /// <summary>
+        /// Attempts to add a buff to the buff list given it's Type.
+        /// <para>Will not add anything if the given Type is not valid.</para>
+        /// </summary>
+        /// <param name="buffType">Type of the buff.</param>
         public void AddBuff(Type buffType)
         {
             if (!buffType.IsSubclassOf(typeof(BuffBase))) return;
@@ -41,7 +50,7 @@ namespace Flamenccio.Powerup.Buff
             AddBuff(buffInstance);
         }
 
-        public void AddBuff(BuffBase b)
+        private void AddBuff(BuffBase b)
         {
             int x = FindBuff(b);
 
@@ -67,7 +76,7 @@ namespace Flamenccio.Powerup.Buff
         #endregion
 
         #region remove buff methods
-        public bool RemoveBuff(BuffBase b)
+        private bool RemoveBuff(BuffBase b)
         {
             int x = FindBuff(b);
 
@@ -93,6 +102,11 @@ namespace Flamenccio.Powerup.Buff
             return true;
         }
 
+        /// <summary>
+        /// Attempts to remove a buff of given Type from the buff list.
+        /// </summary>
+        /// <param name="buffType">The Type of the buff.</param>
+        /// <returns>True if successful, false otherwise.</returns>
         public bool RemoveBuff(Type buffType)
         {
             if (!buffType.IsSubclassOf(typeof(BuffBase))) return false;

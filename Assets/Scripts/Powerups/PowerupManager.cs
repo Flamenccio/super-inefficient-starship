@@ -11,8 +11,10 @@ namespace Flamenccio.Powerup
         string Desc { get; }
         int Level { get; }
         PowerupRarity Rarity { get; }
+
         void Run();
     }
+
     public enum PowerupRarity
     {
         Common,
@@ -21,6 +23,9 @@ namespace Flamenccio.Powerup
         Legendary
     };
 
+    /// <summary>
+    /// Interface to both WeaponManager and BuffManager.
+    /// </summary>
     public class PowerupManager : MonoBehaviour
     {
         private WeaponManager weaponManager;
@@ -66,34 +71,42 @@ namespace Flamenccio.Powerup
         }
 
         #region public weapon attack methods
+
         public void MainAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             weaponManager.MainAttackTap(aimAngle, moveAngle, origin);
         }
+
         public void MainAttackHold(float aimAngle, float moveAngle, Vector2 origin)
         {
             weaponManager.MainAttackHold(aimAngle, moveAngle, origin);
         }
+
         public void MainAttackHoldEnter(float aimAngle, float moveAngle, Vector2 origin)
         {
             weaponManager.MainAttackHoldEnter(aimAngle, moveAngle, origin);
         }
+
         public void MainAttackHoldExit(float aimAngle, float moveAngle, Vector2 origin)
         {
             weaponManager.MainAttackHoldExit(aimAngle, moveAngle, origin);
         }
+
         public void SubAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             weaponManager.SubAttackTap(aimAngle, moveAngle, origin);
         }
+
         public void SpecialAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             weaponManager.SpecialAttackTap(aimAngle, moveAngle, origin);
         }
+
         public void DefenseAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             weaponManager.DefenseAttackTap(aimAngle, moveAngle, origin);
         }
-        #endregion
+
+        #endregion public weapon attack methods
     }
 }

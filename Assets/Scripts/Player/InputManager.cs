@@ -1,9 +1,11 @@
-using Flamenccio.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Flamenccio.Utility
 {
+    /// <summary>
+    /// Manages and abstracts the aiming and movement inputs so other classes don't have to worry about differentiating control schemes.
+    /// </summary>
     public class InputManager : MonoBehaviour
     {
         public static InputManager Instance { get; private set; }

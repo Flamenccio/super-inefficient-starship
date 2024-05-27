@@ -5,6 +5,9 @@ using System;
 
 namespace Flamenccio.Powerup.Weapon
 {
+    /// <summary>
+    /// Manages the players current weapons.
+    /// </summary>
     public class WeaponManager : MonoBehaviour
     {
         [SerializeField] private GameObject defaultMainWeapon;
@@ -28,6 +31,7 @@ namespace Flamenccio.Powerup.Weapon
                 return mainAttack.AimAssisted;
             }
         }
+
         public bool SubAttackAimAssisted
         {
             get
@@ -36,6 +40,7 @@ namespace Flamenccio.Powerup.Weapon
                 return subAttack.AimAssisted;
             }
         }
+
         public bool SpecialAttackAimAssisted
         {
             get
@@ -44,6 +49,7 @@ namespace Flamenccio.Powerup.Weapon
                 return specialAttack.AimAssisted;
             }
         }
+
         public bool DefenseAttackAimAssisted
         {
             get
@@ -67,8 +73,10 @@ namespace Flamenccio.Powerup.Weapon
         }
 
         #region attack delegates
+
         // MAIN ATTACK METHODS
         private Action<float, float, Vector2> mainAttackTap;
+
         private Action<float, float, Vector2> mainAttackHold;
         private Action<float, float, Vector2> mainAttackHoldEnter;
         private Action<float, float, Vector2> mainAttackHoldExit;
@@ -83,9 +91,11 @@ namespace Flamenccio.Powerup.Weapon
 
         // DEFENSE ATTACK METHODS
         private Action<float, float, Vector2> defenseAttackTap;
-        #endregion
+
+        #endregion attack delegates
 
         #region weapon adding
+
         private bool AddMain(GameObject main) // replaces main weapon with given one. Returns previous main weapon.
         {
             if (mainAttack != null)
@@ -101,7 +111,7 @@ namespace Flamenccio.Powerup.Weapon
             mainAttackHold = mainAttack.Hold;
             mainAttackHoldEnter = mainAttack.HoldEnter;
             mainAttackHoldExit = mainAttack.HoldExit;
-            
+
             if (crosshairsControl == null)
             {
                 Debug.LogError("Crosshairs not found!");
@@ -113,6 +123,7 @@ namespace Flamenccio.Powerup.Weapon
 
             return true;
         }
+
         private bool AddSub(GameObject sub) // same thing as above
         {
             if (subAttack != null)
@@ -128,6 +139,7 @@ namespace Flamenccio.Powerup.Weapon
 
             return true;
         }
+
         private bool AddSpecial(GameObject special)
         {
             if (specialAttack != null)
@@ -143,6 +155,7 @@ namespace Flamenccio.Powerup.Weapon
 
             return true;
         }
+
         private bool AddDefense(GameObject defense)
         {
             if (defenseAttack != null)
@@ -159,6 +172,11 @@ namespace Flamenccio.Powerup.Weapon
             return true;
         }
 
+        /// <summary>
+        /// Tries to add a weapon to the player with the weapon's game object.
+        /// </summary>
+        /// <param name="weaponObjectPrefab">The game object of the weapon.</param>
+        /// <returns>True if successful, false otherwise.</returns>
         public bool AddWeapon(GameObject weaponObjectPrefab)
         {
             if (weaponObjectPrefab == null) return false;
@@ -189,38 +207,46 @@ namespace Flamenccio.Powerup.Weapon
 
             return false;
         }
-        #endregion
+
+        #endregion weapon adding
 
         #region public weapon attacks
+
         public void MainAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             mainAttackTap?.Invoke(aimAngle, moveAngle, origin);
         }
+
         public void MainAttackHold(float aimAngle, float moveAngle, Vector2 origin)
         {
             mainAttackHold?.Invoke(aimAngle, moveAngle, origin);
         }
+
         public void MainAttackHoldEnter(float aimAngle, float moveAngle, Vector2 origin)
         {
             mainAttackHoldEnter?.Invoke(aimAngle, moveAngle, origin);
         }
+
         public void MainAttackHoldExit(float aimAngle, float moveAngle, Vector2 origin)
         {
             mainAttackHoldExit?.Invoke(aimAngle, moveAngle, origin);
         }
+
         public void SubAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             subAttackTap?.Invoke(aimAngle, moveAngle, origin);
         }
+
         public void SpecialAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             specialAttackTap?.Invoke(aimAngle, moveAngle, origin);
         }
+
         public void DefenseAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             defenseAttackTap?.Invoke(aimAngle, moveAngle, origin);
         }
-        #endregion
 
+        #endregion public weapon attacks
     }
 }

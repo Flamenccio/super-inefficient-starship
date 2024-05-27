@@ -9,10 +9,15 @@ namespace Flamenccio.Powerup.Buff
         Vitality,
         Agility
     };
+
+    /// <summary>
+    /// Base class for all buffs.
+    /// </summary>
     public class BuffBase : IPowerup
     {
         public string Name { get; protected set; }
         public string Desc { get; protected set; }
+
         public int Level
         {
             get => level;
@@ -25,6 +30,7 @@ namespace Flamenccio.Powerup.Buff
                 OnLevelChange(value, copy);
             }
         }
+
         public PowerupRarity Rarity { get; protected set; }
         public List<StatBuff> Buffs { get => buffs; }
         public BuffType Type { get; protected set; }
@@ -39,19 +45,30 @@ namespace Flamenccio.Powerup.Buff
                 affectedAttribute = a;
                 PercentChange = p;
             }
+
             public PlayerAttributes.Attribute affectedAttribute;
+
+            /// <summary>
+            /// Tells how much to change a stat given the buff's level (the int parameter).
+            /// </summary>
             public Func<int, float> PercentChange { get; protected set; }
         }
+
         public enum BuffType
         {
             Unconditional,
             Conditional,
             Event
         };
+
+        /// <summary>
+        /// Called in Update().
+        /// </summary>
         public virtual void Run()
         {
             // this function is meant to be run in Update()
         }
+
         public virtual float GetPercentChangeOf(PlayerAttributes.Attribute a)
         {
             float total = 0f;
@@ -64,6 +81,7 @@ namespace Flamenccio.Powerup.Buff
             }
             return total;
         }
+
         public List<PlayerAttributes.Attribute> GetAffectedAttributes()
         {
             List<PlayerAttributes.Attribute> temp = new();
@@ -73,27 +91,28 @@ namespace Flamenccio.Powerup.Buff
             }
             return temp;
         }
+
         /// <summary>
         /// This method is called <b>before</b> this buff's level changes.
         /// </summary>
         protected virtual void OnLevelChange(int newLevel, int oldLevel)
         {
-
         }
+
         public void LevelUp()
         {
             Level++;
         }
+
         /// <summary>
         /// This method is called when this buff is removed from the buff list.
         /// </summary>
         public virtual void OnDestroy()
         {
-
         }
+
         protected virtual void OnCreate()
         {
-
         }
     }
 }

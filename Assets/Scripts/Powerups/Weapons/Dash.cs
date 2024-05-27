@@ -4,22 +4,26 @@ using Flamenccio.Effects;
 
 namespace Flamenccio.Powerup.Weapon
 {
+    /// <summary>
+    /// Quickly moves player in direction of movement input.
+    /// </summary>
     public class Dash : WeaponDefense
     {
+        [SerializeField] private GameObject afterImage;
+        private float trailTimer = 0f;
         private const float DURATION = 5f / 60f;
         private const float SPEED = 50f;
         private const float TRAIL_FREQUENCY = 1f / 60f;
-        private float trailTimer = 0f;
-        [SerializeField] private GameObject afterImage;
+
         protected override void Startup()
         {
             base.Startup();
             Desc = "[TAP]: Quickly move a set distance in direction you are moving in.";
             Name = "Dash";
-            cooldown = 1.0f;
             cost = 0;
             Rarity = PowerupRarity.Common;
         }
+
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (cooldownTimer < cooldown) return; // don't do anything if on cooldown
@@ -30,6 +34,7 @@ namespace Flamenccio.Powerup.Weapon
             PlayerMotion.Instance.Move(v, SPEED, DURATION);
             cooldownTimer = 0f;
         }
+
         public override void Run()
         {
             base.Run();

@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Flamenccio.Powerup.Weapon
 {
+    /// <summary>
+    /// A sub weapon that launches a grenade that explodes on impact or if it's lifetime reaches 0.
+    /// </summary>
     public class Grenade : WeaponSub
     {
         protected override void Startup()
@@ -10,6 +13,7 @@ namespace Flamenccio.Powerup.Weapon
             Name = "Grenade";
             Desc = "[TAP]: throw a bomb that explodes on contact.\nDamage: high\nCooldown: 3 seconds\nRange: average\nCost: 5";
         }
+
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (cooldownTimer < cooldown) return;

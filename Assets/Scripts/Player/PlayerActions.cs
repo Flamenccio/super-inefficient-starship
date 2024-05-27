@@ -7,19 +7,26 @@ using Flamenccio.Effects;
 
 namespace Flamenccio.Core.Player
 {
+    /// <summary>
+    /// Manages the execution of the player's actions.
+    /// </summary>
     public class PlayerActions : MonoBehaviour
     {
         [SerializeField] private PowerupManager powerManager;
         [SerializeField] private PlayerAttributes playerAtt;
         [SerializeField] private AimAssist aimAssist;
+
         private enum AttackState
         {
             Tap,
             Hold,
         };
+
         private AttackState mainAttackState = AttackState.Tap;
         private Rigidbody2D rb;
-        private AllAngle rotationAngle; // used for rotating player sprite 
+        private AllAngle rotationAngle; // used for rotating player sprite
+        private PlayerMotion playerMotion;
+        private InputManager input;
         private bool mainPressed = false;
         private float mainHold = 0.0f;
         private float acceleration = 1.0f;
@@ -29,8 +36,6 @@ namespace Flamenccio.Core.Player
         private readonly float aimResponsiveness = 0.6f;
         private const float HOLD_THRESHOLD = 0.50f;
         private const float KBM_FIRE_TIMER_MAX = 2.0f;
-        private PlayerMotion playerMotion;
-        private InputManager input;
 
         public Rigidbody2D Rigidbody { get => rb; }
 
@@ -42,24 +47,29 @@ namespace Flamenccio.Core.Player
             deceleration = playerAtt.MoveSpeed / 26f;
             playerMotion = PlayerMotion.Instance;
         }
+
         private void FixedUpdate()
         {
             if (playerMotion == null)
             {
                 playerMotion = PlayerMotion.Instance;
             }
+
             if (!playerMotion.MovementRestricted)
             {
                 Movement();
             }
+
             Aim();
         }
+
         private void Update()
         {
             if (kbmFireTimer > 0f) kbmFireTimer -= Time.deltaTime;
 
             Fire1Hold();
         }
+
         public void OnFire1(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -70,6 +80,7 @@ namespace Flamenccio.Core.Player
 
             mainPressed = context.ReadValueAsButton();
         }
+
         private void AttackWithAimAssist(Action<float, float, Vector2> attack)
         {
             float a;
@@ -86,6 +97,7 @@ namespace Flamenccio.Core.Player
 
             attack(a, input.MoveInputDegrees, transform.position);
         }
+
         private void AttackTap(Action<float, float, Vector2> attack, bool aimAssist)
         {
             if (aimAssist)
@@ -97,6 +109,7 @@ namespace Flamenccio.Core.Player
                 attack(attackAngleDegrees, input.MoveInputDegrees, transform.position);
             }
         }
+
         private void Fire1Hold()
         {
             if (mainPressed)
@@ -107,7 +120,7 @@ namespace Flamenccio.Core.Player
                 {
                     if (mainAttackState == AttackState.Tap)
                     {
-                        powerManager.MainAttackHoldEnter(attackAngleDegrees,input.MoveInputDegrees, transform.position);
+                        powerManager.MainAttackHoldEnter(attackAngleDegrees, input.MoveInputDegrees, transform.position);
                         mainAttackState = AttackState.Hold;
                     }
                     else
@@ -130,6 +143,7 @@ namespace Flamenccio.Core.Player
                 mainHold = 0f;
             }
         }
+
         public void OnDefense(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -137,6 +151,7 @@ namespace Flamenccio.Core.Player
                 AttackTap(powerManager.DefenseAttackTap, powerManager.DefenseAttackAimAssisted);
             }
         }
+
         public void OnSpecial(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -145,6 +160,7 @@ namespace Flamenccio.Core.Player
                 AttackTap(powerManager.SpecialAttackTap, powerManager.SpecialAttackAimAssisted);
             }
         }
+
         public void OnSub(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -153,6 +169,7 @@ namespace Flamenccio.Core.Player
                 AttackTap(powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
             }
         }
+
         private void Movement()
         {
             if (input.MoveInputVector != Vector2.zero) // if the player is providing direcitonal input:
@@ -168,8 +185,10 @@ namespace Flamenccio.Core.Player
                 rb.velocity = new Vector2(rb.velocity.x - (rb.velocity.x * deceleration), rb.velocity.y - (rb.velocity.y * deceleration));
             }
         }
+
         private void Aim()
         {
+            // TODO (minor) make a way so a branch isn't evaluated every frame.
             if (input.CurrentScheme == InputManager.ControlScheme.XBOX)
             {
                 GamepadAim();
@@ -179,6 +198,7 @@ namespace Flamenccio.Core.Player
                 MouseAim();
             }
         }
+
         private void GamepadAim()
         {
             if (input.AimInputVector != Vector2.zero)
@@ -194,6 +214,7 @@ namespace Flamenccio.Core.Player
 
             rb.rotation = Mathf.LerpAngle(rb.rotation, rotationAngle.Degree, aimResponsiveness);
         }
+
         private void MouseAim()
         {
             if (kbmFireTimer > 0f)
@@ -208,10 +229,12 @@ namespace Flamenccio.Core.Player
 
             attackAngleDegrees = input.AimInputDegrees;
         }
+
         public void OnDebug1(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
+                // debug
             }
         }
     }

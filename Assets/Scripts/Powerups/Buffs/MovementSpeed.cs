@@ -1,5 +1,8 @@
 namespace Flamenccio.Powerup.Buff
 {
+    /// <summary>
+    /// Increases movement speed by 10% every level.
+    /// </summary>
     public class MovementSpeed : UnconditionalBuff
     {
         public MovementSpeed()

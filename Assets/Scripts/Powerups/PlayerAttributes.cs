@@ -1,12 +1,14 @@
+using Flamenccio.Powerup.Buff;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using Flamenccio.Powerup.Buff;
-using UnityEditor;
 using System.Linq;
+using UnityEngine;
 
 namespace Flamenccio.Powerup
 {
+    /// <summary>
+    /// Manages all of the players stats (HP, move speed, etc.)
+    /// </summary>
     public class PlayerAttributes : MonoBehaviour
     {
         public int Ammo { get; private set; }
@@ -161,6 +163,10 @@ namespace Flamenccio.Powerup
             return true;
         }
 
+        /// <summary>
+        /// Add some ammo. Caps at maximum ammo.
+        /// </summary>
+        /// <param name="ammo">How much ammo to grant.</param>
         public void AddAmmo(int ammo)
         {
             Ammo += ammo;
@@ -168,11 +174,19 @@ namespace Flamenccio.Powerup
             if (Ammo > MaxAmmo) Ammo = MaxAmmo;
         }
 
+        /// <summary>
+        /// Adds kill points.
+        /// </summary>
+        /// <param name="killPoints">How much kill points to grant.</param>
         public void AddKillPoints(int killPoints)
         {
             KillPoints += killPoints;
         }
 
+        /// <summary>
+        /// Clears all kill points.
+        /// </summary>
+        /// <returns>The number of total kill points cleared.</returns>
         public int UseKillPoints()
         {
             int x = KillPoints;
@@ -180,6 +194,11 @@ namespace Flamenccio.Powerup
             return x;
         }
 
+        /// <summary>
+        /// Changes life by given amount. Cannot go above maximum or below 0.
+        /// </summary>
+        /// <param name="life">How much life to give or take.</param>
+        /// <returns>True if successful, false if HP is capped.</returns>
         public bool ChangeLife(int life)
         {
             if (HP + life > MaxHP) return false;
@@ -235,13 +254,18 @@ namespace Flamenccio.Powerup
         /// <summary>
         /// Restore an attribute's original value if it was temporarily changed.
         /// </summary>
-        /// <param name="a"></param>
+        /// <param name="a">Attribute to restore.</param>
         public void RestoreAttributeChange(Attribute a)
         {
             BuffManager p = gameObject.GetComponent<BuffManager>(); // cheat a little
             RestoreAttributeChange(a, p.Buffs);
         }
 
+        /// <summary>
+        /// Restore an attribute's original value if it was temporarily changed.
+        /// </summary>
+        /// <param name="a">Attribute to restore.</param>
+        /// <param name="b">A buff list to recompile stat bonuses from.</param>
         public void RestoreAttributeChange(Attribute a, List<BuffBase> b)
         {
             int i = (int)a;
@@ -252,24 +276,45 @@ namespace Flamenccio.Powerup
             RecompileBonus(a, b);
         }
 
+        /// <summary>
+        /// Use some special charges. Given value should be positive.
+        /// </summary>
+        /// <param name="amount">Amount to use.</param>
+        /// <returns>True if successful, false if there are not enough special charges.</returns>
         public bool UseCharge(int amount)
         {
+            amount = Mathf.Abs(amount);
+
             if (SpecialCharges < amount) return false;
 
             SpecialCharges -= amount;
             return true;
         }
 
+        /// <summary>
+        /// Replenish some charges. Given value should be positive. Caps at maximum charges.
+        /// </summary>
+        /// <param name="amount">Amount to replenish.</param>
+        /// <returns>True if successful, false if special charge cap is hit.</returns>
         public bool ReplenishCharge(int amount)
         {
+            amount = Mathf.Abs(amount);
+
             if (SpecialCharges + amount > MaxSpecialCharges) return false;
 
             SpecialCharges += amount;
             return true;
         }
 
+        /// <summary>
+        /// Initialize special charges.
+        /// </summary>
+        /// <param name="max">Maximum amount of special charges.</param>
+        /// <param name="cooldown">The time it should take for a special charge to repelnish naturally.</param>
+        /// <returns>Always returns true currently</returns>
         public bool SetCharges(int max, float cooldown)
         {
+            // TODO make false condition.
             MaxSpecialCharges = max;
             SpecialCharges = MaxSpecialCharges;
             SpecialChargeCooldown = cooldown;
@@ -277,18 +322,33 @@ namespace Flamenccio.Powerup
             return true;
         }
 
+        /// <summary>
+        /// Changes maximum amount of special charges.
+        /// </summary>
+        /// <param name="amount">Amount to change by.</param>
         public void AddCharges(int amount)
         {
-            MaxSpecialCharges += amount;
+            // TODO make this safer by checking MaxSpecialCharges.
+
+            //MaxSpecialCharges += amount;
         }
 
+        /// <summary>
+        /// Removes all special charges.
+        /// </summary>
         public void RemoveCharges()
         {
             SetCharges(0, 0);
         }
 
+        /// <summary>
+        /// Get the ammo cost modifier of some attack.
+        /// </summary>
+        /// <param name="attack">Attack to get cost modifier from.</param>
+        /// <returns>The AmmoCostModifier class of the attack.</returns>
         public AmmoCostModifier GetAmmoCostModifier(AmmoUsage attack)
         {
+            // TODO do we really need this?
             return ammoCostModifiers[attack];
         }
 
@@ -313,6 +373,11 @@ namespace Flamenccio.Powerup
             return newModifier;
         }
 
+        /// <summary>
+        /// Attempts to remove an AmmoCostModifier from the list of AmmoCostModifiers.
+        /// </summary>
+        /// <param name="modifier">Modifier to remove.</param>
+        /// <returns>True if successful, false otherwise.</returns>
         public bool RemoveLocalAmmoCostModifier(AmmoCostModifier modifier)
         {
             if (localAmmoCostModifiers.ContainsValue(modifier))

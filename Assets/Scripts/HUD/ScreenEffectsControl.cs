@@ -21,6 +21,7 @@ namespace Flamenccio.HUD
         private void Start()
         {
             hurtLines.gameObject.SetActive(false);
+            vignette.color = new(vignette.color.r, vignette.color.g, vignette.color.b, 0f); // initialize vignette to transparent
             GameEventManager.OnPlayerHit += (_) => DisplayHurtLines();
         }
 

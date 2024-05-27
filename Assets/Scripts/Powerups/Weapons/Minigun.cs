@@ -3,6 +3,9 @@ using Flamenccio.Effects.Audio;
 
 namespace Flamenccio.Powerup.Weapon
 {
+    /// <summary>
+    /// A main weapon that continuously fires a stream of inaccurate bullets on HOLD.
+    /// </summary>
     public class Minigun : WeaponMain
     {
         private readonly float frequency = 4f / 60f;
@@ -20,6 +23,7 @@ namespace Flamenccio.Powerup.Weapon
             cooldown = 0.5f;
             cost = 1;
         }
+
         public override void Hold(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (freqTimer <= 0f)
@@ -44,10 +48,12 @@ namespace Flamenccio.Powerup.Weapon
                 freqTimer -= Time.deltaTime;
             }
         }
+
         public override void HoldEnter(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             playerAtt.TemporaryAttributeChange(PlayerAttributes.Attribute.MoveSpeed, 0.33f);
         }
+
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             playerAtt.RestoreAttributeChange(PlayerAttributes.Attribute.MoveSpeed);

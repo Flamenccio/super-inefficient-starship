@@ -17,14 +17,17 @@ namespace Flamenccio.Effects
         public Transform PlayerTransform { get => transform; }
         public Vector2 PlayerVelocity { get => rb.velocity; }
         [SerializeField] private Rigidbody2D rb;
+
         private enum Restrictions
         {
             Movement,
             Aim,
             Ability
         }
+
         private const float KNOCKBACK_DURATION = 6f / 60f;
         private int playerRestrictions;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -36,6 +39,7 @@ namespace Flamenccio.Effects
                 Instance = this;
             }
         }
+
         /// <summary>
         /// Instantly and instantaneously moves player to given global coordinate.
         /// </summary>
@@ -45,6 +49,7 @@ namespace Flamenccio.Effects
             transform.position = coord;
             CameraEffects.Instance.CutToPosition(new Vector3(coord.x, coord.y, -10));
         }
+
         /// <summary>
         /// Instantly and instantaneously moves player to position relative to some transform.
         /// </summary>
@@ -54,6 +59,7 @@ namespace Flamenccio.Effects
         {
             TeleportTo(offset + (Vector2)origin.position);
         }
+
         /// <summary>
         /// Prevents player from moving via input for some given amount of time. <para>Note that only <b>one</b> restriction may exist at any time; repeatedly restricting the player character will not accumulate restriction time.</para>
         /// </summary>
@@ -64,6 +70,7 @@ namespace Flamenccio.Effects
             StartCoroutine(RestrictPlayer(t, Restrictions.Movement));
             return true;
         }
+
         /// <summary>
         /// Prevents player from taking any actions (e.g. using weapons) for some given amount of time.
         /// </summary>
@@ -74,12 +81,14 @@ namespace Flamenccio.Effects
             StartCoroutine(RestrictPlayer(t, Restrictions.Ability));
             return true;
         }
+
         public bool RestrictAim(float t)
         {
             if (AimRestricted) return false;
             StartCoroutine(RestrictPlayer(t, Restrictions.Aim));
             return true;
         }
+
         private IEnumerator RestrictPlayer(float t, Restrictions restriction)
         {
             int r = (int)restriction;
@@ -87,11 +96,13 @@ namespace Flamenccio.Effects
             yield return new WaitForSeconds(t);
             playerRestrictions &= ~(1 << r); // clear bit
         }
+
         private bool GetRestrictedBit(Restrictions restrictions)
         {
             int x = playerRestrictions | (1 << (int)restrictions);
             return x == playerRestrictions;
         }
+
         /// <summary>
         /// Exert an impulse on the player character.
         /// </summary>
@@ -100,6 +111,7 @@ namespace Flamenccio.Effects
             direction.Normalize();
             rb.AddForce(direction * magnitude, ForceMode2D.Impulse);
         }
+
         /// <summary>
         /// Exert a force on the player character.
         /// </summary>
@@ -108,6 +120,7 @@ namespace Flamenccio.Effects
             direction.Normalize();
             rb.AddForce(direction * magnitude, ForceMode2D.Force);
         }
+
         /// <summary>
         /// Linearly move the player in specified direction, speed, and time.
         /// </summary>
@@ -117,6 +130,7 @@ namespace Flamenccio.Effects
             RestrictMovement(t);
             rb.velocity = direction * speed;
         }
+
         /// <summary>
         /// Shorthand for moving player character with fixed duration.
         /// </summary>
@@ -124,6 +138,7 @@ namespace Flamenccio.Effects
         {
             Move(direction, power, KNOCKBACK_DURATION);
         }
+
         /// <summary>
         /// Allows player to pass through enemies (not bullets!) for specified time.
         /// </summary>
@@ -132,6 +147,7 @@ namespace Flamenccio.Effects
             if (gameObject.layer.Equals(LayerMask.NameToLayer("PlayerIntangible"))) return;
             StartCoroutine(BlinkCoroutine(duration));
         }
+
         private IEnumerator BlinkCoroutine(float t)
         {
             gameObject.layer = LayerMask.NameToLayer("PlayerIntangible");

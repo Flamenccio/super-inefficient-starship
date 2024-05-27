@@ -6,6 +6,9 @@ using Flamenccio.Powerup.Buff;
 
 namespace Flamenccio.Powerup.Weapon
 {
+    /// <summary>
+    /// A main weapon that swings a sword on TAP. Launches a big, slow-moving projectile on HOLD.
+    /// </summary>
     public class RedSword : WeaponMain
     {
         [SerializeField] private GameObject chargeAttack;
@@ -23,6 +26,7 @@ namespace Flamenccio.Powerup.Weapon
             Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;
         }
+
         private void OnEnable()
         {
             powerupManager = GetComponentInParent<PowerupManager>();
@@ -30,20 +34,24 @@ namespace Flamenccio.Powerup.Weapon
             GameEventManager.OnEnemyKill += (_) => IncreaseKill();
             GameEventManager.OnPlayerHit += (_) => ResetKill();
         }
+
         private void OnDestroy()
         {
             powerupManager.RemoveBuff(typeof(RedFrenzy));
             GameEventManager.OnEnemyKill -= (_) => IncreaseKill();
             GameEventManager.OnPlayerHit -= (_) => ResetKill();
         }
+
         private void IncreaseKill()
         {
             kills++;
         }
+
         private void ResetKill()
         {
             kills = 0;
         }
+
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (cooldownTimer < cooldown) return;
@@ -62,6 +70,7 @@ namespace Flamenccio.Powerup.Weapon
             inst.transform.localPosition = new Vector2(SLASH_OFFSET, 0);
             inst.Flipped = flip;
         }
+
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainHoldExit))

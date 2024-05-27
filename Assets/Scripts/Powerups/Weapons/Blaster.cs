@@ -3,18 +3,23 @@ using Flamenccio.Effects.Audio;
 
 namespace Flamenccio.Powerup.Weapon
 {
+    /// <summary>
+    /// Weapons that fires a simple bullet on TAP; fires a piercing bullet on HOLD.
+    /// </summary>
     public class Blaster : WeaponMain
     {
         [SerializeField] private GameObject chargeAttack;
         [SerializeField] private int ChargeCost = 1;
+
         protected override void Startup()
         {
             base.Startup();
             Name = "Blaster";
-            Desc = "[TAP]: Fires a short-ranged bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
+            Desc = "[TAP]: Fires a short-ranged bullet.\n[HOLD]: Fires a piercing bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
             Rarity = PowerupRarity.Common;
             cost = 1;
         }
+
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (cooldownTimer < cooldown) return; // don't do anything if on cooldown
@@ -25,6 +30,7 @@ namespace Flamenccio.Powerup.Weapon
             Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
             cooldownTimer = 0f;
         }
+
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (!consumeAmmo(ChargeCost, PlayerAttributes.AmmoUsage.MainHoldExit)) return;

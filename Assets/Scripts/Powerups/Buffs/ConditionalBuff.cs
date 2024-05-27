@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Flamenccio.Powerup.Buff
 {
+    /// <summary>
+    /// Base class for all conditional buffs.
+    /// </summary>
     public class ConditionalBuff : BuffBase
     {
         protected PlayerAttributes attributes;
@@ -11,8 +14,8 @@ namespace Flamenccio.Powerup.Buff
         public ConditionalBuff()
         {
             Type = BuffType.Conditional;
-            //Level = 0;
         }
+
         protected virtual void Deactivate()
         {
             Level = 0;

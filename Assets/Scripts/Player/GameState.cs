@@ -35,8 +35,7 @@ namespace Flamenccio.Core
 
         // timers
         private float maxTime = BASE_TIME;
-
-        private float mainTimer = 0.0f;
+        private float mainTimer;
         private float wallFrequency = 3.0f;
         private float wallTimer = 0.0f;
 
