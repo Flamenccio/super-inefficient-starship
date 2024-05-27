@@ -49,7 +49,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (!rechargeUsed && attackInstance != null && attackInstance.EnemiesHit >= 3)
             {
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialQue, transform.position);
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialCue, transform.position);
                 rechargeUsed = true;
                 playerAtt.ReplenishCharge(1);
                 EffectManager.Instance.SpawnEffect(EffectManager.Effects.SpecialReplenish, PlayerMotion.Instance.transform);

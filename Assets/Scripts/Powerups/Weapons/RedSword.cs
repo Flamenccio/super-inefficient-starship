@@ -3,6 +3,7 @@ using Flamenccio.Core;
 using Flamenccio.Effects;
 using UnityEngine;
 using Flamenccio.Powerup.Buff;
+using Flamenccio.Effects.Audio;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -64,6 +65,7 @@ namespace Flamenccio.Powerup.Weapon
                 }
             }
 
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerRedSwordSwing, transform.position);
             flip = !flip;
             cooldownTimer = 0f;
             RedSwordAttack inst = Instantiate(mainAttack, PlayerMotion.Instance.transform).GetComponent<RedSwordAttack>();

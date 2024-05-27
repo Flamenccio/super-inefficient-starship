@@ -173,10 +173,24 @@ MonoBehaviour:
       Data3: 1126556827
       Data4: 1323299488
     Path: event:/items/heart-collect
-  <playerSpecialQue>k__BackingField:
+  <playerSpecialCue>k__BackingField:
     Guid:
       Data1: 1404817076
       Data2: 1187353855
       Data3: 136003751
       Data4: -830965190
     Path: event:/player/special-que
+  <playerRedSwordSwing>k__BackingField:
+    Guid:
+      Data1: -572500369
+      Data2: 1125851227
+      Data3: -875927899
+      Data4: -1485341216
+    Path: event:/player/player-red-sword-swing
+  <playerRedSwordCharged>k__BackingField:
+    Guid:
+      Data1: 757128814
+      Data2: 1243459873
+      Data3: 596962971
+      Data4: -1214963727
+    Path: event:/player/player-red-sword-charged
