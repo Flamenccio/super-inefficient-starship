@@ -22,9 +22,7 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (cooldownTimer < cooldown) return; // don't do anything if on cooldown
-
-            if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap)) return; // don't do anything if there is not enough ammo
+            if (!AttackReady()) return;
 
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerShoot, transform.position);
             Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));

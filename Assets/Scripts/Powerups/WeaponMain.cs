@@ -17,6 +17,11 @@ namespace Flamenccio.Powerup.Weapon
             base.Startup();
         }
 
+        protected bool AttackReady()
+        {
+            return cooldownTimer >= Cooldown && consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap);
+        }
+
         public int GetWeaponDamage()
         {
             return mainAttack.GetComponent<BulletControl>().PlayerDamage;

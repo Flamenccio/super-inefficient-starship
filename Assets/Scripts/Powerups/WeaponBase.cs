@@ -10,6 +10,7 @@ namespace Flamenccio.Powerup.Weapon
     {
         public string Name { get; protected set; }
         public string Desc { get; protected set; }
+        public string Flavor { get; protected set; }
         public int Level { get; protected set; }
         public PowerupRarity Rarity { get; protected set; }
         public WeaponType Type { get => weaponType; }
@@ -68,7 +69,7 @@ namespace Flamenccio.Powerup.Weapon
         /// </summary>
         public virtual void Run()
         {
-            if (cooldownTimer < cooldown)
+            if (cooldownTimer < Cooldown)
             {
                 cooldownTimer += Time.deltaTime;
             }

@@ -30,6 +30,7 @@ namespace Enemy
         protected float slowUpdateTimer = 0f;
         protected bool active = true; // is this enemy currently active?
         protected bool telegraphed = false; // so we only play the telegraph animation once
+        protected bool alive = true;
         protected const float FLASH_DURATION = 2f / 60f;
         protected const float ATTACK_TELEGRAPH_DURATION = 12f / 60f;
         protected const float SLOW_UPDATE_FREQUENCY = 0.25f;
@@ -95,6 +96,10 @@ namespace Enemy
 
         protected virtual void Die()
         {
+            if (!alive) return; // ensures this function is only called once per enemy lifetime
+
+            alive = false;
+
             for (int i = 0; i < loot; i++)
             {
                 float randomAngle = UnityEngine.Random.Range(0f, 359f);

@@ -328,9 +328,8 @@ namespace Flamenccio.Powerup
         /// <param name="amount">Amount to change by.</param>
         public void AddCharges(int amount)
         {
-            // TODO make this safer by checking MaxSpecialCharges.
-
-            //MaxSpecialCharges += amount;
+            amount = Mathf.Abs(amount);
+            MaxSpecialCharges += amount;
         }
 
         /// <summary>
@@ -339,17 +338,6 @@ namespace Flamenccio.Powerup
         public void RemoveCharges()
         {
             SetCharges(0, 0);
-        }
-
-        /// <summary>
-        /// Get the ammo cost modifier of some attack.
-        /// </summary>
-        /// <param name="attack">Attack to get cost modifier from.</param>
-        /// <returns>The AmmoCostModifier class of the attack.</returns>
-        public AmmoCostModifier GetAmmoCostModifier(AmmoUsage attack)
-        {
-            // TODO do we really need this?
-            return ammoCostModifiers[attack];
         }
 
         /// <summary>

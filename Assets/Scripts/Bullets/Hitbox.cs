@@ -33,6 +33,7 @@ namespace Flamenccio.Attack
             type = attackType;
             ChangeAttackType(attackType);
             this.knockbackMultiplier = knockback;
+            timer = 0; // reset the timer just in case
 
             if (lifetime > 0)
             {
@@ -47,7 +48,6 @@ namespace Flamenccio.Attack
                 this.playerDamage = damage;
             }
 
-            timer = 0; // reset the timer just in case
             Activate();
         }
 
