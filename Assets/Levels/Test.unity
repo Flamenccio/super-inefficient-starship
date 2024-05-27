@@ -216,17 +216,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3681306556374531351, guid: 0f78bb8f7a614aa4cbe69cfa258c10e5, type: 3}
   m_PrefabInstance: {fileID: 509126464}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &667081393 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3170281523715618998, guid: e05f53193da7a0d4993a4a0edab115ec, type: 3}
-  m_PrefabInstance: {fileID: 3170281523208217095}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7003d3795eb2adf4281cfbf527bd5a10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &692487787 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2152614155733082003, guid: ee1de66a1cf022e478c8da374b09a5bd, type: 3}
@@ -1411,7 +1400,7 @@ PrefabInstance:
     - target: {fileID: 7819916859176104666, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: hudControl
       value: 
-      objectReference: {fileID: 667081393}
+      objectReference: {fileID: 0}
     - target: {fileID: 7819916859176104666, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: infiniteTime
       value: 0
