@@ -311,10 +311,11 @@ namespace Flamenccio.Powerup
         /// </summary>
         /// <param name="max">Maximum amount of special charges.</param>
         /// <param name="cooldown">The time it should take for a special charge to repelnish naturally.</param>
-        /// <returns>Always returns true currently</returns>
+        /// <returns>Returns true if successful; otherwise false.</returns>
         public bool SetCharges(int max, float cooldown)
         {
-            // TODO make false condition.
+            if (max < 0) return false;
+
             MaxSpecialCharges = max;
             SpecialCharges = MaxSpecialCharges;
             SpecialChargeCooldown = cooldown;
@@ -328,7 +329,7 @@ namespace Flamenccio.Powerup
         /// <param name="amount">Amount to change by.</param>
         public void AddCharges(int amount)
         {
-            amount = Mathf.Abs(amount);
+            amount = Mathf.FloorToInt(Mathf.Clamp(amount, 0, 10));
             MaxSpecialCharges += amount;
         }
 

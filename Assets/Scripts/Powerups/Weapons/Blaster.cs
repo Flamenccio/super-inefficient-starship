@@ -17,7 +17,6 @@ namespace Flamenccio.Powerup.Weapon
             Name = "Blaster";
             Desc = "[TAP]: Fires a short-ranged bullet.\n[HOLD]: Fires a piercing bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
             Rarity = PowerupRarity.Common;
-            cost = 1;
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)

@@ -16,12 +16,13 @@ namespace Flamenccio.Powerup.Weapon
         private bool rechargeUsed = false;
         private const float DURATION = 0.10f;
         private const float SPEED = 50f;
+        private const int HIT_STREAK_CONDITION = 3; // number of enemies required to be hit to replenish a special charge.
 
         protected override void Startup()
         {
             base.Startup();
             Name = "Burst";
-            Desc = "[TAP]: Rushes forward, dealing damage to any enemies in your path.\nIf at least 3 enemies are struck in one dash, grants 1 SPECIAL CHARGE.";
+            Desc = $"[TAP]: Rushes forward, dealing damage to any enemies in your path.\nIf at least {HIT_STREAK_CONDITION} enemies are struck in one dash, grants 1 SPECIAL CHARGE.";
             Level = 1;
             Rarity = PowerupRarity.Rare;
         }

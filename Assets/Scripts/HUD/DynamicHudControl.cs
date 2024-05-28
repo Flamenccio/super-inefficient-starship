@@ -26,6 +26,7 @@ namespace Flamenccio.HUD
         private void Awake()
         {
             GameEventManager.OnLevelUp += (x) => DisplayLevelUpText((int)x.Value);
+            levelUpUIComponents.SetActive(false);
         }
 
         private void Update()
