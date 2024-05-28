@@ -99,7 +99,7 @@ namespace Flamenccio.Powerup.Buff
         {
         }
 
-        public void LevelUp()
+        public virtual void LevelUp()
         {
             Level++;
         }

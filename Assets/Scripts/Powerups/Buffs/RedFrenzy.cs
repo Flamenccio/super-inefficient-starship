@@ -18,6 +18,9 @@ namespace Flamenccio.Powerup.Buff
         private float drainTimer = 0f;
         private float drainTime = 1f;
         private AmmoCostModifier localAmmoCostModifier;
+        private const float MIN_AMMO_PERCENTAGE = 0.3f;
+        private const int LOSS_AMMO_DEDUCTION = 10;
+        private const float MOVE_SPEED_BUFF = 0.02f;
 
         public RedFrenzy(PlayerAttributes p, Action<List<PlayerAttributes.Attribute>> a)
         {
@@ -29,8 +32,8 @@ namespace Flamenccio.Powerup.Buff
         protected override void OnCreate()
         {
             Name = "Red Frenzy";
-            Desc = "Defeating enemies grants stacks Red Frenzy.\nEach stack of Red Frenzy removes the cost of using Red Sword and boosts movement speed by 2%.\nYour ammo will drain over time; the rate increases with the number of stacks.\nGetting hit or dropping below 30% ammo removes all stacks.";
-            static float SpeedBuff(int level) => level * 0.02f;
+            Desc = $"Defeating enemies grants stacks Red Frenzy.\nEach stack of Red Frenzy removes the cost of using Red Sword and boosts movement speed by {MOVE_SPEED_BUFF * 100f}%.\nYour ammo will drain over time; the rate increases with the number of stacks.\nGetting hit or dropping below {MIN_AMMO_PERCENTAGE * 100f}% ammo removes all stacks and will cost {LOSS_AMMO_DEDUCTION} ammo.";
+            static float SpeedBuff(int level) => level * MOVE_SPEED_BUFF;
             buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, SpeedBuff));
             GameEventManager.OnPlayerHit += (_) => Deactivate();
             GameEventManager.OnEnemyKill += (_) => LevelUp();
@@ -50,7 +53,7 @@ namespace Flamenccio.Powerup.Buff
 
             float ammoFill = attributes.Ammo / (float)attributes.MaxAmmo;
 
-            if (ammoFill < 0.3f)
+            if (ammoFill < MIN_AMMO_PERCENTAGE)
             {
                 Level = 0;
                 Deactivate();
@@ -106,12 +109,23 @@ namespace Flamenccio.Powerup.Buff
 
         protected override void Deactivate()
         {
+            float ammoFill = (float)attributes.Ammo / attributes.MaxAmmo;
+
+            if (ammoFill >= MIN_AMMO_PERCENTAGE) attributes.UseAmmo(LOSS_AMMO_DEDUCTION);
+
             if (Level > 0)
             {
                 FloatingTextManager.Instance.DisplayText("FRENZY LOST", PlayerMotion.Instance.PlayerPosition, Color.red, 1.0f, 30.0f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.Fade, true);
             }
 
             base.Deactivate();
+        }
+
+        public override void LevelUp()
+        {
+            float ammoFill = (float)attributes.Ammo / attributes.MaxAmmo;
+
+            if (ammoFill > MIN_AMMO_PERCENTAGE) base.LevelUp();
         }
     }
 }
