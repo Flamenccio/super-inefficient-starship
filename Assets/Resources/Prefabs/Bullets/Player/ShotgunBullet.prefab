@@ -115,8 +115,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e6424d3a640686438b73007e1bd010f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 20
-  maxDistance: 4
+  moveSpeed: 60
+  maxDistance: 4.6
   ignoredTags: []
   knockbackMultiplier: 20
   durability: 3
