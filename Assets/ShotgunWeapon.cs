@@ -17,6 +17,7 @@ namespace Flamenccio.Powerup.Weapon
         private const float TACKLE_DURATIION = 0.4f;
         private const float TACKLE_RADIUS = 1.6f;
         [SerializeField] private GameObject playerTackleHitbox;
+        [SerializeField] private GameObject muzzleFlashEffect;
 
         protected override void Startup()
         {
@@ -41,7 +42,7 @@ namespace Flamenccio.Powerup.Weapon
 
             var hitbox = Instantiate(playerTackleHitbox, PlayerMotion.Instance.PlayerTransform).GetComponent<Hitbox>();
             hitbox.EditProperties(TACKLE_DURATIION, TACKLE_RADIUS, 3, Hitbox.HitboxAffiliation.Player);
-            Debug.Log(hitbox);
+            Instantiate(muzzleFlashEffect, transform);
 
             for (int i = 0; i < BLAST_AMOUNT; i++)
             {

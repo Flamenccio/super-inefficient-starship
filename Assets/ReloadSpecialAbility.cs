@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Flamenccio.Powerup.Weapon
 {
+    /// <summary>
+    /// A special ability that instantly converts a portion of collected star shards (mini stars) into useable ammo.
+    /// </summary>
     public class ReloadSpecialAbility : WeaponSpecial
     {
         private readonly float conversionRatio = 0.7f;

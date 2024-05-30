@@ -91,3 +91,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chargedSprite: {fileID: 466437769, guid: 8337c218fb298ae479ed2254a3c29a6d, type: 3}
   usedSprite: {fileID: 984585435, guid: 8337c218fb298ae479ed2254a3c29a6d, type: 3}
+  replenishFlashPrefab: {fileID: 80959869288039154, guid: 02d9b6bf3abf76043a6ff9aaf30e62b9, type: 3}

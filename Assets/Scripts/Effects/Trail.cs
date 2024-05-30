@@ -14,13 +14,19 @@ namespace Flamenccio.Effects.Visual
         protected float lifeTimer = 0f;
         protected float fadeoutSpeed = 1f;
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             float frames = (60f * maxLifetime);
             fadeoutSpeed = 1f / frames;
         }
 
         protected void FixedUpdate()
+        {
+            DeathTimer();
+            Behavior();
+        }
+
+        protected void DeathTimer()
         {
             if (lifeTimer >= maxLifetime)
             {
@@ -34,5 +40,7 @@ namespace Flamenccio.Effects.Visual
                 spriteren.color = new Color(spriteren.color.r, spriteren.color.g, spriteren.color.b, spriteren.color.a - fadeoutSpeed);
             }
         }
+
+        protected virtual void Behavior() { }
     }
 }

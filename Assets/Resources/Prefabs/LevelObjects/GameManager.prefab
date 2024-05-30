@@ -68,6 +68,7 @@ MonoBehaviour:
   starFlyTrailPrefab: {fileID: 3440814663432809180, guid: ff4a57f51b3c5ed4f8fb87d8aa63d054, type: 3}
   enemyMissileTrailPrefab: {fileID: 9090503508299466834, guid: 7197926ff55ef2e4db27daf2209be7f8, type: 3}
   portalTrailPrefab: {fileID: 351731443959008479, guid: 7c70fb6e48ba0eb488d5199bcd031318, type: 3}
+  smokeTrailPrefab: {fileID: 5292002164863773613, guid: f8a7c00e55c62874a8e09dccf62f893d, type: 3}
 --- !u!1 &4731174166187999380
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,7 +119,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goalArrow: {fileID: 0}
-  hudControl: {fileID: 0}
   playerAtt: {fileID: 0}
   infiniteTime: 0
 --- !u!114 &439820155804191655
@@ -152,7 +152,6 @@ MonoBehaviour:
   flyingStarPrefab: {fileID: 7517241255086465919, guid: d74c6b1c137d16d4d9ef3c0dd533e746, type: 3}
   portalPrefab: {fileID: 1252480021022726534, guid: cb59c0f7c82efcd4d94a011df6cf6d46, type: 3}
   stageContainer: {fileID: 4731174166187999380}
-  stageList: []
   stageLayer:
     serializedVersion: 2
     m_Bits: 8

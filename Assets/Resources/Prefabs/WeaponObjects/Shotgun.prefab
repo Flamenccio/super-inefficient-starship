@@ -51,3 +51,4 @@ MonoBehaviour:
   mainAttack: {fileID: 6935910722787141603, guid: f466f050c720526419020135364982b3, type: 3}
   chargedCost: 0
   playerTackleHitbox: {fileID: 1239980288682230593, guid: 31fd51b646f58a44ca3461d195dd0982, type: 3}
+  muzzleFlashEffect: {fileID: 6515043459337164799, guid: c20daed04ac0fcf43ae3f6bc1a1c3be3, type: 3}
