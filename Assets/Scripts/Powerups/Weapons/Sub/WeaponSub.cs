@@ -16,7 +16,6 @@ namespace Flamenccio.Powerup.Weapon
 
         protected override bool AttackReady()
         {
-            //return base.AttackReady() && consumeAmmo(Cost, PlayerAttributes.AmmoUsage.SubTap);
             if (cooldownTimer < Cooldown) return false;
 
             if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap))
