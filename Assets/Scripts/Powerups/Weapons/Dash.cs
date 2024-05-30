@@ -26,8 +26,13 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
+            /*
             if (cooldownTimer < cooldown) return; // don't do anything if on cooldown
             if (!PlayerMotion.Instance.RestrictMovement(DURATION)) return;
+            */
+
+            if (!AttackReady()) return;
+
             float r = Mathf.Deg2Rad * moveAngleDeg;
             Vector2 v = new(Mathf.Cos(r), Mathf.Sin(r));
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerDash, transform.position);
@@ -53,6 +58,11 @@ namespace Flamenccio.Powerup.Weapon
             {
                 trailTimer = 0f;
             }
+        }
+
+        protected override bool AttackReady()
+        {
+            return base.AttackReady() && PlayerMotion.Instance.RestrictMovement(DURATION);
         }
     }
 }

@@ -16,9 +16,7 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (cooldownTimer < cooldown) return;
-
-            if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.SubTap)) return;
+            if (!AttackReady()) return;
 
             Instantiate(mainAttack, transform.position, Quaternion.Euler(0f, 0f, aimAngleDeg));
             cooldownTimer = 0f;

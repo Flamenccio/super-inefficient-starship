@@ -1,3 +1,6 @@
+using Flamenccio.HUD;
+using UnityEngine;
+
 namespace Flamenccio.Powerup.Weapon
 {
     /// <summary>
@@ -9,6 +12,20 @@ namespace Flamenccio.Powerup.Weapon
         {
             base.Startup();
             weaponType = WeaponType.Sub;
+        }
+
+        protected override bool AttackReady()
+        {
+            //return base.AttackReady() && consumeAmmo(Cost, PlayerAttributes.AmmoUsage.SubTap);
+            if (cooldownTimer < Cooldown) return false;
+
+            if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap))
+            {
+                FloatingTextManager.Instance.DisplayText("AMMO LOW", transform.position, Color.yellow, 0.8f, 30f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.ZoomIn, true);
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -55,15 +55,7 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (cooldownTimer < cooldown) return;
-
-            if (!flip)
-            {
-                if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap)) // must check sequentially
-                {
-                    return;
-                }
-            }
+            if (!AttackReady()) return;
 
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerRedSwordSwing, transform.position);
             flip = !flip;

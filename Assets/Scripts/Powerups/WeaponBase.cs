@@ -104,5 +104,13 @@ namespace Flamenccio.Powerup.Weapon
         /// </summary>
         public virtual void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         { }
+
+        /// <summary>
+        /// Is this weapon ready to fire?
+        /// </summary>
+        protected virtual bool AttackReady()
+        {
+            return cooldownTimer >= Cooldown;
+        }
     }
 }

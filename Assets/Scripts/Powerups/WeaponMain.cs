@@ -18,13 +18,13 @@ namespace Flamenccio.Powerup.Weapon
             base.Startup();
         }
 
-        protected bool AttackReady()
+        protected override bool AttackReady()
         {
             if (cooldownTimer < Cooldown) return false;
 
             if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap))
             {
-                FloatingTextManager.Instance.DisplayText("AMMO LOW", transform.position, Color.yellow, 0.8f, 30f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.ZoomIn);
+                FloatingTextManager.Instance.DisplayText("AMMO LOW", transform.position, Color.yellow, 0.8f, 30f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.ZoomIn, true);
                 return false;
             }
 

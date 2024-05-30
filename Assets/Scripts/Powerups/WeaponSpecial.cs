@@ -21,5 +21,10 @@ namespace Flamenccio.Powerup.Weapon
             base.Start();
             playerAtt.SetCharges(maxSpecialCharges, cooldown);
         }
+
+        protected override bool AttackReady()
+        {
+            return playerAtt.UseCharge(Cost);
+        }
     }
 }

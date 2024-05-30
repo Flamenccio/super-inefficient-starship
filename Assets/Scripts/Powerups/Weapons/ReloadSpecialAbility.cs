@@ -23,7 +23,7 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (!playerAtt.UseCharge(Cost)) return;
+            if (!AttackReady()) return;
 
             // TODO make effects
             int total = playerAtt.UseKillPoints();

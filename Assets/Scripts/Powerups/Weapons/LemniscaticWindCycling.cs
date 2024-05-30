@@ -33,7 +33,7 @@ namespace Flamenccio.Powerup.Weapon
 
             if (pm.AimRestricted || pm.MovementRestricted) return;
 
-            if (!playerAtt.UseCharge(cost)) return;
+            if (!AttackReady()) return;
 
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialBurst, transform.position);
             pm.RestrictAim(DURATION);
