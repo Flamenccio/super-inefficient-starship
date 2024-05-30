@@ -194,3 +194,10 @@ MonoBehaviour:
       Data3: 596962971
       Data4: -1214963727
     Path: event:/player/player-red-sword-charged
+  <playerShotgunBlast>k__BackingField:
+    Guid:
+      Data1: 1475268222
+      Data2: 1283655148
+      Data3: 1642948023
+      Data4: -618269668
+    Path: event:/player/player-shotgun

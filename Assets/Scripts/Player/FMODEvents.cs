@@ -20,6 +20,7 @@ namespace Flamenccio.Effects.Audio
         [field: SerializeField] public EventReference playerSpecialCue { get; private set; }
         [field: SerializeField] public EventReference playerRedSwordSwing { get; private set; }
         [field: SerializeField] public EventReference playerRedSwordCharged { get; private set; }
+        [field: SerializeField] public EventReference playerShotgunBlast { get; private set; }
         public static FMODEvents Instance { get; private set; }
         private void Awake()
         {

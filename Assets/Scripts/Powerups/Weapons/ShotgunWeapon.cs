@@ -1,5 +1,6 @@
 using Flamenccio.Attack;
 using Flamenccio.Effects;
+using Flamenccio.Effects.Audio;
 using Flamenccio.Effects.Visual;
 using UnityEngine;
 using static Flamenccio.Attack.BulletControl;
@@ -39,6 +40,7 @@ namespace Flamenccio.Powerup.Weapon
             PlayerMotion.Instance.RestrictMovement(KNOCKBACK_DURATION);
             PlayerMotion.Instance.Shove(opposite, (float)KnockbackPower.Extreme);
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Strong, origin);
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerShotgunBlast, transform.position);
 
             var hitbox = Instantiate(playerTackleHitbox, PlayerMotion.Instance.PlayerTransform).GetComponent<Hitbox>();
             hitbox.EditProperties(TACKLE_DURATIION, TACKLE_RADIUS, 3, Hitbox.HitboxAffiliation.Player);

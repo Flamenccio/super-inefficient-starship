@@ -20,7 +20,7 @@ namespace Flamenccio.HUD
         [SerializeField] private Image specialChargePrefab;
 
         private List<SpecialChargeHUDControl> specialCharges = new();
-        private const float SPECIAL_CHARGE_LOCAL_Y_OFFSET = -140f;
+        private const float SPECIAL_CHARGE_LOCAL_Y_OFFSET = -160f;
         private const float SPECIAL_CHARGE_DISTANCE = 18f;
 
         private void Awake()

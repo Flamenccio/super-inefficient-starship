@@ -33,7 +33,7 @@ namespace Flamenccio.HUD
             if (charged) return;
 
             var t = Instantiate(replenishFlashPrefab, transform.position, Quaternion.identity, transform).GetComponent<Image>();
-            t.transform.localScale *= new Vector2(2f, 4f);
+            t.transform.localScale *= new Vector2(2f, 2f);
             spriteRenderer.sprite = chargedSprite;
             charged = true;
         }

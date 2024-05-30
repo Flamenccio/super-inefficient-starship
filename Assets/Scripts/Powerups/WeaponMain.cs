@@ -1,5 +1,6 @@
 using UnityEngine;
 using Flamenccio.Attack;
+using Flamenccio.HUD;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -19,7 +20,15 @@ namespace Flamenccio.Powerup.Weapon
 
         protected bool AttackReady()
         {
-            return cooldownTimer >= Cooldown && consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap);
+            if (cooldownTimer < Cooldown) return false;
+
+            if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap))
+            {
+                FloatingTextManager.Instance.DisplayText("AMMO LOW", transform.position, Color.yellow, 0.8f, 30f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.ZoomIn);
+                return false;
+            }
+
+            return true;
         }
 
         public int GetWeaponDamage()
