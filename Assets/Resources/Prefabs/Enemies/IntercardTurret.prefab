@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4427057838095959091}
   - component: {fileID: -7040114115003548497}
   - component: {fileID: -2076488070254673411}
+  - component: {fileID: -3647370351860558241}
   m_Layer: 6
   m_Name: IntercardTurret
   m_TagString: Enemy
@@ -123,8 +124,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   spriteRen: {fileID: 4427057838095959089}
-  killEffect: {fileID: 5295943195373725499, guid: c3c38e79a55fecd4e820b845d8bb450a, type: 3}
-  hitEffect: {fileID: 245488470297807647, guid: 4c81216f993a4a6459468c4f226759c2, type: 3}
   animator: {fileID: -2076488070254673411}
   miniStarPrefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
   activeRange: 15
@@ -156,3 +155,24 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!50 &-3647370351860558241
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4427057838095959088}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

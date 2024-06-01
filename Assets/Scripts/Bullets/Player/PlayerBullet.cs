@@ -23,6 +23,7 @@ namespace Flamenccio.Attack.Player
                 "Items",
                 "ItemBox",
                 "PBullet",
+                "Sensor",
             };
         }
 

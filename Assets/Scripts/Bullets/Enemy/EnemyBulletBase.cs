@@ -19,7 +19,8 @@ namespace Flamenccio.Attack.Enemy
                 "Footprint",
                 "Heart",
                 "MiniStar",
-                "Effect"
+                "Effect",
+                "Sensor"
             };
         }
 

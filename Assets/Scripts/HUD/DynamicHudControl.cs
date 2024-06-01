@@ -18,6 +18,7 @@ namespace Flamenccio.HUD
         [SerializeField] private Transform specialChargeContainer;
         [SerializeField] private PlayerAttributes playerAtt;
         [SerializeField] private Image specialChargePrefab;
+        [SerializeField] private GameObject enemyRadarArrow;
 
         private List<SpecialChargeHUDControl> specialCharges = new();
         private const float SPECIAL_CHARGE_LOCAL_Y_OFFSET = -160f;
@@ -45,6 +46,16 @@ namespace Flamenccio.HUD
             levelDisplay.text = level.ToString();
             yield return new WaitForSeconds(1.5f);
             levelUpUIComponents.SetActive(false);
+        }
+
+        public void DisplayBulletRadarArrow(Transform bullet, float minDistanceX, float minDistanceY, float maxDistance)
+        {
+            if (bullet == null) return;
+
+            var instance = Instantiate(enemyRadarArrow, transform).GetComponent<EnemyRadarArrowControl>();
+            instance.Target = bullet;
+            instance.SetRange(minDistanceX, maxDistance, minDistanceY, maxDistance);
+            instance.Ready = true;
         }
 
         #region special charges
