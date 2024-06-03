@@ -12,6 +12,7 @@ namespace Flamenccio.Attack.Player
         [SerializeField] private GameObject explosionEffect;
         [SerializeField] private float explosionRadius;
         [SerializeField] private Animator animator;
+        [SerializeField] private int blastDamage;
 
         private float lifeTimer = 0f;
         private const float MAX_LIFE_TIME = 1.5f;
@@ -53,7 +54,7 @@ namespace Flamenccio.Attack.Player
         private void Detonate()
         {
             cameraEff.ScreenShake(CameraEffects.ScreenShakeIntensity.Extreme, transform.position);
-            Instantiate(hitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, explosionRadius, playerDamage, Hitbox.HitboxAffiliation.Player, knockbackMultiplier);
+            Instantiate(hitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, explosionRadius, blastDamage, Hitbox.HitboxAffiliation.Player, knockbackMultiplier);
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }

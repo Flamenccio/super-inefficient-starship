@@ -244,7 +244,6 @@ namespace Flamenccio.Core
         /// </summary>
         private void SpawnEnemies()
         {
-            Debug.Log(difficulty);
             if (difficulty < MIN_LEVEL_ENEMY_SPAWN) return; // if level is not high enough, don't do anything
 
             int kp = playerAtt.KillPoints;
