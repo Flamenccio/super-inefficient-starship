@@ -49,7 +49,7 @@ namespace Flamenccio.HUD
             {
                 if (IsInLayerMask(circleCast.collider.gameObject.layer, destructableLayers)) // if the targetted gameObject is destructable,
                 {
-                    if (circleCast.collider.gameObject.CompareTag("Enemy")) spriteRen.sprite = lockedonSprite;
+                    if (circleCast.collider.gameObject.CompareTag(TagManager.GetTag(Tag.Enemy))) spriteRen.sprite = lockedonSprite;
                     else spriteRen.sprite = activeSprite; // activate sprite
                 }
                 else

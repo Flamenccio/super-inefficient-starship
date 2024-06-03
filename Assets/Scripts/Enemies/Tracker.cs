@@ -24,6 +24,7 @@ namespace Enemy
 
         // fields
         [SerializeField] private LayerMask wallsLayer;
+
         [SerializeField] private LayerMask wallLayer;
         [SerializeField] private LayerMask invisWallLayer;
         [SerializeField] private LayerMask footprintLayer;
@@ -47,7 +48,7 @@ namespace Enemy
         private const float CHASE_BEHAVIOR_TIMER_MAX = 0.5f;
         private const float PATH_CORRECTION_RANDOMIZER_MIN = 0f; // both in degrees
         private const float PATH_CORRECTION_RANDOMIZER_MAX = 20f;
-        private readonly List<string> playerTrackTags = new() { "Player", "Footprint" };
+        private readonly List<string> playerTrackTags = new() { TagManager.GetTag(Tag.Player), TagManager.GetTag(Tag.PlayerFootprint) };
 
         // necessary classes
         private GameObject target = null; // the current object being followed
@@ -110,11 +111,11 @@ namespace Enemy
 
             target = track;
 
-            if (track.CompareTag("Player"))
+            if (track.CompareTag(TagManager.GetTag(Tag.Player)))
             {
                 ChangeState(EnemyState.Attack);
             }
-            else if (track.CompareTag("Footprint"))
+            else if (track.CompareTag(TagManager.GetTag(Tag.PlayerFootprint)))
             {
                 ChangeState(EnemyState.Chase);
             }
@@ -144,7 +145,7 @@ namespace Enemy
             if (checkTimer > 0f || behaviorState != EnemyState.Chase) return;
 
             checkTimer = CHECK_TIMER_MAX;
-            GameObject playerScan = SearchForGameObjectsWithTag(new() { "Player" }, true, attackRange, playerLayer, invisWallLayer);
+            GameObject playerScan = SearchForGameObjectsWithTag(new() { TagManager.GetTag(Tag.Player) }, true, attackRange, playerLayer, invisWallLayer);
 
             if (playerScan != null)
             {

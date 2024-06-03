@@ -1,6 +1,7 @@
 using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.Effects.Visual;
+using Flamenccio.Utility;
 
 namespace Enemy
 {
@@ -26,7 +27,7 @@ namespace Enemy
 
         protected override void Trigger(Collider2D col)
         {
-            if (col.gameObject.CompareTag("Player"))
+            if (col.gameObject.CompareTag(TagManager.GetTag(Tag.Player)))
             {
                 // destroy this gameObject, but don't drop stars
                 EffectManager.Instance.SpawnEffect(EffectManager.Effects.EnemyKill, transform.position);

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Flamenccio.Effects.Audio;
+using Flamenccio.Utility;
 
 namespace Flamenccio.Item
 {
@@ -35,7 +36,8 @@ namespace Flamenccio.Item
 
         protected override void TriggerEffect(Collider2D collider)
         {
-            if (collider.gameObject.CompareTag("InvisibleWall") || collider.gameObject.CompareTag("PrimaryWall"))
+            if (collider.gameObject.CompareTag(TagManager.GetTag(Tag.InvisibleWall)) 
+                || collider.gameObject.CompareTag(TagManager.GetTag(Tag.PrimaryWall)))
             {
                 rb.velocity = Vector2.zero;
             }
@@ -43,7 +45,8 @@ namespace Flamenccio.Item
 
         protected override void CollisionEffect(Collision2D collision)
         {
-            if (collision.gameObject.CompareTag("InvisibleWall") || collision.gameObject.CompareTag("PrimaryWall"))
+            if (collision.gameObject.CompareTag(TagManager.GetTag(Tag.InvisibleWall))
+                || collision.gameObject.CompareTag(TagManager.GetTag(Tag.PrimaryWall)))
             {
                 rb.velocity = Vector2.zero;
             }

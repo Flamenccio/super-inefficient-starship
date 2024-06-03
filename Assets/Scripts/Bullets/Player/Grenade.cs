@@ -1,4 +1,5 @@
 using Flamenccio.Effects.Visual;
+using Flamenccio.Utility;
 using UnityEngine;
 
 namespace Flamenccio.Attack.Player
@@ -20,7 +21,7 @@ namespace Flamenccio.Attack.Player
         protected override void Startup()
         {
             base.Startup();
-            ignoredTags.Add("EBullet");
+            collisionTags.Remove(TagManager.GetTag(Tag.EnemyBullet));
         }
 
         protected override void Launch()

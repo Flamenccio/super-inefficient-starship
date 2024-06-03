@@ -1,3 +1,4 @@
+using Flamenccio.Utility;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,18 +11,15 @@ namespace Flamenccio.Attack.Enemy
     {
         protected override void Startup()
         {
-            ignoredTags = new List<string>()
+            collisionTags = TagManager.GetTagCollection(new()
             {
-                "EBullet",
-                "Enemy",
-                "Background",
-                "Star",
-                "Footprint",
-                "Heart",
-                "MiniStar",
-                "Effect",
-                "Sensor"
-            };
+                Tag.Wall,
+                Tag.InvisibleWall,
+                Tag.Player,
+                Tag.PlayerBullet,
+                Tag.NeutralBullet,
+                Tag.PrimaryWall,
+            });
         }
 
         protected override void Trigger(Collider2D collider)

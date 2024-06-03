@@ -2,7 +2,8 @@ using System.Collections;
 using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.Core;
-using Flamenccio.Effects; // ALL THE EFFECTS!
+using Flamenccio.Effects;
+using Flamenccio.Utility; // ALL THE EFFECTS!
 
 namespace Enemy
 {
@@ -131,7 +132,8 @@ namespace Enemy
 
         protected void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.CompareTag("PBullet") || collision.gameObject.CompareTag("NBullet"))
+            if (collision.gameObject.CompareTag(TagManager.GetTag(Tag.PlayerBullet))
+                || collision.gameObject.CompareTag(TagManager.GetTag(Tag.NeutralBullet)))
             {
                 Hurt(collision.gameObject.GetComponent<BulletControl>().PlayerDamage);
             }

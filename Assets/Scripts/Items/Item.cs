@@ -1,4 +1,4 @@
-using Flamenccio.Effects.Visual;
+using Flamenccio.Utility;
 using UnityEngine;
 
 namespace Flamenccio.Item
@@ -8,6 +8,7 @@ namespace Flamenccio.Item
     {
         [SerializeField] protected GameObject collectEffect;
         [SerializeField] protected GameObject spawnEffect;
+        protected readonly string PLAYER_TAG = TagManager.GetTag(Tag.Player);
 
         /// <summary>
         /// Any additional effects that the item will do upon spawning.
@@ -43,7 +44,7 @@ namespace Flamenccio.Item
         protected void OnTriggerEnter2D(Collider2D collision)
         {
             TriggerEffect(collision);
-            if (collision.CompareTag("Player"))
+            if (collision.CompareTag(PLAYER_TAG))
             {
                 CollectEffect(collision.transform);
                 if (collectEffect != null)

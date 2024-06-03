@@ -1,5 +1,6 @@
 using UnityEngine;
 using Flamenccio.Effects.Visual;
+using Flamenccio.Utility;
 
 namespace Flamenccio.Attack.Enemy
 {
@@ -13,8 +14,8 @@ namespace Flamenccio.Attack.Enemy
         protected override void Startup()
         {
             base.Startup();
-            ignoredTags.Add("Wall");
-            ignoredTags.Add("Trigger");
+            collisionTags.Remove(TagManager.GetTag(Tag.Wall));
+            collisionTags.Remove(TagManager.GetTag(Tag.Trigger));
         }
 
         protected override void Trigger(Collider2D collider)

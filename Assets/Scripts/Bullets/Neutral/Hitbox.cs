@@ -1,3 +1,4 @@
+using Flamenccio.Utility;
 using UnityEngine;
 
 namespace Flamenccio.Attack
@@ -80,17 +81,17 @@ namespace Flamenccio.Attack
             switch (attackType)
             {
                 case HitboxAffiliation.Neutral:
-                    gameObject.tag = "NBullet";
+                    gameObject.tag = TagManager.GetTag(Tag.NeutralBullet);
                     gameObject.layer = LayerMask.NameToLayer("Default"); // TODO temporary layer.
                     break;
 
                 case HitboxAffiliation.Enemy:
-                    gameObject.tag = "EBullet";
+                    gameObject.tag = TagManager.GetTag(Tag.EnemyBullet);
                     gameObject.layer = LayerMask.NameToLayer("Enemies");
                     break;
 
                 case HitboxAffiliation.Player:
-                    gameObject.tag = "PBullet";
+                    gameObject.tag = TagManager.GetTag(Tag.PlayerBullet);
                     gameObject.layer = LayerMask.NameToLayer("PlayerBullet");
                     break;
             }

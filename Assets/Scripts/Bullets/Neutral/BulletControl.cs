@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Effects.Visual;
+using Flamenccio.Utility;
 
 namespace Flamenccio.Attack
 {
@@ -27,7 +28,7 @@ namespace Flamenccio.Attack
 
         [SerializeField] protected float moveSpeed = 20.0f; // default move speed
         [SerializeField] protected float maxDistance = 1f;
-        [SerializeField] protected List<string> ignoredTags = new();
+        protected List<string> collisionTags = new(); // Any GameObjects with these tags will trigger this bullet.
         [SerializeField] protected KnockbackPower knockbackMultiplier;
         [SerializeField] protected int durability = 1; // number of entities bullet can touch before destroying
         [SerializeField] protected bool rotationIsStatic = true;
@@ -100,15 +101,18 @@ namespace Flamenccio.Attack
         /// </summary>
         protected virtual void Trigger(Collider2D collider)
         {
-            if ((collider.CompareTag("PrimaryWall") || collider.CompareTag("InvisibleWall")) && !canIgnoreStageEdge) durability = 0;
-            else if (!collider.CompareTag("PrimaryWall") && !collider.CompareTag("InvisibleWall")) durability--;
+            string primaryWall = TagManager.GetTag(Tag.PrimaryWall);
+            string invisibleWall = TagManager.GetTag(Tag.InvisibleWall);
+
+            if ((collider.CompareTag(primaryWall) || collider.CompareTag(invisibleWall)) && !canIgnoreStageEdge) durability = 0;
+            else if (!collider.CompareTag(primaryWall) && !collider.CompareTag(invisibleWall)) durability--;
 
             if (durability <= 0) Destroy(this.gameObject);
         }
 
         protected void OnCollisionEnter2D(Collision2D collision)
         {
-            if (!IgnoreTags(collision.gameObject.tag))
+            if (IsCollisionTag(collision.gameObject.tag))
             {
                 Collide(collision);
             }
@@ -116,15 +120,15 @@ namespace Flamenccio.Attack
 
         protected void OnTriggerEnter2D(Collider2D collision)
         {
-            if (!IgnoreTags(collision.gameObject.tag))
+            if (IsCollisionTag(collision.gameObject.tag))
             {
                 Trigger(collision);
             }
         }
 
-        private bool IgnoreTags(string compareTag)
+        private bool IsCollisionTag(string compareTag)
         {
-            return ignoredTags.Contains(compareTag);
+            return collisionTags.Contains(compareTag);
         }
     }
 }

@@ -1,3 +1,4 @@
+using Flamenccio.Utility;
 using UnityEngine;
 
 namespace Flamenccio.HUD
@@ -17,7 +18,7 @@ namespace Flamenccio.HUD
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.CompareTag("Enemy"))
+            if (collision.gameObject.CompareTag(TagManager.GetTag(Tag.Enemy)))
             {
                 CreateNewArrow(collision.transform);
             }

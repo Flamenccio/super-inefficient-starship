@@ -1,4 +1,5 @@
 using Flamenccio.Effects.Visual;
+using Flamenccio.Utility;
 using UnityEngine;
 
 namespace Flamenccio.Attack.Player
@@ -45,7 +46,7 @@ namespace Flamenccio.Attack.Player
 
         protected override void Trigger(Collider2D collider)
         {
-            if (collider.gameObject.CompareTag("EBullet"))
+            if (collider.gameObject.CompareTag(TagManager.GetTag(Tag.EnemyBullet)))
             {
                 EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletParry, transform.position);
             }

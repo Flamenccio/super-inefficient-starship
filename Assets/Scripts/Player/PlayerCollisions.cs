@@ -4,6 +4,9 @@ using Flamenccio.Item;
 using Flamenccio.Attack;
 using Flamenccio.Effects;
 using Flamenccio.LevelObject;
+using Flamenccio.Utility;
+using System;
+using UnityEngine.InputSystem;
 
 namespace Flamenccio.Core.Player
 {
@@ -17,19 +20,22 @@ namespace Flamenccio.Core.Player
 
         public void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.CompareTag("Star"))
+            Func<Tag, string> GetTag = TagManager.GetTag;
+
+            if (collision.CompareTag(GetTag(Tag.Star)))
             {
                 GameEventManager.OnStarCollect(GameEventManager.CreateGameEvent(collision.GetComponent<Star>().Value, collision.transform.position));
                 return;
             }
 
-            if (collision.CompareTag("MiniStar"))
+            if (collision.CompareTag(GetTag(Tag.StarShard)))
             {
                 GameEventManager.OnMiniStarCollect(GameEventManager.CreateGameEvent(collision.GetComponent<MiniStar>().Value, collision.transform.position));
                 return;
             }
 
-            if ((collision.CompareTag("EBullet") || collision.CompareTag("NBullet")) && !invulnerable)
+            if (!invulnerable
+                && (collision.CompareTag(GetTag(Tag.EnemyBullet)) || collision.CompareTag(GetTag(Tag.NeutralBullet))))
             {
                 StartCoroutine(HurtInvuln());
                 BulletControl bullet = collision.GetComponent<BulletControl>();
@@ -39,7 +45,7 @@ namespace Flamenccio.Core.Player
                 return;
             }
 
-            if (collision.CompareTag("Heart"))
+            if (collision.CompareTag(GetTag(Tag.Heart)))
             {
                 GameEventManager.OnHeartCollect(GameEventManager.CreateGameEvent(1f, transform));
             }
@@ -47,7 +53,7 @@ namespace Flamenccio.Core.Player
 
         public void OnTriggerStay2D(Collider2D collision)
         {
-            if (collision.CompareTag("Portal"))
+            if (collision.CompareTag(TagManager.GetTag(Tag.Portal)))
             {
                 Portal p = collision.gameObject.GetComponent<Portal>();
                 Transform d = p.GetDestination();

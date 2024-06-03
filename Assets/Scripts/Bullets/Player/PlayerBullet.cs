@@ -1,5 +1,6 @@
 using UnityEngine;
 using Flamenccio.Effects.Visual;
+using Flamenccio.Utility;
 
 namespace Flamenccio.Attack.Player
 {
@@ -10,26 +11,19 @@ namespace Flamenccio.Attack.Player
     {
         protected override void Startup()
         {
-            ignoredTags = new()
+            collisionTags = TagManager.GetTagCollection(new()
             {
-                "Player",
-                "Star",
-                "Background",
-                "Footprint",
-                "Heart",
-                "MiniStar",
-                "Effect",
-                "PlayerIntangible",
-                "Items",
-                "ItemBox",
-                "PBullet",
-                "Sensor",
-            };
+                Tag.Enemy,
+                Tag.EnemyBullet,
+                Tag.InvisibleWall,
+                Tag.Wall,
+                Tag.PrimaryWall,
+            });
         }
 
         protected override void Trigger(Collider2D collider)
         {
-            if (collider.gameObject.CompareTag("EBullet"))
+            if (collider.gameObject.CompareTag(TagManager.GetTag(Tag.EnemyBullet)))
             {
                 EffectManager.Instance.SpawnEffect(EffectManager.Effects.BulletParry, transform.position);
             }
