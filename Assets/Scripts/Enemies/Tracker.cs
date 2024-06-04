@@ -131,7 +131,7 @@ namespace Enemy
 
         private void ChaseBehavior()
         {
-            if (behaviorTimer > 0f || behaviorState != EnemyState.Chase) return;
+            if (behaviorTimer > 0f || behaviorState != EnemyState.Chase || target == null) return;
 
             ClearPath();
             behaviorTimer = CHASE_BEHAVIOR_TIMER_MAX;
@@ -183,7 +183,7 @@ namespace Enemy
         {
             rb.velocity = Vector2.zero;
 
-            if (behaviorState != EnemyState.Attack) return;
+            if (behaviorState != EnemyState.Attack || target == null) return;
 
             faceDirection.Vector = target.transform.position - transform.position;
             Attack(target.transform.position);
