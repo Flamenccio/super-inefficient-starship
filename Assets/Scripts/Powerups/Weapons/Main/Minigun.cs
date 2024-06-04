@@ -1,5 +1,6 @@
 using UnityEngine;
 using Flamenccio.Effects.Audio;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -8,24 +9,31 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class Minigun : WeaponMain
     {
-        private readonly float frequency = 4f / 60f;
+        private float attackDuration = 0f;
+        private float frequency;
         private float freqTimer = 0f;
         private const int MAX_ROUNDS = 3; // rounds per ammo
         private int rounds = 0;
-        private readonly float[] sprayPattern = { 5.0f, -8.3f, 4.6f, -6.2f, 7.4f, 0f }; // slight inacurracies in degrees
+
+        private const float MIN_DEVIATION = 3.0f; // The minimum deviation of bullet spray.
+        private const float MAX_DEVIATION = 20.0f; // The maximum deviation of bullet spray.
+        private const float MIN_FREQUENCY = 3f / 60f;
+        private const float MAX_FREQUENCY = 7f / 60f;
+        private const float FIRE_TIMER_CAP = 3.0f; // The number of seconds on HOLD where fire frequency is slowest and most innaccurate.
 
         protected override void Startup()
         {
             base.Startup();
             Name = "Minigun";
-            Desc = "[HOLD]: Continuously fires a stream of bullets. Highly inaccurate.\nDamage: low\nRange: below average\nSpeed: fast\nCooldown: very short.";
+            Desc = "[HOLD]: Continuously fires a stream of bullets. As bullets are fired, fire rate slows down and shots grow more innaccurate.\nDamage: low\nRange: below average\nSpeed: fast\nCooldown: very short.";
             Rarity = PowerupRarity.Common;
-            cooldown = 0.5f;
-            cost = 1;
+            frequency = MIN_FREQUENCY;
         }
 
         public override void Hold(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
+            attackDuration += Time.deltaTime;
+
             if (freqTimer <= 0f)
             {
                 if (rounds <= 0)
@@ -39,8 +47,8 @@ namespace Flamenccio.Powerup.Weapon
                 }
 
                 AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerShootMini, transform.position);
-                Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg + sprayPattern[rounds]));
-                freqTimer = frequency;
+                Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg + GetDeviation(attackDuration)));
+                freqTimer = GetFrequency(attackDuration);
                 rounds--;
             }
             else
@@ -56,7 +64,29 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
+            attackDuration = 0f;
             playerAtt.RestoreAttributeChange(PlayerAttributes.Attribute.MoveSpeed);
         }
+
+        private float GetFrequency(float secondsPassed)
+        {
+            secondsPassed = Mathf.Clamp(secondsPassed, 0f, FIRE_TIMER_CAP);
+            float slope = (MAX_FREQUENCY - MIN_FREQUENCY) / FIRE_TIMER_CAP;
+            return slope * secondsPassed + MIN_FREQUENCY;
+        }
+
+        private float GetMaxDeviation(float secondsPassed)
+        {
+            secondsPassed = Mathf.Clamp(secondsPassed, 0f, FIRE_TIMER_CAP);
+            float slope = (MAX_DEVIATION - MIN_DEVIATION) / FIRE_TIMER_CAP;
+            return slope * secondsPassed + MIN_DEVIATION;
+        }
+
+        private float GetDeviation(float secondsPassed)
+        {
+            float maxDeviation = GetMaxDeviation(secondsPassed);
+            return Random.Range(-maxDeviation, maxDeviation);
+        }
+
     }
 }
