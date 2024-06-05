@@ -18,6 +18,7 @@ namespace Flamenccio.Utility
         Effect,
         PlayerIntangible,
         Sensor,
+        Stage,
     }
 
     /// <summary>
@@ -39,29 +40,38 @@ namespace Flamenccio.Utility
             { Layer.Effect, LayerMask.NameToLayer("Effects") },
             { Layer.PlayerIntangible, LayerMask.NameToLayer("PlayerIntangible") },
             { Layer.Sensor, LayerMask.NameToLayer("Sensor") },
+            { Layer.Stage, LayerMask.NameToLayer("Background") },
         };
 
         /// <summary>
         /// Calculates a layer mask from a collection of layers.
         /// </summary>
-        /// <param name="layers"></param>
-        /// <returns></returns>
+        /// <param name="layers">All layers to convert to a list of LayerMasks.</param>
+        /// <returns>A list of LayerMasks.</returns>
         public static LayerMask GetLayerMask(List<Layer> layers)
         {
-            LayerMask mask = new();
+            LayerMask mask = 0;
             layers
                 .ToList()
-                .ForEach(x => mask += Layers[x] << 1);
+                .ForEach(x => mask |= GetLayerMask(x));
 
             return mask;
         }
 
         /// <summary>
-        /// Same as Layers[layer].
+        /// Return's the given layer's corresponding LayerMask.
         /// </summary>
         public static LayerMask GetLayerMask(Layer layer)
         {
-            return Layers[layer];
+            return 1 << (int)Layers[layer];
+        }
+
+        /// <summary>
+        /// Returns the given layer's number. <b>Note: not the same as a LayerMask.</b>
+        /// </summary>
+        public static int GetLayer(Layer layer)
+        {
+            return (int)Layers[layer];
         }
     }
 }

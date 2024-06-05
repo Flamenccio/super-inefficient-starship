@@ -29,12 +29,14 @@ namespace Flamenccio.Core
         private EnemyList enemyList;
 
         // layer masks
-        [SerializeField] private LayerMask stageLayer; // layer of all stages
-        [SerializeField] private LayerMask entityLayers; // layer of all game objects that need their own unique space
-        [SerializeField] private LayerMask wallLayer; // layer of all walls
-        [SerializeField] private LayerMask itemLayer; // layer of all items
+        private LayerMask stageLayer; // layer of all stages
+        private LayerMask entityLayers; // layer of all game objects that need their own unique space
+        private LayerMask wallLayer; // layer of all walls
+        private LayerMask itemLayer; // layer of all items
         [SerializeField] private LayerMask raycastEnterLayer; // layer used for finding point in stage
         [SerializeField] private LayerMask raycastExitLayers; // layer of invisible walls
+
+        [SerializeField] private LayerMask testLayers;
 
         private int stages = 0;
         private int walls = 0;
@@ -61,6 +63,14 @@ namespace Flamenccio.Core
 
         private void Awake()
         {
+            stageLayer = LayerManager.GetLayerMask(Layer.Stage);
+            wallLayer = LayerManager.GetLayerMask(Layer.Wall);
+            itemLayer = LayerManager.GetLayerMask(Layer.Item);
+            entityLayers = LayerManager.GetLayerMask(new List<Layer>{ Layer.Player, Layer.Enemy, Layer.Wall, Layer.PlayerBullet });
+
+            UnityEngine.Debug.Log($"Test layer: {testLayers.value}");
+            UnityEngine.Debug.Log($"My layer: {stageLayer.value}");
+
             stageList.Add(FindObjectOfType<Stage>());
             enemyList = gameObject.GetComponent<EnemyList>();
             stageList.ForEach(s => UnityEngine.Debug.Log(s));
@@ -90,15 +100,24 @@ namespace Flamenccio.Core
                 tk.globalSpawnCoords = GenerateGlobalPositionOnGrid(stageList[tk.root].transform, tk.rootStage);
                 target = Physics2D.OverlapPoint(tk.globalSpawnCoords, wallLayer); // check if a wall is already at that location
 
-                if (target != null) continue;
+                if (target != null)
+                {
+                    continue;
+                }
 
-                target = Physics2D.OverlapCircle(tk.globalSpawnCoords, ENEMY_SPAWN_RADIUS, LayerMask.GetMask("Player")); // check if the player is within the spawn radius (enemySpawnRadius)
+                target = Physics2D.OverlapCircle(tk.globalSpawnCoords, ENEMY_SPAWN_RADIUS, LayerManager.GetLayerMask(Layer.Player)); // check if the player is within the spawn radius (enemySpawnRadius)
 
-                if (target != null) continue;
+                if (target != null)
+                {
+                    continue;
+                }
 
                 target = Physics2D.OverlapPoint(tk.globalSpawnCoords, stageLayer); // check if the point is viable (within the stage)
 
-                if (target == null) continue;
+                if (target == null)
+                {
+                    continue;
+                }
 
                 tk.spawnReady = true;
             }
@@ -342,7 +361,7 @@ namespace Flamenccio.Core
             float xOrigin = root.gameObject.transform.position.x - xBounds - 1; // the raycast should start just outside the stage
             bool turn = false; // false = looking for raycastTestLayer; true = looking for inviswall layer
             List<float> collisions = new(); // x coordinates--y is kept constant
-            root.gameObject.layer = LayerMask.NameToLayer("RaycastTest"); // temporarily change stage layer
+            root.gameObject.layer = LayerManager.GetLayer(Layer.RaycastTest); // temporarily change stage layer
             RaycastHit2D ray;
 
             do
@@ -356,7 +375,7 @@ namespace Flamenccio.Core
                 turn = !turn;
             } while (ray.collider != null);
 
-            root.gameObject.layer = LayerMask.NameToLayer("Background"); // return stage layer
+            root.gameObject.layer = LayerManager.GetLayer(Layer.Stage); // return stage layer
             int pairs = Mathf.FloorToInt(collisions.Count / 2f);
             int pair = Random.Range(0, pairs);
             Vector2 randomizedPosition = new(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), yOrigin);// FIXME causes problems

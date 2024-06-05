@@ -87,12 +87,12 @@ namespace Flamenccio.Attack
 
                 case HitboxAffiliation.Enemy:
                     gameObject.tag = TagManager.GetTag(Tag.EnemyBullet);
-                    gameObject.layer = LayerMask.NameToLayer("Enemies");
+                    gameObject.layer = LayerManager.GetLayer(Layer.Enemy);
                     break;
 
                 case HitboxAffiliation.Player:
                     gameObject.tag = TagManager.GetTag(Tag.PlayerBullet);
-                    gameObject.layer = LayerMask.NameToLayer("PlayerBullet");
+                    gameObject.layer = LayerManager.GetLayer(Layer.PlayerBullet);
                     break;
             }
         }
