@@ -10,7 +10,6 @@ namespace Flamenccio.Core
     /// </summary>
     public class EnemyList : MonoBehaviour
     {
-        public int MinimumEnemySpawningLevel { get => MINIMUM_ENEMY_SPAWNING_LEVEL; }
         private const int MAXIMUM_LEVEL = 20;
         private const int MINIMUM_ENEMY_SPAWNING_LEVEL = 1;
         private List<GameObject> enemyList = new();

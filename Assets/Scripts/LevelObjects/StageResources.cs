@@ -14,6 +14,7 @@ namespace Flamenccio.LevelObject.Stages
         public List<StageVariant.Variants> AllVariants { get; private set; }
         public List<StageVariant> StageVariants { get => stageVariants; }
         private List<StageVariant> stageVariants = new();
+        [SerializeField] private GameObject stagePrefab;
 
         private void Awake()
         {
@@ -70,6 +71,28 @@ namespace Flamenccio.LevelObject.Stages
                 .ForEach(variant => v.Add(variant.Variant));
 
             return v;
+        }
+
+        /// <summary>
+        /// Returns a list of available stage variants that may extend from a root stage in the given direction.
+        /// </summary>
+        public List<StageVariant.Variants> GetAvailableVariantsInDirection(Directions.CardinalValues direction, StageVariant.Variants rootVariant)
+        {
+            List<StageVariant.Variants> blacklisted = new(GetStageVariant(rootVariant).Links.First(v => v.LinkDirection == direction).BlackListedVariants); // copy blacklisted variants of stage link in chosen direction
+
+            return new(GetVariantsExtendableInDirection(Directions.OppositeOf(direction)).Except(blacklisted)); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
+        }
+
+        /// <summary>
+        /// Creates an instance of a stage with the given variant and returns its instance..
+        /// </summary>
+        /// <param name="variant">Variant of new stage.</param>
+        /// <returns>Instance of new stage.</returns>
+        public Stage CreateStage(StageVariant.Variants variant)
+        {
+            var instance = Instantiate(stagePrefab, gameObject.transform).GetComponent<Stage>();
+            instance.UpdateVariant(variant);
+            return instance;
         }
     }
 }

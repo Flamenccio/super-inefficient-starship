@@ -131,4 +131,4 @@ MonoBehaviour:
   invisibleWallPrefab: {fileID: 6579367236385490562, guid: 1a4b4d32993d64140a2b3ce5c8561497, type: 3}
   stageLinkPrefab: {fileID: 5009577540713311329, guid: c890cdc0dbfc2e24ebaade4c94e59f5d, type: 3}
   initialStage: 0
-  resources: {fileID: 0}
+  testObject: {fileID: 6132600950844373334, guid: 0e359aea6b2271347a3bc272aae4b34e, type: 3}

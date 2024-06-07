@@ -28,7 +28,7 @@ namespace Flamenccio.Core
         private const float BASE_TIME = 10.0f;
         private const float INCREASE_WALL_FREQUENCY = 0.25f;
         private const float MAX_WALL_FREQUENCY = 1.0f;
-        private const int MIN_LEVEL_WALL_UPGRADE = 12; // the minimum level required for level 2 walls to start spawning
+        private const int MIN_LEVEL_WALL_UPGRADE = 8; // the minimum level required for level 2 walls to start spawning
         private const float CHANCE_WALL_UPGRADE = 0.5f;
         private const int MIN_LEVEL_ENEMY_SPAWN = 1;
         private const int MIN_LEVEL_PORTAL_SPAWN = 6;
@@ -113,7 +113,7 @@ namespace Flamenccio.Core
         {
             ReplenishTimer(0.5f);
             AddKillPoint(value);
-            spawnControl.SpawnFlyingStar(PlayerMotion.Instance.PlayerPosition, PlayerMotion.Instance.transform);
+            EffectManager.Instance.SpawnCollectedStarShard(PlayerMotion.Instance.PlayerPosition, PlayerMotion.Instance.PlayerTransform);
         }
 
         public void AddKillPoint(int pt)

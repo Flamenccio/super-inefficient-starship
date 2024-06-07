@@ -27,6 +27,7 @@ namespace Flamenccio.Effects.Visual
         [SerializeField] private GameObject enemyKill;
         [SerializeField] private GameObject specialReplenish;
         [SerializeField] private GameObject playerHit;
+        [SerializeField] private GameObject collectedStarShard;
         [SerializeField] private TrailPool trailPool;
 
         private void Awake()
@@ -108,6 +109,11 @@ namespace Flamenccio.Effects.Visual
             Trail t = trailPool.TrailsPool[trail].Get();
             t.transform.position = origin;
             return t;
+        }
+
+        public void SpawnCollectedStarShard(Vector2 origin, Transform target)
+        {
+            Instantiate(collectedStarShard, origin, Quaternion.identity).GetComponent<StarFly>().FlyTo(target);
         }
     }
 }
