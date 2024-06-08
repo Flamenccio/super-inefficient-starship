@@ -25,6 +25,7 @@ namespace Flamenccio.Core
         private const int MAX_PORTAL_SPAWN_ATTEMPTS = 4;
         private const int MAX_ENEMY_SPAWN_ATTEMPTS = 3;
         private const float WALL_SEARCH_RADIUS = 8.0f;
+        private const float ENEMY_SPAWN_RADIUS = 2.0f; // the minimum space required between the player and enemy for it (the enemy) to spawn
 
         private struct SpawnToolkit
         {
@@ -36,9 +37,6 @@ namespace Flamenccio.Core
             public int spawnAttempts;
             public Collider2D stageCheck;
         }
-
-        // constants
-        private const float ENEMY_SPAWN_RADIUS = 2.0f; // the minimum space required between the player and enemy for it (the enemy) to spawn
 
         private void Awake()
         {
@@ -176,7 +174,7 @@ namespace Flamenccio.Core
                 localPosition1 = AlignPosition(stage1.GetLocalPointInStage());
                 localPosition2 = AlignPosition(stage2.GetLocalPointInStage());
 
-                if (Vector2.Distance(localPosition1, localPosition2) >= MIN_PORTAL_DISTANCE) ready = true;
+                if (Vector2.Distance(LocalToGlobalPosition(localPosition1, stage1.transform.position), LocalToGlobalPosition(localPosition2, stage2.transform.position)) >= MIN_PORTAL_DISTANCE) ready = true;
             } while (!ready && spawnAttempts > 0);
 
             if (!ready) return;

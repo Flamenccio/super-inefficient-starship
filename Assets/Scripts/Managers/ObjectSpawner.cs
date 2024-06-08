@@ -38,7 +38,7 @@ namespace Flamenccio.Core
         /// <param name="local2">Local coordinates to place the second portal.</param>
         public void SpawnPortal(Stage stage1, Stage stage2, Vector2 local1, Vector2 local2)
         {
-            if (stage1 == null || stage2 == null || stage1 == stage2) return;
+            if (stage1 == null || stage2 == null || stage1.GetInstanceID() == stage2.GetInstanceID()) return;
 
             var instance1 = Instantiate(portalPrefab, stage1.transform).GetComponent<Portal>();
             var instance2 = Instantiate(portalPrefab, stage2.transform).GetComponent<Portal>();
