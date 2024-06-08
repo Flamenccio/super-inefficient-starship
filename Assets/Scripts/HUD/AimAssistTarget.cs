@@ -47,7 +47,7 @@ namespace Flamenccio.HUD
             if (this.target != target)
             {
                 this.target = target;
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.crosshairsLockon, target.position);
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GetAudioEvent("PlayerLockon"), target.position);
             }
         }
     }

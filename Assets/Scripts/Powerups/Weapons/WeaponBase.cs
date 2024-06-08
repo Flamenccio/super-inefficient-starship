@@ -1,3 +1,5 @@
+using Flamenccio.Effects.Audio;
+using FMODUnity;
 using System;
 using UnityEngine;
 
@@ -17,6 +19,7 @@ namespace Flamenccio.Powerup.Weapon
         public int Cost { get => cost; }
         public float Cooldown { get => cooldown; }
         public bool AimAssisted { get => aimAssisted; } // whether the weapon should aim towards the aim assist target on TAP
+        protected EventReference audioTap; // the sound effect played on TAP.
 
         public enum WeaponType
         {

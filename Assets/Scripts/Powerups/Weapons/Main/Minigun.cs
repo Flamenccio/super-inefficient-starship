@@ -1,6 +1,5 @@
 using UnityEngine;
 using Flamenccio.Effects.Audio;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -28,6 +27,7 @@ namespace Flamenccio.Powerup.Weapon
             Desc = "[HOLD]: Continuously fires a stream of bullets. As bullets are fired, fire rate slows down and shots grow more innaccurate.\nDamage: low\nRange: below average\nSpeed: fast\nCooldown: very short.";
             Rarity = PowerupRarity.Common;
             frequency = MIN_FREQUENCY;
+            audioTap = FMODEvents.Instance.GetAudioEvent("PlayerMainGatlingHold");
         }
 
         public override void Hold(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
@@ -46,7 +46,7 @@ namespace Flamenccio.Powerup.Weapon
                     rounds = MAX_ROUNDS;
                 }
 
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerShootMini, transform.position);
+                AudioManager.Instance.PlayOneShot(audioTap, transform.position);
                 Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg + GetDeviation(attackDuration)));
                 freqTimer = GetFrequency(attackDuration);
                 rounds--;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.HUD;
+using FMODUnity;
 
 namespace Flamenccio.Powerup.Weapon
 {

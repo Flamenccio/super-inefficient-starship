@@ -3,6 +3,7 @@ using Flamenccio.Attack.Player;
 using Flamenccio.Effects;
 using Flamenccio.Effects.Visual;
 using Flamenccio.Effects.Audio;
+using FMODUnity;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -17,6 +18,7 @@ namespace Flamenccio.Powerup.Weapon
         private const float DURATION = 0.10f;
         private const float SPEED = 50f;
         private const int HIT_STREAK_CONDITION = 3; // number of enemies required to be hit to replenish a special charge.
+        private EventReference specialRechargeAudio;
 
         protected override void Startup()
         {
@@ -25,6 +27,8 @@ namespace Flamenccio.Powerup.Weapon
             Desc = $"[TAP]: Rushes forward, dealing damage to any enemies in your path.\nIf at least {HIT_STREAK_CONDITION} enemies are struck in one dash, grants 1 SPECIAL CHARGE.";
             Level = 1;
             Rarity = PowerupRarity.Rare;
+            audioTap = FMODEvents.Instance.GetAudioEvent("PlayerSpecialBurstTap");
+            specialRechargeAudio = FMODEvents.Instance.GetAudioEvent("PlayerSpecialChargeCue");
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
@@ -35,7 +39,7 @@ namespace Flamenccio.Powerup.Weapon
 
             if (!AttackReady()) return;
 
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialBurst, transform.position);
+            AudioManager.Instance.PlayOneShot(audioTap, transform.position);
             pm.RestrictAim(DURATION);
             pm.Blink(DURATION);
             rechargeUsed = false;
@@ -50,7 +54,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (!rechargeUsed && attackInstance != null && attackInstance.EnemiesHit >= 3)
             {
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialCue, transform.position);
+                AudioManager.Instance.PlayOneShot(specialRechargeAudio, transform.position);
                 rechargeUsed = true;
                 playerAtt.ReplenishCharge(1);
                 EffectManager.Instance.SpawnEffect(EffectManager.Effects.SpecialReplenish, PlayerMotion.Instance.transform);

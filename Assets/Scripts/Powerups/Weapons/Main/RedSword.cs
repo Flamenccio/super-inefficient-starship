@@ -26,6 +26,7 @@ namespace Flamenccio.Powerup.Weapon
             Level = 1;
             Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;
+            audioTap = FMODEvents.Instance.GetAudioEvent("PlayerMainRedSwordTap");
         }
 
         private void OnEnable()
@@ -57,7 +58,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (!AttackReady()) return;
 
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerRedSwordSwing, transform.position);
+            AudioManager.Instance.PlayOneShot(audioTap, transform.position);
             flip = !flip;
             cooldownTimer = 0f;
             RedSwordAttack inst = Instantiate(mainAttack, PlayerMotion.Instance.transform).GetComponent<RedSwordAttack>();

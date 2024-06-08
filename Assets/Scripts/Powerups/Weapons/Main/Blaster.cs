@@ -1,5 +1,6 @@
 using UnityEngine;
 using Flamenccio.Effects.Audio;
+using FMODUnity;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -10,6 +11,7 @@ namespace Flamenccio.Powerup.Weapon
     {
         [SerializeField] private GameObject chargeAttack;
         [SerializeField] private int ChargeCost = 1;
+        private EventReference audioHoldExit;
 
         protected override void Startup()
         {
@@ -17,13 +19,15 @@ namespace Flamenccio.Powerup.Weapon
             Name = "Blaster";
             Desc = "[TAP]: Fires a short-ranged bullet.\n[HOLD]: Fires a piercing bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
             Rarity = PowerupRarity.Common;
+            audioTap = FMODEvents.Instance.GetAudioEvent("PlayerMainBlasterTap");
+            audioHoldExit = FMODEvents.Instance.GetAudioEvent("PlayerSpecialBurstTap");
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (!AttackReady()) return;
 
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerShoot, transform.position);
+            AudioManager.Instance.PlayOneShot(audioTap, transform.position);
             Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
             cooldownTimer = 0f;
         }
@@ -32,7 +36,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (!consumeAmmo(ChargeCost, PlayerAttributes.AmmoUsage.MainHoldExit)) return;
 
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialBurst, transform.position);
+            AudioManager.Instance.PlayOneShot(audioHoldExit, transform.position);
             Instantiate(chargeAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
         }
     }

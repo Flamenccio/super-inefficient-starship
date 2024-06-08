@@ -20,22 +20,17 @@ namespace Flamenccio.Powerup.Weapon
             base.Startup();
             Desc = "[TAP]: Quickly move a set distance in direction you are moving in.";
             Name = "Dash";
-            cost = 0;
             Rarity = PowerupRarity.Common;
+            audioTap = FMODEvents.Instance.GetAudioEvent("PlayerDefenseDashTap");
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            /*
-            if (cooldownTimer < cooldown) return; // don't do anything if on cooldown
-            if (!PlayerMotion.Instance.RestrictMovement(DURATION)) return;
-            */
-
             if (!AttackReady()) return;
 
             float r = Mathf.Deg2Rad * moveAngleDeg;
             Vector2 v = new(Mathf.Cos(r), Mathf.Sin(r));
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerDash, transform.position);
+            AudioManager.Instance.PlayOneShot(audioTap, transform.position);
             PlayerMotion.Instance.Move(v, SPEED, DURATION);
             cooldownTimer = 0f;
         }
