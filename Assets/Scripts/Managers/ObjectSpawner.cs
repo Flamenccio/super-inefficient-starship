@@ -1,8 +1,6 @@
 using Flamenccio.LevelObject;
 using Flamenccio.LevelObject.Walls;
 using Flamenccio.LevelObject.Stages;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Flamenccio.Core
@@ -26,6 +24,7 @@ namespace Flamenccio.Core
             WallCount++;
             var instance = Instantiate(wallPrefab, stage).GetComponent<Wall>();
             instance.transform.localPosition = localCoordinates;
+            instance.OnDeath = () => WallCount--;
 
             if (level == 2) instance.Upgrade();
         }

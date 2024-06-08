@@ -3,6 +3,7 @@ using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.Core;
 using Flamenccio.Effects.Audio;
+using System;
 
 namespace Flamenccio.LevelObject.Walls
 {
@@ -11,6 +12,7 @@ namespace Flamenccio.LevelObject.Walls
     /// </summary>
     public class Wall : Destructables
     {
+        public Action OnDeath;
         [Tooltip("Game objects with these tags will destroy this object.")] [SerializeField] private List<string> dangerousTags = new List<string>();
         [SerializeField] private GameObject destroyEffect;
         [SerializeField] private GameObject spawnEffect;
@@ -53,6 +55,7 @@ namespace Flamenccio.LevelObject.Walls
 
         public void Die()
         {
+            OnDeath?.Invoke();
             Instantiate(destroyEffect, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
