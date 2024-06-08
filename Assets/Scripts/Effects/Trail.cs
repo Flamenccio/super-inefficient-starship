@@ -3,6 +3,9 @@ using UnityEngine.Pool;
 
 namespace Flamenccio.Effects.Visual
 {
+    /// <summary>
+    /// Base class for trail effects.
+    /// </summary>
     public class Trail : MonoBehaviour, ITrailPool
     {
         public ObjectPool<Trail> Pool { get; set; }
@@ -11,12 +14,19 @@ namespace Flamenccio.Effects.Visual
         protected float lifeTimer = 0f;
         protected float fadeoutSpeed = 1f;
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             float frames = (60f * maxLifetime);
             fadeoutSpeed = 1f / frames;
         }
+
         protected void FixedUpdate()
+        {
+            DeathTimer();
+            Behavior();
+        }
+
+        protected void DeathTimer()
         {
             if (lifeTimer >= maxLifetime)
             {
@@ -31,5 +41,6 @@ namespace Flamenccio.Effects.Visual
             }
         }
 
+        protected virtual void Behavior() { }
     }
 }

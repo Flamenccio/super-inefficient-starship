@@ -20,6 +20,7 @@ TagManager:
   - NBullet
   - ItemBox
   - Portal
+  - Sensor
   layers:
   - Default
   - TransparentFX
@@ -38,7 +39,7 @@ TagManager:
   - RaycastTest
   - Effects
   - PlayerIntangible
-  - 
+  - Sensor
   - 
   - 
   - 

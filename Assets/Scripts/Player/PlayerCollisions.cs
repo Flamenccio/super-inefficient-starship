@@ -4,9 +4,15 @@ using Flamenccio.Item;
 using Flamenccio.Attack;
 using Flamenccio.Effects;
 using Flamenccio.LevelObject;
+using Flamenccio.Utility;
+using System;
+using UnityEngine.InputSystem;
 
 namespace Flamenccio.Core.Player
 {
+    /// <summary>
+    /// Manages the events that happen when a player collides or triggers another game object.
+    /// </summary>
     public class PlayerCollisions : MonoBehaviour
     {
         private const float HURT_INVULN_DURATION = 10f / 60f;
@@ -14,17 +20,22 @@ namespace Flamenccio.Core.Player
 
         public void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.CompareTag("Star"))
+            Func<Tag, string> GetTag = TagManager.GetTag;
+
+            if (collision.CompareTag(GetTag(Tag.Star)))
             {
                 GameEventManager.OnStarCollect(GameEventManager.CreateGameEvent(collision.GetComponent<Star>().Value, collision.transform.position));
                 return;
             }
-            if (collision.CompareTag("MiniStar"))
+
+            if (collision.CompareTag(GetTag(Tag.StarShard)))
             {
                 GameEventManager.OnMiniStarCollect(GameEventManager.CreateGameEvent(collision.GetComponent<MiniStar>().Value, collision.transform.position));
                 return;
             }
-            if ((collision.CompareTag("EBullet") || collision.CompareTag("NBullet")) && !invulnerable)
+
+            if (!invulnerable
+                && (collision.CompareTag(GetTag(Tag.EnemyBullet)) || collision.CompareTag(GetTag(Tag.NeutralBullet))))
             {
                 StartCoroutine(HurtInvuln());
                 BulletControl bullet = collision.GetComponent<BulletControl>();
@@ -33,14 +44,16 @@ namespace Flamenccio.Core.Player
                 GameEventManager.OnPlayerHit(GameEventManager.CreateGameEvent(bullet.PlayerDamage, transform));
                 return;
             }
-            if (collision.CompareTag("Heart"))
+
+            if (collision.CompareTag(GetTag(Tag.Heart)))
             {
                 GameEventManager.OnHeartCollect(GameEventManager.CreateGameEvent(1f, transform));
             }
         }
+
         public void OnTriggerStay2D(Collider2D collision)
         {
-            if (collision.CompareTag("Portal"))
+            if (collision.CompareTag(TagManager.GetTag(Tag.Portal)))
             {
                 Portal p = collision.gameObject.GetComponent<Portal>();
                 Transform d = p.GetDestination();
@@ -52,12 +65,14 @@ namespace Flamenccio.Core.Player
                 PlayerMotion.Instance.TeleportTo(d.position);
             }
         }
+
         private IEnumerator HurtInvuln()
         {
             invulnerable = true;
             yield return new WaitForSeconds(HURT_INVULN_DURATION);
             invulnerable = false;
         }
+
         /// <summary>
         /// <para>Calculates the knockback that the player takes after being damaged.</para>
         /// <para>Note that only the direction of the velocities are used.</para>
@@ -78,6 +93,13 @@ namespace Flamenccio.Core.Player
 
             return knockback * multiplier;
         }
+
+        /// <summary>
+        /// Only calculate the direction of the velocity.
+        /// </summary>
+        /// <param name="playerVelocity">player's current velocity</param>
+        /// <param name="attackVelocity">the attacker's velocity</param>
+        /// <returns>vector of knockback</returns>
         private Vector2 CalculateKnockbackAngle(Vector2 playerVelocity, Vector2 attackVelocity)
         {
             return CalculateKnockback(playerVelocity, attackVelocity, 1f);

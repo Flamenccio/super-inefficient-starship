@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3078360585847163044}
   - component: {fileID: 6680503774944497188}
   - component: {fileID: 5789922928037647341}
-  m_Layer: 7
+  m_Layer: 12
   m_Name: GrenadeObject
   m_TagString: PBullet
   m_Icon: {fileID: 0}
@@ -52,15 +52,17 @@ MonoBehaviour:
   maxDistance: 50
   ignoredTags: []
   knockbackMultiplier: 25
-  hp: 0
+  durability: 1
   rotationIsStatic: 1
   canIgnoreStageEdge: 0
-  damage: 3
+  playerDamage: 0
+  objectDamage: 0
   rb: {fileID: 51615182096661829}
   hitbox: {fileID: 1239980288682230593, guid: 31fd51b646f58a44ca3461d195dd0982, type: 3}
   explosionEffect: {fileID: 6154679705410808802, guid: 426f4219b3506094a9779eee87067ce1, type: 3}
   explosionRadius: 4
   animator: {fileID: 6680503774944497188}
+  blastDamage: 2
 --- !u!50 &51615182096661829
 Rigidbody2D:
   serializedVersion: 4

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1613613872814323934}
   - component: {fileID: 1613613872814323935}
   - component: {fileID: 1613613872814323928}
-  - component: {fileID: 1613613872814323932}
   - component: {fileID: 6190220621728304489}
   m_Layer: 12
   m_Name: PlayerMini
@@ -125,36 +124,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.2
---- !u!114 &1613613872814323932
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1613613872814323929}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d44c0f016226de4da472681e80278db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 40
-  maxDistance: 10
-  ignoredTags:
-  - PBullet
-  - Star
-  - Heart
-  - Background
-  - Footprint
-  - MiniStar
-  - Effects
-  - PlayerIntangible
-  knockbackMultiplier: 0
-  durability: 1
-  rotationIsStatic: 1
-  canIgnoreStageEdge: 0
-  playerDamage: 1
-  objectDamage: 1
-  rb: {fileID: 1613613872814323935}
 --- !u!114 &6190220621728304489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,10 +138,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 40
   maxDistance: 10
-  ignoredTags: []
   knockbackMultiplier: 0
   durability: 1
-  rotationIsStatic: 1
+  rotationIsStatic: 0
   canIgnoreStageEdge: 0
   playerDamage: 1
   objectDamage: 1

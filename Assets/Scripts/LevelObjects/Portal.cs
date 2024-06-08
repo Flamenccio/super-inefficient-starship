@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Flamenccio.LevelObject
 {
+    /// <summary>
+    /// Controls an object that allows the player to teleport to another associated portal.
+    /// </summary>
     public class Portal : MonoBehaviour
     {
         [SerializeField] private Portal destination;
@@ -16,6 +19,7 @@ namespace Flamenccio.LevelObject
         {
             if (destination != null) effects.Destination = destination.transform;
         }
+
         public bool SetDestination(Portal destination)
         {
             if (destination == null) return false;
@@ -28,12 +32,14 @@ namespace Flamenccio.LevelObject
             effects.Destination = this.destination.transform;
             return true;
         }
+
         public Transform GetDestination()
         {
             if (destination == null) return null;
 
             return destination.transform;
         }
+
         public bool TriggerCooldown()
         {
             if (cooldownTimer > 0f) return false;
@@ -42,10 +48,12 @@ namespace Flamenccio.LevelObject
             destination.ForceTriggerCooldown();
             return true;
         }
+
         public void ForceTriggerCooldown()
         {
             cooldownTimer = COOLDOWN;
         }
+
         private void Update()
         {
             spriteren.color = PortalColor;

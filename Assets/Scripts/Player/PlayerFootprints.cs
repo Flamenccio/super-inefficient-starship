@@ -2,15 +2,34 @@ using UnityEngine;
 
 namespace Flamenccio.Core.Player
 {
+    /// <summary>
+    /// Manages the set of player Footprints.
+    /// </summary>
     public class PlayerFootprints : MonoBehaviour
     {
         [SerializeField] private GameObject footprintPrefab;
-        private const int FOOTPRINT_AMOUNT = 10;
-        private const float STEP_DISTANCE = 2.0f; // the distance needed to travel to leave one footprint
         private Footprint currentFootprint = null;
         private Footprint previousFootprint = null;
+        private const int FOOTPRINT_AMOUNT = 10;
+        private const float STEP_DISTANCE = 2.0f; // the distance needed to travel to leave one footprint
 
         private void Start()
+        {
+            InitializeFootprints();
+        }
+
+        private void Update()
+        {
+            if (Vector2.Distance(transform.position, previousFootprint.transform.position) >= STEP_DISTANCE)
+            {
+                Step();
+            }
+        }
+
+        /// <summary>
+        /// Spawns footprints and links them.
+        /// </summary>
+        private void InitializeFootprints()
         {
             for (int i = 0; i < FOOTPRINT_AMOUNT; i++)
             {
@@ -24,24 +43,26 @@ namespace Flamenccio.Core.Player
 
             currentFootprint = BottomFootprint();
         }
-        private void Update()
+
+        /// <summary>
+        /// Places the oldest footprint on the player's position and makes it the newest footprint.
+        /// </summary>
+        private void Step()
         {
-            if (Vector2.Distance(transform.position, previousFootprint.transform.position) >= STEP_DISTANCE)
-            {
-                Footprint bottomFootprint = currentFootprint.NextFootprint;
+            Footprint bottomFootprint = currentFootprint.NextFootprint;
 
-                currentFootprint.NextFootprint.SetPrev(null);
-                currentFootprint.SetNext(null);
+            currentFootprint.NextFootprint.SetPrev(null);
+            currentFootprint.SetNext(null);
 
-                previousFootprint.SetNext(currentFootprint);
-                currentFootprint.SetPrev(previousFootprint);
+            previousFootprint.SetNext(currentFootprint);
+            currentFootprint.SetPrev(previousFootprint);
 
-                currentFootprint.Place(transform.position);
+            currentFootprint.Place(transform.position);
 
-                previousFootprint = currentFootprint;
-                currentFootprint = bottomFootprint;
-            }
+            previousFootprint = currentFootprint;
+            currentFootprint = bottomFootprint;
         }
+
         /// <summary>
         /// returns the footprint whose previous footprint is null
         /// </summary>

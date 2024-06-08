@@ -7,7 +7,7 @@ namespace Flamenccio.Item
     {
         protected override void TriggerEffect(Collider2D collider)
         {
-            if (collider.CompareTag("Player"))
+            if (collider.CompareTag(PLAYER_TAG))
             {
                 AudioManager.Instance.PlayOneShot(FMODEvents.Instance.heartCollect, transform.position);
             }

@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Flamenccio.Core
 {
+    /// <summary>
+    /// Base class for all objects that can be destroyed.
+    /// </summary>
     public class Destructables : MonoBehaviour
     {
         public int MaxHP { get => maxHP; set => maxHP = value; }

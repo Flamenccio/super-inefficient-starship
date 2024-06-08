@@ -47,13 +47,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 0
-  maxDistance: 1
+  maxDistance: 100
   ignoredTags: []
   knockbackMultiplier: 10
-  hp: 1
+  durability: 100
   rotationIsStatic: 1
-  canIgnoreStageEdge: 0
-  damage: 1
+  canIgnoreStageEdge: 1
+  playerDamage: 1
+  objectDamage: 1
   rb: {fileID: 5867855997567678068}
   type: 0
   circleCollider: {fileID: -4380405137467399319}

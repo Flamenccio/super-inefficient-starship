@@ -11,6 +11,7 @@ namespace Flamenccio.Utility
         private float degree;
         private float radian;
         private Vector2 vector;
+
         public float Degree
         {
             readonly get { return degree; }
@@ -21,6 +22,7 @@ namespace Flamenccio.Utility
                 vector = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
             }
         }
+
         public float Radian
         {
             readonly get { return radian; }
@@ -31,6 +33,7 @@ namespace Flamenccio.Utility
                 vector = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
             }
         }
+
         public Vector2 Vector
         {
             readonly get { return vector; }
@@ -42,6 +45,10 @@ namespace Flamenccio.Utility
             }
         }
     }
+
+    /// <summary>
+    /// Utility class that normalizes directions.
+    /// </summary>
     public class Directions
     {
         public static Dictionary<int, Vector2> DirectionDictionary { get; } = new()
@@ -56,6 +63,7 @@ namespace Flamenccio.Utility
             [7] = new Vector2(-1, 1),
             [8] = new Vector2(1, 0),
         };
+
         public static Vector2[] CardinalVectors { get; } = new Vector2[4]
         {
             new(0,1),
@@ -63,6 +71,7 @@ namespace Flamenccio.Utility
             new(0,-1),
             new(-1,0)
         };
+
         public enum CardinalValues
         {
             North,
@@ -70,10 +79,12 @@ namespace Flamenccio.Utility
             South,
             West
         }
+
         public struct Cardinals
         {
-            CardinalValues direction;
-            Vector2 vector;
+            private CardinalValues direction;
+            private Vector2 vector;
+
             public Vector2 Vector
             {
                 readonly get { return vector; }
@@ -90,6 +101,7 @@ namespace Flamenccio.Utility
                     direction = VectorToDirection(vector);
                 }
             }
+
             public CardinalValues Direction
             {
                 readonly get { return direction; }
@@ -100,6 +112,7 @@ namespace Flamenccio.Utility
                 }
             }
         }
+
         /// <summary>
         /// Converts a Directions enum value to a normalized Vector2. Returns (0, 0) by default.
         /// </summary>
@@ -116,6 +129,7 @@ namespace Flamenccio.Utility
                 _ => Vector2.zero,
             };
         }
+
         /// <summary>
         /// Converts an integer value to a normalized Vector2. Returns (0, 0) by default.
         /// </summary>
@@ -132,22 +146,27 @@ namespace Flamenccio.Utility
                 _ => Vector2.zero,
             };
         }
+
         public static CardinalValues OppositeOf(int dir)
         {
             return (CardinalValues)((dir + 2) % 4);
         }
+
         public static CardinalValues OppositeOf(CardinalValues dir)
         {
             return (CardinalValues)(((int)dir + 2) % 4);
         }
+
         public static CardinalValues IntToDirection(int dir)
         {
             return (CardinalValues)(dir % 4);
         }
+
         public static int DirectionToInt(CardinalValues dir)
         {
             return (int)dir;
         }
+
         /// <summary>
         /// if the given vector is not a cardinal, returns north
         /// </summary>
@@ -163,10 +182,12 @@ namespace Flamenccio.Utility
             }
             return CardinalValues.North;
         }
+
         public static CardinalValues RandomDirection()
         {
             return (CardinalValues)Random.Range(0, System.Enum.GetNames(typeof(Directions.CardinalValues)).Length);
         }
+
         public static bool IsCardinal(Vector2 vector)
         {
             vector.Normalize();

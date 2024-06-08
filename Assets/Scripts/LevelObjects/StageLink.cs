@@ -5,25 +5,32 @@ using System.Linq;
 
 namespace Flamenccio.LevelObject.Stages
 {
+    /// <summary>
+    /// Controls a gameobject that allows stages to connect to each other.
+    /// </summary>
     public class StageLink : MonoBehaviour
     {
         public Stage ParentStage { get { return parentStage; } }
+
         [SerializeField] private List<StageVariant.Variants> blacklistedVariants = new();
         [SerializeField] private LayerMask STAGE_LAYER;
         [SerializeField] private LayerMask STAGE_LINK_LAYER;
-        private const int STAGE_LENGTH = 16; // length (and width) of a stage module. 
+
         private Vector2 OVERLAP_BOX_SIZE = new(STAGE_LENGTH / 2, STAGE_LENGTH / 2); // the size of the overlap box used to scan for nearby stages.
-        private const float NEAR_SEARCH_RADIUS = 2.0f; // radius of circle used to search for nearby links.
         private Stage linkedStage = null;
         private PrimaryWall primaryWall = null;
         private Directions.CardinalValues placement = Directions.CardinalValues.North;
         private Stage parentStage = null;
+
+        private const int STAGE_LENGTH = 16; // length (and width) of a stage module.
+        private const float NEAR_SEARCH_RADIUS = 2.0f; // radius of circle used to search for nearby links.
 
         private void Awake()
         {
             parentStage = gameObject.GetComponentInParent<Stage>();
             primaryWall = gameObject.GetComponent<PrimaryWall>();
         }
+
         public bool IsValidVariant(StageVariant.Variants variant)
         {
             foreach (StageVariant.Variants v in blacklistedVariants)
@@ -32,25 +39,35 @@ namespace Flamenccio.LevelObject.Stages
             }
             return true;
         }
+
+        /// <summary>
+        /// Link this stage link to the given stage.
+        /// <para>Fails when: given stage is null, this link is already occupied, or the given stage is an blacklisted variant.</para>
+        /// </summary>
+        /// <returns>True if successful, false if unsuccessful.</returns>
         public bool PopulateLink(Stage stage)
         {
             if (stage == null)
             {
                 return false;
             }
+
             if (linkedStage != null) // do not link if this link is already populated
             {
                 return false;
             }
+
             if (!IsValidVariant(stage.Variant))
             {
                 return false;
             }
+
             linkedStage = stage;
             primaryWall.DestroyWall();
             return true;
         }
-        // bypasses the variant check, does not connect if given stage is parent or if already populated 
+
+        // bypasses the variant check, does not connect if given stage is parent or if already populated
         private void ForcePopulateLink(Stage stage)
         {
             if (linkedStage != null) // if link is already populate it, do not overwrite!
@@ -69,31 +86,49 @@ namespace Flamenccio.LevelObject.Stages
             linkedStage = stage;
             primaryWall.DestroyWall();
         }
+
+        /// <summary>
+        /// Is this link currently unoccupied?
+        /// </summary>
         public bool IsVacant()
         {
             return linkedStage == null;
         }
-        // just a wrapper
+
+        /// <summary>
+        /// Build a primary wall with the given wall orientation.
+        /// </summary>
         public void SpawnWall(PrimaryWall.Orientation orient)
         {
             primaryWall.SpawnWall(orient);
         }
-        public void UpdateProperties(List<StageVariant.Variants> blacklist, Directions.CardinalValues dir)
+
+        /// <summary>
+        /// Update this link's properties.
+        /// </summary>
+        /// <param name="blacklist">The stage blacklist.</param>
+        /// <param name="direction">Direction relative to stage to spawn in.</param>
+        public void UpdateProperties(List<StageVariant.Variants> blacklist, Directions.CardinalValues direction)
         {
             // we can't update the properties if the link is already in use
             if (linkedStage != null) return;
 
             blacklistedVariants = blacklist;
-            placement = dir;
+            placement = direction;
         }
+
+        /// <summary>
+        /// Place this link somewhere.
+        /// </summary>
         public void Place(Vector2 position)
         {
             transform.localPosition = position;
         }
+
         /// <summary>
         /// Scan for nearby stage links.
-        /// Forces a connection even if two stages form a broken path.
-        /// (It's assumed that the stage for this link is already connected to a compatible stage variant.)
+        /// <para>Forces a connection even if two stages form a broken path.</para>
+        /// <para>(It's assumed that the stage for this link is already connected to a compatible stage variant.)</para>
         /// </summary>
         public void ScanNearbyStages()
         {
@@ -120,11 +155,12 @@ namespace Flamenccio.LevelObject.Stages
             colliders
                 .Where(col => col.gameObject.GetInstanceID() != ParentStage.gameObject.GetInstanceID())
                 .ToList()
-                .ForEach(i => {
+                .ForEach(i =>
+                {
                     Stage o = i.gameObject.GetComponent<Stage>();
                     ForcePopulateLink(o);
                     o.LinkStageUnsafe(Directions.OppositeOf(placement), ParentStage);
-            });
+                });
         }
     }
 }

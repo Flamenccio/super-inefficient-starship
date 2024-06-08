@@ -2,7 +2,8 @@ using System.Collections;
 using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.Core;
-using Flamenccio.Effects; // ALL THE EFFECTS!
+using Flamenccio.Effects;
+using Flamenccio.Utility; // ALL THE EFFECTS!
 
 namespace Enemy
 {
@@ -10,6 +11,10 @@ namespace Enemy
     {
         int Tier { get; }
     }
+
+    /// <summary>
+    /// Base class for all enemies.
+    /// </summary>
     public class EnemyBase : Destructables
     {
         [SerializeField] protected int tier;
@@ -26,6 +31,7 @@ namespace Enemy
         protected float slowUpdateTimer = 0f;
         protected bool active = true; // is this enemy currently active?
         protected bool telegraphed = false; // so we only play the telegraph animation once
+        protected bool alive = true;
         protected const float FLASH_DURATION = 2f / 60f;
         protected const float ATTACK_TELEGRAPH_DURATION = 12f / 60f;
         protected const float SLOW_UPDATE_FREQUENCY = 0.25f;
@@ -35,30 +41,33 @@ namespace Enemy
             rb = gameObject.GetComponent<Rigidbody2D>();
             player = PlayerMotion.Instance.transform;
         }
+
         protected void Awake()
         {
             currentHP = maxHP;
             OnSpawn();
         }
-        protected virtual void OnSpawn()
-        {
 
-        }
         /// <summary>
-        /// The actions that the enemy will perform. This happens under Update()
+        /// Called under Awake().
         /// </summary>
-        protected virtual void Behavior()
-        {
-            // stuff to do
-        }
-        protected virtual void Animation()
-        {
+        protected virtual void OnSpawn() { }
 
-        }
-        protected virtual void Trigger(Collider2D col)
-        {
-            // additional checks for OnTriggerEnter
-        }
+        /// <summary>
+        /// The actions that the enemy will perform. This happens under FixedUpdate() and only when the enemy is active.
+        /// </summary>
+        protected virtual void Behavior() { }
+
+        /// <summary>
+        /// The animations that the enemy will perform. This happens under FixedUpdate() and only when the enemy is active.
+        /// </summary>
+        protected virtual void Animation() { }
+
+        /// <summary>
+        /// The behavior that happens when the the enemy enters a trigger.
+        /// </summary>
+        protected virtual void Trigger(Collider2D col) { }
+
         protected void FixedUpdate()
         {
             if (active)
@@ -76,6 +85,7 @@ namespace Enemy
                 slowUpdateTimer += Time.fixedDeltaTime;
             }
         }
+
         protected void HealthCheck()
         {
             // if the enemy's health reaches 0,
@@ -84,8 +94,13 @@ namespace Enemy
                 Die();
             }
         }
+
         protected virtual void Die()
         {
+            if (!alive) return; // ensures this function is only called once per enemy lifetime
+
+            alive = false;
+
             for (int i = 0; i < loot; i++)
             {
                 float randomAngle = UnityEngine.Random.Range(0f, 359f);
@@ -95,6 +110,7 @@ namespace Enemy
             GameEventManager.OnEnemyKill(GameEventManager.CreateGameEvent(transform.position));
             Destroy(gameObject); // destroy self
         }
+
         protected void Hurt(int damage)
         {
             currentHP -= damage;
@@ -105,6 +121,7 @@ namespace Enemy
             }
             HealthCheck();
         }
+
         /// <summary>
         /// Called every 0.25 seconds.
         /// </summary>
@@ -112,19 +129,23 @@ namespace Enemy
         {
             active = Vector2.Distance(transform.position, player.position) <= activeRange;
         }
+
         protected void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.CompareTag("PBullet") || collision.gameObject.CompareTag("NBullet"))
+            if (collision.gameObject.CompareTag(TagManager.GetTag(Tag.PlayerBullet))
+                || collision.gameObject.CompareTag(TagManager.GetTag(Tag.NeutralBullet)))
             {
                 Hurt(collision.gameObject.GetComponent<BulletControl>().PlayerDamage);
             }
 
             Trigger(collision);
         }
+
         protected void DamageFlash()
         {
             StartCoroutine(DamageFlashAnimation());
         }
+
         protected IEnumerator DamageFlashAnimation()
         {
             for (int i = 0; i < 3; i++)
@@ -135,6 +156,7 @@ namespace Enemy
                 yield return new WaitForSeconds(FLASH_DURATION);
             }
         }
+
         protected IEnumerator AttackTelegraph()
         {
             animator.SetBool("attack", true);

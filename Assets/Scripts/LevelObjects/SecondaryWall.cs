@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Flamenccio.LevelObject.Stages
 {
+    /// <summary>
+    /// Manages the walls of a stage that define its shape.
+    /// </summary>
     public class SecondaryWall : MonoBehaviour
     {
         public bool Built { get; private set; }
@@ -11,6 +14,10 @@ namespace Flamenccio.LevelObject.Stages
         {
             Built = false;
         }
+
+        /// <summary>
+        /// Build this wall into a shape given by WallLayout.
+        /// </summary>
         public void BuildWall(WallLayout.WallAttributes layout)
         {
             if (Built) return;
@@ -32,12 +39,14 @@ namespace Flamenccio.LevelObject.Stages
 
             Built = true;
         }
+
         private void BuildWallRectangle(Vector2 centerPosition, Vector2 sideLengths)
         {
             BoxCollider2D collider = gameObject.AddComponent<BoxCollider2D>();
             transform.localPosition = centerPosition;
             collider.size = sideLengths;
         }
+
         private void BuildWallPolygon(Vector2 originPosition, List<Vector2> vertices)
         {
             if (vertices.Count < 3)
