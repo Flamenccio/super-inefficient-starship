@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using Flamenccio.Utility;
 using Flamenccio.Effects;
-using UnityEngine.InputSystem;
 using System;
 
 namespace Flamenccio.Core

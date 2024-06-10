@@ -89,118 +89,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a66ac77ab8932a48ac59255a4871eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <playerShoot>k__BackingField:
-    Guid:
-      Data1: 1770685226
-      Data2: 1174029750
-      Data3: 916971917
-      Data4: 746205551
-    Path: event:/player/player-shoot
-  <playerHurt>k__BackingField:
-    Guid:
-      Data1: -2133752650
-      Data2: 1305769540
-      Data3: 1031316625
-      Data4: -1546478426
-    Path: event:/player/player-hurt
-  <playerDash>k__BackingField:
-    Guid:
-      Data1: 443311161
-      Data2: 1337513363
-      Data3: 373769114
-      Data4: -1206529513
-    Path: event:/player/player-dash
-  <crosshairsLockon>k__BackingField:
-    Guid:
-      Data1: -1410357305
-      Data2: 1244152873
-      Data3: 984357272
-      Data4: 1230211916
-    Path: event:/player/player-lockon
-  <enemyHurt>k__BackingField:
-    Guid:
-      Data1: -1431796863
-      Data2: 1298896819
-      Data3: 730920080
-      Data4: 1871516561
-    Path: event:/enemy/enemy-hurt
-  <enemyKill>k__BackingField:
-    Guid:
-      Data1: 1083279
-      Data2: 1179615886
-      Data3: 191447714
-      Data4: 1654639649
-    Path: event:/enemy/enemy-kill
-  <starCollect>k__BackingField:
-    Guid:
-      Data1: 1279869716
-      Data2: 1339169392
-      Data3: -1549662080
-      Data4: -1738584839
-    Path: event:/items/star-collect
-  <miniStarCollect>k__BackingField:
-    Guid:
-      Data1: 1366944205
-      Data2: 1166954975
-      Data3: 1358069382
-      Data4: 933185700
-    Path: event:/items/mini-collect
-  <playerShootMini>k__BackingField:
-    Guid:
-      Data1: -127118816
-      Data2: 1260975394
-      Data3: 109175702
-      Data4: 883146580
-    Path: event:/player/player-shoot-mini
-  <playerSpecialBurst>k__BackingField:
-    Guid:
-      Data1: -92746709
-      Data2: 1328192551
-      Data3: 1062154668
-      Data4: -160407922
-    Path: event:/player/player-burst
-  <wallDestroy>k__BackingField:
-    Guid:
-      Data1: 233108460
-      Data2: 1140077004
-      Data3: -882135636
-      Data4: -1851771520
-    Path: event:/items/wall-break
-  <heartCollect>k__BackingField:
-    Guid:
-      Data1: 757066673
-      Data2: 1221980304
-      Data3: 1126556827
-      Data4: 1323299488
-    Path: event:/items/heart-collect
-  <playerSpecialCue>k__BackingField:
-    Guid:
-      Data1: 1404817076
-      Data2: 1187353855
-      Data3: 136003751
-      Data4: -830965190
-    Path: event:/player/special-que
-  <playerRedSwordSwing>k__BackingField:
-    Guid:
-      Data1: -572500369
-      Data2: 1125851227
-      Data3: -875927899
-      Data4: -1485341216
-    Path: event:/player/player-red-sword-swing
-  <playerRedSwordCharged>k__BackingField:
-    Guid:
-      Data1: 757128814
-      Data2: 1243459873
-      Data3: 596962971
-      Data4: -1214963727
-    Path: event:/player/player-red-sword-charged
-  <playerShotgunBlast>k__BackingField:
-    Guid:
-      Data1: 1475268222
-      Data2: 1283655148
-      Data3: 1642948023
-      Data4: -618269668
-    Path: event:/player/player-shotgun
   audioEvents:
   - <Audio>k__BackingField:
       Guid:
@@ -322,3 +210,19 @@ MonoBehaviour:
         Data4: -830965190
       Path: event:/player/special-que
     <Name>k__BackingField: PlayerSpecialChargeCue
+  - <Audio>k__BackingField:
+      Guid:
+        Data1: 652853263
+        Data2: 1317095392
+        Data3: -229070201
+        Data4: 1024266326
+      Path: event:/player/player-special-reload
+    <Name>k__BackingField: PlayerSpecialReloadTap
+  - <Audio>k__BackingField:
+      Guid:
+        Data1: 2146965484
+        Data2: 1300289824
+        Data3: -1643450701
+        Data4: 2029595856
+      Path: event:/player/player-special-reload-perfect
+    <Name>k__BackingField: PlayerSpecialReloadPerfectTap
