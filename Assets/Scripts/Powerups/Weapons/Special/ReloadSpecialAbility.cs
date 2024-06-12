@@ -29,7 +29,7 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
 
-            /// TODO Find a solution to avoid hardcoding name and description.
+            /// TODO Find a solution to avoid hardcoding name and description. Applies to other buffs and weapons too.
             base.Startup();
             Name = "Reload";
             Desc = $"Immediately consumes all stored star shards and converts {conversionRatio * 100f}% of them into ammo. Additionally restores {timerReplenish} seconds onto the life timer.\nMax charges: 1\nCooldown: {Cooldown} seconds";
