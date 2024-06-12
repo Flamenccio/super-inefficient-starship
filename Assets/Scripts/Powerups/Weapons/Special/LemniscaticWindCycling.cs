@@ -13,11 +13,11 @@ namespace Flamenccio.Powerup.Weapon
     public class LemniscaticWindCycling : WeaponSpecial
     {
         [SerializeField] private GameObject shockwaveEffect;
+        [SerializeField] private float DURATION = 0.10f;
+        [SerializeField] private float SPEED = 50f;
+        [SerializeField] private int HIT_STREAK_CONDITION = 3; // number of enemies required to be hit to replenish a special charge.
         private LemniscaticWindCyclingBullet attackInstance;
         private bool rechargeUsed = false;
-        private const float DURATION = 0.10f;
-        private const float SPEED = 50f;
-        private const int HIT_STREAK_CONDITION = 3; // number of enemies required to be hit to replenish a special charge.
         private EventReference specialRechargeAudio;
 
         protected override void Startup()

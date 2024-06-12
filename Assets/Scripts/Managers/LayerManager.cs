@@ -42,7 +42,7 @@ namespace Flamenccio.Utility
             { Layer.PlayerIntangible, LayerMask.NameToLayer("PlayerIntangible") },
             { Layer.Sensor, LayerMask.NameToLayer("Sensor") },
             { Layer.Stage, LayerMask.NameToLayer("Background") },
-            { Layer.Stage, LayerMask.NameToLayer("NeutralAttack") },
+            { Layer.NeutralAttack, LayerMask.NameToLayer("NeutralAttack") },
         };
 
         /// <summary>
