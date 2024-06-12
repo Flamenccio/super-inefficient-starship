@@ -42,7 +42,14 @@ namespace Flamenccio.Core
         these events must be interactions between game objects: player interaction is already handled by input
         */
 
+        /// <summary>
+        /// VALUE represents star shards dropped.
+        /// </summary>
         public static Action<GameEventInfo> OnEnemyKill { get; set; }
+
+        /// <summary>
+        /// VALUE represents enemy tier.
+        /// </summary>
         public static Action<GameEventInfo> OnEnemySpawn { get; set; }
         public static Action<GameEventInfo> OnEnemyHit { get; set; }
 
@@ -82,6 +89,16 @@ namespace Flamenccio.Core
         /// VALUE represents the total points gained.
         /// </summary>
         public static Action<GameEventInfo> OnPointGain { get; set; }
+
+        /// <summary>
+        /// VALUE represents the object spawned; reference ObjectType enum.
+        /// </summary>
+        public static Action<GameEventInfo> OnObjectSpawn { get; set; }
+
+        /// <summary>
+        /// VALUE represents the object destroyed; reference ObjectType enum.
+        /// </summary>
+        public static Action<GameEventInfo> OnObjectDestroy { get; set; }
 
         /// <summary>
         /// Called when control scheme is changed.

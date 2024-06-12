@@ -14,31 +14,35 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class ReloadSpecialAbility : WeaponSpecial
     {
+        [SerializeField] private GameObject reloadNormalEffect;
+        [SerializeField] private GameObject reloadPerfectEffect;
         private readonly float conversionRatio = 0.7f;
         private readonly float timerReplenish = 3f;
         private const float PARRY_DURATION = 6f / 60f;
-        private const float PARRY_RADIUS = 1.5f;
+        private const float PARRY_SCAN_RADIUS = 1.0f;
+        private const float PARRY_DESTROY_RADIUS = PARRY_SCAN_RADIUS * 5f;
         private float parryTimer = 0f;
         private bool parry = false;
         private GameState gameState;
-        private string[] attackTags;
+        private List<string> attackTags;
 
         protected override void Startup()
         {
+
+            /// TODO Find a solution to avoid hardcoding name and description.
             base.Startup();
             Name = "Reload";
             Desc = $"Immediately consumes all stored star shards and converts {conversionRatio * 100f}% of them into ammo. Additionally restores {timerReplenish} seconds onto the life timer.\nMax charges: 1\nCooldown: {Cooldown} seconds";
             Rarity = PowerupRarity.Rare;
             gameState = FindObjectOfType<GameState>();
             parryTimer = 0f;
-            attackTags = TagManager.GetTagCollection(new List<Tag> { Tag.NeutralBullet, Tag.EnemyBullet, }).ToArray();
+            attackTags = TagManager.GetTagCollection(new List<Tag> { Tag.NeutralBullet, Tag.EnemyBullet, });
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (!AttackReady()) return;
 
-            // TODO make effects
             parryTimer = PARRY_DURATION;
             parry = true;
         }
@@ -50,10 +54,15 @@ namespace Flamenccio.Powerup.Weapon
             if (parry) Parry();
         }
 
-        private List<GameObject> AttackScan(float radius)
+        private List<GameObject> GameObjectScan(float radius, List<Tag> acceptedTags)
+        {
+            return GameObjectScan(radius, TagManager.GetTagCollection(acceptedTags));
+        }
+
+        private List<GameObject> GameObjectScan(float radius, List<string> acceptedTags)
         {
             return Physics2D.OverlapCircleAll(transform.position, radius)
-                .Where(x => attackTags.Any(tag => x.CompareTag(tag)))
+                .Where(x => acceptedTags.Any(tag => x.CompareTag(tag)))
                 .Select(x => x.gameObject)
                 .ToList();
         }
@@ -62,9 +71,9 @@ namespace Flamenccio.Powerup.Weapon
         {
             parryTimer -= Time.deltaTime;
 
-            if (AttackScan(PARRY_RADIUS).Count > 0)
+            if (GameObjectScan(PARRY_SCAN_RADIUS, attackTags).Count > 0)
             {
-                PerfectReload(AttackScan(PARRY_RADIUS * 3f));
+                PerfectReload();
                 parry = false;
             }
             else if (parryTimer <= 0f)
@@ -76,6 +85,7 @@ namespace Flamenccio.Powerup.Weapon
 
         private void Reload()
         {
+            Instantiate(reloadNormalEffect, PlayerMotion.Instance.PlayerTransform);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GetAudioEvent("PlayerSpecialReloadTap"), transform.position);
             int total = playerAtt.UseKillPoints();
             int final = Mathf.FloorToInt(total * conversionRatio);
@@ -84,18 +94,20 @@ namespace Flamenccio.Powerup.Weapon
             cooldownTimer = Cooldown;
         }
 
-        private void PerfectReload(List<GameObject> parriedObjects)
+        private void PerfectReload()
         {
             // TODO add a stun to all nearby enemies
+            Instantiate(reloadPerfectEffect, PlayerMotion.Instance.PlayerPosition, Quaternion.identity);
             PlayerMotion.Instance.RestrictMovement(PARRY_DURATION);
-            PlayerMotion.Instance.Move(transform.right, 20f, PARRY_DURATION);
+            PlayerMotion.Instance.Move(-transform.right, 20f, PARRY_DURATION);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GetAudioEvent("PlayerSpecialReloadPerfectTap"), transform.position);
             int total = playerAtt.UseKillPoints();
             int final = Mathf.FloorToInt(total * conversionRatio);
             playerAtt.AddAmmo(final);
             gameState.ReplenishTimer(timerReplenish);
             cooldownTimer = Cooldown / 2f;
-            parriedObjects
+
+            GameObjectScan(PARRY_DESTROY_RADIUS, attackTags)
                 .Where(x => x.TryGetComponent<EnemyBulletBase>(out var _))
                 .ToList()
                 .ForEach(x => Destroy(x));

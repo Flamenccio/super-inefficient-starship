@@ -1,3 +1,4 @@
+using Flamenccio.Effects.Visual;
 using Flamenccio.Utility;
 using System.Collections.Generic;
 using UnityEngine;
