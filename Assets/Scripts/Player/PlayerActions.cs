@@ -22,6 +22,7 @@ namespace Flamenccio.Core.Player
             Hold,
         };
 
+        private Action DynamicAim;
         private AttackState mainAttackState = AttackState.Tap;
         private Rigidbody2D rb;
         private AllAngle rotationAngle; // used for rotating player sprite
@@ -46,6 +47,7 @@ namespace Flamenccio.Core.Player
             acceleration = playerAtt.MoveSpeed / 4f;
             deceleration = playerAtt.MoveSpeed / 26f;
             playerMotion = PlayerMotion.Instance;
+            GameEventManager.OnControlSchemeChange += SwitchAimScheme;
         }
 
         private void FixedUpdate()
@@ -60,7 +62,7 @@ namespace Flamenccio.Core.Player
                 Movement();
             }
 
-            Aim();
+            DynamicAim?.Invoke();
         }
 
         private void Update()
@@ -186,16 +188,17 @@ namespace Flamenccio.Core.Player
             }
         }
 
-        private void Aim()
+        private void SwitchAimScheme(InputManager.ControlScheme scheme)
         {
-            // TODO (minor) make a way so a branch isn't evaluated every frame.
-            if (input.CurrentScheme == InputManager.ControlScheme.XBOX)
+            switch (scheme)
             {
-                GamepadAim();
-            }
-            if (input.CurrentScheme == InputManager.ControlScheme.KBM)
-            {
-                MouseAim();
+                case InputManager.ControlScheme.XBOX:
+                    DynamicAim = GamepadAim;
+                    break;
+
+                case InputManager.ControlScheme.KBM:
+                    DynamicAim = MouseAim;
+                    break;
             }
         }
 

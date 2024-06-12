@@ -34,7 +34,10 @@ namespace Flamenccio.Core
     /// </summary>
     public static class GameEventManager
     {
-        // TODO make singleton
+        /// <summary>
+        /// Is this class instanced yet?
+        /// </summary>
+        public static bool Instanced { get => true; }
 
         /*
         these events should be common--no highly specific events unless ABSOLUTELY needed.
@@ -102,6 +105,7 @@ namespace Flamenccio.Core
 
         /// <summary>
         /// Called when control scheme is changed.
+        /// Paramter is the new control scheme.
         /// </summary>
         public static Action<InputManager.ControlScheme> OnControlSchemeChange { get; set; }
 

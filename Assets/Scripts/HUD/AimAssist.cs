@@ -36,7 +36,7 @@ namespace Flamenccio.Core.Player
 
         private void Update()
         {
-            if (InputManager.Instance.CurrentScheme == InputManager.ControlScheme.KBM || input.AimInputVector == Vector2.zero)
+            if (input.AimInputVector == Vector2.zero)
             {
                 aimAssistTarget.Hide();
                 return;

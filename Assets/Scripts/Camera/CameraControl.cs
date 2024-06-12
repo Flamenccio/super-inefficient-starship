@@ -75,8 +75,6 @@ namespace Flamenccio.Core
 
         private void UpdatePosition()
         {
-            // TODO temporary
-            UpdateControlScheme(InputManager.Instance.CurrentScheme);
             UpdateCameraPosition?.Invoke();
 
             Vector3 cameraNewPosition = new(playerPosition.position.x + cameraOffset.x, playerPosition.position.y + cameraOffset.y, gameObject.transform.position.z);
