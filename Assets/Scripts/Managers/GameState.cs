@@ -178,7 +178,7 @@ namespace Flamenccio.Core
         /// <returns>True if successful, false otherwise.</returns>
         public bool RemoveLife(int life)
         {
-            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position); // TODO maybe scale intensity with damage taken
+            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
             playerAtt.ChangeLife(-life);
 
             if (playerAtt.HP == 0)
