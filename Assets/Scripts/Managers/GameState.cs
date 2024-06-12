@@ -91,6 +91,7 @@ namespace Flamenccio.Core
             playerAtt.AddAmmo(addPoints);
             progress += addPoints;
             FloatingTextManager.Instance.DisplayAmmoText(addPoints);
+            FloatingTextManager.Instance.DisplayText($"+{addPoints}", PlayerMotion.Instance.PlayerPosition, Color.yellow, 1.0f, 25.0f, FloatingTextControl.TextAnimation.Fade, FloatingTextControl.TextAnimation.Rise, true);
 
             if (progress >= DifficultyCurve(difficulty + 1)) // level up
             {

@@ -15,6 +15,8 @@ namespace Flamenccio.HUD
             Fade,
             ZoomOut,
             ZoomIn,
+            Rise,
+            Fall,
         }
 
         public string TextContent
@@ -112,11 +114,14 @@ namespace Flamenccio.HUD
         private Color targetColor;
         private float targetFontSize;
         private Vector2 worldOrigin; // origin of text in game world
+        private Vector2 offset = Vector2.zero; // offset from the worldOrigin; used to animate rise and fall.
+
         private const float ENTER_DURATION = 0.1f;
-        private const float EXIT_DURATION = 0.1f;
+        private const float EXIT_DURATION = ENTER_DURATION;
         private const float MIN_DURATION_SECONDS = 0.5f;
         private const float MAX_FONT_SIZE = 100f;
         private const float MIN_FONT_SIZE = 1f;
+        private const float RISE_FALL_SPEED = 0.1f;
 
         private Action EnterAnimationAction;
         private Action ExitAnimationAction;
@@ -144,7 +149,7 @@ namespace Flamenccio.HUD
             textObject.text = TextContent;
             textObject.color = new(TargetColor.r, TargetColor.g, TargetColor.b, textObject.color.a);
 
-            if (SpawnInGameWorld) transform.position = Camera.main.WorldToScreenPoint(worldOrigin); // TODO temporary
+            if (SpawnInGameWorld) transform.position = Camera.main.WorldToScreenPoint(worldOrigin + offset); // TODO temporary
 
             if (!playingAnimation) return;
 
@@ -212,6 +217,14 @@ namespace Flamenccio.HUD
                 case TextAnimation.ZoomIn:
                     textObject.fontSize = MIN_FONT_SIZE;
                     break;
+
+                case TextAnimation.Rise:
+                    offset = new(0f, -1f);
+                    break;
+
+                case TextAnimation.Fall:
+                    offset = new(0f, 1f);
+                    break;
             }
 
             // set entrance animation
@@ -231,6 +244,16 @@ namespace Flamenccio.HUD
                 case TextAnimation.ZoomIn:
                     EnterAnimationAction = ZoomInEnter;
                     break;
+
+                case TextAnimation.Rise:
+                    EnterAnimationAction = RiseEnter;
+                    EnterAnimationAction += FadeIn;
+                    break;
+
+                case TextAnimation.Fall:
+                    EnterAnimationAction = FallEnter;
+                    EnterAnimationAction += FadeIn;
+                    break;
             }
 
             // set exit animation
@@ -249,6 +272,16 @@ namespace Flamenccio.HUD
 
                 case TextAnimation.ZoomIn:
                     ExitAnimationAction = ZoomInExit;
+                    break;
+
+                case TextAnimation.Rise:
+                    ExitAnimationAction = RiseExit;
+                    ExitAnimationAction += FadeOut;
+                    break;
+
+                case TextAnimation.Fall:
+                    ExitAnimationAction = FallExit;
+                    ExitAnimationAction += FadeOut;
                     break;
             }
 
@@ -286,6 +319,20 @@ namespace Flamenccio.HUD
             textObject.fontSize -= deltaSize * Time.deltaTime;
         }
 
+        private void RiseEnter()
+        {
+            if (offset.y >= 0f) return;
+
+            offset.y += RISE_FALL_SPEED;
+        }
+
+        private void FallEnter()
+        {
+            if (offset.y <= 0f) return;
+
+            offset.y -= RISE_FALL_SPEED;
+        }
+
         #endregion entrance effects
 
         #region exit effects
@@ -305,6 +352,20 @@ namespace Flamenccio.HUD
         {
             float deltaSize = (MIN_FONT_SIZE - TargetFontSize) / ENTER_DURATION;
             textObject.fontSize -= deltaSize * Time.deltaTime;
+        }
+
+        private void RiseExit()
+        {
+            if (offset.y >= 1f) return;
+
+            offset.y += RISE_FALL_SPEED;
+        }
+
+        private void FallExit()
+        {
+            if (offset.y <= -1f) return;
+
+            offset.y -= RISE_FALL_SPEED;
         }
 
         #endregion exit effects
