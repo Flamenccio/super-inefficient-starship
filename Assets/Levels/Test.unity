@@ -597,6 +597,10 @@ PrefabInstance:
       propertyPath: crosshairsControl
       value: 
       objectReference: {fileID: 600660368}
+    - target: {fileID: 8907782104821334261, guid: ee1de66a1cf022e478c8da374b09a5bd, type: 3}
+      propertyPath: defaultSpecialWeapon
+      value: 
+      objectReference: {fileID: 2861180565581485973, guid: 921ef7fd64974fc4fb37074f271e3596, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee1de66a1cf022e478c8da374b09a5bd, type: 3}
 --- !u!1001 &2216979620704452844

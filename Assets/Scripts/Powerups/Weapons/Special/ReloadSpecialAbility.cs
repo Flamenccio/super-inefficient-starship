@@ -86,6 +86,7 @@ namespace Flamenccio.Powerup.Weapon
         private void Reload()
         {
             Instantiate(reloadNormalEffect, PlayerMotion.Instance.PlayerTransform);
+            PlayerMotion.Instance.Move(Vector2.zero, 0f, PARRY_DURATION * 2f);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GetAudioEvent("PlayerSpecialReloadTap"), transform.position);
             int total = playerAtt.UseKillPoints();
             int final = Mathf.FloorToInt(total * conversionRatio);
@@ -98,7 +99,6 @@ namespace Flamenccio.Powerup.Weapon
         {
             // TODO add a stun to all nearby enemies
             Instantiate(reloadPerfectEffect, PlayerMotion.Instance.PlayerPosition, Quaternion.identity);
-            PlayerMotion.Instance.RestrictMovement(PARRY_DURATION);
             PlayerMotion.Instance.Move(-transform.right, 20f, PARRY_DURATION);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GetAudioEvent("PlayerSpecialReloadPerfectTap"), transform.position);
             int total = playerAtt.UseKillPoints();
