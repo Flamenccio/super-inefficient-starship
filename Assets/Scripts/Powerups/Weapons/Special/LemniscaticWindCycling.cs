@@ -57,7 +57,7 @@ namespace Flamenccio.Powerup.Weapon
                 AudioManager.Instance.PlayOneShot(specialRechargeAudio, transform.position);
                 rechargeUsed = true;
                 playerAtt.ReplenishCharge(1);
-                EffectManager.Instance.SpawnEffect(EffectManager.Effects.SpecialReplenish, PlayerMotion.Instance.transform);
+                EffectManager.Instance.SpawnEffect("PlayerSpecialReplenish", PlayerMotion.Instance.transform);
             }
         }
     }

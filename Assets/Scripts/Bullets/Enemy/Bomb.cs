@@ -20,7 +20,7 @@ namespace Flamenccio.Attack.Enemy
 
         protected override void Trigger(Collider2D collider)
         {
-            EffectManager.Instance.SpawnEffect(EffectManager.Effects.Explosion, transform.position);
+            EffectManager.Instance.SpawnEffect("EnemyExplosion", transform.position);
             Instantiate(explosionHitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, 2f, playerDamage, Hitbox.HitboxAffiliation.Neutral, knockbackMultiplier); // spawn the actual hitbox
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Extreme, transform.position);
             base.Trigger(collider);
