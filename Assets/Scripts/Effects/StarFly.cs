@@ -35,7 +35,7 @@ namespace Flamenccio.Effects.Visual
             rb.rotation = Random.Range(0, 360f);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (GameState.Paused) return;
 
@@ -45,20 +45,23 @@ namespace Flamenccio.Effects.Visual
 
         private void SpawnTrails()
         {
+            effectManager.SpawnTrail(TrailPool.Trails.StarFlyTrail, transform.position);
+
+            /*
             trailTimer += Time.deltaTime;
 
             if (trailTimer > TRAIL_FREQUENCY)
             {
                 trailTimer = 0f;
-                effectManager.SpawnTrail(TrailPool.Trails.StarFlyTrail, transform.position);
             }
+            */
         }
 
         private void MoveToPlayer()
         {
             // turn to face player and move towards them.
-            timer += Time.deltaTime;
-            float turnSpeed = timer / 2f;
+            timer += Time.deltaTime * 1.4f;
+            float turnSpeed = timer;
 
             if (target != null)
             {
