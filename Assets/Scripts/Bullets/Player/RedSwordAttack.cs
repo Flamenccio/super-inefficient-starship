@@ -48,11 +48,11 @@ namespace Flamenccio.Attack.Player
         {
             if (collider.gameObject.CompareTag(TagManager.GetTag(Tag.EnemyBullet)))
             {
-                EffectManager.Instance.SpawnEffect("BulletParry", transform.position);
+                EffectManager.Instance.SpawnEffect("m_bullet_parry", transform.position);
             }
             else
             {
-                EffectManager.Instance.SpawnEffect("BulletImpact", transform.position);
+                EffectManager.Instance.SpawnEffect("m_bullet_impact", transform.position);
             }
         }
     }
