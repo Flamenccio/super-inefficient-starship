@@ -281,7 +281,6 @@ namespace Flamenccio.Core
             Time.timeScale = 0.0f;
             yield return new WaitForSecondsRealtime(1.0f);
             GameEventManager.ClearAllEvents();
-            SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }
 

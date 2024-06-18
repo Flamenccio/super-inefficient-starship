@@ -12,25 +12,26 @@ namespace Flamenccio.Effects.Visual
     public class CameraEffects : MonoBehaviour
     {
         public static CameraEffects Instance { get; private set; }
-        private const float SCREEN_SHAKE_DURATION = 0.25f; // duration of screen shake effect in seconds
-        private const float SCREEN_SHAKE_WEAK = 0.20f;
-        private const float SCREEN_SHAKE_NORMAL = 0.40f;
-        private const float SCREEN_SHAKE_STRONG = 0.75f;
-        private const float SCREEN_SHAKE_EXTREME = 1.0f;
-        private const float MAX_SHAKE_DISTANCE = 40.0f;
         private float screenShakeTime = 0f; // when this is above 0f, screenshake occurs.
         private float screenShakeMagnitude = 0f;
         private float screenShakeMagnitudeDecay = 0f;
-
         private float zoomTimer = 0f;
         private float zoomMagnitude = 0f;
         private float originalSize = 0f;
         private float zoomMaxTime = 0f; // how long it takes for the camera to reach final size
         private float zoomFinalTime = 0f; // how long the camera stays at final size before returning to original size
 
-
         private Action realtimeEffects;
         private Camera thisCamera;
+
+        private const float SCREEN_SHAKE_DURATION = 0.25f; // duration of screen shake effect in seconds
+        private const float SCREEN_SHAKE_WEAK = 0.20f;
+        private const float SCREEN_SHAKE_NORMAL = 0.40f;
+        private const float SCREEN_SHAKE_STRONG = 0.75f;
+        private const float SCREEN_SHAKE_EXTREME = 1.0f;
+        private const float MAX_SHAKE_DISTANCE = 40.0f;
+        private const float MAX_SLOWMO_TIME_SECONDS = 10.0f;
+        private const float MIN_SLOWMO_TIME_SECONDS = 0.1f;
 
         private readonly float[] screenShakeIntesities =
         {
@@ -114,6 +115,10 @@ namespace Flamenccio.Effects.Visual
             Camera.main.transform.position = position;
         }
 
+        /// <summary>
+        /// Slows down game time for specified time.
+        /// </summary>
+        /// <param name="durationSeconds">How long to slow down game.</param>
         public void SlowMo(float durationSeconds)
         {
             StartCoroutine(SlowMoCoroutine(durationSeconds));
@@ -137,6 +142,9 @@ namespace Flamenccio.Effects.Visual
             realtimeEffects += ZoomUpdateStage1;
         }
 
+        /// <summary>
+        /// Zoom to final size over time defined by zoomMaxTime.
+        /// </summary>
         private void ZoomUpdateStage1()
         {
             if (zoomTimer > 0f)
@@ -153,6 +161,9 @@ namespace Flamenccio.Effects.Visual
             }
         }
 
+        /// <summary>
+        /// Stay at final size for time defined by zoomFinalTime.
+        /// </summary>
         private void ZoomUpdateStage2()
         {
             if (zoomTimer > 0f)
@@ -171,6 +182,7 @@ namespace Flamenccio.Effects.Visual
 
         private IEnumerator SlowMoCoroutine(float durationSeconds)
         {
+            durationSeconds = Mathf.Clamp(durationSeconds, MIN_SLOWMO_TIME_SECONDS, MAX_SLOWMO_TIME_SECONDS);
             Time.timeScale = 0.25f;
             yield return new WaitForSecondsRealtime(durationSeconds);
             Time.timeScale = 1.0f;

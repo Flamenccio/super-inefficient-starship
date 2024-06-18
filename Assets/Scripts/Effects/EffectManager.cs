@@ -1,10 +1,8 @@
 using Flamenccio.Core;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace Flamenccio.Effects.Visual
 {
@@ -19,18 +17,8 @@ namespace Flamenccio.Effects.Visual
 
         public struct EffectID
         {
-            public EffectCategory Category { get; set; }
+            public char Category { get; set; }
             public int Index { get; set; }
-        }
-
-        public enum EffectCategory
-        {
-            None,
-            Player,
-            Item,
-            Enemy,
-            Object,
-            Misc
         }
 
         public static EffectManager Instance { get; private set; }
@@ -44,14 +32,14 @@ namespace Flamenccio.Effects.Visual
         private List<EffectObject> objectEffects = new();
         private List<EffectObject> miscEffects = new();
 
-        private Dictionary<EffectCategory, List<EffectObject>> effectListMap;
-        private Dictionary<string, EffectCategory> effectCategoryMap;
+        private Dictionary<string, List<EffectObject>> effectListMap;
 
         private const string CATEGORY_PLAYER = "p";
         private const string CATEGORY_ENEMY = "e";
         private const string CATEGORY_ITEM = "i";
         private const string CATEGORY_OBJECT = "o";
         private const string CATEGORY_MISC = "m";
+        private const string CATEGORY_NONE = "-";
 
         private void Awake()
         {
@@ -66,20 +54,12 @@ namespace Flamenccio.Effects.Visual
 
             effectListMap = new()
             {
-                { EffectCategory.Player, playerEffects },
-                { EffectCategory.Enemy, enemyEffects },
-                { EffectCategory.Item, itemEffects },
-                { EffectCategory.Object, objectEffects },
-                { EffectCategory.Misc, miscEffects },
-                { EffectCategory.None, new() }
-            };
-            effectCategoryMap = new()
-            {
-                { CATEGORY_PLAYER, EffectCategory.Player },
-                { CATEGORY_ENEMY, EffectCategory.Enemy },
-                { CATEGORY_ITEM, EffectCategory.Item },
-                { CATEGORY_OBJECT, EffectCategory.Object },
-                { CATEGORY_MISC, EffectCategory.Misc },
+                { CATEGORY_PLAYER, playerEffects },
+                { CATEGORY_ENEMY, enemyEffects },
+                { CATEGORY_ITEM, itemEffects },
+                { CATEGORY_OBJECT, objectEffects },
+                { CATEGORY_MISC, miscEffects },
+                { CATEGORY_NONE, new() }
             };
             SortEffects();
         }
@@ -96,16 +76,11 @@ namespace Flamenccio.Effects.Visual
         {
             foreach (var effect in effects)
             {
-                var subList = GetEffectList(effect.Name);
+                var subList = effectListMap[FindMatchingCategory(effect.Name)];
                 subList.Add(effect);
             }
 
-            effectListMap[EffectCategory.None].Clear();
-        }
-
-        private List<EffectObject> GetEffectList(string effectName)
-        {
-            return effectListMap[FindMatchingCategory(effectName)];
+            effectListMap[CATEGORY_NONE].Clear();
         }
 
         /// <summary>
@@ -113,23 +88,13 @@ namespace Flamenccio.Effects.Visual
         /// </summary>
         /// <param name="effectName">The entire name of the effect.</param>
         /// <returns>The effect's category.</returns>
-        private EffectCategory FindMatchingCategory(string effectName)
+        private string FindMatchingCategory(string effectName)
         {
-            string category = SplitEffectName(effectName)[0];
+            string category = effectName.Split('_')[0];
 
-            if (category.Length != 1) return EffectCategory.None; // the category part of the name must be a single character
+            if (category.Length != 1) return CATEGORY_NONE; // the category part of the name must be a single character
 
-            return effectCategoryMap.ContainsKey(category) ? effectCategoryMap[category] : EffectCategory.None;
-        }
-
-        /// <summary>
-        /// Splits the effect name with capital letters as the separator.
-        /// </summary>
-        /// <param name="effectName">The name of the effect.</param>
-        /// <returns>An array of strings of the separated words.</returns>
-        private string[] SplitEffectName(string effectName)
-        {
-            return effectName.Split('_');
+            return effectListMap.ContainsKey(category) ? category : CATEGORY_NONE;
         }
 
         /// <summary>
@@ -168,35 +133,40 @@ namespace Flamenccio.Effects.Visual
 
         public void SpawnEffect(EffectID effectID, Vector2 origin)
         {
-            if (effectID.Index < 0 || effectID.Category == EffectCategory.None) return;
+            var list = GetEffectObjectList(effectID);
 
-            var list = effectListMap[effectID.Category];
-
-            if (effectID.Index > list.Count) return;
+            if (list.Count == 0) return;
 
             Instantiate(list[effectID.Index].Effect, origin, Quaternion.identity);
         }
 
         public void SpawnEffect(EffectID effectID, Vector2 origin, Quaternion rotation)
         {
-            if (effectID.Index < 0 || effectID.Category == EffectCategory.None) return;
+            var list = GetEffectObjectList(effectID);
 
-            var list = effectListMap[effectID.Category];
-
-            if (effectID.Index > list.Count) return;
+            if (list.Count == 0) return;
 
             Instantiate(list[effectID.Index].Effect, origin, rotation);
         }
 
         public void SpawnEffect(EffectID effectID, Transform parent)
         {
-            if (effectID.Index < 0 || effectID.Category == EffectCategory.None) return;
+            var list = GetEffectObjectList(effectID);
 
-            var list = effectListMap[effectID.Category];
-
-            if (effectID.Index > list.Count) return;
+            if (list.Count == 0) return;
 
             Instantiate(list[effectID.Index].Effect, parent);
+        }
+
+        private List<EffectObject> GetEffectObjectList(EffectID effectID)
+        {
+            if (effectID.Index < 0 || effectID.Category.Equals(CATEGORY_NONE)) return new();
+
+            var list = effectListMap[effectID.Category.ToString()];
+
+            if (effectID.Index > list.Count) return new();
+
+            return list;
         }
 
         /// <summary>
@@ -210,7 +180,7 @@ namespace Flamenccio.Effects.Visual
 
             var category = FindMatchingCategory(effectName);
 
-            if (category == EffectCategory.None) return GetNullId();
+            if (category.Equals(CATEGORY_NONE)) return GetNullId();
 
             var list = effectListMap[category];
             int index = 0;
@@ -223,11 +193,14 @@ namespace Flamenccio.Effects.Visual
             {
                 foreach (var item in list)
                 {
-                    if (item.Name.Equals(effectName)) return new()
+                    if (item.Name.Equals(effectName))
                     {
-                        Category = category,
-                        Index = index
-                    };
+                        return new()
+                        {
+                            Category = category[0],
+                            Index = index
+                        };
+                    }
 
                     index++;
                 }
@@ -240,7 +213,7 @@ namespace Flamenccio.Effects.Visual
         {
             return new()
             {
-                Category = EffectCategory.None,
+                Category = CATEGORY_NONE[0],
                 Index = -1
             };
         }

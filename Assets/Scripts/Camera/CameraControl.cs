@@ -11,6 +11,8 @@ namespace Flamenccio.Core
     /// </summary>
     public class CameraControl : MonoBehaviour
     {
+        public bool InterruptSizeAdjustment { get; set; } = false;
+
         private Transform playerPosition;
         private InputManager input;
         private Camera cam;
@@ -18,7 +20,6 @@ namespace Flamenccio.Core
         private float currentSize = 0.0f;
         private float previousSize = 0.0f;
         private float t = 0;
-        private bool interruptAdjustment = false;
         private float cameraMoveSpeed;
         private Action UpdateCameraPosition;
 
@@ -62,7 +63,7 @@ namespace Flamenccio.Core
         {
             float sizeDifference = Mathf.Abs(currentSize - cam.orthographicSize);
 
-            if (sizeDifference > MINIMUM_SIZE_DIFFERENCE && !interruptAdjustment)
+            if (sizeDifference > MINIMUM_SIZE_DIFFERENCE && !InterruptSizeAdjustment)
             {
                 t += Time.unscaledDeltaTime;
                 cam.orthographicSize = Mathf.Lerp(previousSize, currentSize, t);
@@ -135,7 +136,7 @@ namespace Flamenccio.Core
 
         private IEnumerator HurtZoomAnimation()
         {
-            interruptAdjustment = true;
+            InterruptSizeAdjustment = true;
             float normalSize = cam.orthographicSize;
             float newSize = normalSize - 1;
             cam.orthographicSize = Mathf.Lerp(normalSize, newSize, 1.0f);
@@ -143,7 +144,7 @@ namespace Flamenccio.Core
             yield return new WaitForSecondsRealtime(HURT_ZOOM_DURATION);
 
             cam.orthographicSize = Mathf.Lerp(newSize, normalSize, 1.0f);
-            interruptAdjustment = false;
+            InterruptSizeAdjustment = false;
         }
     }
 }
