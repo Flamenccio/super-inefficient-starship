@@ -4,6 +4,7 @@ using Flamenccio.Attack;
 using Flamenccio.Core;
 using Flamenccio.Effects.Audio;
 using System;
+using Flamenccio.Effects.Visual;
 
 namespace Flamenccio.LevelObject.Walls
 {
@@ -14,8 +15,8 @@ namespace Flamenccio.LevelObject.Walls
     {
         public Action OnDeath;
         [Tooltip("Game objects with these tags will destroy this object.")] [SerializeField] private List<string> dangerousTags = new List<string>();
-        [SerializeField] private GameObject destroyEffect;
-        [SerializeField] private GameObject spawnEffect;
+        [SerializeField] private string destroyEffect;
+        [SerializeField] private string spawnEffect;
         [SerializeField] private Sprite level0;
         [SerializeField] private Sprite level1;
         [SerializeField] private SpriteRenderer spriteRen;
@@ -27,7 +28,7 @@ namespace Flamenccio.LevelObject.Walls
         private void Awake()
         {
             maxLifeSpan = MAX_LIFE;
-            Instantiate(spawnEffect, transform);
+            EffectManager.Instance.SpawnEffect(spawnEffect, transform);
         }
 
         private void Update()
@@ -56,7 +57,7 @@ namespace Flamenccio.LevelObject.Walls
         public void Die()
         {
             OnDeath?.Invoke();
-            Instantiate(destroyEffect, transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnEffect(destroyEffect, transform.position);
             Destroy(this.gameObject);
         }
 

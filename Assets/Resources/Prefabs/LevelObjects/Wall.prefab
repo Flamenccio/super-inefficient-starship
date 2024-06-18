@@ -130,9 +130,8 @@ MonoBehaviour:
   - PBullet
   - EBullet
   - NBullet
-  spawnControl: {fileID: -5497853322675957859, guid: ee1de66a1cf022e478c8da374b09a5bd, type: 3}
-  destroyEffect: {fileID: 1175986615984056146, guid: beb520a2ab16ce74d9dc53e00077173b, type: 3}
-  spawnEffect: {fileID: 6584689897516604882, guid: 71f2dc2b3825d83458e222fb7f0e0d8b, type: 3}
+  destroyEffect: o_generic_destroy
+  spawnEffect: o_wall_spawn
   level0: {fileID: 21300000, guid: 15c4e348221e96549b7c54ab1a8b9298, type: 3}
   level1: {fileID: 21300000, guid: da20ebc4904180646b7faa853f0b5da4, type: 3}
   spriteRen: {fileID: 66644284648686914}

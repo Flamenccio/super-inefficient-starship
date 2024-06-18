@@ -50,7 +50,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 20
   maxDistance: 50
-  ignoredTags: []
   knockbackMultiplier: 25
   durability: 1
   rotationIsStatic: 1
@@ -59,7 +58,7 @@ MonoBehaviour:
   objectDamage: 0
   rb: {fileID: 51615182096661829}
   hitbox: {fileID: 1239980288682230593, guid: 31fd51b646f58a44ca3461d195dd0982, type: 3}
-  explosionEffect: {fileID: 6154679705410808802, guid: 426f4219b3506094a9779eee87067ce1, type: 3}
+  explosionEffect: p_sub_grenade_explode
   explosionRadius: 4
   animator: {fileID: 6680503774944497188}
   blastDamage: 2

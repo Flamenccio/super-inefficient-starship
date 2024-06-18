@@ -33,19 +33,6 @@ namespace Flamenccio.Effects.Visual
             Misc
         }
 
-        /*
-         * TODO
-         * Divide effects list into separate lists based on source. i.e:
-         *      Player
-         *      Item
-         *      Enemy
-         *      Neutral
-         *      Object
-         *
-         * Then figure out a way to sort the effects into their respective lists, returning an error message if one fails.
-         * If the sort fails, keep going through the rest of the sort. Clear the effects list once done.
-         */
-
         public static EffectManager Instance { get; private set; }
 
         [SerializeField] private GameObject collectedStarShard;
@@ -152,14 +139,8 @@ namespace Flamenccio.Effects.Visual
         /// <param name="origin">Where to place the effect.</param>
         public void SpawnEffect(string effectName, Vector2 origin)
         {
-            Stopwatch sw = new();
-            sw.Start();
-
             EffectID id = GetEffectId(effectName);
             SpawnEffect(id, origin);
-
-            sw.Stop();
-            Debug.Log($"Elapsed: {sw.Elapsed}");
         }
 
         /// <summary>
@@ -225,6 +206,8 @@ namespace Flamenccio.Effects.Visual
         /// <returns>The ID of the effect; -1 if no such effect exists.</returns>
         public EffectID GetEffectId(string effectName)
         {
+            if (string.IsNullOrEmpty(effectName)) return GetNullId();
+
             var category = FindMatchingCategory(effectName);
 
             if (category == EffectCategory.None) return GetNullId();

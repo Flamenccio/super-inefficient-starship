@@ -2,6 +2,7 @@ using Flamenccio.Attack.Enemy;
 using Flamenccio.Core;
 using Flamenccio.Effects;
 using Flamenccio.Effects.Audio;
+using Flamenccio.Effects.Visual;
 using Flamenccio.Utility;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Flamenccio.Powerup.Weapon
             /// TODO Find a solution to avoid hardcoding name and description. Applies to other buffs and weapons too.
             base.Startup();
             Name = "Reload";
-            Desc = $"Immediately consumes all stored star shards and converts {conversionRatio * 100f}% of them into ammo. Additionally restores {timerReplenish} seconds onto the life timer.\nMax charges: 1\nCooldown: {Cooldown} seconds";
+            Desc = $"[TAP]: Immediately consumes all stored star shards and converts {conversionRatio * 100f}% of them into ammo. Additionally restores {timerReplenish} seconds onto the life timer.\nMax charges: {maxSpecialCharges}\nCooldown: {Cooldown} seconds.\nIf [TAP] is used right before a hit lands, performs a Perfect Reload: in addition of Reloading, restores 50% of used star shards and cooldown is reduced to {Cooldown / 2f}.";
             Rarity = PowerupRarity.Rare;
             gameState = FindObjectOfType<GameState>();
             parryTimer = 0f;
@@ -97,11 +98,13 @@ namespace Flamenccio.Powerup.Weapon
 
         private void PerfectReload()
         {
-            // TODO add a stun to all nearby enemies
             Instantiate(reloadPerfectEffect, PlayerMotion.Instance.PlayerPosition, Quaternion.identity);
             PlayerMotion.Instance.Move(-transform.right, 20f, PARRY_DURATION);
+            CameraEffects.Instance.SlowMo(0.5f);
+            CameraEffects.Instance.Zoom(0.1f, 0.4f, -1f);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GetAudioEvent("PlayerSpecialReloadPerfectTap"), transform.position);
             int total = playerAtt.UseKillPoints();
+            playerAtt.AddKillPoints(Mathf.FloorToInt(total / 2f));
             int final = Mathf.FloorToInt(total * conversionRatio);
             playerAtt.AddAmmo(final);
             gameState.ReplenishTimer(timerReplenish);

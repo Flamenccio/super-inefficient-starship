@@ -19,6 +19,7 @@ namespace Flamenccio.Powerup.Weapon
         private LemniscaticWindCyclingBullet attackInstance;
         private bool rechargeUsed = false;
         private EventReference specialRechargeAudio;
+        private EffectManager.EffectID specialChargeReplenishEffect;
 
         protected override void Startup()
         {
@@ -29,6 +30,7 @@ namespace Flamenccio.Powerup.Weapon
             Rarity = PowerupRarity.Rare;
             audioTap = FMODEvents.Instance.GetAudioEvent("PlayerSpecialBurstTap");
             specialRechargeAudio = FMODEvents.Instance.GetAudioEvent("PlayerSpecialChargeCue");
+            specialChargeReplenishEffect = EffectManager.Instance.GetEffectId("p_specialcharge_replenish");
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
@@ -57,7 +59,7 @@ namespace Flamenccio.Powerup.Weapon
                 AudioManager.Instance.PlayOneShot(specialRechargeAudio, transform.position);
                 rechargeUsed = true;
                 playerAtt.ReplenishCharge(1);
-                EffectManager.Instance.SpawnEffect("p_specialcharge_replenish", PlayerMotion.Instance.transform);
+                EffectManager.Instance.SpawnEffect(specialChargeReplenishEffect, PlayerMotion.Instance.transform);
             }
         }
     }

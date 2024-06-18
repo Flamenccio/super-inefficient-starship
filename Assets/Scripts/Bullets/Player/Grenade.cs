@@ -10,7 +10,7 @@ namespace Flamenccio.Attack.Player
     public class Grenade : PlayerBullet
     {
         [SerializeField] private GameObject hitbox;
-        [SerializeField] private GameObject explosionEffect;
+        [SerializeField] private string explosionEffect;
         [SerializeField] private float explosionRadius;
         [SerializeField] private Animator animator;
         [SerializeField] private int blastDamage;
@@ -56,7 +56,7 @@ namespace Flamenccio.Attack.Player
         {
             cameraEff.ScreenShake(CameraEffects.ScreenShakeIntensity.Extreme, transform.position);
             Instantiate(hitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, explosionRadius, blastDamage, Hitbox.HitboxAffiliation.Player, knockbackMultiplier);
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
+            EffectManager.Instance.SpawnEffect(explosionEffect, transform.position);
             Destroy(gameObject);
         }
     }

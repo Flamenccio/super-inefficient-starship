@@ -46,15 +46,6 @@ namespace Flamenccio.Effects.Visual
         private void SpawnTrails()
         {
             effectManager.SpawnTrail(TrailPool.Trails.StarFlyTrail, transform.position);
-
-            /*
-            trailTimer += Time.deltaTime;
-
-            if (trailTimer > TRAIL_FREQUENCY)
-            {
-                trailTimer = 0f;
-            }
-            */
         }
 
         private void MoveToPlayer()
