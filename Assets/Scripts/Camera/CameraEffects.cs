@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Flamenccio.Effects.Visual
 {
     /// <summary>
-    /// Controls visual camera effects like screen shakes.
+    /// Controls visual camera effects (e.g. screen shakes, zoom-ins, zoom-outs, etc.).
     /// <para>Allows other classes to trigger these effects.</para>
     /// </summary>
     public class CameraEffects : MonoBehaviour
@@ -23,6 +23,7 @@ namespace Flamenccio.Effects.Visual
 
         private Action realtimeEffects;
         private Camera thisCamera;
+        private CameraControl cameraControl;
 
         private const float SCREEN_SHAKE_DURATION = 0.25f; // duration of screen shake effect in seconds
         private const float SCREEN_SHAKE_WEAK = 0.20f;
@@ -65,8 +66,10 @@ namespace Flamenccio.Effects.Visual
 
         private void Start()
         {
+            cameraControl = GetComponent<CameraControl>();
             GameEventManager.OnEnemyHit += (v) => ScreenShake(ScreenShakeIntensity.Weak, v.EventOrigin);
             GameEventManager.OnEnemyKill += (v) => ScreenShake(ScreenShakeIntensity.Normal, v.EventOrigin);
+            GameEventManager.OnPlayerHit += (v) => Zoom(0.1f, 0.1f, -1);
         }
 
         private void Update()
@@ -132,7 +135,7 @@ namespace Flamenccio.Effects.Visual
         /// <param name="magnitude">How much to zoom. A <b>positive</b> value will <b>zoom out</b>. A <b>negative</b> value will <b>zoom in</b></param>.
         public void Zoom(float zoomInSeconds, float durationSeconds, float magnitude)
         {
-            if (zoomTimer > 0f) return; // only one zoom in at a time
+            if (zoomTimer > 0f || !cameraControl.StopSizeUpdate(zoomInSeconds + durationSeconds)) return; // only one zoom in at a time and must be able to change camera's size
 
             zoomMaxTime = zoomInSeconds;
             zoomFinalTime = durationSeconds;
@@ -176,6 +179,7 @@ namespace Flamenccio.Effects.Visual
                 zoomTimer = 0f;
                 zoomMagnitude = 0f;
                 zoomMaxTime = 0f;
+                cameraControl.SetCameraSize(originalSize);
                 realtimeEffects -= ZoomUpdateStage2;
             }
         }
