@@ -27,17 +27,6 @@ namespace Flamenccio.Core
         private const float WALL_SEARCH_RADIUS = 8.0f;
         private const float ENEMY_SPAWN_RADIUS = 2.0f; // the minimum space required between the player and enemy for it (the enemy) to spawn
 
-        private struct SpawnToolkit
-        {
-            public Vector2 globalSpawnCoords;
-            public Vector2 localSpawnCoords;
-            public int root;
-            public Stage rootStage;
-            public bool spawnReady;
-            public int spawnAttempts;
-            public Collider2D stageCheck;
-        }
-
         private void Awake()
         {
             wallLayer = LayerManager.GetLayerMask(Layer.Wall);
