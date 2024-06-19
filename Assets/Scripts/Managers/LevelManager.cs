@@ -28,10 +28,9 @@ namespace Flamenccio.Core
         /// <returns>True if successful; false otherwise.</returns>
         public bool AddStage(Stage newStage, Stage rootStage, Directions.CardinalValues direction)
         {
-            // 1. The rootStage must already exist in the Stages list.
-            // 2. The newStage must NOT already exist in the Stages list.
-            var ready = Stages.Exists(x => x.gameObject.GetInstanceID() == rootStage.gameObject.GetInstanceID())
-                && !Stages.Exists(y => y.gameObject.GetInstanceID() == newStage.gameObject.GetInstanceID());
+            bool rootStageExists = Stages.Exists(x => x.gameObject.GetInstanceID() == rootStage.gameObject.GetInstanceID()); // The rootStage must already exist in the Stages list.
+            bool newStageDoesNotExist = !Stages.Exists(y => y.gameObject.GetInstanceID() == newStage.gameObject.GetInstanceID()); // The newStage must NOT already exist in the Stages list.
+            bool ready = rootStageExists && newStageDoesNotExist;
 
             if (!ready) return false; // do not extend if the given root stage is not in the Stages list.
 
