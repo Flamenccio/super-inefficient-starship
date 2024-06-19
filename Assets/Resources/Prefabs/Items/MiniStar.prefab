@@ -65,8 +65,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae537905a44179e4b95a3c95c74ea161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectEffect: {fileID: 0}
-  spawnEffect: {fileID: 0}
+  collectVfx: 
+  spawnVfx: 
+  collectSfx: ItemStarShardCollect
   val: 1
 --- !u!50 &4826716236662565054
 Rigidbody2D:
@@ -401,8 +402,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRen: {fileID: 4188917625378758875}
   brightnessFrequency: 2
+  sizeFrequency: 2
   maxOpacity: 0.3
   minOpacity: 0
-  sizeFrequency: 2
   maxSize: 0.5
   minSize: 0.1

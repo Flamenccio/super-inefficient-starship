@@ -32,11 +32,11 @@ namespace Flamenccio.Attack.Player
         {
             if (collider.gameObject.CompareTag(TagManager.GetTag(Tag.EnemyBullet)))
             {
-                EffectManager.Instance.SpawnEffect("m_bullet_parry", transform.position);
+                EffectManager.Instance.SpawnEffect(bulletParryVfx, transform.position);
             }
             else
             {
-                EffectManager.Instance.SpawnEffect("m_bullet_impact", transform.position);
+                EffectManager.Instance.SpawnEffect(bulletImpactVfx, transform.position);
             }
             if (collider.gameObject.CompareTag(TagManager.GetTag(Tag.Enemy)))
             {

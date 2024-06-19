@@ -131,6 +131,11 @@ namespace Flamenccio.Effects.Visual
             SpawnEffect(id, origin, rotation);
         }
 
+        /// <summary>
+        /// Spawn an effect and place it somewhere in the game world with a rotation.
+        /// </summary>
+        /// <param name="effectID">The ID of the effect.</param>
+        /// <param name="origin">Where to place the effect.</param>
         public void SpawnEffect(EffectID effectID, Vector2 origin)
         {
             var list = GetEffectObjectList(effectID);
@@ -140,6 +145,12 @@ namespace Flamenccio.Effects.Visual
             Instantiate(list[effectID.Index].Effect, origin, Quaternion.identity);
         }
 
+        /// <summary>
+        /// Spawn an effect and place it somewhere in the game world with a rotation.
+        /// </summary>
+        /// <param name="effectID">The ID of the effect.</param>
+        /// <param name="origin">Where to place the effect.</param>
+        /// <param name="rotation">Rotation of the effect.</param>
         public void SpawnEffect(EffectID effectID, Vector2 origin, Quaternion rotation)
         {
             var list = GetEffectObjectList(effectID);
@@ -149,6 +160,11 @@ namespace Flamenccio.Effects.Visual
             Instantiate(list[effectID.Index].Effect, origin, rotation);
         }
 
+        /// <summary>
+        /// Spawn an effect and place it somewhere in the game world with a rotation.
+        /// </summary>
+        /// <param name="effectID">The ID of the effect.</param>
+        /// <param name="parent">Parent transform of effect.</param>
         public void SpawnEffect(EffectID effectID, Transform parent)
         {
             var list = GetEffectObjectList(effectID);

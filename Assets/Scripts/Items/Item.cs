@@ -7,8 +7,9 @@ namespace Flamenccio.Item
     // base class for all in-game appearances of items.
     public class Item : MonoBehaviour
     {
-        [SerializeField] protected string collectEffect = "i_generic_collect"; // set a default collect vfx
-        [SerializeField] protected string spawnEffect;
+        [SerializeField] protected string collectVfx = "i_generic_collect"; // set a default collect vfx
+        [SerializeField] protected string spawnVfx;
+        [SerializeField] protected string collectSfx;
         protected readonly string PLAYER_TAG = TagManager.GetTag(Tag.Player);
 
         /// <summary>
@@ -35,9 +36,9 @@ namespace Flamenccio.Item
 
         protected void Awake()
         {
-            if (spawnEffect != null)
+            if (spawnVfx != null)
             {
-                EffectManager.Instance.SpawnEffect(spawnEffect, transform);
+                EffectManager.Instance.SpawnEffect(spawnVfx, transform);
             }
             SpawnEffect();
         }
@@ -48,7 +49,7 @@ namespace Flamenccio.Item
             if (collision.CompareTag(PLAYER_TAG))
             {
                 CollectEffect(collision.transform);
-                EffectManager.Instance.SpawnEffect(collectEffect, transform.position);
+                EffectManager.Instance.SpawnEffect(collectVfx, transform.position);
                 Destroy(gameObject);
             }
         }

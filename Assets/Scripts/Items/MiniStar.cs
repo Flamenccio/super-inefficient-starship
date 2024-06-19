@@ -23,7 +23,7 @@ namespace Flamenccio.Item
 
         protected override void CollectEffect(Transform player)
         {
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GetAudioEvent("ItemStarShardCollect"), transform.position);
+            AudioManager.Instance.PlayOneShot(collectSfx, transform.position);
         }
 
         protected override void ConstantEffect()

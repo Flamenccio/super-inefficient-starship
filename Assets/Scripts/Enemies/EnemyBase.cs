@@ -64,7 +64,7 @@ namespace Enemy
         protected virtual void Animation() { }
 
         /// <summary>
-        /// The behavior that happens when the the enemy enters a trigger.
+        /// The behavior that happens when the enemy enters a trigger.
         /// </summary>
         protected virtual void Trigger(Collider2D col) { }
 

@@ -1,6 +1,5 @@
 using UnityEngine;
 using Flamenccio.Effects.Audio;
-using UnityEditor;
 
 namespace Flamenccio.Item
 {
@@ -11,7 +10,7 @@ namespace Flamenccio.Item
 
         protected override void CollectEffect(Transform player)
         {
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GetAudioEvent("ItemStarCollect"), transform.position);
+            AudioManager.Instance.PlayOneShot(collectSfx, transform.position);
         }
     }
 }

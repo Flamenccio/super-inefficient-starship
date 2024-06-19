@@ -50,5 +50,7 @@ MonoBehaviour:
   aimAssisted: 0
   mainAttack: {fileID: 0}
   maxSpecialCharges: 1
-  reloadNormalEffect: {fileID: 3270319627928517052, guid: dc58ba2b228a3c84e90a0830ef128ada, type: 3}
-  reloadPerfectEffect: {fileID: 5287969403677209221, guid: f3e97c22da40fd849860f1b3165720ad, type: 3}
+  reloadNormalVfx: p_special_reload_tap
+  reloadPerfectVfx: p_special_reload_perfect_tap
+  reloadNormalSfx: PlayerSpecialReloadTap
+  reloadPerfectSfx: PlayerSpecialReloadPerfectTap

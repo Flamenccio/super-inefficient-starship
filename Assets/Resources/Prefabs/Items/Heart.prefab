@@ -62,8 +62,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 793c41f5aef4d374ba0d52ad42451814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectEffect: i_heart_collect
-  spawnEffect: i_heart_spawn
+  collectVfx: i_generic_collect
+  spawnVfx: i_heart_spawn
+  collectSfx: ItemHeartCollect
 --- !u!1 &4752744517191664850
 GameObject:
   m_ObjectHideFlags: 0

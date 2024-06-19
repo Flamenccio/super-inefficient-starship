@@ -101,8 +101,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a62a27b9232a0145b8d603a966ed483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectEffect: i_star_collect
-  spawnEffect: i_star_spawn
+  collectVfx: i_star_collect
+  spawnVfx: i_star_spawn
+  collectSfx: ItemStarCollect
   val: 1
 --- !u!58 &8892482636647966079
 CircleCollider2D:
