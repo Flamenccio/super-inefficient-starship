@@ -42,7 +42,7 @@ namespace Enemy
         private const float RADAR_RADIUS = 10.0f; // radius of circle used to find player tracks
         private const float FOOTPRINT_DISTANCE_MIN = 1.0f; // distance to footprint that tracker must be before going to next one
         private const float FOOTPRINT_DISTANCE_MAX = 8f;
-        private const float CHECK_TIMER_MAX = 0.10f;
+        private const float CHECK_TIMER_MAX = 3f / 60f;
         private const float WANDER_BEHAVIOR_TIMER_MIN = 3.0f;
         private const float WANDER_BEHAVIOR_TIMER_MAX = 5.0f;
         private const float CHASE_BEHAVIOR_TIMER_MAX = 0.5f;
