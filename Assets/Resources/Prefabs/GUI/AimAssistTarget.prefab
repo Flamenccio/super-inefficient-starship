@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 3917749359578002712}
-  lockonSfx: PlayerLockon
+  lockonSfx: p_lockon
 --- !u!114 &3917749359578002711
 MonoBehaviour:
   m_ObjectHideFlags: 0

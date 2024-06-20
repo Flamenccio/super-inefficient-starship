@@ -47,4 +47,7 @@ MonoBehaviour:
   cost: 1
   cooldown: 1
   holdThreshold: 0.5
+  aimAssisted: 0
   mainAttack: {fileID: 1613613872814323929, guid: 0accc77b24fde9c418a94c05ef6e7279, type: 3}
+  chargedCost: 0
+  holdSfx: p_main_gatling_hold

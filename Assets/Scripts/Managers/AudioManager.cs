@@ -26,9 +26,9 @@ namespace Flamenccio.Effects.Audio
 
         private void Start()
         {
-            GameEventManager.OnEnemyHit += (v) => PlayOneShot("EnemyHurt", v.EventOrigin);
-            GameEventManager.OnEnemyKill += (v) => PlayOneShot("EnemyKill", v.EventOrigin);
-            GameEventManager.OnPlayerHit += (v) => PlayOneShot("PlayerHurt", v.EventOrigin);
+            GameEventManager.OnEnemyHit += (v) => PlayOneShot("e_hurt", v.EventOrigin);
+            GameEventManager.OnEnemyKill += (v) => PlayOneShot("e_kill", v.EventOrigin);
+            GameEventManager.OnPlayerHit += (v) => PlayOneShot("p_hurt", v.EventOrigin);
         }
 
         /// <summary>

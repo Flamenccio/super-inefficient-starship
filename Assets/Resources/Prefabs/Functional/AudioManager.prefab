@@ -90,139 +90,139 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioEvents:
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: e_hurt
+    <Audio>k__BackingField:
       Guid:
         Data1: -1431796863
         Data2: 1298896819
         Data3: 730920080
         Data4: 1871516561
       Path: event:/enemy/enemy-hurt
-    <Name>k__BackingField: EnemyHurt
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: e_kill
+    <Audio>k__BackingField:
       Guid:
         Data1: 1083279
         Data2: 1179615886
         Data3: 191447714
         Data4: 1654639649
       Path: event:/enemy/enemy-kill
-    <Name>k__BackingField: EnemyKill
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: i_heart_collect
+    <Audio>k__BackingField:
       Guid:
         Data1: 757066673
         Data2: 1221980304
         Data3: 1126556827
         Data4: 1323299488
       Path: event:/items/heart-collect
-    <Name>k__BackingField: ItemHeartCollect
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: i_starshard_collect
+    <Audio>k__BackingField:
       Guid:
         Data1: 1366944205
         Data2: 1166954975
         Data3: 1358069382
         Data4: 933185700
       Path: event:/items/mini-collect
-    <Name>k__BackingField: ItemStarShardCollect
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: i_star_collect
+    <Audio>k__BackingField:
       Guid:
         Data1: 1279869716
         Data2: 1339169392
         Data3: -1549662080
         Data4: -1738584839
       Path: event:/items/star-collect
-    <Name>k__BackingField: ItemStarCollect
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: o_wall_destroy
+    <Audio>k__BackingField:
       Guid:
         Data1: 233108460
         Data2: 1140077004
         Data3: -882135636
         Data4: -1851771520
       Path: event:/items/wall-break
-    <Name>k__BackingField: ObjectWallDestroy
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_special_burst_tap
+    <Audio>k__BackingField:
       Guid:
         Data1: -92746709
         Data2: 1328192551
         Data3: 1062154668
         Data4: -160407922
       Path: event:/player/player-burst
-    <Name>k__BackingField: PlayerSpecialBurstTap
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_defense_dash_tap
+    <Audio>k__BackingField:
       Guid:
         Data1: 443311161
         Data2: 1337513363
         Data3: 373769114
         Data4: -1206529513
       Path: event:/player/player-dash
-    <Name>k__BackingField: PlayerDefenseDashTap
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_hurt
+    <Audio>k__BackingField:
       Guid:
         Data1: -2133752650
         Data2: 1305769540
         Data3: 1031316625
         Data4: -1546478426
       Path: event:/player/player-hurt
-    <Name>k__BackingField: PlayerHurt
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_lockon
+    <Audio>k__BackingField:
       Guid:
         Data1: -1410357305
         Data2: 1244152873
         Data3: 984357272
         Data4: 1230211916
       Path: event:/player/player-lockon
-    <Name>k__BackingField: PlayerLockon
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_main_redsword_tap
+    <Audio>k__BackingField:
       Guid:
         Data1: -572500369
         Data2: 1125851227
         Data3: -875927899
         Data4: -1485341216
       Path: event:/player/player-red-sword-swing
-    <Name>k__BackingField: PlayerMainRedSwordTap
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_main_blaster_tap
+    <Audio>k__BackingField:
       Guid:
         Data1: 1770685226
         Data2: 1174029750
         Data3: 916971917
         Data4: 746205551
       Path: event:/player/player-shoot
-    <Name>k__BackingField: PlayerMainBlasterTap
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_main_gatling_hold
+    <Audio>k__BackingField:
       Guid:
         Data1: -127118816
         Data2: 1260975394
         Data3: 109175702
         Data4: 883146580
       Path: event:/player/player-shoot-mini
-    <Name>k__BackingField: PlayerMainGatlingHold
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_main_shotgun_tap
+    <Audio>k__BackingField:
       Guid:
         Data1: 1475268222
         Data2: 1283655148
         Data3: 1642948023
         Data4: -618269668
       Path: event:/player/player-shotgun
-    <Name>k__BackingField: PlayerMainShotgunTap
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_specialcharge_replenish
+    <Audio>k__BackingField:
       Guid:
         Data1: 1404817076
         Data2: 1187353855
         Data3: 136003751
         Data4: -830965190
       Path: event:/player/special-que
-    <Name>k__BackingField: PlayerSpecialChargeCue
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_special_reload_tap
+    <Audio>k__BackingField:
       Guid:
         Data1: 652853263
         Data2: 1317095392
         Data3: -229070201
         Data4: 1024266326
       Path: event:/player/player-special-reload
-    <Name>k__BackingField: PlayerSpecialReloadTap
-  - <Audio>k__BackingField:
+  - <Name>k__BackingField: p_special_reload_perfect_tap
+    <Audio>k__BackingField:
       Guid:
         Data1: 2146965484
         Data2: 1300289824
         Data3: -1643450701
         Data4: 2029595856
       Path: event:/player/player-special-reload-perfect
-    <Name>k__BackingField: PlayerSpecialReloadPerfectTap

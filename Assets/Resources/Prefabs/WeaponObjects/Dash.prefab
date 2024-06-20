@@ -49,4 +49,5 @@ MonoBehaviour:
   holdThreshold: 0
   aimAssisted: 0
   mainAttack: {fileID: 0}
-  afterImage: {fileID: 7310451257306078532, guid: 347bae39dfd536f4480a81b631b45266, type: 3}
+  trail: {fileID: 7310451257306078532, guid: 347bae39dfd536f4480a81b631b45266, type: 3}
+  dashSfx: p_defense_dash_tap

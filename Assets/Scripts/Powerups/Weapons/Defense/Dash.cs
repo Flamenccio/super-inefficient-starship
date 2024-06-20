@@ -9,7 +9,8 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class Dash : WeaponDefense
     {
-        [SerializeField] private GameObject afterImage;
+        [SerializeField] private GameObject trail;
+        [SerializeField] private string dashSfx;
         private float trailTimer = 0f;
         private const float DURATION = 5f / 60f;
         private const float SPEED = 50f;
@@ -21,7 +22,6 @@ namespace Flamenccio.Powerup.Weapon
             Desc = "[TAP]: Quickly move a set distance in direction you are moving in.";
             Name = "Dash";
             Rarity = PowerupRarity.Common;
-            audioTap = FMODEvents.Instance.GetAudioEvent("PlayerDefenseDashTap");
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
@@ -30,7 +30,7 @@ namespace Flamenccio.Powerup.Weapon
 
             float r = Mathf.Deg2Rad * moveAngleDeg;
             Vector2 v = new(Mathf.Cos(r), Mathf.Sin(r));
-            AudioManager.Instance.PlayOneShot(audioTap, transform.position);
+            AudioManager.Instance.PlayOneShot(dashSfx, transform.position);
             PlayerMotion.Instance.Move(v, SPEED, DURATION);
             cooldownTimer = 0f;
         }
@@ -43,7 +43,7 @@ namespace Flamenccio.Powerup.Weapon
             {
                 if (trailTimer >= TRAIL_FREQUENCY)
                 {
-                    Instantiate(afterImage, transform.position, Quaternion.Euler(transform.rotation.eulerAngles));
+                    Instantiate(trail, transform.position, Quaternion.Euler(transform.rotation.eulerAngles));
                     trailTimer = 0f;
                 }
 

@@ -8,8 +8,8 @@ namespace Flamenccio.Effects.Audio
     [System.Serializable]
     public struct AudioEvent
     {
+        [field: SerializeField, Tooltip("Naming convention: <Category><Source><Trigger>. No spaces, snake_case, no plurals, no empty strings.")] public string Name { get; set; }
         [field: SerializeField] public EventReference Audio { get; set; }
-        [field: SerializeField, Tooltip("Naming convention: <Category><Source><Event>. No spaces, PascalCasing, no plurals, no empty strings.")] public string Name { get; set; }
     }
 
     public class FMODEvents : MonoBehaviour

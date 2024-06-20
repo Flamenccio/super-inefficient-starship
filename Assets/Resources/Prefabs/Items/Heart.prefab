@@ -64,7 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectVfx: i_generic_collect
   spawnVfx: i_heart_spawn
-  collectSfx: ItemHeartCollect
+  collectSfx: i_heart_collect
 --- !u!1 &4752744517191664850
 GameObject:
   m_ObjectHideFlags: 0

@@ -52,5 +52,5 @@ MonoBehaviour:
   maxSpecialCharges: 1
   reloadNormalVfx: p_special_reload_tap
   reloadPerfectVfx: p_special_reload_perfect_tap
-  reloadNormalSfx: PlayerSpecialReloadTap
-  reloadPerfectSfx: PlayerSpecialReloadPerfectTap
+  reloadNormalSfx: p_special_reload_tap
+  reloadPerfectSfx: p_special_reload_perfect_tap

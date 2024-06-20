@@ -13,6 +13,7 @@ namespace Flamenccio.Powerup.Weapon
     public class RedSword : WeaponMain
     {
         [SerializeField] private GameObject chargeAttack;
+        [SerializeField] private string tapSfx;
         private const float SLASH_OFFSET = 1f;
         private bool flip = false;
         private int kills = 0;
@@ -26,7 +27,6 @@ namespace Flamenccio.Powerup.Weapon
             Level = 1;
             Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;
-            audioTap = FMODEvents.Instance.GetAudioEvent("PlayerMainRedSwordTap");
         }
 
         private void OnEnable()
@@ -58,7 +58,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (!AttackReady()) return;
 
-            AudioManager.Instance.PlayOneShot(audioTap, transform.position);
+            AudioManager.Instance.PlayOneShot(tapSfx, transform.position);
             flip = !flip;
             cooldownTimer = 0f;
             RedSwordAttack inst = Instantiate(mainAttack, PlayerMotion.Instance.transform).GetComponent<RedSwordAttack>();

@@ -67,7 +67,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectVfx: 
   spawnVfx: 
-  collectSfx: ItemStarShardCollect
+  collectSfx: i_starshard_collect
   val: 1
 --- !u!50 &4826716236662565054
 Rigidbody2D:

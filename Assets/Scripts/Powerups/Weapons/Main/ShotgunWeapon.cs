@@ -12,13 +12,15 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class ShotgunWeapon : WeaponMain
     {
+        [SerializeField] private GameObject playerTackleHitbox;
+        [SerializeField] private GameObject muzzleFlashEffect;
+        [SerializeField] private string tapSfx;
+
         private const float DEVIATION_MAX_DEGREES = 50.0f;
         private const int BLAST_AMOUNT = 6; // bullets fired per shot
         private const float KNOCKBACK_DURATION = 0.24f;
         private const float TACKLE_DURATIION = 0.4f;
         private const float TACKLE_RADIUS = 1.6f;
-        [SerializeField] private GameObject playerTackleHitbox;
-        [SerializeField] private GameObject muzzleFlashEffect;
 
         protected override void Startup()
         {
@@ -26,7 +28,6 @@ namespace Flamenccio.Powerup.Weapon
             Name = "Rocket-Powered Shotgun";
             Desc = "[TAP]: Fires a powerful spray of bullets that launches you backward. You deal damage along with the bullets.\nDamage: high\nRange: short\nSpeed: very fast\nCooldown: long";
             Rarity = PowerupRarity.Uncommon;
-            audioTap = FMODEvents.Instance.GetAudioEvent("PlayerMainShotgunTap");
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
@@ -41,7 +42,7 @@ namespace Flamenccio.Powerup.Weapon
             PlayerMotion.Instance.RestrictMovement(KNOCKBACK_DURATION);
             PlayerMotion.Instance.Shove(opposite, (float)KnockbackPower.Extreme);
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Strong, origin);
-            AudioManager.Instance.PlayOneShot(audioTap, transform.position);
+            AudioManager.Instance.PlayOneShot(tapSfx, transform.position);
 
             var hitbox = Instantiate(playerTackleHitbox, PlayerMotion.Instance.PlayerTransform).GetComponent<Hitbox>();
             hitbox.EditProperties(TACKLE_DURATIION, TACKLE_RADIUS, 3, Hitbox.HitboxAffiliation.Player);

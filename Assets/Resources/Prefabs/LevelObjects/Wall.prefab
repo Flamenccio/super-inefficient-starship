@@ -132,7 +132,7 @@ MonoBehaviour:
   - NBullet
   destroyVfx: o_generic_destroy
   spawnVfx: o_wall_spawn
-  destroySfx: ObjectWallDestroy
+  destroySfx: o_wall_destroy
   level0: {fileID: 21300000, guid: 15c4e348221e96549b7c54ab1a8b9298, type: 3}
   level1: {fileID: 21300000, guid: da20ebc4904180646b7faa853f0b5da4, type: 3}
   spriteRen: {fileID: 66644284648686914}

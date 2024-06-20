@@ -103,7 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectVfx: i_star_collect
   spawnVfx: i_star_spawn
-  collectSfx: ItemStarCollect
+  collectSfx: i_star_collect
   val: 1
 --- !u!58 &8892482636647966079
 CircleCollider2D:

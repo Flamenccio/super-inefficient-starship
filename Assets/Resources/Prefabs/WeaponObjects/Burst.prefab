@@ -54,3 +54,6 @@ MonoBehaviour:
   DURATION: 0.1
   SPEED: 60
   HIT_STREAK_CONDITION: 3
+  tapSfx: p_special_burst_tap
+  specialReplenishSfx: p_specialcharge_replenish
+  specialReplenishVfx: p_specialcharge_replenish

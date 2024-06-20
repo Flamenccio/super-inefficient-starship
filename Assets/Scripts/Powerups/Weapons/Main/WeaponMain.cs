@@ -25,6 +25,7 @@ namespace Flamenccio.Powerup.Weapon
 
             if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap))
             {
+                // TODO Find a way to avoid hardcoding this text: "AMMO LOW."
                 FloatingTextManager.Instance.DisplayText("AMMO LOW", transform.position, Color.yellow, 0.8f, 30f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.ZoomIn, true);
                 return false;
             }

@@ -52,3 +52,4 @@ MonoBehaviour:
   chargedCost: 0
   playerTackleHitbox: {fileID: 1239980288682230593, guid: 31fd51b646f58a44ca3461d195dd0982, type: 3}
   muzzleFlashEffect: {fileID: 6515043459337164799, guid: c20daed04ac0fcf43ae3f6bc1a1c3be3, type: 3}
+  tapSfx: p_main_shotgun_tap
