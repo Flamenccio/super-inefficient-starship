@@ -25,7 +25,7 @@ namespace Flamenccio.Effects.Visual
 
         [SerializeField] private GameObject collectedStarShard;
         [SerializeField] private TrailPool trailPool;
-        [SerializeField] private List<EffectObject> effects = new();
+        private List<EffectObject> effects = new();
         private List<EffectObject> playerEffects = new();
         private List<EffectObject> enemyEffects = new();
         private List<EffectObject> itemEffects = new();
@@ -61,6 +61,7 @@ namespace Flamenccio.Effects.Visual
                 { CATEGORY_MISC, miscEffects },
                 { CATEGORY_NONE, new() }
             };
+            effects = LoadEffects();
             SortEffects();
         }
 
@@ -70,6 +71,31 @@ namespace Flamenccio.Effects.Visual
             GameEventManager.OnEnemyKill += (v) => SpawnEffect("e_kill", v.EventOrigin);
             GameEventManager.OnEnemyHit += (v) => SpawnEffect("e_hit", v.EventOrigin);
             GameEventManager.OnPlayerHit += (v) => SpawnEffect("p_hit", v.EventTriggerer);
+        }
+
+        private List<EffectObject> LoadEffects()
+        {
+            var prefabs = Resources.LoadAll<GameObject>("Prefabs/Effects");
+            List<EffectObject> list = new();
+            prefabs
+                .Select(x =>
+                {
+                    x.TryGetComponent<Effect>(out var i);
+                    return i;
+                })
+                .Where(x => x != null && !string.IsNullOrEmpty(x.EffectName))
+                .ToList()
+                .ForEach(x =>
+                {
+                    EffectObject newEffect = new()
+                    {
+                        Name = x.EffectName,
+                        Effect = x.gameObject
+                    };
+                    list.Add(newEffect);
+                });
+
+            return list;
         }
 
         private void SortEffects()
@@ -192,7 +218,11 @@ namespace Flamenccio.Effects.Visual
         /// <returns>The ID of the effect; -1 if no such effect exists.</returns>
         public EffectID GetEffectId(string effectName)
         {
-            if (string.IsNullOrEmpty(effectName)) return GetNullId();
+            if (string.IsNullOrEmpty(effectName))
+            {
+                Debug.LogWarning("Given effect name is empty.");
+                return GetNullId();
+            }
 
             var category = FindMatchingCategory(effectName);
 
@@ -203,6 +233,7 @@ namespace Flamenccio.Effects.Visual
 
             if (!list.Select(x => x.Name).Contains(effectName))
             {
+                Debug.LogWarning($"Effect list does not contain {effectName}.");
                 return GetNullId();
             }
             else
@@ -220,6 +251,8 @@ namespace Flamenccio.Effects.Visual
 
                     index++;
                 }
+
+                Debug.LogWarning($"Failed to find effect {effectName}.");
 
                 return GetNullId();
             }

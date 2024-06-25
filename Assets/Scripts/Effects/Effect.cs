@@ -7,6 +7,8 @@ namespace Flamenccio.Effects.Visual
     /// </summary>
     public class Effect : MonoBehaviour
     {
+        public string EffectName { get => effectName; }
+        [SerializeField] protected string effectName;
         [SerializeField] protected Animator animator;
         protected float timer = 0f;
         protected float animLength = 0f;

@@ -38,7 +38,7 @@ namespace Flamenccio.Item
 
         protected void Awake()
         {
-            if (spawnVfx != null)
+            if (!string.IsNullOrEmpty(spawnVfx))
             {
                 EffectManager.Instance.SpawnEffect(spawnVfx, transform);
             }
@@ -51,7 +51,9 @@ namespace Flamenccio.Item
             if (collision.CompareTag(PLAYER_TAG))
             {
                 CollectEffect(collision.transform);
-                EffectManager.Instance.SpawnEffect(collectVfx, transform.position);
+                
+                if (!string.IsNullOrEmpty(collectVfx)) EffectManager.Instance.SpawnEffect(collectVfx, transform.position);
+
                 Destroy(gameObject);
             }
         }

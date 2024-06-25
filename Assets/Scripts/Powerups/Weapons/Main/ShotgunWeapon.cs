@@ -13,7 +13,7 @@ namespace Flamenccio.Powerup.Weapon
     public class ShotgunWeapon : WeaponMain
     {
         [SerializeField] private GameObject playerTackleHitbox;
-        [SerializeField] private GameObject muzzleFlashEffect;
+        [SerializeField] private string muzzleFlashVfx;
         [SerializeField] private string tapSfx;
 
         private const float DEVIATION_MAX_DEGREES = 50.0f;
@@ -43,10 +43,10 @@ namespace Flamenccio.Powerup.Weapon
             PlayerMotion.Instance.Shove(opposite, (float)KnockbackPower.Extreme);
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Strong, origin);
             AudioManager.Instance.PlayOneShot(tapSfx, transform.position);
+            EffectManager.Instance.SpawnEffect(muzzleFlashVfx, transform);
 
             var hitbox = Instantiate(playerTackleHitbox, PlayerMotion.Instance.PlayerTransform).GetComponent<Hitbox>();
             hitbox.EditProperties(TACKLE_DURATIION, TACKLE_RADIUS, 3, Hitbox.HitboxAffiliation.Player);
-            Instantiate(muzzleFlashEffect, transform);
 
             for (int i = 0; i < BLAST_AMOUNT; i++)
             {

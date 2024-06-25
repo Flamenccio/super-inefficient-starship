@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605feede3d489dc49994b3e7f6bc7d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effectName: p_special_reload_perfect_tap
   animator: {fileID: 5287969403677209226}
 --- !u!212 &5287969403677209227
 SpriteRenderer:
