@@ -51,7 +51,7 @@ namespace Flamenccio.Item
             if (collision.CompareTag(PLAYER_TAG))
             {
                 CollectEffect(collision.transform);
-                
+          
                 if (!string.IsNullOrEmpty(collectVfx)) EffectManager.Instance.SpawnEffect(collectVfx, transform.position);
 
                 Destroy(gameObject);
