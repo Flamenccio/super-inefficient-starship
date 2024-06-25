@@ -18,7 +18,8 @@ namespace Flamenccio.Item
         {
             rb = gameObject.GetComponent<Rigidbody2D>();
             float launchSpeed = Random.Range(MIN_SPEED, MAX_SPEED);
-            rb.AddForce(transform.right * launchSpeed, ForceMode2D.Impulse);
+            var direction = Directions.RandomVector2();
+            rb.AddForce(direction * launchSpeed, ForceMode2D.Impulse);
         }
 
         protected override void CollectEffect(Transform player)

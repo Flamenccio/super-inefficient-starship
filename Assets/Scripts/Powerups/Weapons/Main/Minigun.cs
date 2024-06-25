@@ -11,7 +11,6 @@ namespace Flamenccio.Powerup.Weapon
         [SerializeField] private string holdSfx;
 
         private float attackDuration = 0f;
-        private float frequency;
         private float freqTimer = 0f;
         private const int MAX_ROUNDS = 3; // rounds per ammo
         private int rounds = 0;
@@ -28,7 +27,6 @@ namespace Flamenccio.Powerup.Weapon
             Name = "Minigun";
             Desc = "[HOLD]: Continuously fires a stream of bullets. As bullets are fired, fire rate slows down and shots grow more innaccurate.\nDamage: low\nRange: below average\nSpeed: fast\nCooldown: very short.";
             Rarity = PowerupRarity.Common;
-            frequency = MIN_FREQUENCY;
         }
 
         public override void Hold(float aimAngleDeg, float moveAngleDeg, Vector2 origin)

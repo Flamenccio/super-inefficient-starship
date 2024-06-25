@@ -19,11 +19,10 @@ namespace Enemy
     {
         [SerializeField] protected int tier;
         [SerializeField] protected float moveSpeed = 0f;
-        [SerializeField] protected LayerMask playerLayer;
         [SerializeField] protected SpriteRenderer spriteRen;
         [SerializeField] protected Animator animator;
-        [SerializeField] protected GameObject miniStarPrefab;
         [SerializeField] protected float activeRange; // the player must be within range for this enemy to activate
+        protected LayerMask playerLayer;
         protected Transform player;
         protected GameState gameState;
         protected Sprite enemySprite;
@@ -40,6 +39,7 @@ namespace Enemy
         {
             rb = gameObject.GetComponent<Rigidbody2D>();
             player = PlayerMotion.Instance.transform;
+            playerLayer = LayerManager.GetLayerMask(Layer.Player);
         }
 
         protected void Awake()
@@ -100,13 +100,7 @@ namespace Enemy
             if (!alive) return; // ensures this function is only called once per enemy lifetime
 
             alive = false;
-
-            for (int i = 0; i < loot; i++)
-            {
-                float randomAngle = UnityEngine.Random.Range(0f, 359f);
-                Instantiate(miniStarPrefab, transform.position, Quaternion.Euler(0f, 0f, randomAngle));
-            }
-
+            Spawner.Instance.SpawnStarShard(transform.position, loot);
             GameEventManager.OnEnemyKill(GameEventManager.CreateGameEvent(transform.position));
             Destroy(gameObject); // destroy self
         }

@@ -253,9 +253,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b221b2f8f559bd419c8a018c1f82d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  starPrefab: {fileID: 3723733491574340259, guid: 4fa7adc0407007b42b9ef2c09b2135db, type: 3}
-  heartPrefab: {fileID: 4752744516956781119, guid: a57d87ecc7699c64386cf32df3b4d3d6, type: 3}
-  starShardPrefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
+  prefabs:
+  - Name: star
+    Prefab: {fileID: 3723733491574340259, guid: 4fa7adc0407007b42b9ef2c09b2135db, type: 3}
+  - Name: heart
+    Prefab: {fileID: 4752744516956781119, guid: a57d87ecc7699c64386cf32df3b4d3d6, type: 3}
+  - Name: starshard
+    Prefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
 --- !u!114 &4652299538706539210
 MonoBehaviour:
   m_ObjectHideFlags: 0

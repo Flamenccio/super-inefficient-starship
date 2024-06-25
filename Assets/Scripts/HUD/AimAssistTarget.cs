@@ -1,6 +1,5 @@
 using UnityEngine;
 using Flamenccio.Effects.Audio;
-using FMODUnity;
 
 namespace Flamenccio.HUD
 {

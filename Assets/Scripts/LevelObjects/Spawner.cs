@@ -4,6 +4,7 @@ using System.Linq;
 using Flamenccio.Utility;
 using Flamenccio.LevelObject.Stages;
 using Flamenccio.LevelObject.Walls;
+using System.Security;
 
 namespace Flamenccio.Core
 {
@@ -12,9 +13,13 @@ namespace Flamenccio.Core
     /// </summary>
     public class Spawner : MonoBehaviour
     {
+        public static Spawner Instance { get; private set; }
+
         private LayerMask wallLayer; // layer of all walls
         private LayerMask enemyCheckLayers; // obstructing layers when spawning enemies
         private LayerMask wallCheckLayers; // obstructing layers when spawning walls
+
+        private ItemSpawner.Item starshardItem;
 
         private LevelManager levelManager;
         private ObjectSpawner objectSpawner;
@@ -29,6 +34,15 @@ namespace Flamenccio.Core
 
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
+            }
+
             wallLayer = LayerManager.GetLayerMask(Layer.Wall);
             enemyCheckLayers = LayerManager.GetLayerMask(new List<Layer> { Layer.Player, Layer.Enemy, Layer.Wall });
             wallCheckLayers = LayerManager.GetLayerMask(new List<Layer> { Layer.Player, Layer.Wall });
@@ -37,6 +51,11 @@ namespace Flamenccio.Core
             objectSpawner = GetComponent<ObjectSpawner>();
             itemSpawner = GetComponent<ItemSpawner>();
             entitySpawner = GetComponent<EntitySpawner>();
+        }
+
+        private void Start()
+        {
+            starshardItem = itemSpawner.GetItem("starshard");
         }
 
         public GameObject SpawnEnemy(int difficulty)
@@ -84,7 +103,7 @@ namespace Flamenccio.Core
             var rootStage = levelManager.GetRandomStage();
             var localPosition = AlignPosition(rootStage.GetLocalPointInStage());
 
-            return itemSpawner.SpawnItem(ItemSpawner.Item.Star, rootStage.transform, localPosition);
+            return itemSpawner.SpawnItem("star", rootStage.transform, localPosition);
         }
 
         public void SpawnStage()
@@ -97,7 +116,7 @@ namespace Flamenccio.Core
             {
                 rootStage = levelManager.GetRandomStage();
                 rootStage.ScanNearbyStages();
-                extendDirection = Directions.RandomDirection();
+                extendDirection = Directions.RandomCardinal();
             } while (!rootStage.LinkableInDirection(extendDirection));
 
             var availableVariants = stageResources.GetAvailableVariantsInDirection(extendDirection, rootStage.Variant);
@@ -115,7 +134,7 @@ namespace Flamenccio.Core
 
             if (existingWall != null)
             {
-                Directions.CardinalValues dir = Directions.RandomDirection();
+                Directions.CardinalValues dir = Directions.RandomCardinal();
                 localPosition = (Vector2)existingWall.transform.localPosition + Directions.DirectionsToVector2(dir);
             }
             else
@@ -138,7 +157,7 @@ namespace Flamenccio.Core
         {
             var stage = levelManager.GetRandomStage();
             var point = AlignPosition(stage.GetLocalPointInStage());
-            return itemSpawner.SpawnItem(ItemSpawner.Item.Heart, stage.transform, point);
+            return itemSpawner.SpawnItem("heart", stage.transform, point);
         }
 
         /// <summary>
@@ -169,6 +188,30 @@ namespace Flamenccio.Core
             if (!ready) return;
 
             objectSpawner.SpawnPortal(stage1, stage2, localPosition1, localPosition2);
+        }
+
+        /// <summary>
+        /// Spawns a star shard at a global position.
+        /// </summary>
+        /// <param name="globalPosition">Global position.</param>
+        public void SpawnStarShard(Vector2 globalPosition)
+        {
+            itemSpawner.SpawnItem(starshardItem, globalPosition);
+        }
+
+        /// <summary>
+        /// Spawns multiple star shards at a global position.
+        /// </summary>
+        /// <param name="globalPosition">Global position.</param>
+        /// <param name="amount">Amount of shards to spawn.</param>
+        public void SpawnStarShard(Vector2 globalPosition, int amount)
+        {
+            if (amount < 0) return;
+
+            for (int i = 0; i < amount; i++)
+            {
+                SpawnStarShard(globalPosition);
+            }
         }
 
         /// <summary>

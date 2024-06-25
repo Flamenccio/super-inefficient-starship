@@ -183,14 +183,23 @@ namespace Flamenccio.Utility
             return CardinalValues.North;
         }
 
-        public static CardinalValues RandomDirection()
+        public static CardinalValues RandomCardinal()
         {
-            return (CardinalValues)Random.Range(0, System.Enum.GetNames(typeof(Directions.CardinalValues)).Length);
+            return (CardinalValues)Random.Range(0, System.Enum.GetNames(typeof(CardinalValues)).Length);
+        }
+
+        public static Vector2 RandomVector2()
+        {
+            float rad = Random.Range(0f, 2 * Mathf.PI);
+
+            return new(Mathf.Cos(rad), Mathf.Sin(rad));
         }
 
         public static bool IsCardinal(Vector2 vector)
         {
             vector.Normalize();
+
+            // TODO simplify
             foreach (Vector2 v in CardinalVectors)
             {
                 if (vector.Equals(v))
