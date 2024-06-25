@@ -6,18 +6,44 @@ namespace Flamenccio.Core
 {
     public class ItemSpawner : MonoBehaviour
     {
-        // TODO make system to automatically retrieve items in folder.
-        // * Each item class will have a "nameID" parameter that corresponds to the Name property in the Item struct.
-        // * nameID will be editable in the editor.
-
         [System.Serializable]
-        public struct Item
+        public struct ItemObject
         {
             [field: SerializeField, Tooltip("Must be all lowercase, no spaces.")] public string Name;
             [field: SerializeField] public GameObject Prefab;
         }
 
-        [SerializeField] private List<Item> prefabs = new();
+        private List<ItemObject> prefabs = new();
+
+        private void Awake()
+        {
+            prefabs = LoadItems();
+        }
+
+        private List<ItemObject> LoadItems()
+        {
+            var gameObjects = Resources.LoadAll<GameObject>("Prefabs/Items");
+            List<ItemObject> itemObjects = new();
+            gameObjects
+                .Select(x =>
+                {
+                    x.TryGetComponent<Item.Item>(out var i);
+                    return i;
+                })
+                .Where(x => x != null && !string.IsNullOrEmpty(x.ItemName))
+                .ToList()
+                .ForEach(x =>
+                {
+                    ItemObject obj = new()
+                    {
+                        Name = x.ItemName,
+                        Prefab = x.gameObject
+                    };
+                    itemObjects.Add(obj);
+                });
+
+            return itemObjects;
+        }
 
         /// <summary>
         /// Spawns an item on given stage and coordinates.
@@ -47,7 +73,7 @@ namespace Flamenccio.Core
         /// <param name="stage">Stage to spawn item in.</param>
         /// <param name="localCoordinate">Local coordinates on stage.</param>
         /// <returns>GameObject of item that was spawned. Returns null on failure.</returns>
-        public GameObject SpawnItem(Item item, Transform stage, Vector2 localCoordinate)
+        public GameObject SpawnItem(ItemObject item, Transform stage, Vector2 localCoordinate)
         {
             if (stage == null) return null;
 
@@ -66,7 +92,7 @@ namespace Flamenccio.Core
         /// <param name="stage">Stage to spawn item in.</param>
         /// <param name="localCoordinate">Local coordinates on stage.</param>
         /// <returns>GameObject of item that was spawned. Returns null on failure.</returns>
-        public GameObject SpawnItem(Item item, Vector2 globalCoordinate)
+        public GameObject SpawnItem(ItemObject item, Vector2 globalCoordinate)
         {
             if (item.Prefab == null) return null;
 
@@ -78,7 +104,7 @@ namespace Flamenccio.Core
         /// </summary>
         /// <param name="name">Name of item.</param>
         /// <returns>Item struct; an empty item struct on failure.</returns>
-        public Item GetItem(string name)
+        public ItemObject GetItem(string name)
         {
             if (!prefabs.Exists(x => x.Name.Equals(name))) return new();
 

@@ -19,7 +19,7 @@ namespace Flamenccio.Core
         private LayerMask enemyCheckLayers; // obstructing layers when spawning enemies
         private LayerMask wallCheckLayers; // obstructing layers when spawning walls
 
-        private ItemSpawner.Item starshardItem;
+        private ItemSpawner.ItemObject starshardItem;
 
         private LevelManager levelManager;
         private ObjectSpawner objectSpawner;

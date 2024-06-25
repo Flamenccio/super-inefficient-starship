@@ -7,10 +7,12 @@ namespace Flamenccio.Item
     // base class for all in-game appearances of items.
     public class Item : MonoBehaviour
     {
+        [SerializeField, Tooltip("Must be all lowercase, no spaces.")] protected string itemName;
         [SerializeField] protected string collectVfx = "i_generic_collect"; // set a default collect vfx
         [SerializeField] protected string spawnVfx;
         [SerializeField] protected string collectSfx;
         protected readonly string PLAYER_TAG = TagManager.GetTag(Tag.Player);
+        public string ItemName { get => itemName; }
 
         /// <summary>
         /// Any additional effects that the item will do upon spawning.

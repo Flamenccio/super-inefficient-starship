@@ -65,6 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae537905a44179e4b95a3c95c74ea161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: starshard
   collectVfx: 
   spawnVfx: 
   collectSfx: i_starshard_collect

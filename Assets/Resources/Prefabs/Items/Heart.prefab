@@ -62,6 +62,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 793c41f5aef4d374ba0d52ad42451814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: heart
   collectVfx: i_generic_collect
   spawnVfx: i_heart_spawn
   collectSfx: i_heart_collect
