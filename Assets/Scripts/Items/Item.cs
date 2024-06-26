@@ -4,7 +4,9 @@ using UnityEngine;
 
 namespace Flamenccio.Item
 {
-    // base class for all in-game appearances of items.
+    /// <summary>
+    /// Base class for all items.
+    /// </summary>
     public class Item : MonoBehaviour
     {
         [SerializeField, Tooltip("Must be all lowercase, no spaces.")] protected string itemName;

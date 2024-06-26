@@ -12,6 +12,9 @@ namespace Flamenccio.Effects.Visual
         ObjectPool<Trail> Pool { get; set; }
     }
 
+    /// <summary>
+    /// Manages object pools for trail visual effects.
+    /// </summary>
     public class TrailPool : MonoBehaviour
     {
         public enum Trails

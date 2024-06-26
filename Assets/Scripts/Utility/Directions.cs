@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Flamenccio.Utility
@@ -199,15 +200,9 @@ namespace Flamenccio.Utility
         {
             vector.Normalize();
 
-            // TODO simplify
-            foreach (Vector2 v in CardinalVectors)
-            {
-                if (vector.Equals(v))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return CardinalVectors
+                .ToList()
+                .Exists(x => x.Equals(vector));
         }
     }
 }

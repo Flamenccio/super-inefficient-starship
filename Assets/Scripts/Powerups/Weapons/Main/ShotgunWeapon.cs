@@ -8,7 +8,7 @@ using static Flamenccio.Attack.BulletControl;
 namespace Flamenccio.Powerup.Weapon
 {
     /// <summary>
-    /// Fires a spray of bullets.
+    /// Fires a spray of bullets and launches player backward.
     /// </summary>
     public class ShotgunWeapon : WeaponMain
     {

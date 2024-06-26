@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Flamenccio.Effects.Visual
 {
+    /// <summary>
+    /// Manages visual effects gameobjects and allows other classes to spawn them.
+    /// </summary>
     public class EffectManager : MonoBehaviour
     {
         [Serializable]
@@ -264,6 +267,20 @@ namespace Flamenccio.Effects.Visual
             {
                 Category = CATEGORY_NONE[0],
                 Index = -1
+            };
+        }
+
+        private EffectID GetID(string category, int index)
+        {
+            if (string.IsNullOrEmpty(category) || index < 0)
+            {
+                return GetNullId();
+            }
+
+            return new()
+            {
+                Category = category[0],
+                Index = index
             };
         }
 
