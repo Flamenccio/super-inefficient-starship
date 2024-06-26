@@ -5,8 +5,12 @@ using UnityEngine;
 
 namespace Flamenccio.Core
 {
+    /// <summary>
+    /// Manages the spawning of objects.
+    /// </summary>
     public class ObjectSpawner : MonoBehaviour
     {
+        // TODO Find a way to automatically load object prefabs.
         [SerializeField] private GameObject wallPrefab;
         [SerializeField] private GameObject portalPrefab;
         public int WallCount { get; private set; }

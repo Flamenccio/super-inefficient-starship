@@ -19,6 +19,7 @@ namespace Flamenccio.LevelObject.Stages
         public Variants Variant
         { get { return variant; } }
 
+        // TODO Please don't use enums for this anymore, it's really tedious to add new variants.
         public enum Variants
         {
             Normal = 0,

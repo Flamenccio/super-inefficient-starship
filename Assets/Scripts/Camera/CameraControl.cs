@@ -13,13 +13,13 @@ namespace Flamenccio.Core
     {
         public bool InterruptSizeUpdate { get; private set; } = false;
         public bool InterruptPositionUpdate { get; private set; } = false;
+        public float PreviousSize { get; private set; }
+        public float TargetSize { get; private set; }
 
         private Transform target;
         private InputManager input;
         private Camera cam;
         private Vector2 cameraOffset = Vector2.zero; // modifies the camera's position from the player's position
-        private float previousSize = 0.0f;
-        private float targetSize = 0.0f;
         private float interpolateSize = 0f;
         private float cameraMoveSpeed;
         private Action UpdateCameraPosition;
@@ -36,8 +36,8 @@ namespace Flamenccio.Core
         {
             cam = Camera.main;
             cam.orthographicSize = DEFAULT_SIZE;
-            previousSize = DEFAULT_SIZE;
-            targetSize = DEFAULT_SIZE;
+            PreviousSize = DEFAULT_SIZE;
+            TargetSize = DEFAULT_SIZE;
         }
 
         private void Start()
@@ -129,13 +129,13 @@ namespace Flamenccio.Core
 
             if (interpolateSize < 1f)
             {
-                float logZoom = Mathf.SmoothStep(Mathf.Log(previousSize), Mathf.Log(targetSize), interpolateSize);
+                float logZoom = Mathf.SmoothStep(Mathf.Log(PreviousSize), Mathf.Log(TargetSize), interpolateSize);
                 cam.orthographicSize = Mathf.Exp(logZoom);
                 interpolateSize = Mathf.Clamp01(interpolateSize + Time.unscaledDeltaTime);
             }
             else
             {
-                previousSize = cam.orthographicSize;
+                PreviousSize = cam.orthographicSize;
             }
         }
 
@@ -202,8 +202,8 @@ namespace Flamenccio.Core
             if (cam.orthographicSize >= MAX_SIZE) return;
 
             interpolateSize = 0f;
-            targetSize = newSize;
-            previousSize = cam.orthographicSize;
+            TargetSize = newSize;
+            PreviousSize = cam.orthographicSize;
         }
     }
 }

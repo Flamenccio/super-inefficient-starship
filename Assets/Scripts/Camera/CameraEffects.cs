@@ -69,7 +69,7 @@ namespace Flamenccio.Effects.Visual
             cameraControl = GetComponent<CameraControl>();
             GameEventManager.OnEnemyHit += (v) => ScreenShake(ScreenShakeIntensity.Weak, v.EventOrigin);
             GameEventManager.OnEnemyKill += (v) => ScreenShake(ScreenShakeIntensity.Normal, v.EventOrigin);
-            GameEventManager.OnPlayerHit += (v) => Zoom(0.1f, 0.1f, -1);
+            GameEventManager.OnPlayerHit += (_) => Zoom(0.1f, 0.1f, -1.5f);
         }
 
         private void Update()
@@ -141,7 +141,7 @@ namespace Flamenccio.Effects.Visual
             zoomFinalTime = durationSeconds;
             zoomTimer = zoomMaxTime;
             zoomMagnitude = magnitude;
-            originalSize = thisCamera.orthographicSize;
+            originalSize = cameraControl.TargetSize;
             realtimeEffects += ZoomUpdateStage1;
         }
 

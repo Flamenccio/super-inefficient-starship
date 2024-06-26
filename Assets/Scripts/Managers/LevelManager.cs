@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Flamenccio.Core
 {
+    /// <summary>
+    /// Manages the layout of the current level.
+    /// </summary>
     public class LevelManager : MonoBehaviour
     {
         public List<Stage> Stages { get; } = new();
@@ -28,11 +31,11 @@ namespace Flamenccio.Core
         /// <returns>True if successful; false otherwise.</returns>
         public bool AddStage(Stage newStage, Stage rootStage, Directions.CardinalValues direction)
         {
-            bool rootStageExists = Stages.Exists(x => x.gameObject.GetInstanceID() == rootStage.gameObject.GetInstanceID()); // The rootStage must already exist in the Stages list.
-            bool newStageDoesNotExist = !Stages.Exists(y => y.gameObject.GetInstanceID() == newStage.gameObject.GetInstanceID()); // The newStage must NOT already exist in the Stages list.
+            bool rootStageExists = Stages.Exists(x => x.gameObject.GetInstanceID() == rootStage.gameObject.GetInstanceID());
+            bool newStageDoesNotExist = !Stages.Exists(y => y.gameObject.GetInstanceID() == newStage.gameObject.GetInstanceID());
             bool ready = rootStageExists && newStageDoesNotExist;
 
-            if (!ready) return false; // do not extend if the given root stage is not in the Stages list.
+            if (!ready) return false;
 
             rootStage.ScanNearbyStages();
 
@@ -61,7 +64,7 @@ namespace Flamenccio.Core
         public Stage GetRandomStageExcept(List<Stage> exceptions)
         {
             List<Stage> filteredList = new(Stages.Except(exceptions));
-            return filteredList[Random.Range(0, filteredList.Count - 1)];
+            return filteredList[Random.Range(0, filteredList.Count - exceptions.Count)];
         }
 
         /// <summary>

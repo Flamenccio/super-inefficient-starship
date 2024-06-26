@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Flamenccio.Core
 {
+    /// <summary>
+    /// Manages spawning of items.
+    /// </summary>
     public class ItemSpawner : MonoBehaviour
     {
         [System.Serializable]

@@ -193,7 +193,14 @@ namespace Flamenccio.LevelObject.Stages
             int pairs = Mathf.FloorToInt(collisions.Count / 2f);
             int pair = Random.Range(0, pairs);
 
-            Debug.Log($"Pairs: {pairs}");
+            // DEBUG
+            if (pairs < 1)
+            {
+                Debug.LogWarning($"Pairs: {pairs}");
+                collisions.ForEach(x => Debug.Log(x));
+                Debug.LogError("Error getting global point on stage.");
+                return new();
+            }
 
             return new(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), raycastOrigin.y); // FIXME causes problems
         }
