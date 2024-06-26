@@ -1,17 +1,19 @@
 using Flamenccio.Effects.Visual;
 using UnityEngine;
 
-namespace Flamenccio.LevelObject
+namespace Flamenccio.Objects
 {
     /// <summary>
     /// Controls an object that allows the player to teleport to another associated portal.
     /// </summary>
-    public class Portal : MonoBehaviour
+    public class Portal : MonoBehaviour, Core.IObject
     {
+        public Color PortalColor { get; set; }
+        public string GetObjectName { get => objectName; }
         [SerializeField] private Portal destination;
         [SerializeField] private PortalEffects effects;
         [SerializeField] private SpriteRenderer spriteren;
-        public Color PortalColor { get; set; }
+        [SerializeField] private string objectName;
         private const float COOLDOWN = 1.0f;
         private float cooldownTimer = 0f; // whenever player uses portal, cooldown is used to prevent player from rapidly moving between portals
 

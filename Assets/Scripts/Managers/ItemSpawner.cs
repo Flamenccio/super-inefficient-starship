@@ -92,8 +92,7 @@ namespace Flamenccio.Core
         /// Spawns an item on given stage and coordinates.
         /// </summary>
         /// <param name="item">Item to spawn.</param>
-        /// <param name="stage">Stage to spawn item in.</param>
-        /// <param name="localCoordinate">Local coordinates on stage.</param>
+        /// <param name="globalCoordinate">Where to spawn item.</param>
         /// <returns>GameObject of item that was spawned. Returns null on failure.</returns>
         public GameObject SpawnItem(ItemObject item, Vector2 globalCoordinate)
         {

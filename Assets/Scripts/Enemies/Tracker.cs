@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Utility;
-using Flamenccio.LevelObject.Walls;
+using Flamenccio.Objects;
 using Flamenccio.Core.Player;
 using System;
 

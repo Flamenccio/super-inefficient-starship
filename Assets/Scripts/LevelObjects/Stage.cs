@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Utility;
+using Flamenccio.Objects;
 
 namespace Flamenccio.LevelObject.Stages
 {

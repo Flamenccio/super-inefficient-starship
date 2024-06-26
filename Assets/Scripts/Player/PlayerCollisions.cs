@@ -3,10 +3,9 @@ using UnityEngine;
 using Flamenccio.Item;
 using Flamenccio.Attack;
 using Flamenccio.Effects;
-using Flamenccio.LevelObject;
 using Flamenccio.Utility;
+using Flamenccio.Objects;
 using System;
-using UnityEngine.InputSystem;
 
 namespace Flamenccio.Core.Player
 {

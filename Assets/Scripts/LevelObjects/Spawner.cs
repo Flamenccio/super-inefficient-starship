@@ -3,8 +3,7 @@ using UnityEngine;
 using System.Linq;
 using Flamenccio.Utility;
 using Flamenccio.LevelObject.Stages;
-using Flamenccio.LevelObject.Walls;
-using System.Security;
+using Flamenccio.Objects;
 
 namespace Flamenccio.Core
 {

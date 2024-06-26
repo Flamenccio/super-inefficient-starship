@@ -6,18 +6,20 @@ using Flamenccio.Effects.Audio;
 using System;
 using Flamenccio.Effects.Visual;
 
-namespace Flamenccio.LevelObject.Walls
+namespace Flamenccio.Objects
 {
     /// <summary>
     /// Controls the behavior of wall objects.
     /// </summary>
-    public class Wall : Destructables
+    public class Wall : Destructables, IObject
     {
         public Action OnDeath;
+        public string GetObjectName { get => objectName; }
         [Tooltip("Game objects with these tags will destroy this object.")] [SerializeField] private List<string> dangerousTags = new List<string>();
         [SerializeField] private string destroyVfx;
         [SerializeField] private string spawnVfx;
         [SerializeField] private string destroySfx;
+        [SerializeField] private string objectName;
         [SerializeField] private Sprite level0;
         [SerializeField] private Sprite level1;
         [SerializeField] private SpriteRenderer spriteRen;

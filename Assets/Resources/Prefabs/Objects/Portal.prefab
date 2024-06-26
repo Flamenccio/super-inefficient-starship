@@ -119,6 +119,7 @@ MonoBehaviour:
   destination: {fileID: 0}
   effects: {fileID: 4617254888367299080}
   spriteren: {fileID: 1252480021022726533}
+  objectName: portal
 --- !u!114 &-5246569293691753716
 MonoBehaviour:
   m_ObjectHideFlags: 0
