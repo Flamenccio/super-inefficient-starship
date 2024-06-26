@@ -8,6 +8,9 @@ using Random = UnityEngine.Random;
 
 namespace Flamenccio.Core
 {
+    /// <summary>
+    /// To be recongized as an object, MonoBehaviour classes must implement this.
+    /// </summary>
     public interface IObject
     {
         string GetObjectName { get; }
