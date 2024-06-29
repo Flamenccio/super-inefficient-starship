@@ -16,11 +16,15 @@ MonoBehaviour:
   secondaryWallLayout: {fileID: 11400000, guid: e86131bc179eb2943889ed374089f097, type: 2}
   linkSet:
   - linkDirection: 0
-    blackListedVariants: 
+    subLinkPositions: 
+    invertSubLinkPositions: 1
   - linkDirection: 1
-    blackListedVariants: 
+    subLinkPositions: 
+    invertSubLinkPositions: 1
   - linkDirection: 2
-    blackListedVariants: 
+    subLinkPositions: 
+    invertSubLinkPositions: 1
   - linkDirection: 3
-    blackListedVariants: 
-  variant: 5
+    subLinkPositions: 
+    invertSubLinkPositions: 1
+  variantId: hole_center

@@ -118,8 +118,9 @@ namespace Flamenccio.Core
                 extendDirection = Directions.RandomCardinal();
             } while (!rootStage.LinkableInDirection(extendDirection));
 
-            var availableVariants = stageResources.GetAvailableVariantsInDirection(extendDirection, rootStage.Variant);
-            var variant = availableVariants[Random.Range(1, availableVariants.Count)];
+            var availableVariants = stageResources.GetAvailableVariantsInDirection(extendDirection, rootStage.VariantId);
+            availableVariants.Remove("normal");
+            var variant = availableVariants[Random.Range(0, availableVariants.Count)];
             var instance = stageResources.CreateStage(variant);
             levelManager.AddStage(instance, rootStage, extendDirection);
         }

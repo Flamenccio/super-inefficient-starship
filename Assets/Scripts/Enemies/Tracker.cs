@@ -156,7 +156,7 @@ namespace Enemy
             }
 
             // Try to get the Footprint script from target.
-            if (!target.TryGetComponent<Footprint>(out var currentFootprint))
+            if (target == null || !target.TryGetComponent<Footprint>(out var currentFootprint)) // FIXME causes problems...
             {
                 ChangeState(EnemyState.Wander);
                 target = null;

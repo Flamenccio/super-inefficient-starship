@@ -10,19 +10,20 @@ namespace Flamenccio.LevelObject.Stages
     /// </summary>
     public class Stage : MonoBehaviour
     {
-        public StageVariant.Variants Variant { get { return variant; } }
+        public string VariantId { get => variantId; }
         public Sprite Sprite { get { return sprite; } }
         public bool InitialStage { get { return initialStage; } }
         public Vector2 Extents { get => polymesh.bounds.extents; }
         public Vector2 Center { get => polymesh.bounds.center; }
         public List<Portal> Portals { get => portals; }
+        public Dictionary<Directions.CardinalValues, StageLink> StageLinks { get => links; }
 
         [SerializeField] private SpriteRenderer spriteRen; // sprite renderer
         [SerializeField] private GameObject invisibleWallPrefab; // prefab for invisible walls
         [SerializeField] private GameObject stageLinkPrefab; // prefab for stage links
         [SerializeField] private bool initialStage; // is this stage the first one in the level?
 
-        private StageVariant.Variants variant = StageVariant.Variants.Normal; // initialize the stage as a normal variant
+        private string variantId = "normal"; // initialize as normal variant.
         private Sprite sprite; // sprite representing the stage
         private Dictionary<Directions.CardinalValues, StageLink> links = new(); // a list of all stage links associated with their direction
         private PolygonCollider2D polyCollider; // collider that conforms to sprite shape
@@ -38,16 +39,16 @@ namespace Flamenccio.LevelObject.Stages
 
         private void Start()
         {
-            if (initialStage) UpdateVariant(StageVariant.Variants.Normal);
+            if (initialStage) UpdateVariant("normal");
         }
 
         /// <summary>
         /// Change this stage's variant to the one given.
         /// </summary>
-        public void UpdateVariant(StageVariant.Variants updatedVariant)
+        public void UpdateVariant(string updatedVariantId)
         {
-            variant = updatedVariant;
-            StageVariant v = StageResources.Instance.GetStageVariant(variant);
+            variantId = updatedVariantId;
+            StageVariant v = StageResources.Instance.GetStageVariant(variantId);
             sprite = v.Sprite;
             spriteRen.sprite = sprite;
 
@@ -65,7 +66,14 @@ namespace Flamenccio.LevelObject.Stages
         /// </summary>
         private void CommitUpdate()
         {
-            StageVariant v = StageResources.Instance.GetStageVariant(variant); // retrieve the variant's template
+            StageVariant v = StageResources.Instance.GetStageVariant(variantId); // retrieve the variant's template
+
+            if (v == null)
+            {
+                Debug.LogError($"Failed to update stage: {variantId} not valid stage variant.");
+                return;
+            }
+
             BuildSecondaryWalls(v); // spawn secondary walls
             BuildLinks(v); // spawn and place stage links (primary walls)
         }
@@ -86,7 +94,7 @@ namespace Flamenccio.LevelObject.Stages
             foreach (var link in variant.Links)
             {
                 StageLink instance = Instantiate(stageLinkPrefab, transform).GetComponent<StageLink>();
-                instance.UpdateProperties(link.BlackListedVariants, link.LinkDirection);
+                instance.UpdateProperties(link.SubLinkMask, link.LinkDirection);
                 links.Add(link.LinkDirection, instance);
 
                 switch (link.LinkDirection)
