@@ -30,7 +30,6 @@ namespace Flamenccio.LevelObject.Stages
 
         public static int GetSubLinkMask(List<int> sublinks, bool isInverted)
         {
-            // FIXME broken
             int mask = isInverted ? 255 : 0;
 
             for (int i = 0; i < MAX_SUBLINKS && i < sublinks.Count; i++)
@@ -50,22 +49,7 @@ namespace Flamenccio.LevelObject.Stages
                 }
             }
 
-            Debug.Log($"Mask: {ConvertBinary(mask)}");
             return mask;
-        }
-
-        private static string ConvertBinary(int number)
-        {
-            StringBuilder sb = new("", 12);
-
-            while (number > 0)
-            {
-                int r = number % 2;
-                number = Mathf.FloorToInt(number / 2f);
-                sb.Append(r);
-            }
-
-            return sb.ToString();
         }
 
         [SerializeField] private Sprite sprite;

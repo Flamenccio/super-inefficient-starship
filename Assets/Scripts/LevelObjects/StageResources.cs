@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Flamenccio.Utility;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 namespace Flamenccio.LevelObject.Stages
 {
@@ -14,6 +16,7 @@ namespace Flamenccio.LevelObject.Stages
         public Dictionary<string, StageVariant> AllStageVariants { get => allStageVariants; }
         [SerializeField] private GameObject stagePrefab;
         private Dictionary<string, StageVariant> allStageVariants = new();
+        private Dictionary<string, Dictionary<Directions.CardinalValues, List<string>>> stageBlacklists = new();
 
         private void Awake()
         {
@@ -27,6 +30,7 @@ namespace Flamenccio.LevelObject.Stages
             }
 
             LoadVariants(allStageVariants);
+            LoadAllBlacklists(stageBlacklists);
         }
 
         private void LoadVariants(Dictionary<string, StageVariant> dictionary)
@@ -37,6 +41,33 @@ namespace Flamenccio.LevelObject.Stages
             {
                 dictionary.Add(x.VariantId, x);
             }
+        }
+
+        private void LoadAllBlacklists(Dictionary<string, Dictionary<Directions.CardinalValues, List<string>>> blacklists)
+        {
+            Stopwatch sw = new();
+            sw.Start();
+
+            foreach (var x in AllStageVariants)
+            {
+                string currentName = x.Value.VariantId;
+                blacklists.Add(currentName, LoadBlacklist(currentName));
+            }
+
+            sw.Stop();
+            Debug.Log($"TIME: {sw.Elapsed.TotalMilliseconds}ms");
+        }
+
+        private  Dictionary<Directions.CardinalValues, List<string>> LoadBlacklist(string stage)
+        {
+            if (!AllStageVariants.TryGetValue(stage, out var variant)) return new();
+
+            Dictionary<Directions.CardinalValues, List<string>> newDict = new();
+
+            variant.Links
+                .ForEach(x => newDict.Add(x.LinkDirection, GetBlacklistedVariants(variant, x.LinkDirection)));
+
+            return newDict;
         }
 
         public StageVariant GetStageVariant(string variant)
@@ -76,20 +107,14 @@ namespace Flamenccio.LevelObject.Stages
         {
             if (!AllStageVariants.TryGetValue(rootVariantId, out var variant)) return new();
 
-            List<string> blacklisted = GetBlacklistedVariants(variant, direction);
-
-            if (blacklisted.Count == 0) return new();
-
             return new(
                 GetVariantsExtendableInDirection(Directions.OppositeOf(direction))
-                .Except(blacklisted)
+                .Except(stageBlacklists[variant.VariantId][direction])
                 ); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
         }
 
         public List<string> GetBlacklistedVariants(StageVariant stageVariant, Directions.CardinalValues direction)
         {
-            // TODO cache these results on Awake()
-
             List<string> blacklisted = new();
 
             if (!stageVariant.Links.Exists(v => v.LinkDirection == direction)) return AllStageVariants.Keys.ToList();
