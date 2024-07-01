@@ -14,7 +14,7 @@ namespace Flamenccio.Core.Player
     /// </summary>
     public class PlayerCollisions : MonoBehaviour
     {
-        private const float HURT_INVULN_DURATION = 10f / 60f;
+        private const float HURT_INVULN_DURATION = 30f / 60f;
         private bool invulnerable = false;
 
         public void OnTriggerEnter2D(Collider2D collision)

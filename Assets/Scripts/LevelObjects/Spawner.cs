@@ -17,9 +17,6 @@ namespace Flamenccio.Core
         private LayerMask wallLayer; // layer of all walls
         private LayerMask enemyCheckLayers; // obstructing layers when spawning enemies
         private LayerMask wallCheckLayers; // obstructing layers when spawning walls
-
-        private ItemSpawner.ItemObject starshardItem;
-
         private LevelManager levelManager;
         private ObjectSpawner objectSpawner;
         private ItemSpawner itemSpawner;
@@ -52,11 +49,11 @@ namespace Flamenccio.Core
             entitySpawner = GetComponent<EntitySpawner>();
         }
 
-        private void Start()
-        {
-            starshardItem = itemSpawner.GetItem("starshard");
-        }
-
+        /// <summary>
+        /// Spawn a random enemy at a random location.
+        /// </summary>
+        /// <param name="difficulty">Current level.</param>
+        /// <returns>GameObject of spawned enemy.</returns>
         public GameObject SpawnEnemy(int difficulty)
         {
             Stage stage;
@@ -94,7 +91,7 @@ namespace Flamenccio.Core
         }
 
         /// <summary>
-        /// spawn a star on stage
+        /// Spawn a star on a random stage.
         /// </summary>
         /// <returns>returns the spanwed star object</returns>
         public GameObject SpawnStar()
@@ -105,6 +102,9 @@ namespace Flamenccio.Core
             return itemSpawner.SpawnItem("star", rootStage.transform, localPosition);
         }
 
+        /// <summary>
+        /// Spawn a random stage.
+        /// </summary>
         public void SpawnStage()
         {
             Stage rootStage;
@@ -196,7 +196,7 @@ namespace Flamenccio.Core
         /// <param name="globalPosition">Global position.</param>
         public void SpawnStarShard(Vector2 globalPosition)
         {
-            itemSpawner.SpawnItem(starshardItem, globalPosition);
+            itemSpawner.SpawnItem("starshard", globalPosition);
         }
 
         /// <summary>
@@ -206,12 +206,7 @@ namespace Flamenccio.Core
         /// <param name="amount">Amount of shards to spawn.</param>
         public void SpawnStarShard(Vector2 globalPosition, int amount)
         {
-            if (amount < 0) return;
-
-            for (int i = 0; i < amount; i++)
-            {
-                SpawnStarShard(globalPosition);
-            }
+            itemSpawner.SpawnItem("starshard", globalPosition, amount);
         }
 
         /// <summary>

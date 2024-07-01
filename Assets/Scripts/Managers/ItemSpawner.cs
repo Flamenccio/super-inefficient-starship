@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Flamenccio.Core
@@ -10,7 +11,7 @@ namespace Flamenccio.Core
     public class ItemSpawner : MonoBehaviour
     {
         [System.Serializable]
-        public struct ItemObject
+        private struct ItemObject
         {
             [field: SerializeField, Tooltip("Must be all lowercase, no spaces.")] public string Name;
             [field: SerializeField] public GameObject Prefab;
@@ -70,47 +71,34 @@ namespace Flamenccio.Core
         }
 
         /// <summary>
-        /// Spawns an item on given stage and coordinates.
+        /// Spawn an item at given coordinates.
         /// </summary>
-        /// <param name="item">Item to spawn.</param>
-        /// <param name="stage">Stage to spawn item in.</param>
-        /// <param name="localCoordinate">Local coordinates on stage.</param>
-        /// <returns>GameObject of item that was spawned. Returns null on failure.</returns>
-        public GameObject SpawnItem(ItemObject item, Transform stage, Vector2 localCoordinate)
-        {
-            if (stage == null) return null;
-
-            if (item.Prefab == null) return null;
-
-            var spawn = Instantiate(item.Prefab, stage, false);
-            spawn.transform.localPosition = localCoordinate;
-
-            return spawn;
-        }
-
-        /// <summary>
-        /// Spawns an item on given stage and coordinates.
-        /// </summary>
-        /// <param name="item">Item to spawn.</param>
+        /// <param name="name">Name of item to spawn.</param>
         /// <param name="globalCoordinate">Where to spawn item.</param>
-        /// <returns>GameObject of item that was spawned. Returns null on failure.</returns>
-        public GameObject SpawnItem(ItemObject item, Vector2 globalCoordinate)
+        /// <returns>Item that was spawned; null on failure.</returns>
+        public GameObject SpawnItem(string name, Vector2 globalCoordinate)
         {
-            if (item.Prefab == null) return null;
+            var prefab = GetGameObjectFromName(name);
 
-            return Instantiate(item.Prefab, globalCoordinate, Quaternion.identity);
+            if (prefab == null) return null;
+
+            prefab = Instantiate(prefab, globalCoordinate, Quaternion.identity);
+
+            return prefab;
         }
 
-        /// <summary>
-        /// Tries to get an Item from name.
-        /// </summary>
-        /// <param name="name">Name of item.</param>
-        /// <returns>Item struct; an empty item struct on failure.</returns>
-        public ItemObject GetItem(string name)
+        public void SpawnItem(string name, Vector2 globalCoordinate, int repeats)
         {
-            if (!prefabs.Exists(x => x.Name.Equals(name))) return new();
+            if (repeats < 1) return;
 
-            return prefabs.Find(x => x.Name.Equals(name));
+            var prefab = GetGameObjectFromName(name);
+
+            if (prefab == null) return;
+
+            for (int i = repeats; i > 0; i--)
+            {
+                Instantiate(prefab, globalCoordinate, Quaternion.identity);
+            }
         }
 
         private GameObject GetGameObjectFromName(string name)
@@ -118,6 +106,23 @@ namespace Flamenccio.Core
             if (string.IsNullOrEmpty(name)) return null;
 
             return prefabs.Find(x => x.Name.Equals(name)).Prefab;
+        }
+
+        /// <summary>
+        /// Get the item ID of given item name.
+        /// </summary>
+        /// <param name="name">Name of item.</param>
+        /// <returns>Item ID. -1 if invalid name.</returns>
+        public int GetItemId(string name)
+        {
+            if (!prefabs.Exists(x => x.Name.Equals(name))) return -1;
+
+            for (int i = 0; i < prefabs.Count; i++)
+            {
+                if (prefabs[i].Name.Equals(name)) return i;
+            }
+
+            return -1;
         }
     }
 }
