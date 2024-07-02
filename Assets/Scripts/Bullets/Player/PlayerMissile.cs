@@ -11,14 +11,27 @@ namespace Flamenccio.Attack.Player
         [SerializeField] private string explosionVfx;
         [SerializeField] private GameObject explosionHitbox;
         private Transform target;
-        private const float ACCELERATION = 0.5f;
+        private const float ACCELERATION = 1f;
+        private float turningSpeed = 0.1f;
 
+        protected override void Startup()
+        {
+            base.Startup();
+
+            collisionTags.Remove(TagManager.GetTag(Tag.Wall));
+            collisionTags.Remove(TagManager.GetTag(Tag.NeutralBullet));
+        }
         protected override void Behavior()
         {
             moveSpeed += ACCELERATION;
             if (target != null)
             {
+                canIgnoreStageEdge = true; // When the missile is locked on to an enemy, it can ignore stage edges.
                 FlyToTarget();
+            }
+            else
+            {
+                canIgnoreStageEdge = false; // Otherwise, the missile will explode on contact.
             }
         }
 
@@ -28,7 +41,6 @@ namespace Flamenccio.Attack.Player
         /// <param name="target">Target.</param>
         public void SetTarget(Transform target)
         {
-
             if (this.target == null)
             {
                 this.target = target;
@@ -41,31 +53,17 @@ namespace Flamenccio.Attack.Player
             {
                 Vector = target.position - transform.position,
             };
-            rb.rotation = Mathf.Lerp(rb.rotation, angle.Degree, 0.1f);
+            rb.rotation = Mathf.LerpAngle(rb.rotation, angle.Degree, turningSpeed);
             rb.velocity = transform.right * moveSpeed;
+            turningSpeed = Mathf.Clamp01(turningSpeed + Time.deltaTime);
         }
 
-        private void SearchForTarget()
+        protected override void Death()
         {
-            rb.velocity = transform.right * moveSpeed;
-            var found = Physics2D.OverlapCircle(transform.position, searchRadius, LayerManager.GetLayerMask(Layer.Enemy));
-            Debug.Log(found);
-
-            if (found != null && found.CompareTag(TagManager.GetTag(Tag.Enemy)))
-            {
-                SetTarget(found.transform);
-            }
-        }
-
-        protected override void Trigger(Collider2D collider)
-        {
-            if (!collider.CompareTag(TagManager.GetTag(Tag.EnemyBullet)) && !collider.CompareTag(TagManager.GetTag(Tag.NeutralBullet)))
-            {
-                Instantiate(explosionHitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>()
-                    .EditProperties(0f, explosionRadius, playerDamage, Hitbox.HitboxAffiliation.Player);
-                EffectManager.Instance.SpawnEffect(explosionVfx, transform.position);
-                Destroy(gameObject);
-            }
+            Instantiate(explosionHitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>()
+                .EditProperties(0f, explosionRadius, playerDamage, Hitbox.HitboxAffiliation.Player);
+            EffectManager.Instance.SpawnEffect(explosionVfx, transform.position);
+            base.Death();
         }
 
     }

@@ -63,14 +63,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f916cf0ee8128994791c53b30bbb0ed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 20
-  maxDistance: 40
+  moveSpeed: 15
+  maxDistance: 15
   knockbackMultiplier: 20
   durability: 1
   rotationIsStatic: 0
   canIgnoreStageEdge: 1
   playerDamage: 2
-  objectDamage: 2
+  objectDamage: 0
   rb: {fileID: 396614698618339175}
   bulletParryVfx: m_bullet_parry
   bulletImpactVfx: m_bullet_impact

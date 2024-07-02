@@ -49,3 +49,4 @@ MonoBehaviour:
   holdThreshold: 0
   aimAssisted: 0
   mainAttack: {fileID: 396614698618339171, guid: 8765dc317960bb346a90ff2342e7805c, type: 3}
+  lockonVfx: p_sub_missile_lockon
