@@ -18,6 +18,8 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (cooldownTimer < Cooldown) return false;
 
+            cooldownTimer = 0f;
+
             if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap))
             {
                 FloatingTextManager.Instance.DisplayText("AMMO LOW", transform.position, Color.yellow, 0.8f, 30f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.ZoomIn, true);
