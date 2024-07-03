@@ -28,6 +28,11 @@ namespace Flamenccio.Powerup.Weapon
             targetTag = TagManager.GetTag(Tag.Enemy);
         }
 
+        public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
+        {
+            Attack(aimAngleDeg, origin);
+        }
+
         public override void Hold(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (loadedMissiles >= MISSILE_BURST_MAX_AMOUNT) return;
@@ -44,6 +49,11 @@ namespace Flamenccio.Powerup.Weapon
         }
 
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
+        {
+            Attack(aimAngleDeg, origin);
+        }
+
+        private void Attack(float aimAngleDeg, Vector2 origin)
         {
             loadingTimer = LOADING_TIME_DEFAULT;
 

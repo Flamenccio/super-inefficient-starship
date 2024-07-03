@@ -156,8 +156,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2152614155733081992}
-        m_TargetAssemblyTypeName: PlayerActions, Assembly-CSharp
-        m_MethodName: OnFire1
+        m_TargetAssemblyTypeName: Flamenccio.Core.Player.PlayerActions, Assembly-CSharp
+        m_MethodName: OnMain
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

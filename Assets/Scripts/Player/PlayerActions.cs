@@ -12,6 +12,8 @@ namespace Flamenccio.Core.Player
     /// </summary>
     public class PlayerActions : MonoBehaviour
     {
+        public Rigidbody2D Rigidbody { get => rb; }
+
         [SerializeField] private PowerupManager powerManager;
         [SerializeField] private PlayerAttributes playerAtt;
         [SerializeField] private AimAssist aimAssist;
@@ -40,8 +42,6 @@ namespace Flamenccio.Core.Player
         private readonly float aimResponsiveness = 0.6f;
         private const float HOLD_THRESHOLD = 0.26f;
         private const float KBM_FIRE_TIMER_MAX = 2.0f;
-
-        public Rigidbody2D Rigidbody { get => rb; }
 
         private void Start()
         {
@@ -72,20 +72,10 @@ namespace Flamenccio.Core.Player
         {
             if (kbmFireTimer > 0f) kbmFireTimer -= Time.deltaTime;
 
-            HoldAttack(ref mainPressed, ref mainAttackState, ref mainHold, powerManager.MainAttackHold, powerManager.MainAttackHoldEnter, powerManager.MainAttackHoldExit);
-            HoldAttack(ref subPressed, ref subAttackState, ref subHold, powerManager.SubAttackHold, powerManager.SubAttackHoldEnter, powerManager.SubAttackHoldExit);
+            Attack(ref mainPressed, ref mainAttackState, ref mainHold, powerManager.MainAttackHold, powerManager.MainAttackHoldEnter, powerManager.MainAttackHoldExit, powerManager.MainAttackTap, powerManager.MainAttackAimAssisted);
+            Attack(ref subPressed, ref subAttackState, ref subHold, powerManager.SubAttackHold, powerManager.SubAttackHoldEnter, powerManager.SubAttackHoldExit, powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
         }
 
-        public void OnFire1(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-            {
-                kbmFireTimer = KBM_FIRE_TIMER_MAX;
-                AttackTap(powerManager.MainAttackTap, powerManager.MainAttackAimAssisted);
-            }
-
-            mainPressed = context.ReadValueAsButton();
-        }
 
         private void AttackWithAimAssist(Action<float, float, Vector2> attack)
         {
@@ -117,7 +107,7 @@ namespace Flamenccio.Core.Player
         }
 
         /// <summary>
-        /// Manages hold attacks.
+        /// Manages button behavior on attacks (hold and tap).
         /// </summary>
         /// <param name="actionPressed">The boolean value signifying that an action is pressed.</param>
         /// <param name="state">The AttackState enum signifying the state of an attack.</param>
@@ -125,7 +115,9 @@ namespace Flamenccio.Core.Player
         /// <param name="hold">Action called every frame button is held.</param>
         /// <param name="enter">Action called once entering hold attack state.</param>
         /// <param name="exit">Action called once exiting hold attack state.</param>
-        private void HoldAttack(ref bool actionPressed, ref AttackState state, ref float holdTimer, Action<float, float, Vector2> hold, Action<float, float, Vector2> enter, Action<float, float, Vector2> exit)
+        /// <param name="tap">Action called if button is released before a hold attack is registered.</param>
+        /// <param name="aimAssist">Does this attack use aim assist?</param>
+        private void Attack(ref bool actionPressed, ref AttackState state, ref float holdTimer, Action<float, float, Vector2> hold, Action<float, float, Vector2> enter, Action<float, float, Vector2> exit, Action<float, float, Vector2> tap, bool aimAssist)
         {
             if (actionPressed)
             {
@@ -155,9 +147,19 @@ namespace Flamenccio.Core.Player
                     exit(attackAngleDegrees, input.MoveInputDegrees, transform.position);
                     state = AttackState.Tap;
                 }
+                else if (holdTimer > 0f)
+                {
+                    AttackTap(tap, aimAssist);
+                }
 
                 holdTimer = 0f;
             }
+        }
+
+        #region Unity events
+        public void OnMain(InputAction.CallbackContext context)
+        {
+            mainPressed = context.ReadValueAsButton();
         }
 
         public void OnDefense(InputAction.CallbackContext context)
@@ -179,23 +181,24 @@ namespace Flamenccio.Core.Player
 
         public void OnSub(InputAction.CallbackContext context)
         {
-            if (context.performed)
-            {
-                kbmFireTimer = KBM_FIRE_TIMER_MAX;
-                AttackTap(powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
-            }
-
             subPressed = context.ReadValueAsButton();
         }
+
+        public void OnDebug1(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                // debug
+            }
+        }
+        #endregion
 
         private void Movement()
         {
             if (input.MoveInputVector != Vector2.zero) // if the player is providing direcitonal input:
             {
                 Vector2 newVelocity = new((input.MoveInputVector.x * acceleration) + rb.velocity.x, (input.MoveInputVector.y * acceleration) + rb.velocity.y);
-
                 newVelocity = Vector2.ClampMagnitude(newVelocity, playerAtt.MoveSpeed);
-
                 rb.velocity = newVelocity;
             }
             else if (rb.velocity.magnitude > 0f) // otherwise, if no directional input is given:
@@ -249,12 +252,5 @@ namespace Flamenccio.Core.Player
             attackAngleDegrees = input.AimInputDegrees;
         }
 
-        public void OnDebug1(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-            {
-                // debug
-            }
-        }
     }
 }
