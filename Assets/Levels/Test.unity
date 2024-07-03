@@ -1074,7 +1074,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7819916859176104666, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: infiniteTime
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7819916859176104666, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: cameraControl
