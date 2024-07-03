@@ -38,7 +38,7 @@ namespace Enemy
 
         // constants
         private const float OBSTACLE_SCAN_RADIUS = 1f / 2f;
-        private const float OBSTACLE_SCAN_DISTANCE = 2f / 3f;
+        private const float OBSTACLE_SCAN_DISTANCE = 1f;
         private const float RADAR_RADIUS = 10.0f; // radius of circle used to find player tracks
         private const float FOOTPRINT_DISTANCE_MIN = 1.0f; // distance to footprint that tracker must be before going to next one
         private const float FOOTPRINT_DISTANCE_MAX = 8f;

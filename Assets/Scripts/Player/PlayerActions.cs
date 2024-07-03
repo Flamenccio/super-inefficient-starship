@@ -77,6 +77,7 @@ namespace Flamenccio.Core.Player
         }
 
 
+        #region Attacking
         private void AttackWithAimAssist(Action<float, float, Vector2> attack)
         {
             float a;
@@ -155,6 +156,7 @@ namespace Flamenccio.Core.Player
                 holdTimer = 0f;
             }
         }
+        #endregion
 
         #region Unity events
         public void OnMain(InputAction.CallbackContext context)
@@ -207,6 +209,7 @@ namespace Flamenccio.Core.Player
             }
         }
 
+        #region Aiming
         private void SwitchAimScheme(InputManager.ControlScheme scheme)
         {
             switch (scheme)
@@ -251,6 +254,6 @@ namespace Flamenccio.Core.Player
 
             attackAngleDegrees = input.AimInputDegrees;
         }
-
+        #endregion
     }
 }
