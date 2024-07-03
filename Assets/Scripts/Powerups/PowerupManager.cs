@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Flamenccio.Powerup.Weapon;
 using Flamenccio.Powerup.Buff;
+using Unity.VisualScripting;
 
 namespace Flamenccio.Powerup
 {
@@ -95,6 +96,21 @@ namespace Flamenccio.Powerup
         public void SubAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             weaponManager.SubAttackTap(aimAngle, moveAngle, origin);
+        }
+
+        public void SubAttackHold(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            weaponManager.SubAttackHold(aimAngle, moveAngle, origin);
+        }
+
+        public void SubAttackHoldEnter(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            weaponManager.SubAttackHoldEnter(aimAngle, moveAngle, origin);
+        }
+
+        public void SubAttackHoldExit(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            weaponManager.SubAttackHoldExit(aimAngle, moveAngle, origin);
         }
 
         public void SpecialAttackTap(float aimAngle, float moveAngle, Vector2 origin)

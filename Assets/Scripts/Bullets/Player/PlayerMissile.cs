@@ -21,12 +21,14 @@ namespace Flamenccio.Attack.Player
             collisionTags.Remove(TagManager.GetTag(Tag.Wall));
             collisionTags.Remove(TagManager.GetTag(Tag.NeutralBullet));
         }
+
         protected override void Behavior()
         {
             moveSpeed += ACCELERATION;
+
             if (target != null)
             {
-                canIgnoreStageEdge = true; // When the missile is locked on to an enemy, it can ignore stage edges.
+                canIgnoreStageEdge = true; // When the missile is locked onto an enemy, it can ignore stage edges.
                 FlyToTarget();
             }
             else
@@ -36,7 +38,7 @@ namespace Flamenccio.Attack.Player
         }
 
         /// <summary>
-        /// Set this missile's target.
+        /// Set this missile's target. Once a target is set, it cannot be changed.
         /// </summary>
         /// <param name="target">Target.</param>
         public void SetTarget(Transform target)

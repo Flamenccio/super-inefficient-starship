@@ -29,7 +29,6 @@ namespace Flamenccio.Utility
                         Vector = (Vector2)x.transform.position - origin,
                     };
 
-                    Debug.Log($"ANGLE: {Mathf.Abs(ShortestAngle(directionDegrees, angle.Degree))}");
                     return Mathf.Abs(ShortestAngle(directionDegrees, angle.Degree)) <= (widthDegrees / 2f);
                 });
 

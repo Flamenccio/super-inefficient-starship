@@ -22,20 +22,23 @@ namespace Flamenccio.Core.Player
             Hold,
         };
 
-        private Action DynamicAim;
+        private Action dynamicAim;
         private AttackState mainAttackState = AttackState.Tap;
+        private AttackState subAttackState = AttackState.Tap;
         private Rigidbody2D rb;
         private AllAngle rotationAngle; // used for rotating player sprite
         private PlayerMotion playerMotion;
         private InputManager input;
         private bool mainPressed = false;
+        private bool subPressed = false;
         private float mainHold = 0.0f;
+        private float subHold = 0.0f;
         private float acceleration = 1.0f;
         private float deceleration = 1.0f;
         private float kbmFireTimer = 0f;
         private float attackAngleDegrees = 0f; // where to attack, different from input.aimangle
         private readonly float aimResponsiveness = 0.6f;
-        private const float HOLD_THRESHOLD = 0.50f;
+        private const float HOLD_THRESHOLD = 0.26f;
         private const float KBM_FIRE_TIMER_MAX = 2.0f;
 
         public Rigidbody2D Rigidbody { get => rb; }
@@ -62,14 +65,15 @@ namespace Flamenccio.Core.Player
                 Movement();
             }
 
-            DynamicAim?.Invoke();
+            dynamicAim?.Invoke();
         }
 
         private void Update()
         {
             if (kbmFireTimer > 0f) kbmFireTimer -= Time.deltaTime;
 
-            Fire1Hold();
+            HoldAttack(ref mainPressed, ref mainAttackState, ref mainHold, powerManager.MainAttackHold, powerManager.MainAttackHoldEnter, powerManager.MainAttackHoldExit);
+            HoldAttack(ref subPressed, ref subAttackState, ref subHold, powerManager.SubAttackHold, powerManager.SubAttackHoldEnter, powerManager.SubAttackHoldExit);
         }
 
         public void OnFire1(InputAction.CallbackContext context)
@@ -112,37 +116,47 @@ namespace Flamenccio.Core.Player
             }
         }
 
-        private void Fire1Hold()
+        /// <summary>
+        /// Manages hold attacks.
+        /// </summary>
+        /// <param name="actionPressed">The boolean value signifying that an action is pressed.</param>
+        /// <param name="state">The AttackState enum signifying the state of an attack.</param>
+        /// <param name="holdTimer">The timer used to confirm a button hold.</param>
+        /// <param name="hold">Action called every frame button is held.</param>
+        /// <param name="enter">Action called once entering hold attack state.</param>
+        /// <param name="exit">Action called once exiting hold attack state.</param>
+        private void HoldAttack(ref bool actionPressed, ref AttackState state, ref float holdTimer, Action<float, float, Vector2> hold, Action<float, float, Vector2> enter, Action<float, float, Vector2> exit)
         {
-            if (mainPressed)
+            if (actionPressed)
             {
                 kbmFireTimer = KBM_FIRE_TIMER_MAX;
 
-                if (mainHold >= HOLD_THRESHOLD)
+                if (holdTimer >= HOLD_THRESHOLD)
                 {
-                    if (mainAttackState == AttackState.Tap)
+                    if (state == AttackState.Tap)
                     {
-                        powerManager.MainAttackHoldEnter(attackAngleDegrees, input.MoveInputDegrees, transform.position);
-                        mainAttackState = AttackState.Hold;
+                        enter(attackAngleDegrees, input.MoveInputDegrees, transform.position);
+                        state = AttackState.Hold;
                     }
                     else
                     {
-                        powerManager.MainAttackHold(attackAngleDegrees, input.MoveInputDegrees, transform.position);
+                        hold(attackAngleDegrees, input.MoveInputDegrees, transform.position);
                     }
                 }
                 else
                 {
-                    mainHold += Time.deltaTime;
+                    holdTimer += Time.deltaTime;
                 }
             }
             else
             {
-                if (mainAttackState == AttackState.Hold)
+                if (state == AttackState.Hold)
                 {
-                    powerManager.MainAttackHoldExit(attackAngleDegrees, input.MoveInputDegrees, transform.position);
-                    mainAttackState = AttackState.Tap;
+                    exit(attackAngleDegrees, input.MoveInputDegrees, transform.position);
+                    state = AttackState.Tap;
                 }
-                mainHold = 0f;
+
+                holdTimer = 0f;
             }
         }
 
@@ -170,6 +184,8 @@ namespace Flamenccio.Core.Player
                 kbmFireTimer = KBM_FIRE_TIMER_MAX;
                 AttackTap(powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
             }
+
+            subPressed = context.ReadValueAsButton();
         }
 
         private void Movement()
@@ -193,11 +209,11 @@ namespace Flamenccio.Core.Player
             switch (scheme)
             {
                 case InputManager.ControlScheme.XBOX:
-                    DynamicAim = GamepadAim;
+                    dynamicAim = GamepadAim;
                     break;
 
                 case InputManager.ControlScheme.KBM:
-                    DynamicAim = MouseAim;
+                    dynamicAim = MouseAim;
                     break;
             }
         }
