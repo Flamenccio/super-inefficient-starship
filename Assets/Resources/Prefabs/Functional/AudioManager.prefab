@@ -226,3 +226,11 @@ MonoBehaviour:
         Data3: -1643450701
         Data4: 2029595856
       Path: event:/player/player-special-reload-perfect
+  - <Name>k__BackingField: p_sub_explode
+    <Audio>k__BackingField:
+      Guid:
+        Data1: -173409760
+        Data2: 1273021335
+        Data3: -1301388101
+        Data4: 648938452
+      Path: event:/player/player-sub-explode

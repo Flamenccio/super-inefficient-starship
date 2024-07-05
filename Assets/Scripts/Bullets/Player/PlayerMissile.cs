@@ -1,3 +1,4 @@
+using Flamenccio.Effects.Audio;
 using Flamenccio.Effects.Visual;
 using Flamenccio.Utility;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Flamenccio.Attack.Player
         [SerializeField] private float searchRadius;
         [SerializeField] private float explosionRadius;
         [SerializeField] private string explosionVfx;
+        [SerializeField] private string explosionSfx;
         [SerializeField] private GameObject explosionHitbox;
         private Transform target;
         private const float ACCELERATION = 1f;
@@ -65,6 +67,7 @@ namespace Flamenccio.Attack.Player
             Instantiate(explosionHitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>()
                 .EditProperties(0f, explosionRadius, playerDamage, Hitbox.HitboxAffiliation.Player);
             EffectManager.Instance.SpawnEffect(explosionVfx, transform.position);
+            AudioManager.Instance.PlayOneShot(explosionSfx, transform.position);
             base.Death();
         }
 
