@@ -57,8 +57,11 @@ MonoBehaviour:
   playerDamage: 0
   objectDamage: 0
   rb: {fileID: 51615182096661829}
+  bulletParryVfx: m_bullet_parry
+  bulletImpactVfx: m_bullet_impact
   hitbox: {fileID: 1239980288682230593, guid: 31fd51b646f58a44ca3461d195dd0982, type: 3}
   explosionEffect: p_sub_grenade_explode
+  explosionSfx: p_sub_explode
   explosionRadius: 4
   animator: {fileID: 6680503774944497188}
   blastDamage: 2

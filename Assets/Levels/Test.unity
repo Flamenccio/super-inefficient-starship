@@ -594,10 +594,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6837751821844069354, guid: d3885b906de45aa4c86b15ea5ba6669b, type: 3}
     - target: {fileID: 8907782104821334261, guid: ee1de66a1cf022e478c8da374b09a5bd, type: 3}
-      propertyPath: defaultSubWeapon
-      value: 
-      objectReference: {fileID: 8585248140931465656, guid: bec262b70401e5144ae3b44bd95d51af, type: 3}
-    - target: {fileID: 8907782104821334261, guid: ee1de66a1cf022e478c8da374b09a5bd, type: 3}
       propertyPath: crosshairsControl
       value: 
       objectReference: {fileID: 600660368}
