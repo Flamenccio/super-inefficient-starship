@@ -54,3 +54,4 @@ MonoBehaviour:
   ChargeCost: 2
   tapSfx: p_main_blaster_tap
   holdExitSfx: p_special_burst_tap
+  chargedVfx: p_generic_charged

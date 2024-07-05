@@ -52,3 +52,4 @@ MonoBehaviour:
   chargedCost: 0
   chargeAttack: {fileID: 3418487867427910732, guid: 077588bf23001814891653c965531ce7, type: 3}
   tapSfx: p_main_redsword_tap
+  chargedVfx: p_generic_charged

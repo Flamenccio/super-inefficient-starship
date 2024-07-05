@@ -9,6 +9,7 @@ namespace Flamenccio.Powerup.Weapon
     public class MissileBurst : WeaponSub
     {
         [SerializeField] private string lockonVfx;
+        [SerializeField] private string loadMissileVfx;
         private const int MISSILE_BURST_DEFAULT_AMOUNT = 4;
         private const int MISSILE_BURST_MAX_AMOUNT = 6;
         private const float MISSILE_SEARCH_DEGREES = 90f; // Width of search cone.
@@ -41,8 +42,7 @@ namespace Flamenccio.Powerup.Weapon
 
             if (loadingTimer <= 0)
             {
-                Debug.Log("Loaded a missile.");
-                // TODO Add a small visual effect.
+                EffectManager.Instance.SpawnEffect(loadMissileVfx, transform);
                 loadedMissiles++;
                 loadingTimer = LOADING_TIME_DEFAULT + ((MISSILE_BURST_MAX_AMOUNT - loadedMissiles) * LOADING_TIME_INCREASE);
             }
@@ -55,22 +55,23 @@ namespace Flamenccio.Powerup.Weapon
 
         private void Attack(float aimAngleDeg, Vector2 origin)
         {
+            int load = loadedMissiles;
+            loadedMissiles = MISSILE_BURST_DEFAULT_AMOUNT;
             loadingTimer = LOADING_TIME_DEFAULT;
 
             if (!AttackReady()) return;
 
-            FireMissiles(aimAngleDeg, origin);
-            loadedMissiles = MISSILE_BURST_DEFAULT_AMOUNT;
+            FireMissiles(aimAngleDeg, origin, load);
         }
 
-        private void FireMissiles(float aimAngleDeg, Vector2 origin)
+        private void FireMissiles(float aimAngleDeg, Vector2 origin, int amount)
         {
             var targetList = PhysicsExtensions.ConeCastAll(origin, maxDistance, aimAngleDeg, MISSILE_SEARCH_DEGREES, targetLayers)
                     .Where(x => x.CompareTag(targetTag))
                     .ToList();
-            float missileOffsetDegrees = 360f / loadedMissiles;
+            float missileOffsetDegrees = 360f / amount;
 
-            for (int i = 0; i  < loadedMissiles; i++)
+            for (int i = 0; i  < amount; i++)
             {
                 float angle = aimAngleDeg + (i * missileOffsetDegrees);
                 var target = targetList.Count > 0 ? targetList[i % targetList.Count].transform : null;

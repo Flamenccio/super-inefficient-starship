@@ -4,6 +4,7 @@ using Flamenccio.Effects;
 using UnityEngine;
 using Flamenccio.Powerup.Buff;
 using Flamenccio.Effects.Audio;
+using Flamenccio.Effects.Visual;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -14,6 +15,7 @@ namespace Flamenccio.Powerup.Weapon
     {
         [SerializeField] private GameObject chargeAttack;
         [SerializeField] private string tapSfx;
+        [SerializeField] private string chargedVfx;
         private const float SLASH_OFFSET = 1f;
         private bool flip = false;
         private int kills = 0;
@@ -52,6 +54,11 @@ namespace Flamenccio.Powerup.Weapon
         private void ResetKill()
         {
             kills = 0;
+        }
+
+        public override void HoldEnter(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
+        {
+            EffectManager.Instance.SpawnEffect(chargedVfx, transform);
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
