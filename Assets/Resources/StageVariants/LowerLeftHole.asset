@@ -22,7 +22,7 @@ MonoBehaviour:
     subLinkPositions: 
     invertSubLinkPositions: 1
   - linkDirection: 2
-    subLinkPositions: 00000000010000000200000003000000
+    subLinkPositions: 04000000050000000600000007000000
     invertSubLinkPositions: 0
   - linkDirection: 3
     subLinkPositions: 00000000010000000200000003000000
