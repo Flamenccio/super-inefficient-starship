@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 2152614155733081996}
   - component: {fileID: 5948239196993711514}
   - component: {fileID: 4231892635959146387}
-  - component: {fileID: 6512970577687625348}
   - component: {fileID: 7438514266558005631}
   - component: {fileID: 1708049359961764838}
   - component: {fileID: 8907782104821334261}
@@ -242,9 +241,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf93a75bbff41a4ca3cec5665346f02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerManager: {fileID: 6512970577687625348}
   playerAtt: {fileID: 5948239196993711514}
   aimAssist: {fileID: 4231892635959146387}
+  weaponManager: {fileID: 8907782104821334261}
 --- !u!114 &2152614155733081995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -301,18 +300,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1600
   aimAssistTarget: {fileID: 5816842151184578517}
---- !u!114 &6512970577687625348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2152614155733082003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01e314d5bc8b08349b11f90518ae3ff6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7438514266558005631
 MonoBehaviour:
   m_ObjectHideFlags: 0

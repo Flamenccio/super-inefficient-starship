@@ -19,7 +19,7 @@ namespace Flamenccio.Powerup.Weapon
         private const float SLASH_OFFSET = 1f;
         private bool flip = false;
         private int kills = 0;
-        private PowerupManager powerupManager;
+        private BuffManager buffManager;
 
         protected override void Startup()
         {
@@ -33,15 +33,15 @@ namespace Flamenccio.Powerup.Weapon
 
         private void OnEnable()
         {
-            powerupManager = GetComponentInParent<PowerupManager>();
-            powerupManager.AddBuff(typeof(RedFrenzy));
+            buffManager = GetComponentInParent<BuffManager>();
+            buffManager.AddBuff(typeof(RedFrenzy));
             GameEventManager.OnEnemyKill += (_) => IncreaseKill();
             GameEventManager.OnPlayerHit += (_) => ResetKill();
         }
 
         private void OnDestroy()
         {
-            powerupManager.RemoveBuff(typeof(RedFrenzy));
+            buffManager.RemoveBuff(typeof(RedFrenzy));
             GameEventManager.OnEnemyKill -= (_) => IncreaseKill();
             GameEventManager.OnPlayerHit -= (_) => ResetKill();
         }

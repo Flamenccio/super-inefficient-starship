@@ -4,6 +4,7 @@ using Flamenccio.Utility;
 using Flamenccio.Powerup;
 using System;
 using Flamenccio.Effects;
+using Flamenccio.Powerup.Weapon;
 
 namespace Flamenccio.Core.Player
 {
@@ -14,9 +15,9 @@ namespace Flamenccio.Core.Player
     {
         public Rigidbody2D Rigidbody { get => rb; }
 
-        [SerializeField] private PowerupManager powerManager;
         [SerializeField] private PlayerAttributes playerAtt;
         [SerializeField] private AimAssist aimAssist;
+        [SerializeField] private WeaponManager weaponManager;
 
         private enum AttackState
         {
@@ -72,8 +73,8 @@ namespace Flamenccio.Core.Player
         {
             if (kbmFireTimer > 0f) kbmFireTimer -= Time.deltaTime;
 
-            Attack(ref mainPressed, ref mainAttackState, ref mainHold, powerManager.MainAttackHold, powerManager.MainAttackHoldEnter, powerManager.MainAttackHoldExit, powerManager.MainAttackTap, powerManager.MainAttackAimAssisted);
-            Attack(ref subPressed, ref subAttackState, ref subHold, powerManager.SubAttackHold, powerManager.SubAttackHoldEnter, powerManager.SubAttackHoldExit, powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
+            Attack(ref mainPressed, ref mainAttackState, ref mainHold, weaponManager.MainAttackHold, weaponManager.MainAttackHoldEnter, weaponManager.MainAttackHoldExit, weaponManager.MainAttackTap, weaponManager.MainAttackAimAssisted);
+            Attack(ref subPressed, ref subAttackState, ref subHold, weaponManager.SubAttackHold, weaponManager.SubAttackHoldEnter, weaponManager.SubAttackHoldExit, weaponManager.SubAttackTap, weaponManager.SubAttackAimAssisted);
         }
 
 
@@ -168,7 +169,7 @@ namespace Flamenccio.Core.Player
         {
             if (context.performed)
             {
-                AttackTap(powerManager.DefenseAttackTap, powerManager.DefenseAttackAimAssisted);
+                AttackTap(weaponManager.DefenseAttackTap, weaponManager.DefenseAttackAimAssisted);
             }
         }
 
@@ -177,7 +178,7 @@ namespace Flamenccio.Core.Player
             if (context.performed)
             {
                 kbmFireTimer = KBM_FIRE_TIMER_MAX;
-                AttackTap(powerManager.SpecialAttackTap, powerManager.SpecialAttackAimAssisted);
+                AttackTap(weaponManager.SpecialAttackTap, weaponManager.SpecialAttackAimAssisted);
             }
         }
 
