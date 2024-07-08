@@ -122,18 +122,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 15
   maxDistance: 1
-  parryEffect: {fileID: 0}
-  impactEffect: {fileID: 0}
-  ignoredTags: []
   knockbackMultiplier: 20
-  damage: 1
+  durability: 1
+  rotationIsStatic: 1
+  canIgnoreStageEdge: 0
+  playerDamage: 1
+  objectDamage: 1
   rb: {fileID: 8964093285665541808}
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
-  afterimage: {fileID: 9090503508299466834, guid: 7197926ff55ef2e4db27daf2209be7f8, type: 3}
-  explosion: {fileID: 5889722259713699865, guid: 9079724ab2fd8174ca550088253330ee, type: 3}
   hitbox: {fileID: 1239980288682230593, guid: 31fd51b646f58a44ca3461d195dd0982, type: 3}
+  explodeVfx: e_explode
 --- !u!50 &8964093285665541808
 Rigidbody2D:
   serializedVersion: 4

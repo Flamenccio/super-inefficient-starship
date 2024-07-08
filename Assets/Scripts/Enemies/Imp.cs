@@ -30,7 +30,7 @@ namespace Enemy
             if (col.gameObject.CompareTag(TagManager.GetTag(Tag.Player)))
             {
                 // destroy this gameObject, but don't drop stars
-                EffectManager.Instance.SpawnEffect(EffectManager.Effects.EnemyKill, transform.position);
+                EffectManager.Instance.SpawnEffect("e_kill", transform.position);
                 GameObject ouch = Instantiate(hitboxPrefab, transform.position, Quaternion.identity);
                 ouch.GetComponent<Hitbox>().EditProperties(0f, hitRadius, 0, Hitbox.HitboxAffiliation.Enemy);
                 Destroy(gameObject); // destroy self

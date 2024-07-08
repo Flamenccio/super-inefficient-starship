@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using Flamenccio.Utility;
 using Flamenccio.Effects;
-using UnityEngine.InputSystem;
 using System;
 
 namespace Flamenccio.Core
@@ -12,14 +11,16 @@ namespace Flamenccio.Core
     /// </summary>
     public class CameraControl : MonoBehaviour
     {
-        private Transform playerPosition;
+        public bool InterruptSizeUpdate { get; private set; } = false;
+        public bool InterruptPositionUpdate { get; private set; } = false;
+        public float PreviousSize { get; private set; }
+        public float TargetSize { get; private set; }
+
+        private Transform target;
         private InputManager input;
         private Camera cam;
         private Vector2 cameraOffset = Vector2.zero; // modifies the camera's position from the player's position
-        private float currentSize = 0.0f;
-        private float previousSize = 0.0f;
-        private float t = 0;
-        private bool interruptAdjustment = false;
+        private float interpolateSize = 0f;
         private float cameraMoveSpeed;
         private Action UpdateCameraPosition;
 
@@ -30,23 +31,20 @@ namespace Flamenccio.Core
         private const float PEEK_DISTANCE_X = 8.0f; // same thing but for x axis
         private const float DEFAULT_SIZE = 6.0f;
         private const float MAX_SIZE = 12.0f;
-        private const float MINIMUM_SIZE_DIFFERENCE = 0.1f;
-        private const float HURT_ZOOM_DURATION = 0.25f;
 
         private void Awake()
         {
             cam = Camera.main;
             cam.orthographicSize = DEFAULT_SIZE;
-            currentSize = DEFAULT_SIZE;
-            previousSize = DEFAULT_SIZE;
+            PreviousSize = DEFAULT_SIZE;
+            TargetSize = DEFAULT_SIZE;
         }
 
         private void Start()
         {
             input = InputManager.Instance;
-            playerPosition = PlayerMotion.Instance.transform;
+            Follow(PlayerMotion.Instance.transform);
 
-            GameEventManager.OnPlayerHit += (_) => HurtZoom();
             GameEventManager.OnLevelUp += (_) => IncreaseCameraSize();
             GameEventManager.OnControlSchemeChange += (x) => UpdateControlScheme(x);
         }
@@ -59,28 +57,95 @@ namespace Flamenccio.Core
             UpdatePosition();
         }
 
+        /// <summary>
+        /// Tell the camera to follow a Transform. Fails if given Transform is null.
+        /// </summary>
+        /// <param name="target">Transform to follow.</param>
+        public void Follow(Transform target)
+        {
+            if (target == null) return;
+
+            this.target = target;
+        }
+
+        /// <summary>
+        /// Temporarily prevents this class from controlling the main camera's orthographic size. Has no effect if another interrupt is in progress.
+        /// </summary>
+        /// <param name="durationSeconds">How long to stop the size updates.</param>
+        public bool StopSizeUpdate(float durationSeconds)
+        {
+            if (InterruptSizeUpdate) return false;
+
+            StartCoroutine(StopSizeUpdateCoroutine(durationSeconds));
+            return true;
+        }
+
+        private IEnumerator StopSizeUpdateCoroutine(float durationSeconds)
+        {
+            InterruptSizeUpdate = true;
+            yield return new WaitForSecondsRealtime(durationSeconds);
+            InterruptSizeUpdate = false;
+        }
+
+        /// <summary>
+        /// Temporarily prevents this class from controlling the main camera's position. Has no effect if another interrupt is in progress.
+        /// </summary>
+        /// <param name="durationSeconds">How long to sotp the position updates.</param>
+        public bool StopPositionUpdate(float durationSeconds)
+        {
+            if (InterruptPositionUpdate) return false;
+
+            StartCoroutine(StopPositionUpdateCoroutine(durationSeconds));
+            return true;
+        }
+
+        private IEnumerator StopPositionUpdateCoroutine(float durationSeconds)
+        {
+            InterruptPositionUpdate = true;
+            yield return new WaitForSecondsRealtime(durationSeconds);
+            InterruptPositionUpdate = false;
+        }
+
+        /// <summary>
+        /// Temporarily stop both position and size updates of the camera.
+        /// </summary>
+        /// <param name="positionSeconds">How long to stop position updates.</param>
+        /// <param name="sizeSeconds">How long to stop size updates.</param>
+        /// <param name="enforceSimultaneous">Passing <b>true</b> will ensure that either both updates succeed; if one is unable to succeed, neither interrupts will be run.</param>
+        public bool StopPositionAndSizeUpdates(float positionSeconds, float sizeSeconds, bool enforceSimultaneous)
+        {
+            bool isInterrupted = InterruptSizeUpdate || InterruptPositionUpdate;
+
+            if (enforceSimultaneous && isInterrupted) return false;
+
+            StopPositionUpdate(positionSeconds);
+            StopSizeUpdate(sizeSeconds);
+            return true;
+        }
+
         private void UpdateSize()
         {
-            float sizeDifference = Mathf.Abs(currentSize - cam.orthographicSize);
+            if (InterruptSizeUpdate) return;
 
-            if (sizeDifference > MINIMUM_SIZE_DIFFERENCE && !interruptAdjustment)
+            if (interpolateSize < 1f)
             {
-                t += Time.unscaledDeltaTime;
-                cam.orthographicSize = Mathf.Lerp(previousSize, currentSize, t);
+                float logZoom = Mathf.SmoothStep(Mathf.Log(PreviousSize), Mathf.Log(TargetSize), interpolateSize);
+                cam.orthographicSize = Mathf.Exp(logZoom);
+                interpolateSize = Mathf.Clamp01(interpolateSize + Time.unscaledDeltaTime);
             }
             else
             {
-                t = 0;
+                PreviousSize = cam.orthographicSize;
             }
         }
 
         private void UpdatePosition()
         {
-            // TODO temporary
-            UpdateControlScheme(InputManager.Instance.CurrentScheme);
+            if (InterruptPositionUpdate) return;
+
             UpdateCameraPosition?.Invoke();
 
-            Vector3 cameraNewPosition = new(playerPosition.position.x + cameraOffset.x, playerPosition.position.y + cameraOffset.y, gameObject.transform.position.z);
+            Vector3 cameraNewPosition = new(target.position.x + cameraOffset.x, target.position.y + cameraOffset.y, gameObject.transform.position.z);
             gameObject.transform.position = new(Mathf.Lerp(transform.position.x, cameraNewPosition.x, cameraMoveSpeed), Mathf.Lerp(transform.position.y, cameraNewPosition.y, cameraMoveSpeed), cameraNewPosition.z);
         }
 
@@ -89,10 +154,12 @@ namespace Flamenccio.Core
             switch (scheme)
             {
                 case InputManager.ControlScheme.KBM:
+                    cameraMoveSpeed = CAMERA_MOVE_SPEED_KBM;
                     UpdateCameraPosition = UpdateCameraPositionKBM;
                     break;
 
                 case InputManager.ControlScheme.XBOX:
+                    cameraMoveSpeed = CAMERA_MOVE_SPEED_GAMEPAD;
                     UpdateCameraPosition = UpdateCameraPositionGamepad;
                     break;
             }
@@ -101,12 +168,10 @@ namespace Flamenccio.Core
         private void UpdateCameraPositionKBM()
         {
             cameraOffset = Vector2.zero;
-            cameraMoveSpeed = CAMERA_MOVE_SPEED_KBM;
         }
 
         private void UpdateCameraPositionGamepad()
         {
-            cameraMoveSpeed = CAMERA_MOVE_SPEED_GAMEPAD;
             if (input.AimInputVector != Vector2.zero)
             {
                 cameraOffset.x = input.AimInputVector.x * PEEK_DISTANCE_X;
@@ -125,28 +190,20 @@ namespace Flamenccio.Core
 
         public void IncreaseCameraSize()
         {
+            SetCameraSize(cam.orthographicSize + CAMERA_SIZE_CHANGE);
+        }
+
+        /// <summary>
+        /// Smoothly changes camera's orthographic size.
+        /// </summary>
+        /// <param name="newSize">New orthographic size.</param>
+        public void SetCameraSize(float newSize)
+        {
             if (cam.orthographicSize >= MAX_SIZE) return;
 
-            previousSize = cam.orthographicSize;
-            currentSize = cam.orthographicSize + CAMERA_SIZE_CHANGE;
-        }
-
-        public void HurtZoom()
-        {
-            StartCoroutine(HurtZoomAnimation());
-        }
-
-        private IEnumerator HurtZoomAnimation()
-        {
-            interruptAdjustment = true;
-            float normalSize = cam.orthographicSize;
-            float newSize = normalSize - 1;
-            cam.orthographicSize = Mathf.Lerp(normalSize, newSize, 1.0f);
-
-            yield return new WaitForSecondsRealtime(HURT_ZOOM_DURATION);
-
-            cam.orthographicSize = Mathf.Lerp(newSize, normalSize, 1.0f);
-            interruptAdjustment = false;
+            interpolateSize = 0f;
+            TargetSize = newSize;
+            PreviousSize = cam.orthographicSize;
         }
     }
 }

@@ -16,7 +16,9 @@ MonoBehaviour:
   secondaryWallLayout: {fileID: 11400000, guid: 1eab6745ec2faf14b93e1c78656d2c37, type: 2}
   linkSet:
   - linkDirection: 0
-    blackListedVariants: 040000000600000009000000
+    subLinkPositions: 0100000002000000
+    invertSubLinkPositions: 0
   - linkDirection: 2
-    blackListedVariants: 010000000600000009000000
-  variant: 10
+    subLinkPositions: 0100000002000000
+    invertSubLinkPositions: 0
+  variantId: chokepoint_w

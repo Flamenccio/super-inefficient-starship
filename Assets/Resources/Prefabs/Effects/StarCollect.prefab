@@ -118,4 +118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605feede3d489dc49994b3e7f6bc7d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effectName: i_star_collect
   animator: {fileID: 8625941825237215562}

@@ -12,11 +12,15 @@ namespace Flamenccio.Powerup.Weapon
     public class LemniscaticWindCycling : WeaponSpecial
     {
         [SerializeField] private GameObject shockwaveEffect;
+        [SerializeField] private float DURATION = 0.10f;
+        [SerializeField] private float SPEED = 50f;
+        [SerializeField] private int HIT_STREAK_CONDITION = 3; // number of enemies required to be hit to replenish a special charge.
+        [SerializeField] private string tapSfx;
+        [SerializeField] private string specialReplenishSfx;
+        [SerializeField] private string specialReplenishVfx;
+
         private LemniscaticWindCyclingBullet attackInstance;
         private bool rechargeUsed = false;
-        private const float DURATION = 0.10f;
-        private const float SPEED = 50f;
-        private const int HIT_STREAK_CONDITION = 3; // number of enemies required to be hit to replenish a special charge.
 
         protected override void Startup()
         {
@@ -35,13 +39,14 @@ namespace Flamenccio.Powerup.Weapon
 
             if (!AttackReady()) return;
 
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialBurst, transform.position);
+            AudioManager.Instance.PlayOneShot(tapSfx, transform.position);
+            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, pm.transform.position);
+            Instantiate(shockwaveEffect, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
+
             pm.RestrictAim(DURATION);
             pm.Blink(DURATION);
             rechargeUsed = false;
-            Instantiate(shockwaveEffect, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
             attackInstance = Instantiate(mainAttack, PlayerMotion.Instance.transform, false).GetComponent<LemniscaticWindCyclingBullet>();
-            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, pm.transform.position);
             float r = aimAngleDeg * Mathf.Deg2Rad;
             pm.Move(new Vector2(Mathf.Cos(r), Mathf.Sin(r)), SPEED, DURATION);
         }
@@ -50,10 +55,10 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (!rechargeUsed && attackInstance != null && attackInstance.EnemiesHit >= 3)
             {
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialCue, transform.position);
+                AudioManager.Instance.PlayOneShot(specialReplenishSfx, transform.position);
                 rechargeUsed = true;
                 playerAtt.ReplenishCharge(1);
-                EffectManager.Instance.SpawnEffect(EffectManager.Effects.SpecialReplenish, PlayerMotion.Instance.transform);
+                EffectManager.Instance.SpawnEffect(specialReplenishVfx, PlayerMotion.Instance.transform);
             }
         }
     }

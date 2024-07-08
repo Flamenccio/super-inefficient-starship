@@ -82,7 +82,7 @@ namespace Flamenccio.Attack
             {
                 case HitboxAffiliation.Neutral:
                     gameObject.tag = TagManager.GetTag(Tag.NeutralBullet);
-                    gameObject.layer = LayerMask.NameToLayer("Default"); // TODO temporary layer.
+                    gameObject.layer = LayerManager.GetLayer(Layer.NeutralAttack);
                     break;
 
                 case HitboxAffiliation.Enemy:

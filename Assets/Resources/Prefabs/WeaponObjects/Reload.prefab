@@ -50,3 +50,7 @@ MonoBehaviour:
   aimAssisted: 0
   mainAttack: {fileID: 0}
   maxSpecialCharges: 1
+  reloadNormalVfx: p_special_reload_tap
+  reloadPerfectVfx: p_special_reload_perfect_tap
+  reloadNormalSfx: p_special_reload_tap
+  reloadPerfectSfx: p_special_reload_perfect_tap

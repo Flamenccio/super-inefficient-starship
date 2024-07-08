@@ -1,34 +1,48 @@
 using Flamenccio.Core;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Flamenccio.Effects.Visual
 {
+    /// <summary>
+    /// Manages visual effects gameobjects and allows other classes to spawn them.
+    /// </summary>
     public class EffectManager : MonoBehaviour
     {
-        public enum Effects
+        [Serializable]
+        public struct EffectObject
         {
-            BulletParry,
-            BulletImpact,
-            Explosion,
-            EnemyHit,
-            EnemyKill,
-            SpecialReplenish,
-            PlayerHit,
+            [field: SerializeField, Tooltip("Name of the effect. Must be in snake_case, have no spaces.\nThe general format of the name should look something like: \n<category>_<trigger>_<more info>\nExample: p_weapon_main_blaster_tap")] public string Name { get; set; }
+            [field: SerializeField] public GameObject Effect { get; set; }
+        }
+
+        public struct EffectID
+        {
+            public char Category { get; set; }
+            public int Index { get; set; }
         }
 
         public static EffectManager Instance { get; private set; }
-        private Dictionary<Effects, GameObject> effectDictionary;
 
-        [SerializeField] private GameObject bulletParry;
-        [SerializeField] private GameObject bulletImpact;
-        [SerializeField] private GameObject explosion;
-        [SerializeField] private GameObject enemyHit;
-        [SerializeField] private GameObject enemyKill;
-        [SerializeField] private GameObject specialReplenish;
-        [SerializeField] private GameObject playerHit;
         [SerializeField] private GameObject collectedStarShard;
         [SerializeField] private TrailPool trailPool;
+        private List<EffectObject> effects = new();
+        private List<EffectObject> playerEffects = new();
+        private List<EffectObject> enemyEffects = new();
+        private List<EffectObject> itemEffects = new();
+        private List<EffectObject> objectEffects = new();
+        private List<EffectObject> miscEffects = new();
+
+        private Dictionary<string, List<EffectObject>> effectListMap;
+
+        private const string CATEGORY_PLAYER = "p";
+        private const string CATEGORY_ENEMY = "e";
+        private const string CATEGORY_ITEM = "i";
+        private const string CATEGORY_OBJECT = "o";
+        private const string CATEGORY_MISC = "m";
+        private const string CATEGORY_NONE = "-";
 
         private void Awake()
         {
@@ -41,63 +55,233 @@ namespace Flamenccio.Effects.Visual
                 Instance = this;
             }
 
-            // TODO make better way to do this
-            effectDictionary = new()
+            effectListMap = new()
             {
-                { Effects.BulletParry, bulletParry },
-                { Effects.BulletImpact, bulletImpact },
-                { Effects.Explosion, explosion },
-                { Effects.EnemyHit, enemyHit },
-                { Effects.EnemyKill, enemyKill },
-                { Effects.SpecialReplenish, specialReplenish },
-                { Effects.PlayerHit, playerHit },
+                { CATEGORY_PLAYER, playerEffects },
+                { CATEGORY_ENEMY, enemyEffects },
+                { CATEGORY_ITEM, itemEffects },
+                { CATEGORY_OBJECT, objectEffects },
+                { CATEGORY_MISC, miscEffects },
+                { CATEGORY_NONE, new() }
             };
+            effects = LoadEffects();
+            SortEffects();
         }
 
         private void Start()
         {
             // subscribe to events
-            GameEventManager.OnEnemyKill += (v) => SpawnEffect(Effects.EnemyKill, v.EventOrigin);
-            GameEventManager.OnEnemyHit += (v) => SpawnEffect(Effects.EnemyHit, v.EventOrigin);
-            GameEventManager.OnPlayerHit += (v) => SpawnEffect(Effects.PlayerHit, v.EventTriggerer);
+            GameEventManager.OnEnemyKill += (v) => SpawnEffect("e_kill", v.EventOrigin);
+            GameEventManager.OnEnemyHit += (v) => SpawnEffect("e_hit", v.EventOrigin);
+            GameEventManager.OnPlayerHit += (v) => SpawnEffect("p_hit", v.EventTriggerer);
         }
 
-        /// <summary>
-        /// Spawn an effect and make it a child of some transform.
-        /// </summary>
-        public void SpawnEffect(Effects effect, Transform parent)
+        private List<EffectObject> LoadEffects()
         {
-            if (!effectDictionary.TryGetValue(effect, out GameObject obj))
+            var prefabs = Resources.LoadAll<GameObject>("Prefabs/Effects");
+            List<EffectObject> list = new();
+            prefabs
+                .Select(x =>
+                {
+                    x.TryGetComponent<Effect>(out var i);
+                    return i;
+                })
+                .Where(x => x != null && !string.IsNullOrEmpty(x.EffectName))
+                .ToList()
+                .ForEach(x =>
+                {
+                    EffectObject newEffect = new()
+                    {
+                        Name = x.EffectName,
+                        Effect = x.gameObject
+                    };
+                    list.Add(newEffect);
+                });
+
+            return list;
+        }
+
+        private void SortEffects()
+        {
+            foreach (var effect in effects)
             {
-                Debug.LogError($"Effect {effect} does not exist!");
-                return;
+                var subList = effectListMap[FindMatchingCategory(effect.Name)];
+                subList.Add(effect);
             }
 
-            Instantiate(obj, parent);
+            effectListMap[CATEGORY_NONE].Clear();
         }
 
         /// <summary>
-        /// Spawn an effect and place it somewhere in the game world.
+        /// Tries to find a matching category from a string.
         /// </summary>
-        /// <param name="effect"></param>
-        /// <param name="origin"></param>
-        public void SpawnEffect(Effects effect, Vector2 origin)
+        /// <param name="effectName">The entire name of the effect.</param>
+        /// <returns>The effect's category.</returns>
+        private string FindMatchingCategory(string effectName)
         {
-            SpawnEffect(effect, origin, Quaternion.identity);
+            string category = effectName.Split('_')[0];
+
+            if (category.Length != 1) return CATEGORY_NONE; // the category part of the name must be a single character
+
+            return effectListMap.ContainsKey(category) ? category : CATEGORY_NONE;
         }
 
         /// <summary>
-        /// Spawn an effect and place it somewhere in the game world with a quaternion rotation
+        /// Spawn an effect and place it somehwere in the game world. The effect will have a rotation of 0 degrees.
         /// </summary>
-        public void SpawnEffect(Effects effect, Vector2 origin, Quaternion rotation)
+        /// <param name="effectName">The name of the effect.</param>
+        /// <param name="origin">Where to place the effect.</param>
+        public void SpawnEffect(string effectName, Vector2 origin)
         {
-            if (!effectDictionary.TryGetValue(effect, out GameObject obj))
+            EffectID id = GetEffectId(effectName);
+            SpawnEffect(id, origin);
+        }
+
+        /// <summary>
+        /// Spawn an effect under a parent GameObject.
+        /// </summary>
+        /// <param name="effectName">Name of effect.</param>
+        /// <param name="parent">Parent GameObject Transform.</param>
+        public void SpawnEffect(string effectName, Transform parent)
+        {
+            EffectID id = GetEffectId(effectName);
+            SpawnEffect(id, parent);
+        }
+
+        /// <summary>
+        /// Spawn an effect and place it somewhere in the game world with a rotation.
+        /// </summary>
+        /// <param name="effectName">The name of the effect.</param>
+        /// <param name="origin">Where to place the effect.</param>
+        /// <param name="rotation">Rotation of the effect.</param>
+        public void SpawnEffect(string effectName, Vector2 origin, Quaternion rotation)
+        {
+            EffectID id = GetEffectId(effectName);
+            SpawnEffect(id, origin, rotation);
+        }
+
+        /// <summary>
+        /// Spawn an effect and place it somewhere in the game world with a rotation.
+        /// </summary>
+        /// <param name="effectID">The ID of the effect.</param>
+        /// <param name="origin">Where to place the effect.</param>
+        public void SpawnEffect(EffectID effectID, Vector2 origin)
+        {
+            var list = GetEffectObjectList(effectID);
+
+            if (list.Count == 0) return;
+
+            Instantiate(list[effectID.Index].Effect, origin, Quaternion.identity);
+        }
+
+        /// <summary>
+        /// Spawn an effect and place it somewhere in the game world with a rotation.
+        /// </summary>
+        /// <param name="effectID">The ID of the effect.</param>
+        /// <param name="origin">Where to place the effect.</param>
+        /// <param name="rotation">Rotation of the effect.</param>
+        public void SpawnEffect(EffectID effectID, Vector2 origin, Quaternion rotation)
+        {
+            var list = GetEffectObjectList(effectID);
+
+            if (list.Count == 0) return;
+
+            Instantiate(list[effectID.Index].Effect, origin, rotation);
+        }
+
+        /// <summary>
+        /// Spawn an effect and place it somewhere in the game world with a rotation.
+        /// </summary>
+        /// <param name="effectID">The ID of the effect.</param>
+        /// <param name="parent">Parent transform of effect.</param>
+        public void SpawnEffect(EffectID effectID, Transform parent)
+        {
+            var list = GetEffectObjectList(effectID);
+
+            if (list.Count == 0) return;
+
+            Instantiate(list[effectID.Index].Effect, parent);
+        }
+
+        private List<EffectObject> GetEffectObjectList(EffectID effectID)
+        {
+            if (effectID.Index < 0 || effectID.Category.Equals(CATEGORY_NONE)) return new();
+
+            var list = effectListMap[effectID.Category.ToString()];
+
+            if (effectID.Index > list.Count) return new();
+
+            return list;
+        }
+
+        /// <summary>
+        /// Get the ID of an effect.
+        /// </summary>
+        /// <param name="effectName">Name of effect.</param>
+        /// <returns>The ID of the effect; -1 if no such effect exists.</returns>
+        public EffectID GetEffectId(string effectName)
+        {
+            if (string.IsNullOrEmpty(effectName))
             {
-                Debug.LogError($"Effect {effect} does not exist!");
-                return;
+                Debug.LogWarning("Given effect name is empty.");
+                return GetNullId();
             }
 
-            Instantiate(obj, origin, rotation);
+            var category = FindMatchingCategory(effectName);
+
+            if (category.Equals(CATEGORY_NONE)) return GetNullId();
+
+            var list = effectListMap[category];
+            int index = 0;
+
+            if (!list.Select(x => x.Name).Contains(effectName))
+            {
+                Debug.LogWarning($"Effect list does not contain {effectName}.");
+                return GetNullId();
+            }
+            else
+            {
+                foreach (var item in list)
+                {
+                    if (item.Name.Equals(effectName))
+                    {
+                        return new()
+                        {
+                            Category = category[0],
+                            Index = index
+                        };
+                    }
+
+                    index++;
+                }
+
+                Debug.LogWarning($"Failed to find effect {effectName}.");
+
+                return GetNullId();
+            }
+        }
+
+        private EffectID GetNullId()
+        {
+            return new()
+            {
+                Category = CATEGORY_NONE[0],
+                Index = -1
+            };
+        }
+
+        private EffectID GetID(string category, int index)
+        {
+            if (string.IsNullOrEmpty(category) || index < 0)
+            {
+                return GetNullId();
+            }
+
+            return new()
+            {
+                Category = category[0],
+                Index = index
+            };
         }
 
         /// <summary>

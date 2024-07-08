@@ -1,3 +1,5 @@
+using Flamenccio.Core;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,6 +20,7 @@ namespace Flamenccio.Utility
         public float MousePositionDistance { get; private set; }
         private AllAngle aimInput = new();
         private AllAngle moveInput = new();
+        private bool startCalled = false;
 
         public enum ControlScheme
         {
@@ -37,6 +40,11 @@ namespace Flamenccio.Utility
             {
                 Instance = this;
             }
+        }
+
+        private void Start()
+        {
+            startCalled = true;
         }
 
         private void Update()
@@ -64,7 +72,17 @@ namespace Flamenccio.Utility
                 CurrentScheme = ControlScheme.KBM;
             }
 
-            //GameEventManager.OnControlSchemeChange(CurrentScheme);
+            WaitForGameEventManager();
+        }
+
+        private async Task WaitForGameEventManager()
+        {
+            await Task.Run(() =>
+            {
+                while (!GameEventManager.Instanced || !startCalled) { }
+
+                GameEventManager.OnControlSchemeChange(CurrentScheme);
+            });
         }
 
         public void OnAim(InputAction.CallbackContext context)

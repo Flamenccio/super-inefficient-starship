@@ -1,5 +1,7 @@
 using UnityEngine;
 using Flamenccio.Effects.Audio;
+using FMODUnity;
+using Flamenccio.Effects.Visual;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -10,6 +12,9 @@ namespace Flamenccio.Powerup.Weapon
     {
         [SerializeField] private GameObject chargeAttack;
         [SerializeField] private int ChargeCost = 1;
+        [SerializeField] private string tapSfx;
+        [SerializeField] private string holdExitSfx;
+        [SerializeField] private string chargedVfx;
 
         protected override void Startup()
         {
@@ -23,16 +28,21 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (!AttackReady()) return;
 
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerShoot, transform.position);
+            AudioManager.Instance.PlayOneShot(tapSfx, transform.position);
             Instantiate(mainAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
             cooldownTimer = 0f;
+        }
+
+        public override void HoldEnter(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
+        {
+            EffectManager.Instance.SpawnEffect(chargedVfx, transform);
         }
 
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (!consumeAmmo(ChargeCost, PlayerAttributes.AmmoUsage.MainHoldExit)) return;
 
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerSpecialBurst, transform.position);
+            AudioManager.Instance.PlayOneShot(holdExitSfx, transform.position);
             Instantiate(chargeAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));
         }
     }

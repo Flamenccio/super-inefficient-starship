@@ -34,7 +34,10 @@ namespace Flamenccio.Core
     /// </summary>
     public static class GameEventManager
     {
-        // TODO make singleton
+        /// <summary>
+        /// Is this class instanced yet?
+        /// </summary>
+        public static bool Instanced { get => true; }
 
         /*
         these events should be common--no highly specific events unless ABSOLUTELY needed.
@@ -42,7 +45,14 @@ namespace Flamenccio.Core
         these events must be interactions between game objects: player interaction is already handled by input
         */
 
+        /// <summary>
+        /// VALUE represents star shards dropped.
+        /// </summary>
         public static Action<GameEventInfo> OnEnemyKill { get; set; }
+
+        /// <summary>
+        /// VALUE represents enemy tier.
+        /// </summary>
         public static Action<GameEventInfo> OnEnemySpawn { get; set; }
         public static Action<GameEventInfo> OnEnemyHit { get; set; }
 
@@ -84,7 +94,18 @@ namespace Flamenccio.Core
         public static Action<GameEventInfo> OnPointGain { get; set; }
 
         /// <summary>
+        /// VALUE represents the object spawned; reference ObjectType enum.
+        /// </summary>
+        public static Action<GameEventInfo> OnObjectSpawn { get; set; }
+
+        /// <summary>
+        /// VALUE represents the object destroyed; reference ObjectType enum.
+        /// </summary>
+        public static Action<GameEventInfo> OnObjectDestroy { get; set; }
+
+        /// <summary>
         /// Called when control scheme is changed.
+        /// Paramter is the new control scheme.
         /// </summary>
         public static Action<InputManager.ControlScheme> OnControlSchemeChange { get; set; }
 

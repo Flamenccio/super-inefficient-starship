@@ -7,9 +7,10 @@ namespace Flamenccio.Item
     {
         public int Value { get => val; }
         [SerializeField] protected int val;
+
         protected override void CollectEffect(Transform player)
         {
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.starCollect, transform.position);
+            AudioManager.Instance.PlayOneShot(collectSfx, transform.position);
         }
     }
 }

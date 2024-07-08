@@ -23,6 +23,5 @@ namespace Flamenccio.LevelObject.Stages
             public Vector2 Origin;
         }
         public List<WallAttributes> Layout = new();
-        public StageVariant.Variants AssociatedVariant;
     }
 }

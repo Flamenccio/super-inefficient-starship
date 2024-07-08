@@ -51,3 +51,9 @@ MonoBehaviour:
   mainAttack: {fileID: 5624131329123951944, guid: ada48b854de174c4db8e50572c34f7a6, type: 3}
   maxSpecialCharges: 2
   shockwaveEffect: {fileID: 7755075267815121952, guid: 796f4905a51a24645bb1c1d828325122, type: 3}
+  DURATION: 0.1
+  SPEED: 60
+  HIT_STREAK_CONDITION: 3
+  tapSfx: p_special_burst_tap
+  specialReplenishSfx: p_specialcharge_replenish
+  specialReplenishVfx: p_specialcharge_replenish

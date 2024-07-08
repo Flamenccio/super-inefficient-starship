@@ -4,6 +4,7 @@ using Flamenccio.Utility;
 using Flamenccio.Powerup;
 using System;
 using Flamenccio.Effects;
+using Flamenccio.Powerup.Weapon;
 
 namespace Flamenccio.Core.Player
 {
@@ -12,9 +13,11 @@ namespace Flamenccio.Core.Player
     /// </summary>
     public class PlayerActions : MonoBehaviour
     {
-        [SerializeField] private PowerupManager powerManager;
+        public Rigidbody2D Rigidbody { get => rb; }
+
         [SerializeField] private PlayerAttributes playerAtt;
         [SerializeField] private AimAssist aimAssist;
+        [SerializeField] private WeaponManager weaponManager;
 
         private enum AttackState
         {
@@ -22,22 +25,24 @@ namespace Flamenccio.Core.Player
             Hold,
         };
 
+        private Action dynamicAim;
         private AttackState mainAttackState = AttackState.Tap;
+        private AttackState subAttackState = AttackState.Tap;
         private Rigidbody2D rb;
         private AllAngle rotationAngle; // used for rotating player sprite
         private PlayerMotion playerMotion;
         private InputManager input;
         private bool mainPressed = false;
+        private bool subPressed = false;
         private float mainHold = 0.0f;
+        private float subHold = 0.0f;
         private float acceleration = 1.0f;
         private float deceleration = 1.0f;
         private float kbmFireTimer = 0f;
         private float attackAngleDegrees = 0f; // where to attack, different from input.aimangle
         private readonly float aimResponsiveness = 0.6f;
-        private const float HOLD_THRESHOLD = 0.50f;
+        private const float HOLD_THRESHOLD = 0.26f;
         private const float KBM_FIRE_TIMER_MAX = 2.0f;
-
-        public Rigidbody2D Rigidbody { get => rb; }
 
         private void Start()
         {
@@ -46,6 +51,7 @@ namespace Flamenccio.Core.Player
             acceleration = playerAtt.MoveSpeed / 4f;
             deceleration = playerAtt.MoveSpeed / 26f;
             playerMotion = PlayerMotion.Instance;
+            GameEventManager.OnControlSchemeChange += SwitchAimScheme;
         }
 
         private void FixedUpdate()
@@ -60,27 +66,19 @@ namespace Flamenccio.Core.Player
                 Movement();
             }
 
-            Aim();
+            dynamicAim?.Invoke();
         }
 
         private void Update()
         {
             if (kbmFireTimer > 0f) kbmFireTimer -= Time.deltaTime;
 
-            Fire1Hold();
+            Attack(ref mainPressed, ref mainAttackState, ref mainHold, weaponManager.MainAttackHold, weaponManager.MainAttackHoldEnter, weaponManager.MainAttackHoldExit, weaponManager.MainAttackTap, weaponManager.MainAttackAimAssisted);
+            Attack(ref subPressed, ref subAttackState, ref subHold, weaponManager.SubAttackHold, weaponManager.SubAttackHoldEnter, weaponManager.SubAttackHoldExit, weaponManager.SubAttackTap, weaponManager.SubAttackAimAssisted);
         }
 
-        public void OnFire1(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-            {
-                kbmFireTimer = KBM_FIRE_TIMER_MAX;
-                AttackTap(powerManager.MainAttackTap, powerManager.MainAttackAimAssisted);
-            }
 
-            mainPressed = context.ReadValueAsButton();
-        }
-
+        #region Attacking
         private void AttackWithAimAssist(Action<float, float, Vector2> attack)
         {
             float a;
@@ -110,45 +108,68 @@ namespace Flamenccio.Core.Player
             }
         }
 
-        private void Fire1Hold()
+        /// <summary>
+        /// Manages button behavior on attacks (hold and tap).
+        /// </summary>
+        /// <param name="actionPressed">The boolean value signifying that an action is pressed.</param>
+        /// <param name="state">The AttackState enum signifying the state of an attack.</param>
+        /// <param name="holdTimer">The timer used to confirm a button hold.</param>
+        /// <param name="hold">Action called every frame button is held.</param>
+        /// <param name="enter">Action called once entering hold attack state.</param>
+        /// <param name="exit">Action called once exiting hold attack state.</param>
+        /// <param name="tap">Action called if button is released before a hold attack is registered.</param>
+        /// <param name="aimAssist">Does this attack use aim assist?</param>
+        private void Attack(ref bool actionPressed, ref AttackState state, ref float holdTimer, Action<float, float, Vector2> hold, Action<float, float, Vector2> enter, Action<float, float, Vector2> exit, Action<float, float, Vector2> tap, bool aimAssist)
         {
-            if (mainPressed)
+            if (actionPressed)
             {
                 kbmFireTimer = KBM_FIRE_TIMER_MAX;
 
-                if (mainHold >= HOLD_THRESHOLD)
+                if (holdTimer >= HOLD_THRESHOLD)
                 {
-                    if (mainAttackState == AttackState.Tap)
+                    if (state == AttackState.Tap)
                     {
-                        powerManager.MainAttackHoldEnter(attackAngleDegrees, input.MoveInputDegrees, transform.position);
-                        mainAttackState = AttackState.Hold;
+                        enter(attackAngleDegrees, input.MoveInputDegrees, transform.position);
+                        state = AttackState.Hold;
                     }
                     else
                     {
-                        powerManager.MainAttackHold(attackAngleDegrees, input.MoveInputDegrees, transform.position);
+                        hold(attackAngleDegrees, input.MoveInputDegrees, transform.position);
                     }
                 }
                 else
                 {
-                    mainHold += Time.deltaTime;
+                    holdTimer += Time.deltaTime;
                 }
             }
             else
             {
-                if (mainAttackState == AttackState.Hold)
+                if (state == AttackState.Hold)
                 {
-                    powerManager.MainAttackHoldExit(attackAngleDegrees, input.MoveInputDegrees, transform.position);
-                    mainAttackState = AttackState.Tap;
+                    exit(attackAngleDegrees, input.MoveInputDegrees, transform.position);
+                    state = AttackState.Tap;
                 }
-                mainHold = 0f;
+                else if (holdTimer > 0f)
+                {
+                    AttackTap(tap, aimAssist);
+                }
+
+                holdTimer = 0f;
             }
+        }
+        #endregion
+
+        #region Unity events
+        public void OnMain(InputAction.CallbackContext context)
+        {
+            mainPressed = context.ReadValueAsButton();
         }
 
         public void OnDefense(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
-                AttackTap(powerManager.DefenseAttackTap, powerManager.DefenseAttackAimAssisted);
+                AttackTap(weaponManager.DefenseAttackTap, weaponManager.DefenseAttackAimAssisted);
             }
         }
 
@@ -157,27 +178,30 @@ namespace Flamenccio.Core.Player
             if (context.performed)
             {
                 kbmFireTimer = KBM_FIRE_TIMER_MAX;
-                AttackTap(powerManager.SpecialAttackTap, powerManager.SpecialAttackAimAssisted);
+                AttackTap(weaponManager.SpecialAttackTap, weaponManager.SpecialAttackAimAssisted);
             }
         }
 
         public void OnSub(InputAction.CallbackContext context)
         {
+            subPressed = context.ReadValueAsButton();
+        }
+
+        public void OnDebug1(InputAction.CallbackContext context)
+        {
             if (context.performed)
             {
-                kbmFireTimer = KBM_FIRE_TIMER_MAX;
-                AttackTap(powerManager.SubAttackTap, powerManager.SubAttackAimAssisted);
+                // debug
             }
         }
+        #endregion
 
         private void Movement()
         {
             if (input.MoveInputVector != Vector2.zero) // if the player is providing direcitonal input:
             {
                 Vector2 newVelocity = new((input.MoveInputVector.x * acceleration) + rb.velocity.x, (input.MoveInputVector.y * acceleration) + rb.velocity.y);
-
                 newVelocity = Vector2.ClampMagnitude(newVelocity, playerAtt.MoveSpeed);
-
                 rb.velocity = newVelocity;
             }
             else if (rb.velocity.magnitude > 0f) // otherwise, if no directional input is given:
@@ -186,16 +210,18 @@ namespace Flamenccio.Core.Player
             }
         }
 
-        private void Aim()
+        #region Aiming
+        private void SwitchAimScheme(InputManager.ControlScheme scheme)
         {
-            // TODO (minor) make a way so a branch isn't evaluated every frame.
-            if (input.CurrentScheme == InputManager.ControlScheme.XBOX)
+            switch (scheme)
             {
-                GamepadAim();
-            }
-            if (input.CurrentScheme == InputManager.ControlScheme.KBM)
-            {
-                MouseAim();
+                case InputManager.ControlScheme.XBOX:
+                    dynamicAim = GamepadAim;
+                    break;
+
+                case InputManager.ControlScheme.KBM:
+                    dynamicAim = MouseAim;
+                    break;
             }
         }
 
@@ -229,13 +255,6 @@ namespace Flamenccio.Core.Player
 
             attackAngleDegrees = input.AimInputDegrees;
         }
-
-        public void OnDebug1(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-            {
-                // debug
-            }
-        }
+        #endregion
     }
 }

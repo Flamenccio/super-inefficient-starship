@@ -26,9 +26,9 @@ namespace Flamenccio.Effects.Audio
 
         private void Start()
         {
-            GameEventManager.OnEnemyHit += (v) => PlayOneShot(FMODEvents.Instance.enemyHurt, v.EventOrigin);
-            GameEventManager.OnEnemyKill += (v) => PlayOneShot(FMODEvents.Instance.enemyKill, v.EventOrigin);
-            GameEventManager.OnPlayerHit += (v) => PlayOneShot(FMODEvents.Instance.playerHurt, v.EventOrigin);
+            GameEventManager.OnEnemyHit += (v) => PlayOneShot("e_hurt", v.EventOrigin);
+            GameEventManager.OnEnemyKill += (v) => PlayOneShot("e_kill", v.EventOrigin);
+            GameEventManager.OnPlayerHit += (v) => PlayOneShot("p_hurt", v.EventOrigin);
         }
 
         /// <summary>
@@ -39,6 +39,16 @@ namespace Flamenccio.Effects.Audio
         public void PlayOneShot(EventReference sfx, Vector3 worldPos)
         {
             RuntimeManager.PlayOneShot(sfx, worldPos);
+        }
+
+        /// <summary>
+        /// Play a one shot sound effect.
+        /// </summary>
+        /// <param name="sfxName">The name of the sound effect to play.</param>
+        /// <param name="worldPos">Where to play the sound effect in the game world.</param>
+        public void PlayOneShot(string sfxName, Vector3 worldPos)
+        {
+            RuntimeManager.PlayOneShot(FMODEvents.Instance.GetAudioEvent(sfxName), worldPos);
         }
     }
 }

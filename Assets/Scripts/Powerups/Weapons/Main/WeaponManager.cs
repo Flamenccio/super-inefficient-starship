@@ -76,13 +76,15 @@ namespace Flamenccio.Powerup.Weapon
 
         // MAIN ATTACK METHODS
         private Action<float, float, Vector2> mainAttackTap;
-
         private Action<float, float, Vector2> mainAttackHold;
         private Action<float, float, Vector2> mainAttackHoldEnter;
         private Action<float, float, Vector2> mainAttackHoldExit;
 
         // SUB ATTACK METHODS
         private Action<float, float, Vector2> subAttackTap;
+        private Action<float, float, Vector2> subAttackHold;
+        private Action<float, float, Vector2> subAttackHoldEnter;
+        private Action<float, float, Vector2> subAttackHoldExit;
 
         // SPECIAL ATTACK METHODS
         private Action<float, float, Vector2> specialAttackTap;
@@ -136,6 +138,9 @@ namespace Flamenccio.Powerup.Weapon
 
             weaponUpdate += subAttack.Run;
             subAttackTap = subAttack.Tap;
+            subAttackHold = subAttack.Hold;
+            subAttackHoldEnter = subAttack.HoldEnter;
+            subAttackHoldExit = subAttack.HoldExit;
 
             return true;
         }
@@ -235,6 +240,21 @@ namespace Flamenccio.Powerup.Weapon
         public void SubAttackTap(float aimAngle, float moveAngle, Vector2 origin)
         {
             subAttackTap?.Invoke(aimAngle, moveAngle, origin);
+        }
+
+        public void SubAttackHold(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            subAttackHold?.Invoke(aimAngle, moveAngle, origin);
+        }
+
+        public void SubAttackHoldEnter(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            subAttackHoldEnter?.Invoke(aimAngle, moveAngle, origin);
+        }
+
+        public void SubAttackHoldExit(float aimAngle, float moveAngle, Vector2 origin)
+        {
+            subAttackHoldExit?.Invoke(aimAngle, moveAngle, origin);
         }
 
         public void SpecialAttackTap(float aimAngle, float moveAngle, Vector2 origin)

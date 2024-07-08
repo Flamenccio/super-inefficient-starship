@@ -1,14 +1,20 @@
+using Flamenccio.Effects.Visual;
 using Flamenccio.Utility;
 using UnityEngine;
 
 namespace Flamenccio.Item
 {
-    // base class for all in-game appearances of items.
+    /// <summary>
+    /// Base class for all items.
+    /// </summary>
     public class Item : MonoBehaviour
     {
-        [SerializeField] protected GameObject collectEffect;
-        [SerializeField] protected GameObject spawnEffect;
+        [SerializeField, Tooltip("Must be all lowercase, no spaces.")] protected string itemName;
+        [SerializeField] protected string collectVfx = "i_generic_collect"; // set a default collect vfx
+        [SerializeField] protected string spawnVfx;
+        [SerializeField] protected string collectSfx;
         protected readonly string PLAYER_TAG = TagManager.GetTag(Tag.Player);
+        public string ItemName { get => itemName; }
 
         /// <summary>
         /// Any additional effects that the item will do upon spawning.
@@ -34,9 +40,9 @@ namespace Flamenccio.Item
 
         protected void Awake()
         {
-            if (spawnEffect != null)
+            if (!string.IsNullOrEmpty(spawnVfx))
             {
-                Instantiate(spawnEffect, transform); // summon spawn effect, if it exists.
+                EffectManager.Instance.SpawnEffect(spawnVfx, transform);
             }
             SpawnEffect();
         }
@@ -47,10 +53,9 @@ namespace Flamenccio.Item
             if (collision.CompareTag(PLAYER_TAG))
             {
                 CollectEffect(collision.transform);
-                if (collectEffect != null)
-                {
-                    Instantiate(collectEffect, transform.position, Quaternion.identity);
-                }
+          
+                if (!string.IsNullOrEmpty(collectVfx)) EffectManager.Instance.SpawnEffect(collectVfx, transform.position);
+
                 Destroy(gameObject);
             }
         }

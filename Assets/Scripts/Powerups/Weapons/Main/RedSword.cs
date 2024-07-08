@@ -4,6 +4,7 @@ using Flamenccio.Effects;
 using UnityEngine;
 using Flamenccio.Powerup.Buff;
 using Flamenccio.Effects.Audio;
+using Flamenccio.Effects.Visual;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -13,10 +14,12 @@ namespace Flamenccio.Powerup.Weapon
     public class RedSword : WeaponMain
     {
         [SerializeField] private GameObject chargeAttack;
+        [SerializeField] private string tapSfx;
+        [SerializeField] private string chargedVfx;
         private const float SLASH_OFFSET = 1f;
         private bool flip = false;
         private int kills = 0;
-        private PowerupManager powerupManager;
+        private BuffManager buffManager;
 
         protected override void Startup()
         {
@@ -30,15 +33,15 @@ namespace Flamenccio.Powerup.Weapon
 
         private void OnEnable()
         {
-            powerupManager = GetComponentInParent<PowerupManager>();
-            powerupManager.AddBuff(typeof(RedFrenzy));
+            buffManager = GetComponentInParent<BuffManager>();
+            buffManager.AddBuff(typeof(RedFrenzy));
             GameEventManager.OnEnemyKill += (_) => IncreaseKill();
             GameEventManager.OnPlayerHit += (_) => ResetKill();
         }
 
         private void OnDestroy()
         {
-            powerupManager.RemoveBuff(typeof(RedFrenzy));
+            buffManager.RemoveBuff(typeof(RedFrenzy));
             GameEventManager.OnEnemyKill -= (_) => IncreaseKill();
             GameEventManager.OnPlayerHit -= (_) => ResetKill();
         }
@@ -53,11 +56,16 @@ namespace Flamenccio.Powerup.Weapon
             kills = 0;
         }
 
+        public override void HoldEnter(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
+        {
+            EffectManager.Instance.SpawnEffect(chargedVfx, transform);
+        }
+
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
             if (!AttackReady()) return;
 
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.playerRedSwordSwing, transform.position);
+            AudioManager.Instance.PlayOneShot(tapSfx, transform.position);
             flip = !flip;
             cooldownTimer = 0f;
             RedSwordAttack inst = Instantiate(mainAttack, PlayerMotion.Instance.transform).GetComponent<RedSwordAttack>();

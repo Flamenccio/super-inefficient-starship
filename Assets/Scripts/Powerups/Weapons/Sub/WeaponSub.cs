@@ -24,6 +24,8 @@ namespace Flamenccio.Powerup.Weapon
                 return false;
             }
 
+            cooldownTimer = 0f;
+
             return true;
         }
     }

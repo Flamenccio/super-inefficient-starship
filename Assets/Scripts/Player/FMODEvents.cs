@@ -1,27 +1,23 @@
 using UnityEngine;
 using FMODUnity;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Flamenccio.Effects.Audio
 {
+    [System.Serializable]
+    public struct AudioEvent
+    {
+        [field: SerializeField, Tooltip("Naming convention: <Category><Source><Trigger>. No spaces, snake_case, no plurals, no empty strings.")] public string Name { get; set; }
+        [field: SerializeField] public EventReference Audio { get; set; }
+    }
+
     public class FMODEvents : MonoBehaviour
     {
-        [field: SerializeField] public EventReference playerShoot { get; private set; }
-        [field: SerializeField] public EventReference playerHurt { get; private set; }
-        [field: SerializeField] public EventReference playerDash { get; private set; }
-        [field: SerializeField] public EventReference crosshairsLockon { get; private set; }
-        [field: SerializeField] public EventReference enemyHurt { get; private set; }
-        [field: SerializeField] public EventReference enemyKill { get; private set; }
-        [field: SerializeField] public EventReference starCollect { get; private set; }
-        [field: SerializeField] public EventReference miniStarCollect { get; private set; }
-        [field: SerializeField] public EventReference playerShootMini { get; private set; }
-        [field: SerializeField] public EventReference playerSpecialBurst { get; private set; }
-        [field: SerializeField] public EventReference wallDestroy { get; private set; }
-        [field: SerializeField] public EventReference heartCollect { get; private set; }
-        [field: SerializeField] public EventReference playerSpecialCue { get; private set; }
-        [field: SerializeField] public EventReference playerRedSwordSwing { get; private set; }
-        [field: SerializeField] public EventReference playerRedSwordCharged { get; private set; }
-        [field: SerializeField] public EventReference playerShotgunBlast { get; private set; }
         public static FMODEvents Instance { get; private set; }
+
+        [SerializeField] private List<AudioEvent> audioEvents = new();
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -33,6 +29,22 @@ namespace Flamenccio.Effects.Audio
             {
                 Instance = this;
             }
+
+            InitializeAudioList();
+        }
+
+        private void InitializeAudioList()
+        {
+            audioEvents = audioEvents
+                .Where(x => !x.Name.Equals(string.Empty))
+                .ToList();
+        }
+
+        public EventReference GetAudioEvent(string name)
+        {
+            return audioEvents
+                .Find(x => x.Name.Equals(name))
+                .Audio;
         }
     }
 }

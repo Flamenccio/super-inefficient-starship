@@ -16,7 +16,9 @@ MonoBehaviour:
   secondaryWallLayout: {fileID: 11400000, guid: ad9f6387c1bc2b84cabd606f021d3dbe, type: 2}
   linkSet:
   - linkDirection: 0
-    blackListedVariants: 
+    subLinkPositions: 03000000040000000500000006000000
+    invertSubLinkPositions: 0
   - linkDirection: 2
-    blackListedVariants: 
-  variant: 11
+    subLinkPositions: 01000000020000000300000004000000
+    invertSubLinkPositions: 0
+  variantId: crookedhallway_ew

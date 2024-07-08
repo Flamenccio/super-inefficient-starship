@@ -172,12 +172,8 @@ MonoBehaviour:
   loot: 4
   tier: 5
   moveSpeed: 4
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
   spriteRen: {fileID: 7836364339937057156}
   animator: {fileID: 6133615341230344078}
-  miniStarPrefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
   activeRange: 25
   enemyBullet: {fileID: 4787159891083559322, guid: e6829f2a81430cc49a9b8219c8195416, type: 3}
   searchRadius: 10
@@ -202,15 +198,15 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5061009787506184076}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 0d559b9236ce8444f8f86e1c515be056, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0

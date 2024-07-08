@@ -8,6 +8,7 @@ namespace Flamenccio.Attack.Enemy
     {
         [SerializeField] private LayerMask playerLayer;
         [SerializeField] private GameObject hitbox;
+        [SerializeField] private string explodeVfx;
         private GameObject player;
         private EffectManager effectManager;
         private float lifetime = 0f;
@@ -72,7 +73,7 @@ namespace Flamenccio.Attack.Enemy
 
         protected override void Trigger(Collider2D collider)
         {
-            EffectManager.Instance.SpawnEffect(EffectManager.Effects.Explosion, transform.position);
+            EffectManager.Instance.SpawnEffect(explodeVfx, transform.position);
             Instantiate(hitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, 2f, playerDamage, Hitbox.HitboxAffiliation.Enemy, KnockbackPower.High);
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Strong, transform.position);
             base.Trigger(collider);

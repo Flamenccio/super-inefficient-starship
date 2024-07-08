@@ -10,6 +10,7 @@ namespace Flamenccio.Attack.Enemy
     public class Bomb : EnemyBulletBase
     {
         [SerializeField] private GameObject explosionHitbox;
+        [SerializeField] private string explodeVfx;
 
         protected override void Startup()
         {
@@ -20,7 +21,7 @@ namespace Flamenccio.Attack.Enemy
 
         protected override void Trigger(Collider2D collider)
         {
-            EffectManager.Instance.SpawnEffect(EffectManager.Effects.Explosion, transform.position);
+            EffectManager.Instance.SpawnEffect(explodeVfx, transform.position);
             Instantiate(explosionHitbox, transform.position, Quaternion.identity).GetComponent<Hitbox>().EditProperties(0f, 2f, playerDamage, Hitbox.HitboxAffiliation.Neutral, knockbackMultiplier); // spawn the actual hitbox
             CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Extreme, transform.position);
             base.Trigger(collider);

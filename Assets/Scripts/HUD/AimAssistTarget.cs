@@ -9,6 +9,7 @@ namespace Flamenccio.HUD
     public class AimAssistTarget : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private string lockonSfx;
         private Transform target;
 
         private void Awake()
@@ -47,7 +48,7 @@ namespace Flamenccio.HUD
             if (this.target != target)
             {
                 this.target = target;
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.crosshairsLockon, target.position);
+                AudioManager.Instance.PlayOneShot(lockonSfx, target.position);
             }
         }
     }

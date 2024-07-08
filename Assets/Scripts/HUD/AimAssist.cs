@@ -19,6 +19,7 @@ namespace Flamenccio.Core.Player
         [SerializeField][Tooltip("All layers that may obstruct the bullet's path")] private LayerMask obstacleLayers;
         [SerializeField] private AimAssistTarget aimAssistTarget;
 
+        // TODO Find a way to dynamically update maxDist based on main weapon
         private float maxDist = 6.5f; // default
         private AllAngle angleRayB = new();
         private AllAngle angleRayC = new();
@@ -36,7 +37,7 @@ namespace Flamenccio.Core.Player
 
         private void Update()
         {
-            if (InputManager.Instance.CurrentScheme == InputManager.ControlScheme.KBM || input.AimInputVector == Vector2.zero)
+            if (input.AimInputVector == Vector2.zero)
             {
                 aimAssistTarget.Hide();
                 return;

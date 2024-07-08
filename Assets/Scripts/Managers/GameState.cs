@@ -91,6 +91,7 @@ namespace Flamenccio.Core
             playerAtt.AddAmmo(addPoints);
             progress += addPoints;
             FloatingTextManager.Instance.DisplayAmmoText(addPoints);
+            FloatingTextManager.Instance.DisplayText($"+{addPoints}", PlayerMotion.Instance.PlayerPosition, Color.yellow, 1.0f, 25.0f, FloatingTextControl.TextAnimation.Fade, FloatingTextControl.TextAnimation.Rise, true);
 
             if (progress >= DifficultyCurve(difficulty + 1)) // level up
             {
@@ -178,7 +179,7 @@ namespace Flamenccio.Core
         /// <returns>True if successful, false otherwise.</returns>
         public bool RemoveLife(int life)
         {
-            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position); // TODO maybe scale intensity with damage taken
+            CameraEffects.Instance.ScreenShake(CameraEffects.ScreenShakeIntensity.Weak, transform.position);
             playerAtt.ChangeLife(-life);
 
             if (playerAtt.HP == 0)
@@ -280,7 +281,6 @@ namespace Flamenccio.Core
             Time.timeScale = 0.0f;
             yield return new WaitForSecondsRealtime(1.0f);
             GameEventManager.ClearAllEvents();
-            SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }
 

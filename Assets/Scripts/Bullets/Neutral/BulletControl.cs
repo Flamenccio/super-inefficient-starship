@@ -93,7 +93,7 @@ namespace Flamenccio.Attack
         /// </summary>
         protected virtual void Collide(Collision2D collision)
         {
-            Destroy(this.gameObject);
+            Death();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Flamenccio.Attack
             if ((collider.CompareTag(primaryWall) || collider.CompareTag(invisibleWall)) && !canIgnoreStageEdge) durability = 0;
             else if (!collider.CompareTag(primaryWall) && !collider.CompareTag(invisibleWall)) durability--;
 
-            if (durability <= 0) Destroy(this.gameObject);
+            if (durability <= 0) Death();
         }
 
         protected void OnCollisionEnter2D(Collision2D collision)
@@ -129,6 +129,14 @@ namespace Flamenccio.Attack
         private bool IsCollisionTag(string compareTag)
         {
             return collisionTags.Contains(compareTag);
+        }
+
+        /// <summary>
+        /// What happens when this bullet's durability reaches 0?
+        /// </summary>
+        protected virtual void Death()
+        {
+            Destroy(gameObject);
         }
     }
 }

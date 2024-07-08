@@ -12,7 +12,6 @@ namespace Flamenccio.LevelObject.Stages
     {
         public Stage ParentStage { get { return parentStage; } }
 
-        [SerializeField] private List<StageVariant.Variants> blacklistedVariants = new();
         [SerializeField] private LayerMask STAGE_LAYER;
         [SerializeField] private LayerMask STAGE_LINK_LAYER;
 
@@ -21,6 +20,7 @@ namespace Flamenccio.LevelObject.Stages
         private PrimaryWall primaryWall = null;
         private Directions.CardinalValues placement = Directions.CardinalValues.North;
         private Stage parentStage = null;
+        private int subLinkMask = 0;
 
         private const int STAGE_LENGTH = 16; // length (and width) of a stage module.
         private const float NEAR_SEARCH_RADIUS = 2.0f; // radius of circle used to search for nearby links.
@@ -31,12 +31,19 @@ namespace Flamenccio.LevelObject.Stages
             primaryWall = gameObject.GetComponent<PrimaryWall>();
         }
 
-        public bool IsValidVariant(StageVariant.Variants variant)
+        /// <summary>
+        /// Is the given stage able to connect to this link?
+        /// </summary>
+        /// <param name="newStage">New stage to connect to.</param>
+        /// <returns>True if stage is compatible, false otherwise.</returns>
+        public bool IsCompatibleStage(Stage newStage)
         {
-            foreach (StageVariant.Variants v in blacklistedVariants)
-            {
-                if (variant == v) return false;
-            }
+            var oppositeDirection = Directions.OppositeOf(placement);
+
+            if (!newStage.StageLinks.TryGetValue(oppositeDirection, out var link)) return false;
+
+            if ((subLinkMask & link.subLinkMask) == 0) return false;
+
             return true;
         }
 
@@ -57,7 +64,7 @@ namespace Flamenccio.LevelObject.Stages
                 return false;
             }
 
-            if (!IsValidVariant(stage.Variant))
+            if (!IsCompatibleStage(stage))
             {
                 return false;
             }
@@ -106,14 +113,14 @@ namespace Flamenccio.LevelObject.Stages
         /// <summary>
         /// Update this link's properties.
         /// </summary>
-        /// <param name="blacklist">The stage blacklist.</param>
+        /// <param name="subLinkMask">This link's sub link mask.</param>
         /// <param name="direction">Direction relative to stage to spawn in.</param>
-        public void UpdateProperties(List<StageVariant.Variants> blacklist, Directions.CardinalValues direction)
+        public void UpdateProperties(int subLinkMask, Directions.CardinalValues direction)
         {
             // we can't update the properties if the link is already in use
             if (linkedStage != null) return;
 
-            blacklistedVariants = blacklist;
+            this.subLinkMask = subLinkMask;
             placement = direction;
         }
 

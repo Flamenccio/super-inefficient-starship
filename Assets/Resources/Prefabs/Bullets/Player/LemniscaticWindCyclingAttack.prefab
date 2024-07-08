@@ -148,11 +148,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 0
   maxDistance: 10
-  parryEffect: {fileID: 8596703315022740292, guid: 9bbb1de6277cc2e42bf8b447521a9a09, type: 3}
-  impactEffect: {fileID: 5705401448773474299, guid: e20bac83db7a0f14d93f0809b1b1f3a4, type: 3}
-  ignoredTags: []
   knockbackMultiplier: 20
-  damage: 2
+  durability: 1
+  rotationIsStatic: 1
+  canIgnoreStageEdge: 1
+  playerDamage: 2
+  objectDamage: 1
   rb: {fileID: 7899587434270893482}
 --- !u!50 &7899587434270893482
 Rigidbody2D:
