@@ -169,8 +169,8 @@ namespace Flamenccio.Core
 
             Stage stage1;
             Stage stage2;
-            Vector2 localPosition1;
-            Vector2 localPosition2;
+            Vector2 localPosition1 = Vector2.zero;
+            Vector2 localPosition2 = Vector2.zero;
             bool ready = false;
             int spawnAttempts = MAX_PORTAL_SPAWN_ATTEMPTS;
 
@@ -179,6 +179,9 @@ namespace Flamenccio.Core
                 spawnAttempts--;
                 stage1 = levelManager.GetRandomStage();
                 stage2 = levelManager.GetRandomStageExcept(stage1);
+
+                if (!stage1.CanAddPortals() || !stage2.CanAddPortals()) continue;
+
                 localPosition1 = AlignPosition(stage1.GetLocalPointInStage());
                 localPosition2 = AlignPosition(stage2.GetLocalPointInStage());
 

@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a6b7665e19526469470da20f72ea16, type: 3}
-  m_Name: Cross
+  m_Name: LowerLeftHole
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: c437246ff0ccdb04882a83f527dd317c, type: 3}
-  secondaryWallLayout: {fileID: 11400000, guid: 475acb8724ec9764fbbfca40c62cc3d2, type: 2}
+  sprite: {fileID: 21300000, guid: 38eeb67c444570c43a8014faf4927333, type: 3}
+  secondaryWallLayout: {fileID: 11400000, guid: 0f515e5f6797d6d468a4e27b6cf5a40d, type: 2}
   linkSet:
   - linkDirection: 0
-    SubLinkPositions: 0300000004000000
-    invertSubLinkPositions: 0
+    subLinkPositions: 
+    invertSubLinkPositions: 1
   - linkDirection: 1
-    SubLinkPositions: 0300000004000000
-    invertSubLinkPositions: 0
+    subLinkPositions: 
+    invertSubLinkPositions: 1
   - linkDirection: 2
-    SubLinkPositions: 0300000004000000
+    subLinkPositions: 04000000050000000600000007000000
     invertSubLinkPositions: 0
   - linkDirection: 3
-    SubLinkPositions: 0300000004000000
+    subLinkPositions: 00000000010000000200000003000000
     invertSubLinkPositions: 0
-  variantId: cross
-  doNotRotate: 1
+  variantId: hole_sw
+  clockwiseRotations: 1

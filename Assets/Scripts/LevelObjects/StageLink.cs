@@ -81,11 +81,11 @@ namespace Flamenccio.LevelObject.Stages
             {
                 return;
             }
-            if (stage.GetInstanceID() == ParentStage.gameObject.GetInstanceID()) // do not link to parent stage
+            if (stage == null) // if given stage is null, do not link
             {
                 return;
             }
-            if (stage == null) // if given stage is null, do not link
+            if (stage.GetInstanceID() == ParentStage.gameObject.GetInstanceID()) // do not link to parent stage
             {
                 return;
             }
@@ -160,13 +160,13 @@ namespace Flamenccio.LevelObject.Stages
             colliders = Physics2D.OverlapBoxAll((Directions.DirectionsToVector2(placement) * (STAGE_LENGTH / 2)) + (Vector2)gameObject.transform.position, OVERLAP_BOX_SIZE, 0f, STAGE_LAYER);
 
             colliders
-                .Where(col => col.gameObject.GetInstanceID() != ParentStage.gameObject.GetInstanceID())
+                .Select(x => x.GetComponentInParent<Stage>())
+                .Where(x => x.gameObject.GetInstanceID() != ParentStage.gameObject.GetInstanceID())
                 .ToList()
                 .ForEach(i =>
                 {
-                    Stage o = i.gameObject.GetComponent<Stage>();
-                    ForcePopulateLink(o);
-                    o.LinkStageUnsafe(Directions.OppositeOf(placement), ParentStage);
+                    ForcePopulateLink(i);
+                    i.LinkStageUnsafe(Directions.OppositeOf(placement), ParentStage);
                 });
         }
     }

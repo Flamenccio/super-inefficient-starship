@@ -52,7 +52,7 @@ namespace Flamenccio.Utility
     /// </summary>
     public class Directions
     {
-        public static Dictionary<int, Vector2> DirectionDictionary { get; } = new()
+        public static Dictionary<int, Vector2> DirectionDictionary { get; } = new() // TODO Remove
         {
             [0] = new Vector2(0, 0),
             [1] = new Vector2(1, -1),
@@ -75,13 +75,13 @@ namespace Flamenccio.Utility
 
         public enum CardinalValues
         {
-            North,
-            East,
-            South,
-            West
+            North = 0,
+            East = 1,
+            South = 2,
+            West = 3
         }
 
-        public struct Cardinals
+        public struct Cardinals // TODO Remove
         {
             private CardinalValues direction;
             private Vector2 vector;
@@ -203,6 +203,62 @@ namespace Flamenccio.Utility
             return CardinalVectors
                 .ToList()
                 .Exists(x => x.Equals(vector));
+        }
+    }
+
+    public static class DirectionsExtensions
+    {
+        /// <summary>
+        /// Turns this direction left.
+        /// </summary>
+        public static Directions.CardinalValues TurnLeft(ref this Directions.CardinalValues dir)
+        {
+            return TurnLeft(ref dir, 1);
+        }
+
+        /// <summary>
+        /// Turns this direction right.
+        /// </summary>
+        public static Directions.CardinalValues TurnRight(ref this Directions.CardinalValues dir)
+        {
+            return TurnRight(ref dir, 1);
+        }
+
+        /// <summary>
+        /// Turns this direction left.
+        /// </summary>
+        /// <param name="turns">How many times to turn left.</param>
+        public static Directions.CardinalValues TurnLeft(ref this Directions.CardinalValues dir, int turns)
+        {
+            int i = (int)dir;
+            i = (i - turns) % 4;
+            dir = (Directions.CardinalValues)i;
+
+            return dir;
+        }
+
+        /// <summary>
+        /// Turns this direction right.
+        /// </summary>
+        /// <param name="turns">How many times to turn right.</param>
+        public static Directions.CardinalValues TurnRight(ref this Directions.CardinalValues dir, int turns)
+        {
+            int i = (int)dir;
+            i = (i + turns) % 4;
+            dir = (Directions.CardinalValues)i;
+
+            return dir;
+        }
+
+        /// <summary>
+        /// Return the opposite direction of this direction.
+        /// </summary>
+        /// <param name="apply">Apply the opposite direction to this direction?</param>
+        public static Directions.CardinalValues OppositeOf(ref this Directions.CardinalValues dir, bool apply)
+        {
+            Directions.CardinalValues opposite = Directions.OppositeOf(dir);
+            if (apply) dir = opposite;
+            return opposite;
         }
     }
 }
