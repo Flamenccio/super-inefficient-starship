@@ -1,7 +1,7 @@
+using Flamenccio.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Flamenccio.Utility;
 using Debug = UnityEngine.Debug;
 
 namespace Flamenccio.LevelObject.Stages
@@ -23,10 +23,8 @@ namespace Flamenccio.LevelObject.Stages
     public class StageResources : MonoBehaviour
     {
         public static StageResources Instance { get; private set; }
-        public Dictionary<string, StageVariant> AllStageVariants { get => allStageVariants; }
         public Dictionary<string, StageProperties> AllStageProperties => stageProperties;
         [SerializeField] private GameObject stagePrefab;
-        private Dictionary<string, StageVariant> allStageVariants = new();
         private Dictionary<string, Dictionary<Directions.CardinalValues, List<string>>> stageBlacklists = new();
         private Dictionary<string, StageProperties> stageProperties = new();
 
@@ -41,29 +39,16 @@ namespace Flamenccio.LevelObject.Stages
                 Instance = this;
             }
 
-            LoadVariants(allStageVariants, stageProperties);
+            LoadVariants(stageProperties);
             LoadAllBlacklists(stageBlacklists);
-
-            // DEBUG
-            foreach (var x in stageBlacklists)
-            {
-                foreach (var y in x.Value)
-                {
-                    foreach (var z in y.Value)
-                    {
-                        Debug.Log($"{x.Key} : {y.Key} : {z}");
-                    }
-                }
-            }
         }
 
-        private void LoadVariants(Dictionary<string, StageVariant> stageVariants, Dictionary<string, StageProperties> stageProperties)
+        private void LoadVariants(Dictionary<string, StageProperties> stageProperties)
         {
             var load = Resources.LoadAll<StageVariant>("StageVariants");
 
             foreach (var variant in load)
             {
-                stageVariants.Add(variant.VariantId, variant);
 
                 // If there are no rotation variants, just add the base shape.
                 if (variant.DoNotRotate)
@@ -83,46 +68,62 @@ namespace Flamenccio.LevelObject.Stages
                 // Otherwise, add each of the rotation variants.
                 // The base shape (the value in the dictionary) is added.
                 // The actual rotation will be calculated when needed.
-                for (int i = 0; i < 4; i++)
-                {
-                    string name = $"{variant.VariantId}_{i}";
-                    List<StageVariant.LinkSet> newLinks = CopyLinkSet(variant.Links);
-
-                    for (int j = 0; j < newLinks.Count; j++)
-                    {
-                        var link = newLinks[j];
-                        bool directionPolarity = DirectionPolarity(link.LinkDirection);
-                        var newDirection = Directions.IntToDirection((int)link.LinkDirection + i);
-                        var newSubLinkMask = link.SubLinkMask;
-                        var subLinkPositions = link.SubLinkPositions;
-
-                        if (!directionPolarity.Equals(DirectionPolarity(newDirection)))
-                        {
-                            newSubLinkMask = ReverseBinary(link.SubLinkMask);
-                            subLinkPositions = CreateSubLinks(newSubLinkMask, link.InvertSubLinkPositions);
-                        }
-
-                        newLinks[j] = new()
-                        {
-                            SubLinkPositions = subLinkPositions,
-                            InvertSubLinkPositions = link.InvertSubLinkPositions,
-                            LinkDirection = newDirection
-                        };
-                    }
-
-                    StageProperties properties = new()
-                    {
-                        Direction = Directions.IntToDirection(i),
-                        Sprite = variant.Sprite,
-                        WallLayout = variant.SecondaryWallLayout,
-                        LinkSet = newLinks
-                    };
-
-                    stageProperties.Add(name, properties);
-                }
+                RotateStage(variant, stageProperties);
             }
         }
 
+        /// <summary>
+        /// Takes a stage variant and provides all directional variants.
+        /// </summary>
+        /// <param name="variant">Variant to rotate.</param>
+        /// <param name="output">Dictionary to output results to.</param>
+        private void RotateStage(StageVariant variant, Dictionary<string, StageProperties> output)
+        {
+            if (variant.DoNotRotate) return;
+
+            for (int i = 0; i < 4; i++)
+            {
+                string name = $"{variant.VariantId}_{i}";
+                List<StageVariant.LinkSet> newLinks = CopyLinkSet(variant.Links);
+
+                for (int j = 0; j < newLinks.Count; j++)
+                {
+                    var link = newLinks[j];
+                    bool directionPolarity = DirectionPolarity(link.LinkDirection);
+                    var newDirection = Directions.IntToDirection((int)link.LinkDirection + i);
+                    var newSubLinkMask = link.SubLinkMask;
+                    var subLinkPositions = link.SubLinkPositions;
+
+                    if (!directionPolarity.Equals(DirectionPolarity(newDirection)))
+                    {
+                        newSubLinkMask = ReverseBinary(link.SubLinkMask);
+                        subLinkPositions = CreateSubLinks(newSubLinkMask, link.InvertSubLinkPositions);
+                    }
+
+                    newLinks[j] = new()
+                    {
+                        SubLinkPositions = subLinkPositions,
+                        InvertSubLinkPositions = link.InvertSubLinkPositions,
+                        LinkDirection = newDirection
+                    };
+                }
+
+                StageProperties properties = new()
+                {
+                    Direction = Directions.IntToDirection(i),
+                    Sprite = variant.Sprite,
+                    WallLayout = variant.SecondaryWallLayout,
+                    LinkSet = newLinks
+                };
+
+                output.Add(name, properties);
+            }
+        }
+
+        /// <summary>
+        /// Returns a deep copy of the given list of linksets.
+        /// </summary>
+        /// <param name="original">Original list to copy.</param>
         private List<StageVariant.LinkSet> CopyLinkSet(List<StageVariant.LinkSet> original)
         {
             List<StageVariant.LinkSet> copy = new();
@@ -216,7 +217,7 @@ namespace Flamenccio.LevelObject.Stages
         /// <summary>
         /// Does the given variant have an existing link in given direction?
         /// </summary>
-        public bool HasLinkInDirection(string variant, Directions.CardinalValues direction)
+        private bool HasLinkInDirection(string variant, Directions.CardinalValues direction)
         {
             if (!AllStageProperties.TryGetValue(variant, out var stageVariant)) return false;
 
@@ -276,7 +277,6 @@ namespace Flamenccio.LevelObject.Stages
                     if (!HasLinkInDirection(x.Name, oppositeDirection))
                     {
                         blacklisted.Add(x.Name);
-                        Debug.Log($"{x.Name} blacklisted: no {oppositeDirection} link");
                     }
                     else
                     {
@@ -285,7 +285,6 @@ namespace Flamenccio.LevelObject.Stages
                         if ((set.SubLinkMask & mask) == 0)
                         {
                             blacklisted.Add(x.Name);
-                            Debug.Log($"{x.Name} blacklisted: sublinks {set.SubLinkMask} & {mask} are not compatible.");
                         }
                     }
                 });

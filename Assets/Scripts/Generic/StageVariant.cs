@@ -33,6 +33,12 @@ namespace Flamenccio.LevelObject.Stages
             [SerializeField] private Directions.CardinalValues linkDirection;
         }
 
+        [SerializeField] private Sprite sprite;
+        [SerializeField] private WallLayout secondaryWallLayout;
+        [SerializeField] private List<LinkSet> linkSet = new();
+        [SerializeField] private string variantId;
+        [SerializeField, Tooltip("Should this stage variant be rotated to make 4 rotated variants?")] private bool doNotRotate = false;
+
         private static int GetSubLinkMask(List<int> sublinks, bool isInverted)
         {
             int mask = isInverted ? 255 : 0;
@@ -57,11 +63,6 @@ namespace Flamenccio.LevelObject.Stages
             return mask;
         }
 
-        [SerializeField] private Sprite sprite;
-        [SerializeField] private WallLayout secondaryWallLayout;
-        [SerializeField] private List<LinkSet> linkSet = new();
-        [SerializeField] private string variantId;
-        [SerializeField, Tooltip("Should this stage variant be rotated to make 4 rotated variants?")] private bool doNotRotate = false;
         private const int MAX_SUBLINKS = 8;
     }
 }
