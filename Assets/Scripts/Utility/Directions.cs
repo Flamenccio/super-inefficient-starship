@@ -52,19 +52,6 @@ namespace Flamenccio.Utility
     /// </summary>
     public class Directions
     {
-        public static Dictionary<int, Vector2> DirectionDictionary { get; } = new() // TODO Remove
-        {
-            [0] = new Vector2(0, 0),
-            [1] = new Vector2(1, -1),
-            [2] = new Vector2(0, -1),
-            [3] = new Vector2(1, 1),
-            [4] = new Vector2(0, 1),
-            [5] = new Vector2(-1, -1),
-            [6] = new Vector2(-1, 0),
-            [7] = new Vector2(-1, 1),
-            [8] = new Vector2(1, 0),
-        };
-
         public static Vector2[] CardinalVectors { get; } = new Vector2[4]
         {
             new(0,1),
@@ -79,39 +66,6 @@ namespace Flamenccio.Utility
             East = 1,
             South = 2,
             West = 3
-        }
-
-        public struct Cardinals // TODO Remove
-        {
-            private CardinalValues direction;
-            private Vector2 vector;
-
-            public Vector2 Vector
-            {
-                readonly get { return vector; }
-                set
-                {
-                    if (!IsCardinal(value))
-                    {
-                        vector = Vector2.up;
-                        direction = CardinalValues.North;
-                        return;
-                    }
-                    vector = value;
-                    vector.Normalize();
-                    direction = VectorToDirection(vector);
-                }
-            }
-
-            public CardinalValues Direction
-            {
-                readonly get { return direction; }
-                set
-                {
-                    direction = value;
-                    vector = DirectionsToVector2(direction);
-                }
-            }
         }
 
         /// <summary>
