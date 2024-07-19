@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using System;
 
 namespace Flamenccio.LevelObject.Stages
 {
@@ -194,8 +195,6 @@ namespace Flamenccio.LevelObject.Stages
             int reversed = 0;
             int maxPower = 7; // Works only for 8-bit integers
 
-            //for (maxBits = 0; Mathf.Pow(2f, maxBits) < value; maxBits++) ;
-
             for (int n = 0; n <= maxPower; n++)
             {
                 int bit = ((1 << n) & value) == 0 ? 0 : 1;
@@ -207,7 +206,7 @@ namespace Flamenccio.LevelObject.Stages
 
         private bool DirectionPolarity(Directions.CardinalValues direction)
         {
-            return (int)direction <= 2;
+            return (int)direction < 2;
         }
 
         /// <summary>
@@ -273,6 +272,10 @@ namespace Flamenccio.LevelObject.Stages
                         if ((set.SubLinkMask & mask) == 0)
                         {
                             blacklisted.Add(x.Name);
+                        }
+                        else
+                        {
+                            Debug.Log($"Accepted: {properties.Sprite.name}_{properties.Direction} =({direction})=> {x.Name}");
                         }
                     }
                 });

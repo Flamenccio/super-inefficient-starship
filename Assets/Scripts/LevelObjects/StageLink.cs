@@ -15,7 +15,7 @@ namespace Flamenccio.LevelObject.Stages
         [SerializeField] private LayerMask STAGE_LAYER;
         [SerializeField] private LayerMask STAGE_LINK_LAYER;
 
-        private Vector2 OVERLAP_BOX_SIZE = new(STAGE_LENGTH / 2, STAGE_LENGTH / 2); // the size of the overlap box used to scan for nearby stages.
+        private Vector2 OVERLAP_BOX_SIZE = new(STAGE_LENGTH, STAGE_LENGTH); // the size of the overlap box used to scan for nearby stages.
         private Stage linkedStage = null;
         private PrimaryWall primaryWall = null;
         private Directions.CardinalValues placement = Directions.CardinalValues.North;
