@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Utility;
 using Flamenccio.Objects;
+using Flamenccio.Core;
 
 namespace Flamenccio.LevelObject.Stages
 {
@@ -156,8 +157,8 @@ namespace Flamenccio.LevelObject.Stages
             float xBounds = stageShape.Extents.x;
             float yBounds = stageShape.Extents.y - 0.5f;
             Vector2 raycastOrigin = new(
-                gameObject.transform.position.x - xBounds - 1,
-                Random.Range(-yBounds, yBounds) + transform.position.y + stageShape.Center.y);
+                transform.position.x + stageShape.Center.x - xBounds - 1,
+                transform.position.y  + stageShape.Center.y + Random.Range(-yBounds, yBounds));
             bool turn = false; // false = looking for raycastTestLayer; true = looking for inviswall layer
             List<float> collisions = new(); // x coordinates--y is kept constant
             LayerMask raycastEnterLayer = LayerManager.GetLayerMask(Layer.RaycastTest);
@@ -167,12 +168,13 @@ namespace Flamenccio.LevelObject.Stages
 
             do
             {
-                ray = Physics2D.Raycast(raycastOrigin, Vector2.right, 16, turn ? raycastExitLayers : raycastEnterLayer);
+                ray = Physics2D.Raycast(raycastOrigin, Vector2.right, 2 * stageShape.Extents.x, turn ? raycastExitLayers : raycastEnterLayer);
 
                 if (ray.collider == null) break;
 
                 raycastOrigin.x = ray.point.x + 0.05f;
                 collisions.Add(ray.point.x);
+
                 turn = !turn;
             } while (ray.collider != null);
 
@@ -182,7 +184,8 @@ namespace Flamenccio.LevelObject.Stages
 
             if (pairs < 1)
             {
-                return GetGlobalPointInStage();
+                Debug.LogWarning($"{variantId}: Failed to find a global point.");
+                return new(0, 0);
             }
 
             return new(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), raycastOrigin.y);

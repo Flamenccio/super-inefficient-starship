@@ -134,8 +134,6 @@ namespace Flamenccio.Core
                 spawnControl.SpawnPortal();
             }
 
-            spawnControl.SpawnStage(); // spawn another stage
-
             if (wallFrequency > MAX_WALL_FREQUENCY) // increase wall frequency
             {
                 wallFrequency -= INCREASE_WALL_FREQUENCY;
@@ -148,6 +146,8 @@ namespace Flamenccio.Core
             {
                 LevelUp();
             }
+
+            spawnControl.SpawnStage(); // spawn another stage
 
             GameEventManager.OnLevelUp(GameEventManager.CreateGameEvent(difficulty, PlayerMotion.Instance.transform));
         }

@@ -23,7 +23,6 @@ namespace Flamenccio.LevelObject.Stages
     public class StageResources : MonoBehaviour
     {
         public static StageResources Instance { get; private set; }
-        public Dictionary<string, StageProperties> AllStageProperties => stageProperties;
         [SerializeField] private GameObject stagePrefab;
         private Dictionary<string, Dictionary<Directions.CardinalValues, List<string>>> stageBlacklists = new();
         private Dictionary<string, StageProperties> stageProperties = new();
@@ -43,7 +42,7 @@ namespace Flamenccio.LevelObject.Stages
             LoadAllBlacklists(stageBlacklists);
         }
 
-        private void LoadVariants(Dictionary<string, StageProperties> stageProperties)
+        private void LoadVariants(Dictionary<string, StageProperties> output)
         {
             var load = Resources.LoadAll<StageVariant>("StageVariants");
 
@@ -60,7 +59,7 @@ namespace Flamenccio.LevelObject.Stages
                         LinkSet = CopyLinkSet(variant.Links),
                         WallLayout = variant.SecondaryWallLayout
                     };
-                    stageProperties.Add(variant.VariantId, properties);
+                    output.Add(variant.VariantId, properties);
 
                     continue;
                 }
@@ -68,7 +67,7 @@ namespace Flamenccio.LevelObject.Stages
                 // Otherwise, add each of the rotation variants.
                 // The base shape (the value in the dictionary) is added.
                 // The actual rotation will be calculated when needed.
-                RotateStage(variant, stageProperties);
+                RotateStage(variant, output);
             }
         }
 
@@ -159,7 +158,6 @@ namespace Flamenccio.LevelObject.Stages
                     {
                         set.Add(i);
                     }
-                    continue;
                 }
                 else if (bit != 0)
                 {
@@ -172,7 +170,7 @@ namespace Flamenccio.LevelObject.Stages
 
         private void LoadAllBlacklists(Dictionary<string, Dictionary<Directions.CardinalValues, List<string>>> blacklists)
         {
-            foreach (var x in AllStageProperties)
+            foreach (var x in stageProperties)
             {
                 string currentName = x.Key;
                 blacklists.Add(currentName, LoadBlacklist(currentName));
@@ -181,7 +179,7 @@ namespace Flamenccio.LevelObject.Stages
 
         private Dictionary<Directions.CardinalValues, List<string>> LoadBlacklist(string stage)
         {
-            if (!AllStageProperties.TryGetValue(stage, out var property)) return new();
+            if (!stageProperties.TryGetValue(stage, out var property)) return new();
 
             Dictionary<Directions.CardinalValues, List<string>> newDict = new();
             property.LinkSet
@@ -194,16 +192,14 @@ namespace Flamenccio.LevelObject.Stages
         {
             value = Mathf.Abs(value);
             int reversed = 0;
-            int maxBits;
+            int maxPower = 7; // Works only for 8-bit integers
 
-            for (maxBits = 0; Mathf.Pow(2f, maxBits) < value; maxBits++) ;
+            //for (maxBits = 0; Mathf.Pow(2f, maxBits) < value; maxBits++) ;
 
-            maxBits--;
-
-            for (int n = 0; n <= maxBits; n++)
+            for (int n = 0; n <= maxPower; n++)
             {
                 int bit = ((1 << n) & value) == 0 ? 0 : 1;
-                reversed |= (bit << (maxBits - n));
+                reversed |= (bit << (maxPower - n));
             }
 
             return reversed;
@@ -219,11 +215,9 @@ namespace Flamenccio.LevelObject.Stages
         /// </summary>
         private bool HasLinkInDirection(string variant, Directions.CardinalValues direction)
         {
-            if (!AllStageProperties.TryGetValue(variant, out var stageVariant)) return false;
+            if (!stageProperties.TryGetValue(variant, out var stageVariant)) return false;
 
             var b = stageVariant.LinkSet.Exists(x => x.LinkDirection.Equals(direction));
-
-            Debug.Log($"{variant} has link {direction}: {b}");
 
             return b;
         }
@@ -231,11 +225,11 @@ namespace Flamenccio.LevelObject.Stages
         /// <summary>
         /// Retrives a list of stage variants IDs that can be extended in the given direction.
         /// </summary>
-        public List<string> GetVariantsExtendableInDirection(Directions.CardinalValues direction)
+        private List<string> GetVariantsExtendableInDirection(Directions.CardinalValues direction)
         {
             List<string> v = new();
 
-            AllStageProperties
+            stageProperties
                 .Select(element => element.Key)
                 .Where(variant => HasLinkInDirection(variant, direction))
                 .ToList()
@@ -244,32 +238,26 @@ namespace Flamenccio.LevelObject.Stages
             return v;
         }
 
+
         /// <summary>
-        /// Returns a list of available stage variants that may extend from a root stage in the given direction.
+        /// Get blacklisted stage variants of given root in given direction.
         /// </summary>
-        public List<string> GetAvailableVariantsInDirection(Directions.CardinalValues direction, string rootVariantId)
-        {
-            if (!AllStageProperties.TryGetValue(rootVariantId, out var property)) return new();
-
-            return new(
-                GetVariantsExtendableInDirection(direction.OppositeOf(false))
-                .Except(stageBlacklists[rootVariantId][direction])
-                ); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
-        }
-
-        private List<string> GetBlacklistedVariants(StageProperties stageProperties, Directions.CardinalValues direction)
+        /// <param name="properties">The root stage variant.</param>
+        /// <param name="direction">Direction from root stage to find blacklisted variants.</param>
+        /// <returns>List of stage variants ids.</returns>
+        private List<string> GetBlacklistedVariants(StageProperties properties, Directions.CardinalValues direction)
         {
             List<string> blacklisted = new();
 
-            if (!stageProperties.LinkSet.Exists(v => v.LinkDirection.Equals(direction)))
+            if (!properties.LinkSet.Exists(v => v.LinkDirection.Equals(direction)))
             {
-                return AllStageProperties.Keys.ToList();
+                return stageProperties.Keys.ToList();
             }
 
-            var link = stageProperties.LinkSet.Find(x => x.LinkDirection == direction);
+            var link = properties.LinkSet.Find(x => x.LinkDirection == direction);
             var mask = link.SubLinkMask;
             var oppositeDirection = direction.OppositeOf(false);
-            AllStageProperties
+            stageProperties
                 .Select(x => (Name: x.Key, Property: x.Value))
                 .ToList()
                 .ForEach(x =>
@@ -293,13 +281,26 @@ namespace Flamenccio.LevelObject.Stages
         }
 
         /// <summary>
+        /// Returns a list of available stage variants that may extend from a root stage in the given direction.
+        /// </summary>
+        public List<string> GetAvailableVariantsInDirection(Directions.CardinalValues direction, string rootVariantId)
+        {
+            if (!stageProperties.TryGetValue(rootVariantId, out var property)) return new();
+
+            return new(
+                GetVariantsExtendableInDirection(direction.OppositeOf(false))
+                .Except(stageBlacklists[rootVariantId][direction])
+                ); // basically, find all stage variants that can extend in the opposite direction of localSpawnDirection.Direction and then remove variants blacklisted by the roots variant.
+        }
+
+        /// <summary>
         /// Creates an instance of a stage with the given variant and returns its instance..
         /// </summary>
         /// <param name="variantId">Variant of new stage.</param>
         /// <returns>Instance of new stage.</returns>
         public Stage CreateStage(string variantId)
         {
-            if (!AllStageProperties.TryGetValue(variantId, out var _))
+            if (!stageProperties.TryGetValue(variantId, out var _))
             {
                 Debug.LogError($"Stage variant {variantId} does not exist.");
                 return null;
