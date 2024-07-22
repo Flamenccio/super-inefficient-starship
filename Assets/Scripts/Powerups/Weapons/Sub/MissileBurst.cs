@@ -36,7 +36,7 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void Hold(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (loadedMissiles >= MISSILE_BURST_MAX_AMOUNT) return;
+            if (cooldownTimer < Cooldown || loadedMissiles >= MISSILE_BURST_MAX_AMOUNT) return;
 
             loadingTimer -= Time.deltaTime;
 

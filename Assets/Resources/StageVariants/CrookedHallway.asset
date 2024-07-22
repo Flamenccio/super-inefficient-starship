@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a6b7665e19526469470da20f72ea16, type: 3}
-  m_Name: ChokepointNorth
+  m_Name: CrookedHallway
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: c61ff46aee34c7240bd875f12533060d, type: 3}
-  secondaryWallLayout: {fileID: 11400000, guid: 1d97edbb914fca64db76093e592369b2, type: 2}
+  sprite: {fileID: 21300000, guid: c35e712b36f560942b3627fb36d1b300, type: 3}
+  secondaryWallLayout: {fileID: 11400000, guid: ad9f6387c1bc2b84cabd606f021d3dbe, type: 2}
   linkSet:
-  - linkDirection: 1
-    subLinkPositions: 0100000002000000
+  - linkDirection: 0
+    SubLinkPositions: 03000000040000000500000006000000
     invertSubLinkPositions: 0
-  - linkDirection: 3
-    subLinkPositions: 0100000002000000
+  - linkDirection: 2
+    SubLinkPositions: 01000000020000000300000004000000
     invertSubLinkPositions: 0
-  variantId: chokepoint_n
+  variantId: crooked_hallway
+  doNotRotate: 0

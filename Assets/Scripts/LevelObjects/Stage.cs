@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Flamenccio.Utility;
 using Flamenccio.Objects;
+using Flamenccio.Core;
 
 namespace Flamenccio.LevelObject.Stages
 {
@@ -11,30 +12,24 @@ namespace Flamenccio.LevelObject.Stages
     public class Stage : MonoBehaviour
     {
         public string VariantId { get => variantId; }
-        public Sprite Sprite { get { return sprite; } }
         public bool InitialStage { get { return initialStage; } }
-        public Vector2 Extents { get => polymesh.bounds.extents; }
-        public Vector2 Center { get => polymesh.bounds.center; }
         public List<Portal> Portals { get => portals; }
         public Dictionary<Directions.CardinalValues, StageLink> StageLinks { get => links; }
 
-        [SerializeField] private SpriteRenderer spriteRen; // sprite renderer
         [SerializeField] private GameObject invisibleWallPrefab; // prefab for invisible walls
         [SerializeField] private GameObject stageLinkPrefab; // prefab for stage links
         [SerializeField] private bool initialStage; // is this stage the first one in the level?
+        [SerializeField, Tooltip("The child transform that allows the stage to move independently from its actual position.")] private Transform shapeTransform;
+        [SerializeField] private StageShape stageShape;
 
         private string variantId = "normal"; // initialize as normal variant.
-        private Sprite sprite; // sprite representing the stage
         private Dictionary<Directions.CardinalValues, StageLink> links = new(); // a list of all stage links associated with their direction
-        private PolygonCollider2D polyCollider; // collider that conforms to sprite shape
-        private Mesh polymesh; // mesh for poly collider
         private List<Portal> portals = new(MAX_PORTAL_COUNT);
         private const int MAX_PORTAL_COUNT = 2;
 
         private void Awake()
         {
-            polyCollider = gameObject.GetComponent<PolygonCollider2D>();
-            polymesh = polyCollider.CreateMesh(true, true);
+            stageShape = shapeTransform.gameObject.GetComponent<StageShape>();
         }
 
         private void Start()
@@ -48,50 +43,34 @@ namespace Flamenccio.LevelObject.Stages
         public void UpdateVariant(string updatedVariantId)
         {
             variantId = updatedVariantId;
-            StageVariant v = StageResources.Instance.GetStageVariant(variantId);
-            sprite = v.Sprite;
-            spriteRen.sprite = sprite;
+            var v = StageResources.Instance.GetStageProperties(variantId);
+            stageShape.StageSprite = v.Sprite;
+            stageShape.FaceDirection(v.Direction);
 
-            // update polygon mesh
-            Destroy(polyCollider);
-            Destroy(polymesh);
-            polyCollider = gameObject.AddComponent<PolygonCollider2D>();
-            polymesh = polyCollider.CreateMesh(true, true);
-            polyCollider.isTrigger = true;
-            CommitUpdate();
-        }
-
-        /// <summary>
-        /// Commit the variant update and spawn walls and links.
-        /// </summary>
-        private void CommitUpdate()
-        {
-            StageVariant v = StageResources.Instance.GetStageVariant(variantId); // retrieve the variant's template
-
-            if (v == null)
+            if (v.LinkSet.Count == 0) // TODO Make a better "null" check.
             {
                 Debug.LogError($"Failed to update stage: {variantId} not valid stage variant.");
                 return;
             }
 
-            BuildSecondaryWalls(v); // spawn secondary walls
-            BuildLinks(v); // spawn and place stage links (primary walls)
+            BuildBoundaries(v);
+            BuildLinks(v);
         }
 
-        private void BuildSecondaryWalls(StageVariant variant)
+        private void BuildBoundaries(StageProperties properties)
         {
-            if (variant.SecondaryWallLayout == null) return;
+            if (properties.WallLayout == null) return;
 
-            foreach (var invisibleWallConfig in variant.SecondaryWallLayout.Layout)
+            foreach (var wallConfig in properties.WallLayout.Layout)
             {
-                SecondaryWall instance = Instantiate(invisibleWallPrefab, transform).GetComponent<SecondaryWall>();
-                instance.BuildWall(invisibleWallConfig);
+                var instance = Instantiate(invisibleWallPrefab, stageShape.transform).GetComponent<SecondaryWall>();
+                instance.BuildWall(wallConfig);
             }
         }
 
-        private void BuildLinks(StageVariant variant)
+        private void BuildLinks(StageProperties variant)
         {
-            foreach (var link in variant.Links)
+            foreach (var link in variant.LinkSet)
             {
                 StageLink instance = Instantiate(stageLinkPrefab, transform).GetComponent<StageLink>();
                 instance.UpdateProperties(link.SubLinkMask, link.LinkDirection);
@@ -175,36 +154,38 @@ namespace Flamenccio.LevelObject.Stages
         /// </summary>
         public Vector2 GetGlobalPointInStage()
         {
-            float xBounds = Extents.x;
-            float yBounds = Extents.y - 0.5f;
+            float xBounds = stageShape.Extents.x;
+            float yBounds = stageShape.Extents.y - 0.5f;
             Vector2 raycastOrigin = new(
-                gameObject.transform.position.x - xBounds - 1,
-                Random.Range(-yBounds, yBounds) + transform.position.y + Center.y);
+                transform.position.x + stageShape.Center.x - xBounds - 1,
+                transform.position.y  + stageShape.Center.y + Random.Range(-yBounds, yBounds));
             bool turn = false; // false = looking for raycastTestLayer; true = looking for inviswall layer
             List<float> collisions = new(); // x coordinates--y is kept constant
             LayerMask raycastEnterLayer = LayerManager.GetLayerMask(Layer.RaycastTest);
             LayerMask raycastExitLayers = LayerManager.GetLayerMask(new List<Layer>{ Layer.Stage, Layer.InvisibleWall });
-            gameObject.layer = LayerManager.GetLayer(Layer.RaycastTest); // temporarily change stage layer
+            stageShape.gameObject.layer = LayerManager.GetLayer(Layer.RaycastTest); // temporarily change stage layer
             RaycastHit2D ray;
 
             do
             {
-                ray = Physics2D.Raycast(raycastOrigin, Vector2.right, 16, turn ? raycastExitLayers : raycastEnterLayer);
+                ray = Physics2D.Raycast(raycastOrigin, Vector2.right, 2 * stageShape.Extents.x, turn ? raycastExitLayers : raycastEnterLayer);
 
                 if (ray.collider == null) break;
 
                 raycastOrigin.x = ray.point.x + 0.05f;
                 collisions.Add(ray.point.x);
+
                 turn = !turn;
             } while (ray.collider != null);
 
-            gameObject.layer = LayerManager.GetLayer(Layer.Stage); // return stage layer
+            stageShape.gameObject.layer = LayerManager.GetLayer(Layer.Stage); // return stage layer
             int pairs = Mathf.FloorToInt(collisions.Count / 2f);
             int pair = Random.Range(0, pairs);
 
             if (pairs < 1)
             {
-                return GetGlobalPointInStage();
+                Debug.LogWarning($"{variantId}: Failed to find a global point.");
+                return new(0, 0);
             }
 
             return new(Random.Range(collisions[2 * pair], collisions[(2 * pair) + 1]), raycastOrigin.y);
@@ -223,7 +204,8 @@ namespace Flamenccio.LevelObject.Stages
         /// </summary>
         public Vector2 GetLocalPointInExtents()
         {
-            return new(Random.Range(-Extents.x, Extents.x), Random.Range(-Extents.y, Extents.y));
+            var extents = stageShape.Extents;
+            return new(Random.Range(-extents.x, extents.x), Random.Range(-extents.y, extents.y));
         }
 
         /// <summary>

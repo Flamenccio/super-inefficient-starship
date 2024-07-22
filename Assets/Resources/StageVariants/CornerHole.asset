@@ -10,21 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a6b7665e19526469470da20f72ea16, type: 3}
-  m_Name: UpperRightHole
+  m_Name: CornerHole
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 8d568416eac6768468898349ed931ae8, type: 3}
   secondaryWallLayout: {fileID: 11400000, guid: 30cb5db6d3711e741b1a5683edd7db72, type: 2}
   linkSet:
-  - linkDirection: 0
-    subLinkPositions: 00000000010000000200000003000000
-    invertSubLinkPositions: 0
-  - linkDirection: 1
-    subLinkPositions: 04000000050000000600000007000000
-    invertSubLinkPositions: 0
-  - linkDirection: 2
-    subLinkPositions: 
-    invertSubLinkPositions: 1
-  - linkDirection: 3
-    subLinkPositions: 
-    invertSubLinkPositions: 1
-  variantId: hole_ne
+  - SubLinkPositions: 00000000010000000200000003000000
+    invertSubLink: 0
+    linkDirection: 0
+  - SubLinkPositions: 04000000050000000600000007000000
+    invertSubLink: 0
+    linkDirection: 1
+  - SubLinkPositions: 
+    invertSubLink: 1
+    linkDirection: 2
+  - SubLinkPositions: 
+    invertSubLink: 1
+    linkDirection: 3
+  variantId: corner_hole
+  doNotRotate: 0

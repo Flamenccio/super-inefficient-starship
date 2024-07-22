@@ -16,15 +16,16 @@ MonoBehaviour:
   secondaryWallLayout: {fileID: 11400000, guid: 475acb8724ec9764fbbfca40c62cc3d2, type: 2}
   linkSet:
   - linkDirection: 0
-    subLinkPositions: 0300000004000000
+    SubLinkPositions: 0300000004000000
     invertSubLinkPositions: 0
   - linkDirection: 1
-    subLinkPositions: 0300000004000000
+    SubLinkPositions: 0300000004000000
     invertSubLinkPositions: 0
   - linkDirection: 2
-    subLinkPositions: 0300000004000000
+    SubLinkPositions: 0300000004000000
     invertSubLinkPositions: 0
   - linkDirection: 3
-    subLinkPositions: 0300000004000000
+    SubLinkPositions: 0300000004000000
     invertSubLinkPositions: 0
   variantId: cross
+  doNotRotate: 1

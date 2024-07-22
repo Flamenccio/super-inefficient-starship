@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 5061009787506184067}
   - component: {fileID: 5061009787506184064}
   - component: {fileID: 5061009787506184071}
+  - component: {fileID: 8259752896932496880}
   m_Layer: 6
   m_Name: Tracker
   m_TagString: Enemy
@@ -211,3 +212,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &8259752896932496880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5061009787506184076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5cb5151d97c3840b0f7af7c4655548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceThreshold: 40
+  scripts:
+  - {fileID: 5061009787506184064}

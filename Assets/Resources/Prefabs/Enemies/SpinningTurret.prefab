@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1842121546355489230}
   - component: {fileID: 1842121546355489231}
   - component: {fileID: 1842121546355489266}
+  - component: {fileID: 773958947245494646}
   m_Layer: 6
   m_Name: SpinningTurret
   m_TagString: Enemy
@@ -141,12 +142,8 @@ MonoBehaviour:
   loot: 4
   tier: 6
   moveSpeed: 0
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
   spriteRen: {fileID: 1842121546355489229}
   animator: {fileID: 1842121546355489266}
-  miniStarPrefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
   activeRange: 25
   enemyBullet: {fileID: 1974476895787416968, guid: a50387333da472247a13ab0a79d0e8dc, type: 3}
   searchRadius: 1
@@ -172,3 +169,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &773958947245494646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1842121546355489224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5cb5151d97c3840b0f7af7c4655548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceThreshold: 40
+  scripts:
+  - {fileID: 1842121546355489231}

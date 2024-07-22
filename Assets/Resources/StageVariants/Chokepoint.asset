@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a6b7665e19526469470da20f72ea16, type: 3}
-  m_Name: ChokepointSouth
+  m_Name: Chokepoint
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 97a08d84b2df15e48bf7e23b5e11a6bb, type: 3}
-  secondaryWallLayout: {fileID: 11400000, guid: 04cced07e8dd65b4fbf82da87b4d3248, type: 2}
+  sprite: {fileID: 21300000, guid: c61ff46aee34c7240bd875f12533060d, type: 3}
+  secondaryWallLayout: {fileID: 11400000, guid: 1d97edbb914fca64db76093e592369b2, type: 2}
   linkSet:
   - linkDirection: 1
-    subLinkPositions: 0500000006000000
+    SubLinkPositions: 0100000002000000
     invertSubLinkPositions: 0
   - linkDirection: 3
-    subLinkPositions: 0500000006000000
+    SubLinkPositions: 0100000002000000
     invertSubLinkPositions: 0
-  variantId: chokepoint_s
+  variantId: chokepoint
+  doNotRotate: 0

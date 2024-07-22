@@ -8,7 +8,15 @@ namespace Flamenccio.Objects
     /// </summary>
     public class Portal : MonoBehaviour, Core.IObject
     {
-        public Color PortalColor { get; set; }
+        public Color PortalColor
+        {
+            get => portalColor;
+            set
+            {
+                portalColor = value;
+                spriteren.color = portalColor;
+            }
+        }
         public string GetObjectName { get => objectName; }
         [SerializeField] private Portal destination;
         [SerializeField] private PortalEffects effects;
@@ -16,6 +24,7 @@ namespace Flamenccio.Objects
         [SerializeField] private string objectName;
         private const float COOLDOWN = 1.0f;
         private float cooldownTimer = 0f; // whenever player uses portal, cooldown is used to prevent player from rapidly moving between portals
+        private Color portalColor;
 
         private void Start()
         {
@@ -58,8 +67,6 @@ namespace Flamenccio.Objects
 
         private void Update()
         {
-            spriteren.color = PortalColor;
-
             if (cooldownTimer > 0f)
             {
                 cooldownTimer -= Time.deltaTime;
