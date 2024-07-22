@@ -13,11 +13,10 @@ namespace Flamenccio.Components
         public interface IDistanceDisable
         {
             public void Disable();
-
             public void Enable();
         }
 
-        [SerializeField] private float distanceThreshold = 20f;
+        [SerializeField] private float distanceThreshold = 20f; // 20 is default distance.
         [SerializeField, Tooltip("Monobehaviour components placed here must implement the IDistanceDisable interface.")] private List<MonoBehaviour> scripts = new();
         private Transform player;
         private bool scriptsEnabled = true;
