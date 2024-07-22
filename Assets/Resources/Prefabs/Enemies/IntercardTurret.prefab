@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -7040114115003548497}
   - component: {fileID: -2076488070254673411}
   - component: {fileID: -3647370351860558241}
+  - component: {fileID: -6210396239136452020}
   m_Layer: 6
   m_Name: IntercardTurret
   m_TagString: Enemy
@@ -120,12 +121,8 @@ MonoBehaviour:
   loot: 2
   tier: 1
   moveSpeed: 0
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
   spriteRen: {fileID: 4427057838095959089}
   animator: {fileID: -2076488070254673411}
-  miniStarPrefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
   activeRange: 15
   enemyBullet: {fileID: 4787159891083559322, guid: e6829f2a81430cc49a9b8219c8195416, type: 3}
   searchRadius: 0
@@ -176,3 +173,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-6210396239136452020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4427057838095959088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5cb5151d97c3840b0f7af7c4655548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceThreshold: 20
+  scripts:
+  - {fileID: -7040114115003548497}

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1065507533629051071}
   - component: {fileID: 324416880175892521}
   - component: {fileID: -5878586835790463294}
+  - component: {fileID: -7255507130365578930}
   m_Layer: 6
   m_Name: CardTurret
   m_TagString: Enemy
@@ -51,12 +52,8 @@ MonoBehaviour:
   loot: 2
   tier: 1
   moveSpeed: 0
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
   spriteRen: {fileID: 7256403188790275196}
   animator: {fileID: 5679050777139528107}
-  miniStarPrefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
   activeRange: 15
   enemyBullet: {fileID: 4787159891083559322, guid: e6829f2a81430cc49a9b8219c8195416, type: 3}
   searchRadius: 0
@@ -103,6 +100,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-7255507130365578930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065507533629051066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5cb5151d97c3840b0f7af7c4655548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceThreshold: 20
+  scripts:
+  - {fileID: 1065507533629051071}
 --- !u!1 &6240915357969409119
 GameObject:
   m_ObjectHideFlags: 0

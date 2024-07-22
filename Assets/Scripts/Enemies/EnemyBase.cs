@@ -3,7 +3,8 @@ using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.Core;
 using Flamenccio.Effects;
-using Flamenccio.Utility; // ALL THE EFFECTS!
+using Flamenccio.Utility;
+using Flamenccio.Components; // ALL THE EFFECTS!
 
 namespace Enemy
 {
@@ -15,25 +16,22 @@ namespace Enemy
     /// <summary>
     /// Base class for all enemies.
     /// </summary>
-    public class EnemyBase : Destructables
+    public class EnemyBase : Destructables, DistanceBehavior.IDistanceDisable
     {
         [SerializeField] protected int tier;
         [SerializeField] protected float moveSpeed = 0f;
         [SerializeField] protected SpriteRenderer spriteRen;
         [SerializeField] protected Animator animator;
-        [SerializeField] protected float activeRange; // the player must be within range for this enemy to activate
         protected LayerMask playerLayer;
         protected Transform player;
         protected GameState gameState;
         protected Sprite enemySprite;
         protected Rigidbody2D rb;
-        protected float slowUpdateTimer = 0f;
-        protected bool active = true; // is this enemy currently active?
         protected bool telegraphed = false; // so we only play the telegraph animation once
         protected bool alive = true;
         protected const float FLASH_DURATION = 2f / 60f;
         protected const float ATTACK_TELEGRAPH_DURATION = 12f / 60f;
-        protected const float SLOW_UPDATE_FREQUENCY = 0.25f;
+        protected bool active = true;
 
         protected override void Start()
         {
@@ -46,6 +44,16 @@ namespace Enemy
         {
             currentHP = maxHP;
             OnSpawn();
+        }
+
+        public virtual void Disable()
+        {
+            active = false;
+        }
+
+        public virtual void Enable()
+        {
+            active = true;
         }
 
         /// <summary>
@@ -70,20 +78,10 @@ namespace Enemy
 
         protected void FixedUpdate()
         {
-            if (active)
-            {
-                Behavior();
-                Animation();
-            }
-            if (slowUpdateTimer >= SLOW_UPDATE_FREQUENCY)
-            {
-                slowUpdateTimer = 0f;
-                SlowUpdate();
-            }
-            else
-            {
-                slowUpdateTimer += Time.fixedDeltaTime;
-            }
+            if (!active) return;
+
+            Behavior();
+            Animation();
         }
 
         protected void HealthCheck()
@@ -114,14 +112,6 @@ namespace Enemy
                 GameEventManager.OnEnemyHit(GameEventManager.CreateGameEvent(transform));
             }
             HealthCheck();
-        }
-
-        /// <summary>
-        /// Called every 0.25 seconds.
-        /// </summary>
-        protected virtual void SlowUpdate()
-        {
-            active = Vector2.Distance(transform.position, player.position) <= activeRange;
         }
 
         protected void OnTriggerEnter2D(Collider2D collision)

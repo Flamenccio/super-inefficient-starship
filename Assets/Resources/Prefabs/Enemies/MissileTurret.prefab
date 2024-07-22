@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 722219961977940191}
   - component: {fileID: 722219961977940185}
   - component: {fileID: 722219961977940184}
+  - component: {fileID: 7940280222519959189}
   m_Layer: 6
   m_Name: MissileTurret
   m_TagString: Enemy
@@ -72,12 +73,8 @@ MonoBehaviour:
   loot: 4
   tier: 9
   moveSpeed: 0
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
   spriteRen: {fileID: 722219963359205251}
   animator: {fileID: 722219963359205250}
-  miniStarPrefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
   activeRange: 15
   enemyBullet: {fileID: 8964093285665541810, guid: 46459dd02116ed94f8b568cc58fdfa99, type: 3}
   searchRadius: 50
@@ -98,6 +95,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &7940280222519959189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722219961977940188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5cb5151d97c3840b0f7af7c4655548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceThreshold: 20
+  scripts:
+  - {fileID: 722219961977940185}
 --- !u!1 &722219963359205249
 GameObject:
   m_ObjectHideFlags: 0

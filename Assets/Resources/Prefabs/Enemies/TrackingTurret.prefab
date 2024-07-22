@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 324416880175892521}
   - component: {fileID: 972426940777397615}
   - component: {fileID: 3297321879875336315}
+  - component: {fileID: -1693050331800171703}
   m_Layer: 6
   m_Name: TrackingTurret
   m_TagString: Enemy
@@ -67,12 +68,8 @@ MonoBehaviour:
   loot: 3
   tier: 3
   moveSpeed: 0
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
   spriteRen: {fileID: 8314071820538327257}
   animator: {fileID: 6743287909538618003}
-  miniStarPrefab: {fileID: 4826716236662565026, guid: 515cfcc7deacc36418f67ffc7e8718a9, type: 3}
   activeRange: 15
   enemyBullet: {fileID: 4787159891083559322, guid: e6829f2a81430cc49a9b8219c8195416, type: 3}
   searchRadius: 15
@@ -98,6 +95,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-1693050331800171703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065507533629051066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5cb5151d97c3840b0f7af7c4655548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceThreshold: 20
+  scripts:
+  - {fileID: 972426940777397615}
 --- !u!1 &7078871115011122033
 GameObject:
   m_ObjectHideFlags: 0

@@ -273,10 +273,6 @@ namespace Flamenccio.LevelObject.Stages
                         {
                             blacklisted.Add(x.Name);
                         }
-                        else
-                        {
-                            Debug.Log($"Accepted: {properties.Sprite.name}_{properties.Direction} =({direction})=> {x.Name}");
-                        }
                     }
                 });
 
