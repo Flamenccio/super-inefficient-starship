@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1065507533629051071}
   - component: {fileID: 324416880175892521}
   - component: {fileID: -5878586835790463294}
-  - component: {fileID: -7255507130365578930}
+  - component: {fileID: 6987557937842770870}
   m_Layer: 6
   m_Name: CardTurret
   m_TagString: Enemy
@@ -54,7 +54,6 @@ MonoBehaviour:
   moveSpeed: 0
   spriteRen: {fileID: 7256403188790275196}
   animator: {fileID: 5679050777139528107}
-  activeRange: 15
   enemyBullet: {fileID: 4787159891083559322, guid: e6829f2a81430cc49a9b8219c8195416, type: 3}
   searchRadius: 0
   fireRate: 2
@@ -100,7 +99,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-7255507130365578930
+--- !u!114 &6987557937842770870
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

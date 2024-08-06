@@ -1,0 +1,56 @@
+"labels": {
+	"tap": "[TAP]"
+	"hold": "[HOLD]"
+	"cooldown": "[COOLDOWN]"
+	"costTap": "[TAP COST]"
+	"costHold": "[HOLD COST]"
+	"damageTap": "[DAMAGE]"
+	"damageHold": "[HOLD DAMAGE]"
+}
+
+"main": [
+{
+	"name": "Blaster"
+	"descTap": "Fires a short-ranged projectile."
+	"descHoldRelease": "Fires a piercing projectile."
+},
+{
+	"name": "Rocket-Powered Shotgun"
+	"descTap": "Fires a powerful blast and launches you backward. While launched, you deal damage to anything in your path."
+},
+{
+	"name": "Minigun"
+	"descHold": "Continuously fires a stream of bullets. Rate of fire and accuracy gradually decreases as weapon is fired."
+},
+{
+	"name": "Red Sword"
+	"descTap": "Slashes a wide area in front of you."
+	"descHoldRelease": "Fires a slow, large projectile in front of you."
+	"descEffect": "On an enemy kill, grants 1 level of Red Frenzy. On hit, loses all levels of Red Frenzy."
+}
+]
+
+"sub": [
+{
+	"name": "Grenade"
+	"descTap": "Throws a grenade in front of you. Explodes on contact or after some time has passed."
+},
+{
+	"name": "Missile Barrage"
+	"descHold": "Loads a missile to be fired; maximum of two loads."
+	"descHoldRelease": "Locks on to enemies in front of you and fires all missiles. Always fires at least ${missileMin} missiles."
+}
+]
+
+"special": [
+{
+	"name": "Reload"
+	"descTap": "Reloads your ammo. Consumes all Shards and converts ${percent1} of them into ammo."
+	"descTap2": "If performed just before getting hit, additionally refunds ${percent2} of all consumed Shards."
+},
+{
+	"name": "Burst"
+	"descTap": "Rushes forward, dealing damage to anything in your path."
+	"descEffect": "On hitting at least ${int1} enemies in one Burst, replenishes ${int2} Special Charge."
+}
+]

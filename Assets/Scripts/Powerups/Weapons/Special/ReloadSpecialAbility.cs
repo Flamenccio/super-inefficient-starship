@@ -35,7 +35,6 @@ namespace Flamenccio.Powerup.Weapon
 
         protected override void Startup()
         {
-
             /// TODO Find a solution to avoid hardcoding name and description. Applies to other buffs and weapons too.
             base.Startup();
             Name = "Reload";
