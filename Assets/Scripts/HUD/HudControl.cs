@@ -37,7 +37,7 @@ namespace Flamenccio.HUD
             timeDisplay.text = CorrectTimerDisplay(gState.Timer);
             hpDisplay.text = playerAtt.HP.ToString();
             killPointsDisplay.text = $"+{playerAtt.KillPoints}";
-            killPointBonusDisplay.text = $"x{playerAtt.KillPointBonus}";
+            killPointBonusDisplay.text = $"×{playerAtt.KillPointBonus}";
         }
 
         private string CorrectTimerDisplay(float num)
