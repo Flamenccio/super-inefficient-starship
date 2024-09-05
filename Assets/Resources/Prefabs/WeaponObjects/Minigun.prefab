@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea5c9fdfaf5bd34a815bcf04768b61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: minigun
   cost: 1
   cooldown: 1
   holdThreshold: 0.5

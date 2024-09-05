@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c650866d81b74f44aae7c6f16fc086ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: blaster
   cost: 1
   cooldown: 0.13333334
   holdThreshold: 0

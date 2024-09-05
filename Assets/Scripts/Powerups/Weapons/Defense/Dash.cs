@@ -19,8 +19,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Desc = "[TAP]: Quickly move a set distance in direction you are moving in.";
-            Name = "Dash";
             Rarity = PowerupRarity.Common;
         }
 

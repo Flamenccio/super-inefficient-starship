@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Flamenccio.Powerup.Buff
 {
-    public enum BuffClass
+    public enum BuffClass // TODO soon to be deleted
     {
         Brutality,
         Vitality,
@@ -16,7 +16,6 @@ namespace Flamenccio.Powerup.Buff
     public class BuffBase : IPowerup
     {
         public string Name { get; protected set; }
-        public string Desc { get; protected set; }
 
         public int Level
         {

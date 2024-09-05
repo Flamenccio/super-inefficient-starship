@@ -32,7 +32,6 @@ namespace Flamenccio.Powerup.Buff
         protected override void OnCreate()
         {
             Name = "Red Frenzy";
-            Desc = $"Defeating enemies grants stacks Red Frenzy.\nEach stack of Red Frenzy removes the cost of using Red Sword and boosts movement speed by {MOVE_SPEED_BUFF * 100f}%.\nYour ammo will drain over time; the rate increases with the number of stacks.\nGetting hit or dropping below {MIN_AMMO_PERCENTAGE * 100f}% ammo removes all stacks and will cost {LOSS_AMMO_DEDUCTION} ammo.";
             static float SpeedBuff(int level) => level * MOVE_SPEED_BUFF;
             buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, SpeedBuff));
             GameEventManager.OnPlayerHit += (_) => Deactivate();

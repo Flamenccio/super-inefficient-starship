@@ -24,8 +24,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Red Sword";
-            Desc = "[TAP]: Widely swings a red sword around you.\n[HOLD]: On release, unleashes a slow-moving vortex before you, repeatedly dealing damage in its path.\nTAP cost: 1\nHOLD cost: 3\nCooldown: fast";
             Level = 1;
             Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;

@@ -10,8 +10,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Grenade";
-            Desc = "[TAP]: throw a bomb that explodes on contact.\nDamage: high\nCooldown: 3 seconds\nRange: average\nCost: 5";
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)

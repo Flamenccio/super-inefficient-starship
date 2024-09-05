@@ -35,10 +35,7 @@ namespace Flamenccio.Powerup.Weapon
 
         protected override void Startup()
         {
-            /// TODO Find a solution to avoid hardcoding name and description. Applies to other buffs and weapons too.
             base.Startup();
-            Name = "Reload";
-            Desc = $"[TAP]: Immediately consumes all stored star shards and converts {conversionRatio * 100f}% of them into ammo. Additionally restores {timerReplenish} seconds onto the life timer.\nMax charges: {maxSpecialCharges}\nCooldown: {Cooldown} seconds.\nIf [TAP] is used right before a hit lands, performs a Perfect Reload: in addition of Reloading, restores {PARRY_PERFECT_REFUND * 100f}% of used star shards and cooldown is reduced to {Cooldown / 2f}.";
             Rarity = PowerupRarity.Rare;
             gameState = FindObjectOfType<GameState>();
             parryTimer = 0f;

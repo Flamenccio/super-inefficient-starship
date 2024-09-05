@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b3a6c18ae403534a90325ace8e7e590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: missilebarrage
   cost: 5
   cooldown: 3
   holdThreshold: 0

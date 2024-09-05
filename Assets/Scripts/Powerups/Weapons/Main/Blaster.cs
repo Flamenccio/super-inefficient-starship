@@ -19,8 +19,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Blaster";
-            Desc = "[TAP]: Fires a short-ranged bullet.\n[HOLD]: Fires a piercing bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
             Rarity = PowerupRarity.Common;
         }
 

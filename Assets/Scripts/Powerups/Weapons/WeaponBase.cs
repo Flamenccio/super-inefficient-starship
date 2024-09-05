@@ -1,24 +1,25 @@
 using Flamenccio.Effects.Audio;
+using Flamenccio.Localization;
 using FMODUnity;
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace Flamenccio.Powerup.Weapon
 {
     /// <summary>
     /// Base class for all player weapons.
     /// </summary>
-    public class WeaponBase : MonoBehaviour, IPowerup
+    public class WeaponBase : MonoBehaviour, IPowerup, IDescribable
     {
-        public string Name { get; protected set; }
-        public string Desc { get; protected set; }
-        public string Flavor { get; protected set; }
+        public string Name { get => weaponId; }
         public int Level { get; protected set; }
         public PowerupRarity Rarity { get; protected set; }
         public WeaponType Type { get => weaponType; }
         public int Cost { get => cost; }
         public float Cooldown { get => cooldown; }
         public bool AimAssisted { get => aimAssisted; } // whether the weapon should aim towards the aim assist target on TAP
+        [SerializeField] private string weaponId;
 
         public enum WeaponType
         {
@@ -113,6 +114,12 @@ namespace Flamenccio.Powerup.Weapon
         protected virtual bool AttackReady()
         {
             return cooldownTimer >= Cooldown;
+        }
+
+        public virtual LocalizedString CompleteDescription(LocalizedString description)
+        {
+            // TODO make some way for dev to assign variable names to correct values
+            return description; // Placeholder
         }
     }
 }

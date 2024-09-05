@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc08ca06e72180949a8899ecad99d820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: burst
   cost: 1
   cooldown: 3
   holdThreshold: 0

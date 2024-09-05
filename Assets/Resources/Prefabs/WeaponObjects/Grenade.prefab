@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c135f07a7b5944787d0085bbb46c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: grenade
   cost: 5
   cooldown: 2
   holdThreshold: 0

@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f5bf8c239e8e1940895b6730aa4d9fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: redsword
   cost: 4
   cooldown: 0.16666667
   holdThreshold: 0.25

@@ -25,8 +25,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Burst";
-            Desc = $"[TAP]: Rushes forward, dealing damage to any enemies in your path.\nIf at least {HIT_STREAK_CONDITION} enemies are struck in one dash, grants 1 SPECIAL CHARGE.";
             Level = 1;
             Rarity = PowerupRarity.Rare;
         }

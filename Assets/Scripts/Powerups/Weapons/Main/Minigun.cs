@@ -24,8 +24,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Minigun";
-            Desc = "[HOLD]: Continuously fires a stream of bullets. As bullets are fired, fire rate slows down and shots grow more innaccurate.\nDamage: low\nRange: below average\nSpeed: fast\nCooldown: very short.";
             Rarity = PowerupRarity.Common;
         }
 

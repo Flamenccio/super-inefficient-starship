@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c568e35a6176bee49ba3a4ac982d73a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: rocketshotgun
   cost: 3
   cooldown: 0.7
   holdThreshold: 0

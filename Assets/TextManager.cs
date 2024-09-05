@@ -52,14 +52,6 @@ namespace Flamenccio.Text
             weapons.Add("main", reader.LoadWeaponDescription($"{basePath}/Weapons/mains"));
             weapons.Add("sub", reader.LoadWeaponDescription($"{basePath}/Weapons/subs"));
             weapons.Add("special", reader.LoadWeaponDescription($"{basePath}/Weapons/specials"));
-
-            /* DEBUG
-            Debug.Log("hi");
-            foreach (var w in weapons["main"].weapons)
-            {
-                Debug.Log($"{w.weaponName}");
-            }
-            */
         }
     }
 }

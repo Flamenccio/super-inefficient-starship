@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30066edd76d0d5945ad7459cf05d4804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: reload
   cost: 1
   cooldown: 10
   holdThreshold: 0
