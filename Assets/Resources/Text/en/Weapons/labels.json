@@ -1,9 +1,0 @@
-"labels": {
-	"tap": "[TAP]"
-	"hold": "[HOLD]"
-	"cooldown": "[COOLDOWN]"
-	"costTap": "[TAP COST]"
-	"costHold": "[HOLD COST]"
-	"damageTap": "[DAMAGE]"
-	"damageHold": "[HOLD DAMAGE]"
-}
