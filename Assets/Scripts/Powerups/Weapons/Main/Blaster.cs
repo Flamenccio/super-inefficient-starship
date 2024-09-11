@@ -39,7 +39,7 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (!consumeAmmo(ChargeCost, PlayerAttributes.AmmoUsage.MainHoldExit)) return;
+            if (!consumeAmmo(ChargedCost, PlayerAttributes.AmmoUsage.MainHoldExit)) return;
 
             AudioManager.Instance.PlayOneShot(holdExitSfx, transform.position);
             Instantiate(chargeAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));

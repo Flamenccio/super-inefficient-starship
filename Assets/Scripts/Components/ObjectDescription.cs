@@ -15,7 +15,6 @@ namespace Flamenccio.Localization
         LocalizedString CompleteDescription(LocalizedString description);
     }
 
-<<<<<<< HEAD
     /// <summary>
     /// Holds a localized name and description for the GameObject that this class is attached to.
     /// </summary>

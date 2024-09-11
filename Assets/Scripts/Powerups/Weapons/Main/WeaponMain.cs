@@ -2,10 +2,7 @@ using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.HUD;
 using FMODUnity;
-<<<<<<< HEAD
 using UnityEditor.Build.Pipeline;
-=======
->>>>>>> parent of dc4b1ce (Add system to select properties from GameObjects to populte local variables in LocalizedStrings)
 
 namespace Flamenccio.Powerup.Weapon
 {
