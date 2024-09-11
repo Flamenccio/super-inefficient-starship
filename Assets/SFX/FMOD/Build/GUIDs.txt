@@ -1,0 +1,15 @@
+{de98b092-e972-48f0-9ec2-4c2ab5e65320} bank:/Master
+{46859046-9809-04b2-188b-c6d4441555b8} bank:/Master.strings
+{c437f176-13f1-4a34-8e1f-901020242bcd} bank:/SFX
+{751c26f7-0481-45d9-8a02-6855a9717e3e} bus:/
+{f1673487-9f0e-40a8-a496-62d48c1dfba8} bus:/Reverb
+{aaa88381-97b3-4d6b-90f4-902b91138d6f} event:/enemy/enemy-hurt
+{0010878f-828e-464f-a242-690b21cc9f62} event:/enemy/enemy-kill
+{5179e9cd-51df-458e-867e-f250a4489f37} event:/items/mini-collect
+{1b2fbf3c-af69-4cd7-ba1f-cdeb20c553c0} event:/items/mini-star-collect
+{4c494314-1a70-4fd2-8008-a2a3f94c5f98} event:/items/star-collect
+{1a6c6439-d593-4fb8-9a43-471617d215b8} event:/player/player-dash
+{80d184b6-7644-4dd4-91a4-783da69cd2a3} event:/player/player-hurt
+{abefa7c7-4429-4a28-9819-ac3a4c8b5349} event:/player/player-lockon
+{698a832a-45b6-45fa-8de1-a7366f317a2c} event:/player/player-shoot
+{f86c5220-f522-4b28-96e3-810654bfa334} event:/player/player-shoot-mini

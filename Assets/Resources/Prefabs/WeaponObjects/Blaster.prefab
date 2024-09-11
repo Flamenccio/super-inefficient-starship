@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7804797723523311312
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7804797723523311318}
+  - component: {fileID: 7804797723523311313}
+  - component: {fileID: -6724318227102441769}
+  - component: {fileID: -267409739128333415}
+  m_Layer: 7
+  m_Name: Blaster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7804797723523311318
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804797723523311312}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7804797723523311313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804797723523311312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c650866d81b74f44aae7c6f16fc086ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponId: blaster
+  cost1: 1
+  cooldown: 0.13333334
+  aimAssisted: 1
+  mainAttack: {fileID: 3247408391109038382, guid: 82b9c0481752dbb47b8c0cfff92d0c6b, type: 3}
+  chargedCost: 2
+  chargeAttack: {fileID: 5748844518406190761, guid: 88ef974b8a9d69b47b6087b1cd716dd9, type: 3}
+  tapSfx: p_main_blaster_tap
+  holdExitSfx: p_special_burst_tap
+  chargedVfx: p_generic_charged
+--- !u!114 &-6724318227102441769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804797723523311312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e097106e361565740974468db3245460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Properties:
+  - Source: {fileID: 7804797723523311312}
+    PropertyName: Damage1
+    VariableName: damage_1
+    SourceScript: {fileID: 7804797723523311313}
+  - Source: {fileID: 7804797723523311312}
+    PropertyName: Cost1
+    VariableName: cost_1
+    SourceScript: {fileID: 7804797723523311313}
+  - Source: {fileID: 7804797723523311312}
+    PropertyName: Damage2
+    VariableName: damage_2
+    SourceScript: {fileID: 7804797723523311313}
+  - Source: {fileID: 7804797723523311312}
+    PropertyName: ChargedCost
+    VariableName: cost_2
+    SourceScript: {fileID: 7804797723523311313}
+--- !u!114 &-267409739128333415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804797723523311312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68e24b2534a0844a88b38c82d4b0b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  propertyList: {fileID: -6724318227102441769}
+  objectName:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 446415867904
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  objectDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 533401538560
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables:
+    - name: damage_1
+      variable:
+        rid: 7087253191319355398
+    - name: cost_1
+      variable:
+        rid: 7087253191319355399
+    - name: damage_2
+      variable:
+        rid: 7087253191319355400
+    - name: cost_2
+      variable:
+        rid: 7087253191319355401
+  references:
+    version: 2
+    RefIds:
+    - rid: 7087253191319355398
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253191319355399
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253191319355400
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253191319355401
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0

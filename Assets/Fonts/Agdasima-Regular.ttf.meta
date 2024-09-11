@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 089124a081b12064e875ca2e2190d0ad
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Agdasima
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d0fa2aea266f3c14884711ccdf4a2411, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
