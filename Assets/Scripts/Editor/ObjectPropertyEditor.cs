@@ -141,7 +141,23 @@ namespace Flamenccio.FlamenccioEditor
             {
                 property.FindPropertyRelative("PropertyName").stringValue = changeEvent.newValue.Name;
                 var source = property.FindPropertyRelative("Source").objectReferenceValue;
-                property.FindPropertyRelative("SourceScript").SetUnderlyingValue(source.GetComponent(changeEvent.newValue.DeclaringType)); // TODO only works when given object is a GameObject, fix soon
+                MonoBehaviour sourceScript;
+
+                if (source is MonoBehaviour)
+                {
+                    sourceScript = source as MonoBehaviour;
+
+                }
+                else if (source is GameObject)
+                {
+                    sourceScript = source.GetComponent(changeEvent.newValue.DeclaringType) as MonoBehaviour;
+                }
+                else
+                {
+                    Debug.LogWarning($"Unknown type {source.GetType()}");
+                    return;
+                }
+                property.FindPropertyRelative("SourceScript").SetUnderlyingValue(sourceScript);
             }
         }
     }

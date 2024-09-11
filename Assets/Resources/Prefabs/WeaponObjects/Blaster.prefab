@@ -81,7 +81,7 @@ MonoBehaviour:
     PropertyName: Damage2
     VariableName: damage_2
     SourceScript: {fileID: 7804797723523311313}
-  - Source: {fileID: 7804797723523311312}
+  - Source: {fileID: 7804797723523311313}
     PropertyName: ChargedCost
     VariableName: cost_2
     SourceScript: {fileID: 7804797723523311313}
