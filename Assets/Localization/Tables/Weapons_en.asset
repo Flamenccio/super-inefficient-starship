@@ -52,7 +52,8 @@ MonoBehaviour:
   - m_Id: 4721587747393536
     m_Localized: "[HOLD] Continuously unleashes a stream of bullets. Both the rate
       of fire and accuracy gradually decrease.\nOn release, rate of fire and accuracy
-      reset.\n  > Damage: {damage_1}\n  > Cost (for 3 bullets): {cost_1}"
+      reset.\n  > Damage: {damage_1}\n  > Cost (for {bullet_per_round} bullets):
+      {cost_1}"
     m_Metadata:
       m_Items:
       - rid: 7087253052275818498

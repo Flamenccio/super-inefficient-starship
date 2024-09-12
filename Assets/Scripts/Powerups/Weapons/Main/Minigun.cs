@@ -8,6 +8,7 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class Minigun : WeaponMain
     {
+        public int BulletsPerRound { get => MAX_ROUNDS; }
         [SerializeField] private string holdSfx;
 
         private float attackDuration = 0f;

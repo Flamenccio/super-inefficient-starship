@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4247250920761169880}
   - component: {fileID: 7228331769442246866}
+  - component: {fileID: 1486750503181392114}
+  - component: {fileID: 1640347960447658769}
   m_Layer: 7
   m_Name: Minigun
   m_TagString: Untagged
@@ -45,10 +47,89 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponId: minigun
-  cost: 1
+  cost1: 1
   cooldown: 1
-  holdThreshold: 0.5
   aimAssisted: 0
   mainAttack: {fileID: 1613613872814323929, guid: 0accc77b24fde9c418a94c05ef6e7279, type: 3}
   chargedCost: 0
   holdSfx: p_main_gatling_hold
+--- !u!114 &1486750503181392114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272615772202195769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68e24b2534a0844a88b38c82d4b0b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  propertyList: {fileID: 0}
+  objectName:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 4083561107456
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  objectDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 4721587747393536
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables:
+    - name: damage_1
+      variable:
+        rid: 7087253232774283271
+    - name: bullet_per_round
+      variable:
+        rid: 7087253232774283272
+    - name: cost_1
+      variable:
+        rid: 7087253232774283273
+  references:
+    version: 2
+    RefIds:
+    - rid: 7087253232774283271
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283272
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283273
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+--- !u!114 &1640347960447658769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272615772202195769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e097106e361565740974468db3245460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Properties:
+  - Source: {fileID: 272615772202195769}
+    PropertyName: Cost1
+    VariableName: cost_1
+    SourceScript: {fileID: 7228331769442246866}
+  - Source: {fileID: 272615772202195769}
+    PropertyName: Damage1
+    VariableName: damage_1
+    SourceScript: {fileID: 7228331769442246866}
+  - Source: {fileID: 272615772202195769}
+    PropertyName: BulletsPerRound
+    VariableName: bullet_per_round
+    SourceScript: {fileID: 7228331769442246866}
