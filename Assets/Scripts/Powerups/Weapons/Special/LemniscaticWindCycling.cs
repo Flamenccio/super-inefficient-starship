@@ -11,6 +11,7 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class LemniscaticWindCycling : WeaponSpecial
     {
+        public int HitStreakCondition { get => HIT_STREAK_CONDITION; }
         [SerializeField] private GameObject shockwaveEffect;
         [SerializeField] private float DURATION = 0.10f;
         [SerializeField] private float SPEED = 50f;

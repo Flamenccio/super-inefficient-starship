@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6837751821844069364}
   - component: {fileID: 6837751821844069365}
+  - component: {fileID: -5338789526198004989}
+  - component: {fileID: 5591923922664313672}
   m_Layer: 7
   m_Name: Burst
   m_TagString: Untagged
@@ -45,9 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponId: burst
-  cost: 1
+  cost1: 1
   cooldown: 3
-  holdThreshold: 0
   aimAssisted: 1
   mainAttack: {fileID: 5624131329123951944, guid: ada48b854de174c4db8e50572c34f7a6, type: 3}
   maxSpecialCharges: 2
@@ -58,3 +59,72 @@ MonoBehaviour:
   tapSfx: p_special_burst_tap
   specialReplenishSfx: p_specialcharge_replenish
   specialReplenishVfx: p_specialcharge_replenish
+--- !u!114 &-5338789526198004989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6837751821844069354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68e24b2534a0844a88b38c82d4b0b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  propertyList: {fileID: 5591923922664313672}
+  objectName:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 4742165254475776
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  objectDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 4742223278477312
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables:
+    - name: enemy_hit_quota
+      variable:
+        rid: 7087253232774283264
+    - name: damage_1
+      variable:
+        rid: 7087253232774283265
+  references:
+    version: 2
+    RefIds:
+    - rid: 7087253232774283264
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283265
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+--- !u!114 &5591923922664313672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6837751821844069354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e097106e361565740974468db3245460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Properties:
+  - Source: {fileID: 6837751821844069354}
+    PropertyName: Damage1
+    VariableName: damage_1
+    SourceScript: {fileID: 6837751821844069365}
+  - Source: {fileID: 6837751821844069354}
+    PropertyName: HitStreakCondition
+    VariableName: enemy_hit_quota
+    SourceScript: {fileID: 6837751821844069365}
