@@ -71,6 +71,14 @@ MonoBehaviour:
     m_Key: weapon.sub.grenade.description
     m_Metadata:
       m_Items: []
+  - m_Id: 7601838781468672
+    m_Key: weapon.sub.missileburst.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7601902157402112
+    m_Key: weapon.sub.missileburst.description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
