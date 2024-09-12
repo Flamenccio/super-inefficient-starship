@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2861180565581485975}
   - component: {fileID: 2861180565581485972}
+  - component: {fileID: 5711364111598683743}
+  - component: {fileID: -4013591157370792901}
   m_Layer: 0
   m_Name: Reload
   m_TagString: Untagged
@@ -45,9 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponId: reload
-  cost: 1
+  cost1: 1
   cooldown: 10
-  holdThreshold: 0
   aimAssisted: 0
   mainAttack: {fileID: 0}
   maxSpecialCharges: 1
@@ -55,3 +56,94 @@ MonoBehaviour:
   reloadPerfectVfx: p_special_reload_perfect_tap
   reloadNormalSfx: p_special_reload_tap
   reloadPerfectSfx: p_special_reload_perfect_tap
+--- !u!114 &5711364111598683743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2861180565581485973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e097106e361565740974468db3245460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Properties:
+  - Source: {fileID: 2861180565581485973}
+    PropertyName: ConversionPercentage
+    VariableName: ammo_conversion_percentage
+    SourceScript: {fileID: 2861180565581485972}
+  - Source: {fileID: 2861180565581485973}
+    PropertyName: TimerReplenish
+    VariableName: timer_restore
+    SourceScript: {fileID: 2861180565581485972}
+  - Source: {fileID: 2861180565581485973}
+    PropertyName: PerfectRefundPercentage
+    VariableName: perfect_refund_percentage
+    SourceScript: {fileID: 2861180565581485972}
+  - Source: {fileID: 2861180565581485973}
+    PropertyName: PerfectCooldownReductionPercentage
+    VariableName: perfect_cooldown_reduction_percentage
+    SourceScript: {fileID: 2861180565581485972}
+--- !u!114 &-4013591157370792901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2861180565581485973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68e24b2534a0844a88b38c82d4b0b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  propertyList: {fileID: 5711364111598683743}
+  objectName:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 4740763727794176
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  objectDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 4740817272279040
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables:
+    - name: ammo_conversion_percentage
+      variable:
+        rid: 7087253232774283286
+    - name: timer_restore
+      variable:
+        rid: 7087253232774283287
+    - name: perfect_refund_percentage
+      variable:
+        rid: 7087253232774283288
+    - name: perfect_cooldown_reduction_percentage
+      variable:
+        rid: 7087253232774283289
+  references:
+    version: 2
+    RefIds:
+    - rid: 7087253232774283286
+      type: {class: FloatVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283287
+      type: {class: FloatVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283288
+      type: {class: FloatVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283289
+      type: {class: FloatVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0

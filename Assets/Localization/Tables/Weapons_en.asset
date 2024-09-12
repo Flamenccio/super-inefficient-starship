@@ -73,8 +73,9 @@ MonoBehaviour:
   - m_Id: 4740817272279040
     m_Localized: "[TAP] Consume all Shards, {ammo_conversion_percentage}% is returned
       as Ammo. Restores {timer_restore} seconds to the timer.\nAdditionally, when
-      used before getting hit:\n  * Refunds {perfect_shard_refund} of consumed Shards,\n 
-      * Destroys all nearby bullets,\n  * Shortens Reload's cooldown by {perfect_cooldown_reduction}."
+      used before getting hit:\n  * Refunds {perfect_refund_percentage}% of consumed
+      Shards,\n  * Destroys all nearby bullets,\n  * Shortens Reload's cooldown by
+      {perfect_cooldown_reduction_percentage}%."
     m_Metadata:
       m_Items:
       - rid: 7087253052275818498

@@ -15,6 +15,11 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class ReloadSpecialAbility : WeaponSpecial
     {
+        public float ConversionPercentage { get => conversionRatio * 100f; }
+        public float TimerReplenish { get => timerReplenish; }
+        public float PerfectRefundPercentage { get => PARRY_PERFECT_REFUND * 100f; }
+        public float PerfectCooldownReductionPercentage { get => PARRY_PERFECT_COOLDOWN_REDUCTION * 100f; }
+
         [SerializeField] private string reloadNormalVfx;
         [SerializeField] private string reloadPerfectVfx;
         [SerializeField] private string reloadNormalSfx;
@@ -32,6 +37,7 @@ namespace Flamenccio.Powerup.Weapon
         private const float PARRY_SCAN_RADIUS = 1.0f;
         private const float PARRY_DESTROY_RADIUS = PARRY_SCAN_RADIUS * 5f;
         private const float PARRY_PERFECT_REFUND = 0.50f;
+        private const float PARRY_PERFECT_COOLDOWN_REDUCTION = 0.50f;
 
         protected override void Startup()
         {
@@ -110,7 +116,7 @@ namespace Flamenccio.Powerup.Weapon
             int final = Mathf.FloorToInt(total * conversionRatio);
             playerAtt.AddAmmo(final);
             gameState.ReplenishTimer(timerReplenish);
-            cooldownTimer = Cooldown / 2f;
+            cooldownTimer = Cooldown * PARRY_PERFECT_COOLDOWN_REDUCTION;
 
             GameObjectScan(PARRY_DESTROY_RADIUS, attackTags)
                 .Where(x => x.TryGetComponent<EnemyBulletBase>(out var _))
