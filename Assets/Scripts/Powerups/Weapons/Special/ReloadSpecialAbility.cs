@@ -15,6 +15,11 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class ReloadSpecialAbility : WeaponSpecial
     {
+        public float ConversionPercentage { get => conversionRatio * 100f; }
+        public float TimerReplenish { get => timerReplenish; }
+        public float PerfectRefundPercentage { get => PARRY_PERFECT_REFUND * 100f; }
+        public float PerfectCooldownReductionPercentage { get => PARRY_PERFECT_COOLDOWN_REDUCTION * 100f; }
+
         [SerializeField] private string reloadNormalVfx;
         [SerializeField] private string reloadPerfectVfx;
         [SerializeField] private string reloadNormalSfx;
@@ -32,14 +37,11 @@ namespace Flamenccio.Powerup.Weapon
         private const float PARRY_SCAN_RADIUS = 1.0f;
         private const float PARRY_DESTROY_RADIUS = PARRY_SCAN_RADIUS * 5f;
         private const float PARRY_PERFECT_REFUND = 0.50f;
+        private const float PARRY_PERFECT_COOLDOWN_REDUCTION = 0.50f;
 
         protected override void Startup()
         {
-
-            /// TODO Find a solution to avoid hardcoding name and description. Applies to other buffs and weapons too.
             base.Startup();
-            Name = "Reload";
-            Desc = $"[TAP]: Immediately consumes all stored star shards and converts {conversionRatio * 100f}% of them into ammo. Additionally restores {timerReplenish} seconds onto the life timer.\nMax charges: {maxSpecialCharges}\nCooldown: {Cooldown} seconds.\nIf [TAP] is used right before a hit lands, performs a Perfect Reload: in addition of Reloading, restores {PARRY_PERFECT_REFUND * 100f}% of used star shards and cooldown is reduced to {Cooldown / 2f}.";
             Rarity = PowerupRarity.Rare;
             gameState = FindObjectOfType<GameState>();
             parryTimer = 0f;
@@ -114,7 +116,7 @@ namespace Flamenccio.Powerup.Weapon
             int final = Mathf.FloorToInt(total * conversionRatio);
             playerAtt.AddAmmo(final);
             gameState.ReplenishTimer(timerReplenish);
-            cooldownTimer = Cooldown / 2f;
+            cooldownTimer = Cooldown * PARRY_PERFECT_COOLDOWN_REDUCTION;
 
             GameObjectScan(PARRY_DESTROY_RADIUS, attackTags)
                 .Where(x => x.TryGetComponent<EnemyBulletBase>(out var _))

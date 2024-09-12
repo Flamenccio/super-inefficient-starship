@@ -1,0 +1,13 @@
+{
+	"weapons": [
+{
+	"weaponName": "Grenade",
+	"descTap": "Throws a grenade in front of you. Explodes on contact or after some time has passed."
+},
+{
+	"weaponName": "Missile Barrage",
+	"descHold": "Loads a missile to be fired; maximum of two loads.",
+	"descHoldExit": "Locks on to enemies in front of you and fires all missiles. Always fires at least ${missileMin} missiles."
+}
+]
+}

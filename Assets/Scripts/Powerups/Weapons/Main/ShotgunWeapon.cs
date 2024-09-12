@@ -25,8 +25,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Rocket-Powered Shotgun";
-            Desc = "[TAP]: Fires a powerful spray of bullets that launches you backward. You deal damage along with the bullets.\nDamage: high\nRange: short\nSpeed: very fast\nCooldown: long";
             Rarity = PowerupRarity.Uncommon;
         }
 

@@ -1,0 +1,14 @@
+{
+	"weapons": [
+{
+	"weaponName": "Reload",
+	"descTap": "Reloads your ammo. Consumes all Shards and converts ${percent1} of them into ammo.",
+	"descEffect": "If performed just before getting hit, additionally refunds ${percent2} of all consumed Shards."
+},
+{
+	"weaponName": "Burst",
+	"descTap": "Rushes forward, dealing damage to anything in your path.",
+	"descEffect": "On hitting at least ${int1} enemies in one Burst, replenishes ${int2} Special Charge."
+}
+]
+}

@@ -16,7 +16,7 @@ namespace Enemy
     /// <summary>
     /// Base class for all enemies.
     /// </summary>
-    public class EnemyBase : Destructables, DistanceBehavior.IDistanceDisable
+    public class EnemyBase : Destructables, DistanceBehaviorCull.IDistanceDisable
     {
         [SerializeField] protected int tier;
         [SerializeField] protected float moveSpeed = 0f;

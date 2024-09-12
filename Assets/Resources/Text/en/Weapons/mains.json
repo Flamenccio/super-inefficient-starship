@@ -1,0 +1,23 @@
+{
+	"weapons": [
+{
+	"weaponName": "Blaster",
+	"descTap": "Fires a short-ranged projectile.",
+	"descHoldExit": "Fires a piercing projectile."
+},
+{
+	"weaponName": "Rocket-Powered Shotgun",
+	"descTap": "Fires a powerful blast and launches you backward. While launched, you deal damage to anything in your path."
+},
+{
+	"weaponName": "Minigun",
+	"descHold": "Continuously fires a stream of bullets. Rate of fire and accuracy gradually decreases as weapon is fired."
+},
+{
+	"weaponName": "Red Sword",
+	"descTap": "Slashes a wide area in front of you.",
+	"descHoldExit": "Fires a slow, large projectile in front of you.",
+	"descEffect": "On an enemy kill, grants 1 level of Red Frenzy. On hit, loses all levels of Red Frenzy."
+}
+]
+}

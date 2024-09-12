@@ -8,6 +8,9 @@ namespace Flamenccio.Powerup.Weapon
 {
     public class MissileBurst : WeaponSub
     {
+        public int MissileAmountMin { get => MISSILE_BURST_DEFAULT_AMOUNT; }
+        public int MissileAmountMax { get => MISSILE_BURST_MAX_AMOUNT; }
+
         [SerializeField] private string lockonVfx;
         [SerializeField] private string loadMissileVfx;
         private const int MISSILE_BURST_DEFAULT_AMOUNT = 4;

@@ -8,6 +8,7 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class Minigun : WeaponMain
     {
+        public int BulletsPerRound { get => MAX_ROUNDS; }
         [SerializeField] private string holdSfx;
 
         private float attackDuration = 0f;
@@ -24,8 +25,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Minigun";
-            Desc = "[HOLD]: Continuously fires a stream of bullets. As bullets are fired, fire rate slows down and shots grow more innaccurate.\nDamage: low\nRange: below average\nSpeed: fast\nCooldown: very short.";
             Rarity = PowerupRarity.Common;
         }
 
@@ -37,7 +36,7 @@ namespace Flamenccio.Powerup.Weapon
             {
                 if (rounds <= 0)
                 {
-                    if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainHold))
+                    if (!consumeAmmo(Cost1, PlayerAttributes.AmmoUsage.MainHold))
                     {
                         return;
                     }

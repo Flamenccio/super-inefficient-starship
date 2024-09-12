@@ -152,9 +152,12 @@ MonoBehaviour:
   durability: 1
   rotationIsStatic: 1
   canIgnoreStageEdge: 1
-  playerDamage: 2
-  objectDamage: 1
+  playerDamage: 3
+  objectDamage: 2
   rb: {fileID: 7899587434270893482}
+  bulletParryVfx: m_bullet_parry
+  bulletImpactVfx: m_bullet_impact
+  MAX_LIFE_TIMER: 0.15
 --- !u!50 &7899587434270893482
 Rigidbody2D:
   serializedVersion: 4

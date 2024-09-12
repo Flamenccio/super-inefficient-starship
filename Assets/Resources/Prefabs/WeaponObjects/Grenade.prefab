@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2565327453990794701}
   - component: {fileID: 2565327453990794700}
+  - component: {fileID: -4638079510929030000}
+  - component: {fileID: -8739742984329260791}
   m_Layer: 0
   m_Name: Grenade
   m_TagString: Untagged
@@ -44,8 +46,88 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c135f07a7b5944787d0085bbb46c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 5
+  weaponId: grenade
+  cost1: 1
   cooldown: 2
-  holdThreshold: 0
   aimAssisted: 0
   mainAttack: {fileID: 51615182096661947, guid: 0e534d63fd7d8a04a88d681df6d50841, type: 3}
+--- !u!114 &-4638079510929030000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2565327453990794691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e097106e361565740974468db3245460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Properties:
+  - Source: {fileID: 2565327453990794691}
+    PropertyName: Damage1
+    VariableName: damage_1
+    SourceScript: {fileID: 2565327453990794700}
+  - Source: {fileID: 2565327453990794691}
+    PropertyName: Cost1
+    VariableName: cost_1
+    SourceScript: {fileID: 2565327453990794700}
+  - Source: {fileID: 2565327453990794691}
+    PropertyName: GrenadeLifeTime
+    VariableName: detonation_time_seconds
+    SourceScript: {fileID: 2565327453990794700}
+--- !u!114 &-8739742984329260791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2565327453990794691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68e24b2534a0844a88b38c82d4b0b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  propertyList: {fileID: -4638079510929030000}
+  objectName:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 4742915200225280
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  objectDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 4743004752809984
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables:
+    - name: detonation_time_seconds
+      variable:
+        rid: 7087253232774283268
+    - name: damage_1
+      variable:
+        rid: 7087253232774283269
+    - name: cost_1
+      variable:
+        rid: 7087253232774283270
+  references:
+    version: 2
+    RefIds:
+    - rid: 7087253232774283268
+      type: {class: FloatVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283269
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283270
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0

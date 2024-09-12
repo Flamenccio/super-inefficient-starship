@@ -11,6 +11,7 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class LemniscaticWindCycling : WeaponSpecial
     {
+        public int HitStreakCondition { get => HIT_STREAK_CONDITION; }
         [SerializeField] private GameObject shockwaveEffect;
         [SerializeField] private float DURATION = 0.10f;
         [SerializeField] private float SPEED = 50f;
@@ -25,8 +26,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Burst";
-            Desc = $"[TAP]: Rushes forward, dealing damage to any enemies in your path.\nIf at least {HIT_STREAK_CONDITION} enemies are struck in one dash, grants 1 SPECIAL CHARGE.";
             Level = 1;
             Rarity = PowerupRarity.Rare;
         }

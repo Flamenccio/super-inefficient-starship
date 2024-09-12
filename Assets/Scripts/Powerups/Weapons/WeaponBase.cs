@@ -1,7 +1,9 @@
 using Flamenccio.Effects.Audio;
+using Flamenccio.Localization;
 using FMODUnity;
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -10,15 +12,15 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class WeaponBase : MonoBehaviour, IPowerup
     {
-        public string Name { get; protected set; }
-        public string Desc { get; protected set; }
-        public string Flavor { get; protected set; }
+        public string Name { get => weaponId; }
         public int Level { get; protected set; }
         public PowerupRarity Rarity { get; protected set; }
         public WeaponType Type { get => weaponType; }
-        public int Cost { get => cost; }
+        public int Cost1 { get => cost1; }
         public float Cooldown { get => cooldown; }
         public bool AimAssisted { get => aimAssisted; } // whether the weapon should aim towards the aim assist target on TAP
+        public int Damage1 { get => GetDamage1(); }
+        [SerializeField] private string weaponId;
 
         public enum WeaponType
         {
@@ -29,9 +31,8 @@ namespace Flamenccio.Powerup.Weapon
             Support
         };
 
-        [SerializeField] protected int cost = 1;
+        [SerializeField] protected int cost1 = 1;
         [SerializeField] protected float cooldown;
-        [SerializeField] protected float holdThreshold;
         [SerializeField] protected bool aimAssisted = false;
         [SerializeField] protected GameObject mainAttack;
         protected Func<int, PlayerAttributes.AmmoUsage, bool> consumeAmmo;
@@ -113,6 +114,14 @@ namespace Flamenccio.Powerup.Weapon
         protected virtual bool AttackReady()
         {
             return cooldownTimer >= Cooldown;
+        }
+
+        /// <summary>
+        /// Gets the main damage of this weapon.
+        /// </summary>
+        protected virtual int GetDamage1()
+        {
+            return 1;
         }
     }
 }

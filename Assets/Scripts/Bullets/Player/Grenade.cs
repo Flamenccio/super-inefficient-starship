@@ -10,6 +10,7 @@ namespace Flamenccio.Attack.Player
     /// </summary>
     public class Grenade : PlayerBullet
     {
+        public float MaxLifetime { get => MAX_LIFE_TIME; }
         [SerializeField] private GameObject hitbox;
         [SerializeField] private string explosionEffect;
         [SerializeField] private string explosionSfx;

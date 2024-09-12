@@ -11,6 +11,7 @@ namespace Flamenccio.FlamenccioEditor // this is a really stupid name
     [CustomEditor(typeof(WallLayout))]
     public class WallLayoutEditor : Editor
     {
+        // NOTE: this is needed to force Unity to use UIToolkit (instead of the current default, IMGUI)
         [SerializeField] private VisualTreeAsset visualTree;
 
         public override VisualElement CreateInspectorGUI()

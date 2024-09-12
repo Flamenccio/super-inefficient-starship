@@ -2,6 +2,7 @@ using UnityEngine;
 using Flamenccio.Attack;
 using Flamenccio.HUD;
 using FMODUnity;
+using UnityEditor.Build.Pipeline;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -23,7 +24,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             if (cooldownTimer < Cooldown) return false;
 
-            if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainTap))
+            if (!consumeAmmo(Cost1, PlayerAttributes.AmmoUsage.MainTap))
             {
                 // TODO Find a way to avoid hardcoding this text: "AMMO LOW."
                 FloatingTextManager.Instance.DisplayText("AMMO LOW", transform.position, Color.yellow, 0.8f, 30f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.ZoomIn, true);
@@ -33,7 +34,7 @@ namespace Flamenccio.Powerup.Weapon
             return true;
         }
 
-        public int GetWeaponDamage()
+        protected override int GetDamage1()
         {
             return mainAttack.GetComponent<BulletControl>().PlayerDamage;
         }
@@ -41,16 +42,6 @@ namespace Flamenccio.Powerup.Weapon
         public float GetWeaponRange()
         {
             return mainAttack.GetComponent<BulletControl>().Range;
-        }
-
-        public float GetWeaponSpeed()
-        {
-            return mainAttack.GetComponent<BulletControl>().Speed;
-        }
-
-        public float GetWeaponCooldown()
-        {
-            return Cooldown;
         }
     }
 }

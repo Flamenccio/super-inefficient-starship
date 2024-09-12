@@ -2,6 +2,7 @@ using UnityEngine;
 using Flamenccio.Effects.Audio;
 using FMODUnity;
 using Flamenccio.Effects.Visual;
+using Flamenccio.Attack.Player;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -10,8 +11,8 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class Blaster : WeaponMain
     {
+        public int Damage2 { get => chargeAttack.GetComponent<PlayerBullet>().PlayerDamage; }
         [SerializeField] private GameObject chargeAttack;
-        [SerializeField] private int ChargeCost = 1;
         [SerializeField] private string tapSfx;
         [SerializeField] private string holdExitSfx;
         [SerializeField] private string chargedVfx;
@@ -19,8 +20,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Blaster";
-            Desc = "[TAP]: Fires a short-ranged bullet.\n[HOLD]: Fires a piercing bullet.\nDamage: low\nRange: low\nSpeed: Very fast\nCooldown: Very short";
             Rarity = PowerupRarity.Common;
         }
 
@@ -40,7 +39,7 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (!consumeAmmo(ChargeCost, PlayerAttributes.AmmoUsage.MainHoldExit)) return;
+            if (!consumeAmmo(ChargedCost, PlayerAttributes.AmmoUsage.MainHoldExit)) return;
 
             AudioManager.Instance.PlayOneShot(holdExitSfx, transform.position);
             Instantiate(chargeAttack, origin, Quaternion.Euler(0f, 0f, aimAngleDeg));

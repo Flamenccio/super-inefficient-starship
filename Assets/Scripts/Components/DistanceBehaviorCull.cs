@@ -8,7 +8,7 @@ namespace Flamenccio.Components
     /// <summary>
     /// Disables scripts if the distance from the player exceeds a given amount.
     /// </summary>
-    public class DistanceBehavior : MonoBehaviour
+    public class DistanceBehaviorCull : MonoBehaviour
     {
         public interface IDistanceDisable
         {

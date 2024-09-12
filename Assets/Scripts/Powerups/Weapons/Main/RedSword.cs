@@ -5,6 +5,7 @@ using UnityEngine;
 using Flamenccio.Powerup.Buff;
 using Flamenccio.Effects.Audio;
 using Flamenccio.Effects.Visual;
+using UnityEditor.PackageManager.UI;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -13,6 +14,7 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class RedSword : WeaponMain
     {
+        public int ChargeAttackDamage { get => chargeAttack.GetComponent<RedSwordChargeAttack>().PlayerDamage; }
         [SerializeField] private GameObject chargeAttack;
         [SerializeField] private string tapSfx;
         [SerializeField] private string chargedVfx;
@@ -24,8 +26,6 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Name = "Red Sword";
-            Desc = "[TAP]: Widely swings a red sword around you.\n[HOLD]: On release, unleashes a slow-moving vortex before you, repeatedly dealing damage in its path.\nTAP cost: 1\nHOLD cost: 3\nCooldown: fast";
             Level = 1;
             Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;
@@ -75,7 +75,7 @@ namespace Flamenccio.Powerup.Weapon
 
         public override void HoldExit(float aimAngleDeg, float moveAngleDeg, Vector2 origin)
         {
-            if (!consumeAmmo(Cost, PlayerAttributes.AmmoUsage.MainHoldExit))
+            if (!consumeAmmo(Cost1, PlayerAttributes.AmmoUsage.MainHoldExit))
             {
                 return;
             }

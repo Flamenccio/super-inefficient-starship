@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Weapons_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 746ffd358d8e22f4dadd12123cc1ea77, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7087253052275818498
+  m_TableData:
+  - m_Id: 446415867904
+    m_Localized: Blaster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 533401538560
+    m_Localized: "[TAP] Fires a short-ranged projectile.\n  > Damage: {damage_1}\n 
+      > Cost: {cost_1}\n[HOLD] On release, fires a piercing projectile.\n  > Damage:
+      {damage_2}\n  > Cost: {cost_2}"
+    m_Metadata:
+      m_Items:
+      - rid: 7087253052275818498
+  - m_Id: 3644266483712
+    m_Localized: Rocket Powered Shotgun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4083561107456
+    m_Localized: Minigun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4692892815360
+    m_Localized: Vortex Blade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4721130136244224
+    m_Localized: "[TAP] Fires a blast and launches you backward.\nWhile launched,
+      you deal collision damage.\n  > Bullet damage: {damage_1}\n  > Collision damage:
+      {damage_2}\n  > Cost: {cost_1}"
+    m_Metadata:
+      m_Items:
+      - rid: 7087253052275818498
+  - m_Id: 4721587747393536
+    m_Localized: "[HOLD] Continuously unleashes a stream of bullets. Both the rate
+      of fire and accuracy gradually decrease.\nOn release, rate of fire and accuracy
+      reset.\n  > Damage: {damage_1}\n  > Cost (for {bullet_per_round} bullets):
+      {cost_1}"
+    m_Metadata:
+      m_Items:
+      - rid: 7087253052275818498
+  - m_Id: 4721967109607424
+    m_Localized: "[TAP] Sweeps widely in front of you. Also can destroy bullets.\nWhen
+      killing an enemy, grants a level of {frenzy_buff}.\n  > Damage: {damage_1}\n 
+      > Cost: {cost_1}\n[HOLD] On release, unleashes a slow-moving projectile before
+      you, continuously dealing damage. This projectile ignores map bounds.\n  >
+      Damage per tick: {damage_2}\n  > Cost: {cost_2}"
+    m_Metadata:
+      m_Items:
+      - rid: 7087253052275818498
+  - m_Id: 4740763727794176
+    m_Localized: Reload
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4740817272279040
+    m_Localized: "[TAP] Consume all Shards, {ammo_conversion_percentage}% is returned
+      as Ammo. Restores {timer_restore} seconds to the timer.\nAdditionally, when
+      used before getting hit:\n  * Refunds {perfect_refund_percentage}% of consumed
+      Shards,\n  * Destroys all nearby bullets,\n  * Shortens Reload's cooldown by
+      {perfect_cooldown_reduction_percentage}%."
+    m_Metadata:
+      m_Items:
+      - rid: 7087253052275818498
+  - m_Id: 4742165254475776
+    m_Localized: Burst
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4742223278477312
+    m_Localized: "[TAP] Rush a fixed distance forward, dealing damage to everything
+      in your path.\nWhen at least {enemy_hit_quota} enemies are hit, immediately
+      restores a Special Charge.\n  > Damage: {damage_1}"
+    m_Metadata:
+      m_Items:
+      - rid: 7087253052275818498
+  - m_Id: 4742915200225280
+    m_Localized: Grenade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4743004752809984
+    m_Localized: "[TAP] Launches a grenade before you.\nExplodes when {detonation_time_seconds}
+      seconds have passed or if it collides with something.\n  > Damage: {damage_1}\n 
+      > Cost: {cost_1}"
+    m_Metadata:
+      m_Items:
+      - rid: 7087253052275818498
+  - m_Id: 7601838781468672
+    m_Localized: Missile Burst
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7601902157402112
+    m_Localized: "[TAP] Fires {missile_min} homing missiles.\n[HOLD] Loads an additional
+      missile. On release, fires all missiles; up to {max_missiles}.\nMissiles will
+      lock on to targets in front of you. When locked on, missiles ignore wall collision.\n 
+      > Damage (per missile): {damage_1}\n  > Cost: {cost_1}"
+    m_Metadata:
+      m_Items:
+      - rid: 7087253052275818498
+  references:
+    version: 2
+    RefIds:
+    - rid: 7087253052275818498
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 009035317c0000000090b5c4d7c510000090755042c61000009035a49ac6100000907589bfd710000090f5e506d91000009075d9bcd910000090b5c5e3011b00

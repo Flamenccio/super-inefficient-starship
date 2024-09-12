@@ -11,7 +11,7 @@ namespace Flamenccio.Attack.Player
     {
         public int EnemiesHit { get; private set; }
         private float timer = 0f;
-        private const float MAX_LIFE_TIMER = 0.10f;
+        [SerializeField] private float MAX_LIFE_TIMER = 0.10f;
 
         protected override void DeathTimer()
         {

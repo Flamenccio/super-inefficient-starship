@@ -24,7 +24,7 @@ namespace Flamenccio.Powerup.Weapon
 
         protected override bool AttackReady()
         {
-            return playerAtt.UseCharge(Cost);
+            return playerAtt.UseCharge(Cost1);
         }
     }
 }

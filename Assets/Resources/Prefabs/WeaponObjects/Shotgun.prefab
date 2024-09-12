@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 922408421083834748}
   - component: {fileID: 922408421083834749}
+  - component: {fileID: 7280465320718312806}
+  - component: {fileID: -2434935076295688872}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Untagged
@@ -44,12 +46,92 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c568e35a6176bee49ba3a4ac982d73a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 3
+  weaponId: rocketshotgun
+  cost1: 1
   cooldown: 0.7
-  holdThreshold: 0
   aimAssisted: 0
   mainAttack: {fileID: 6935910722787141603, guid: f466f050c720526419020135364982b3, type: 3}
   chargedCost: 0
   playerTackleHitbox: {fileID: 1239980288682230593, guid: 31fd51b646f58a44ca3461d195dd0982, type: 3}
   muzzleFlashVfx: p_main_shotgun_flash_tap
   tapSfx: p_main_shotgun_tap
+--- !u!114 &7280465320718312806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922408421083834751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68e24b2534a0844a88b38c82d4b0b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  propertyList: {fileID: -2434935076295688872}
+  objectName:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 3644266483712
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  objectDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77
+    m_TableEntryReference:
+      m_KeyId: 4721130136244224
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables:
+    - name: damage_1
+      variable:
+        rid: 7087253232774283290
+    - name: damage_2
+      variable:
+        rid: 7087253232774283291
+    - name: cost_1
+      variable:
+        rid: 7087253232774283292
+  references:
+    version: 2
+    RefIds:
+    - rid: 7087253232774283290
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283291
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 7087253232774283292
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+--- !u!114 &-2434935076295688872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922408421083834751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e097106e361565740974468db3245460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Properties:
+  - Source: {fileID: 922408421083834751}
+    PropertyName: Damage1
+    VariableName: damage_1
+    SourceScript: {fileID: 922408421083834749}
+  - Source: {fileID: 922408421083834751}
+    PropertyName: Damage1
+    VariableName: damage_2
+    SourceScript: {fileID: 922408421083834749}
+  - Source: {fileID: 922408421083834751}
+    PropertyName: Cost1
+    VariableName: cost_1
+    SourceScript: {fileID: 922408421083834749}
