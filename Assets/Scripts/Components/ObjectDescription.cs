@@ -42,8 +42,10 @@ namespace Flamenccio.Localization
 
             if (!areListsEqualSize || differenceLocalVariables || differenceListCopy)
             {
-                Debug.LogError($"Failed to fill all local variables! ({objectName.GetLocalizedString()})");
-                return;
+                // TODO remove localized string variables from the comparisons
+                // changed this to a warning; some variables are localized strings which can't be filled out by properties
+                Debug.LogWarning($"WARNING: failed to fill all local variables! ({objectName.GetLocalizedString()})");
+                //return;
             }
 
             listCopy

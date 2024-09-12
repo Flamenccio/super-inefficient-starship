@@ -5,6 +5,7 @@ using UnityEngine;
 using Flamenccio.Powerup.Buff;
 using Flamenccio.Effects.Audio;
 using Flamenccio.Effects.Visual;
+using UnityEditor.PackageManager.UI;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -13,6 +14,7 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class RedSword : WeaponMain
     {
+        public int ChargeAttackDamage { get => chargeAttack.GetComponent<RedSwordChargeAttack>().PlayerDamage; }
         [SerializeField] private GameObject chargeAttack;
         [SerializeField] private string tapSfx;
         [SerializeField] private string chargedVfx;

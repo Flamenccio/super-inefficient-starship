@@ -59,10 +59,10 @@ MonoBehaviour:
       - rid: 7087253052275818498
   - m_Id: 4721967109607424
     m_Localized: "[TAP] Sweeps widely in front of you. Also can destroy bullets.\nWhen
-      killing an enemy, grants {frenzy_gained} level of {frenzy_buff}.\n  > Damage:
-      {damage_1}\n  > Cost: {cost_1}\n[HOLD] On release, unleashes a slow-moving
-      projectile before you, continuously dealing damage. This projectile ignores
-      map bounds.\n  > Damage per tick: {damage_2}\n  > Cost: {cost_2}"
+      killing an enemy, grants a level of {frenzy_buff}.\n  > Damage: {damage_1}\n 
+      > Cost: {cost_1}\n[HOLD] On release, unleashes a slow-moving projectile before
+      you, continuously dealing damage. This projectile ignores map bounds.\n  >
+      Damage per tick: {damage_2}\n  > Cost: {cost_2}"
     m_Metadata:
       m_Items:
       - rid: 7087253052275818498

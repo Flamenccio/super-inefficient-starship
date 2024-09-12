@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_TableCollectionName: Powerups
   m_TableCollectionNameGuidString: cc843317e6bec064da9b2d9ea5da55ef
-  m_Entries: []
+  m_Entries:
+  - m_Id: 7605801765408768
+    m_Key: buff.redfrenzy.name
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

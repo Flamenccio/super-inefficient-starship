@@ -17,7 +17,11 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: cc843317e6bec064da9b2d9ea5da55ef, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 7605801765408768
+    m_Localized: Red Frenzy
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
