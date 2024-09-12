@@ -97,11 +97,12 @@ MonoBehaviour:
       seconds have passed or if it collides with something.\n  > Damage: {damage_1}\n 
       > Cost: {cost_1}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7087253052275818498
   references:
     version: 2
     RefIds:
     - rid: 7087253052275818498
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 009035317c0000000090b5c4d7c510000090755042c61000009035a49ac6100000907589bfd710000090f5e506d91000
+        m_Entries: 009035317c0000000090b5c4d7c510000090755042c61000009035a49ac6100000907589bfd710000090f5e506d91000009075d9bcd91000

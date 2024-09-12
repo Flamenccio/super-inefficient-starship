@@ -7,6 +7,7 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class Grenade : WeaponSub
     {
+        public float GrenadeLifeTime { get => mainAttack.GetComponent<Flamenccio.Attack.Player.Grenade>().MaxLifetime; }
         protected override void Startup()
         {
             base.Startup();
