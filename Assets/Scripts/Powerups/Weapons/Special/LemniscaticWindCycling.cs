@@ -27,7 +27,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             base.Startup();
             Level = 1;
-            Rarity = PowerupRarity.Rare;
+            //Rarity = PowerupRarity.Rare;
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)

@@ -42,7 +42,7 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Rarity = PowerupRarity.Rare;
+            //Rarity = PowerupRarity.Rare;
             gameState = FindObjectOfType<GameState>();
             parryTimer = 0f;
             attackTags = TagManager.GetTagCollection(new List<Tag> { Tag.NeutralBullet, Tag.EnemyBullet, });

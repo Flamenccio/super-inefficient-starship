@@ -12,8 +12,8 @@ namespace Flamenccio.Powerup
     public enum PowerupRarity
     {
         Common,
-        Uncommon,
         Rare,
-        Legendary
+        Legendary,
+        Relic
     };
 }

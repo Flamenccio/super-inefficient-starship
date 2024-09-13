@@ -27,7 +27,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             base.Startup();
             Level = 1;
-            Rarity = PowerupRarity.Uncommon;
+            //Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;
         }
 
