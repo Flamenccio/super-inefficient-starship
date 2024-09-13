@@ -1064,6 +1064,10 @@ PrefabInstance:
       propertyPath: testLayers.m_Bits
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 7769961454879871531, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7819916859176104666, guid: 3e037ae0bab5b5e488ed985f3a59c2ca, type: 3}
       propertyPath: cam
       value: 

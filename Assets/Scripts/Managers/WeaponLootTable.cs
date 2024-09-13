@@ -41,6 +41,21 @@ namespace Flamenccio.DataHandling
         }
 
         /// <summary>
+        /// Returns a random weapon
+        /// </summary>
+        /// <param name="luck">Affects the chances of a higher-rarity weapon appearing</param>
+        /// <param name="exceptions">Removes excepted weapons from being chosen</param>
+        public GameObject GetRandomWeapon(float luck, List<GameObject> exceptions)
+        {
+            // TODO all weapons have an equal chance for now, fix this later
+            luck = Mathf.Clamp(luck, MIN_LUCK, MAX_LUCK);
+            var modifiedTable = weaponTable.Except(exceptions).ToList();
+            int pick = UnityEngine.Random.Range(0, modifiedTable.Count);
+
+            return modifiedTable[pick];
+        }
+
+        /// <summary>
         /// Gets the percent chance of a rarity appearing
         /// </summary>
         /// <param name="rarity">Rarity type</param>
