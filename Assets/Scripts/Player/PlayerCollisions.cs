@@ -48,6 +48,11 @@ namespace Flamenccio.Core.Player
             {
                 GameEventManager.OnHeartCollect(GameEventManager.CreateGameEvent(1f, transform));
             }
+
+            if (collision.CompareTag(GetTag(Tag.ItemBox)))
+            {
+                GameEventManager.OnItemBoxCollect(GameEventManager.CreateGameEvent(transform));
+            }
         }
 
         public void OnTriggerStay2D(Collider2D collision)
