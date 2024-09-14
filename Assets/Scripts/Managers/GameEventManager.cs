@@ -13,7 +13,8 @@ namespace Flamenccio.Core
     /// </summary>
     public struct GameEventInfo
     {
-        public float Value { get; set; }
+        public object Value { get; set; }
+        public object Value2 { get; set; }
 
         public Transform EventTriggerer
         {
@@ -54,6 +55,10 @@ namespace Flamenccio.Core
         /// VALUE represents enemy tier.
         /// </summary>
         public static Action<GameEventInfo> OnEnemySpawn { get; set; }
+
+        /// <summary>
+        /// No VALUE needed.
+        /// </summary>
         public static Action<GameEventInfo> OnEnemyHit { get; set; }
 
         /// <summary>
@@ -77,6 +82,11 @@ namespace Flamenccio.Core
         /// VALUE represents health replenished.
         /// </summary>
         public static Action<GameEventInfo> OnHeartCollect { get; set; }
+
+        /// <summary>
+        /// No VALUE needed.
+        /// </summary>
+        public static Action<GameEventInfo> OnItemBoxCollect { get; set; }
 
         /// <summary>
         /// VALUE represents the <b>next</b> level.
@@ -115,7 +125,7 @@ namespace Flamenccio.Core
         /// <param name="value">Depends on the event being triggered.</param>
         /// <param name="triggerer">The transform that triggered the event.</param>
         /// <returns>A new GameEventInfo struct.</returns>
-        public static GameEventInfo CreateGameEvent(float value, Transform triggerer)
+        public static GameEventInfo CreateGameEvent(object value, Transform triggerer)
         {
             return new()
             {
@@ -130,7 +140,7 @@ namespace Flamenccio.Core
         /// <param name="value">Depends on the event being triggered.</param>
         /// <param name="origin">The location where the event happened.</param>
         /// <returns>A new GameEventInfo struct.</returns>
-        public static GameEventInfo CreateGameEvent(float value, Vector2 origin)
+        public static GameEventInfo CreateGameEvent(object value, Vector2 origin)
         {
             return new()
             {

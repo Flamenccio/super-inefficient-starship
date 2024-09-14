@@ -5,6 +5,7 @@ using TMPro;
 using Flamenccio.Core;
 using UnityEngine.UI;
 using Flamenccio.Powerup;
+using System;
 
 namespace Flamenccio.HUD
 {
@@ -26,7 +27,7 @@ namespace Flamenccio.HUD
 
         private void Awake()
         {
-            GameEventManager.OnLevelUp += (x) => DisplayLevelUpText((int)x.Value);
+            GameEventManager.OnLevelUp += (x) => DisplayLevelUpText(Convert.ToInt32(x.Value));
             levelUpUIComponents.SetActive(false);
         }
 

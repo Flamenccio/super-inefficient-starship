@@ -67,10 +67,10 @@ namespace Flamenccio.Core
             spawnControl.SpawnStar();
 
             // subscribe to events
-            GameEventManager.OnStarCollect += (x) => CollectStar(Mathf.FloorToInt(x.Value));
-            GameEventManager.OnMiniStarCollect += (x) => CollectMiniStar(Mathf.FloorToInt(x.Value));
-            GameEventManager.OnPlayerHit += (x) => RemoveLife(Mathf.FloorToInt(x.Value));
-            GameEventManager.OnHeartCollect += (x) => ReplenishLife(Mathf.FloorToInt(x.Value));
+            GameEventManager.OnStarCollect += (x) => CollectStar(Mathf.FloorToInt((float)x.Value));
+            GameEventManager.OnMiniStarCollect += (x) => CollectMiniStar(Mathf.FloorToInt((float)x.Value));
+            GameEventManager.OnPlayerHit += (x) => RemoveLife(Mathf.FloorToInt((float)x.Value));
+            GameEventManager.OnHeartCollect += (x) => ReplenishLife(Mathf.FloorToInt((float)x.Value));
         }
 
         private void Awake()
