@@ -31,6 +31,8 @@ namespace Flamenccio.Localization
 
         public void FillDescription()
         {
+            if (objectDescription.Values.Count == 0) return;
+
             List<ObjectProperty> listCopy = new(propertyList.Properties); // copied to prevent altering the original list
             List<string> localVariables = new(objectDescription.Keys);
 
@@ -95,7 +97,7 @@ namespace Flamenccio.Localization
         /// <exception cref="Exception">There is no attached property list</exception>
         private void FindDataSource()
         {
-            if (propertyList == null)
+            if (propertyList == null && objectDescription.Count > 0)
             {
                 Debug.LogError("There is no attached propertyList!");
                 throw new Exception("No attached PropertyList");

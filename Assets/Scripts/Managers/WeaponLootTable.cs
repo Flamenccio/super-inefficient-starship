@@ -1,20 +1,22 @@
 using Flamenccio.Powerup;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace Flamenccio.DataHandling
 {
-    public class WeaponLootTable : MonoBehaviour
+    public class WeaponLootTable
     {
-        [SerializeField] private string weaponObjectPath;
+        private const string weaponObjectPath = "Prefabs/WeaponObjects";
         private const float MIN_LUCK = 0f;
         private const float MAX_LUCK = 100f;
         private List<GameObject> weaponTable = new();
 
-        private void Start()
+        /// <summary>
+        /// Automatically loads weapons
+        /// </summary>
+        public WeaponLootTable()
         {
             LoadWeapons();
         }

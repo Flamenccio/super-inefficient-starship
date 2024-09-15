@@ -2,6 +2,7 @@ using UnityEngine;
 using Flamenccio.HUD;
 using System.Collections.Generic;
 using System;
+using Flamenccio.Core;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -65,6 +66,8 @@ namespace Flamenccio.Powerup.Weapon
             if (!AddWeapon(defaultDefenseWeapon)) Debug.LogError("Conflicting weapon type!");
             if (!AddWeapon(defaultSpecialWeapon)) Debug.LogError("Conflicting weapon type!");
             if (!AddWeapon(defaultSubWeapon)) Debug.LogError("Conflicting weapon type!");
+
+            GameEventManager.EquipWeapon += (x) => AddWeapon(x.Value as GameObject);
         }
 
         private void Update()

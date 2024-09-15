@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a68e24b2534a0844a88b38c82d4b0b9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  propertyList: {fileID: 0}
+  propertyList: {fileID: 1640347960447658769}
   objectName:
     m_TableReference:
       m_TableCollectionName: GUID:746ffd358d8e22f4dadd12123cc1ea77

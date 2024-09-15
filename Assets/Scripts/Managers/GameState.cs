@@ -6,6 +6,10 @@ using Flamenccio.HUD;
 using Flamenccio.Effects.Visual;
 using Flamenccio.Effects;
 using UnityEngine.InputSystem;
+using Flamenccio.DataHandling;
+using System.Collections.Generic;
+using System;
+using Flamenccio.Utility;
 
 namespace Flamenccio.Core
 {
@@ -18,13 +22,11 @@ namespace Flamenccio.Core
 
         // parameters
         private int progress = 0;
-
         private int difficulty = 0;
         private int waveSpawnAmount = 1;
 
         // constants
         private const float MAX_TIME_INCREASE = 0.5f;
-
         private const float BASE_TIME = 10.0f;
         private const float INCREASE_WALL_FREQUENCY = 0.25f;
         private const float MAX_WALL_FREQUENCY = 1.0f;
@@ -41,7 +43,6 @@ namespace Flamenccio.Core
 
         // other necessary classes
         private Spawner spawnControl;
-
         private GameObject heart;
         [SerializeField] private GoalArrowControl goalArrow;
         [SerializeField] private PlayerAttributes playerAtt;
@@ -67,10 +68,16 @@ namespace Flamenccio.Core
             spawnControl.SpawnStar();
 
             // subscribe to events
-            GameEventManager.OnStarCollect += (x) => CollectStar(Mathf.FloorToInt((float)x.Value));
-            GameEventManager.OnMiniStarCollect += (x) => CollectMiniStar(Mathf.FloorToInt((float)x.Value));
-            GameEventManager.OnPlayerHit += (x) => RemoveLife(Mathf.FloorToInt((float)x.Value));
-            GameEventManager.OnHeartCollect += (x) => ReplenishLife(Mathf.FloorToInt((float)x.Value));
+            GameEventManager.OnStarCollect += (x) => CollectStar(Convert.ToInt32(x.Value));
+            GameEventManager.OnMiniStarCollect += (x) => CollectMiniStar(Convert.ToInt32(x.Value));
+            GameEventManager.OnPlayerHit += (x) => RemoveLife(Convert.ToInt32(x.Value));
+            GameEventManager.OnHeartCollect += (x) => ReplenishLife(Convert.ToInt32(x.Value));
+            GameEventManager.OnItemBoxCollect += (_) => CollectItemBox();
+            GameEventManager.EquipWeapon += (_) =>
+            {
+                InputManager.Instance.ChangeActionMap(InputManager.ControlActionMap.Game);
+                SetPauseState(false);
+            };
         }
 
         private void Awake()
@@ -229,7 +236,7 @@ namespace Flamenccio.Core
             if (wallTimer >= wallFrequency)
             {
                 wallTimer = 0.0f;
-                int wallLevel = (difficulty >= MIN_LEVEL_WALL_UPGRADE && Random.Range(0f, 1f) >= CHANCE_WALL_UPGRADE) ? 2 : 1;
+                int wallLevel = (difficulty >= MIN_LEVEL_WALL_UPGRADE && UnityEngine.Random.Range(0f, 1f) >= CHANCE_WALL_UPGRADE) ? 2 : 1;
 
                 for (int i = 0; i < difficulty + 1; i++)
                 {
@@ -251,7 +258,7 @@ namespace Flamenccio.Core
 
             if (kp > 0) kp = Mathf.FloorToInt(Mathf.Log(kp)); // kill point scaling
 
-            int r = Random.Range(0, 3); // spawns an additional 0 to 2 more enemies randomly
+            int r = UnityEngine.Random.Range(0, 3); // spawns an additional 0 to 2 more enemies randomly
             int enemies = waveSpawnAmount + kp + r; // total amount of enemies to spawn in this wave
 
             for (int i = 0; i < enemies; i++) // spawn a wave of enemies
@@ -281,6 +288,7 @@ namespace Flamenccio.Core
             Time.timeScale = 0.0f;
             yield return new WaitForSecondsRealtime(1.0f);
             GameEventManager.ClearAllEvents();
+            UIEventManager.ClearAllEvents();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }
 
@@ -288,17 +296,37 @@ namespace Flamenccio.Core
         {
             if (context.performed)
             {
-                if (Time.timeScale == 0.0f)
-                {
-                    Paused = false;
-                    Time.timeScale = 1.0f;
-                }
-                else
-                {
-                    Paused = true;
-                    Time.timeScale = 0f;
-                }
+                TogglePause();
             }
+        }
+
+        /// <summary>
+        /// Toggles pause function
+        /// </summary>
+        private void TogglePause()
+        {
+            SetPauseState(!Paused);
+        }
+
+        private void SetPauseState(bool pause)
+        {
+            Paused = pause;
+            Time.timeScale = Paused ? 0.0f : 1.0f; // TODO restore time scale before pause (instead of just 1)
+        }
+
+        private void CollectItemBox()
+        {
+            SetPauseState(true);
+            List<GameObject> randomWeapons = new();
+            WeaponLootTable weaponLoot = new();
+            
+            for (int i = 0; i < 3; i++)
+            {
+                randomWeapons.Add(weaponLoot.GetRandomWeapon(0f, randomWeapons));
+            }
+
+            InputManager.Instance.ChangeActionMap(InputManager.ControlActionMap.Menu);
+            UIEventManager.DisplayWeapons(UIEventManager.CreateUIMessage(randomWeapons, randomWeapons.GetType()));
         }
     }
 }

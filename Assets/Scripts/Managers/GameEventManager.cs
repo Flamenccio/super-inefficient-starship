@@ -114,6 +114,11 @@ namespace Flamenccio.Core
         public static Action<GameEventInfo> OnObjectDestroy { get; set; }
 
         /// <summary>
+        /// VALUE represents the game object of the equipping weapon
+        /// </summary>
+        public static Action<GameEventInfo> EquipWeapon { get; set; }
+
+        /// <summary>
         /// Called when control scheme is changed.
         /// Paramter is the new control scheme.
         /// </summary>

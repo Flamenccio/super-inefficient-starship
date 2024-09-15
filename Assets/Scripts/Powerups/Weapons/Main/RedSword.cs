@@ -29,6 +29,7 @@ namespace Flamenccio.Powerup.Weapon
             Level = 1;
             //Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;
+            //playerAtt.AddAmmo(playerAtt.MaxAmmo);
         }
 
         private void OnEnable()

@@ -215,7 +215,7 @@ namespace Flamenccio.Core.Player
         {
             switch (scheme)
             {
-                case InputManager.ControlScheme.XBOX:
+                case InputManager.ControlScheme.Gamepad:
                     dynamicAim = GamepadAim;
                     break;
 

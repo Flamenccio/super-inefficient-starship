@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponId: missilebarrage
-  cost1: 1
+  cost1: 5
   cooldown: 3
   aimAssisted: 0
   mainAttack: {fileID: 396614698618339171, guid: 8765dc317960bb346a90ff2342e7805c, type: 3}
@@ -131,16 +131,16 @@ MonoBehaviour:
     - rid: 7087253232774283274
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 4
     - rid: 7087253232774283275
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 6
     - rid: 7087253232774283276
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 1
     - rid: 7087253232774283277
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 1

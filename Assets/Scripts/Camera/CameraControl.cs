@@ -158,7 +158,7 @@ namespace Flamenccio.Core
                     UpdateCameraPosition = UpdateCameraPositionKBM;
                     break;
 
-                case InputManager.ControlScheme.XBOX:
+                case InputManager.ControlScheme.Gamepad:
                     cameraMoveSpeed = CAMERA_MOVE_SPEED_GAMEPAD;
                     UpdateCameraPosition = UpdateCameraPositionGamepad;
                     break;

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 70070448150687356}
   - component: {fileID: 70070448150687357}
   - component: {fileID: 70070448150687331}
+  - component: {fileID: 8745632811335636570}
   m_Layer: 5
   m_Name: flyingtext
   m_TagString: Untagged
@@ -148,3 +149,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c5059ed4863e814fa2d20126dd3200e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &8745632811335636570
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70070448150687359}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

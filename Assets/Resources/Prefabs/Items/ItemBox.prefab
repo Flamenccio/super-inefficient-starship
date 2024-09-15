@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6132600950844373332}
   - component: {fileID: 6132600950844373333}
   - component: {fileID: -2612584822851584758}
+  - component: {fileID: -8194874451911296493}
   m_Layer: 8
   m_Name: ItemBox
   m_TagString: ItemBox
@@ -123,6 +124,22 @@ MonoBehaviour:
   collectVfx: i_generic_collect
   spawnVfx: 
   collectSfx: 
+--- !u!58 &-8194874451911296493
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6132600950844373334}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1
 --- !u!1 &6132600951860481922
 GameObject:
   m_ObjectHideFlags: 0
