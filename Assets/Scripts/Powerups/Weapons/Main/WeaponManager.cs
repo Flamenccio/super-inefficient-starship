@@ -62,10 +62,10 @@ namespace Flamenccio.Powerup.Weapon
 
         private void Start()
         {
-            if (!AddWeapon(defaultMainWeapon)) Debug.LogError("Conflicting weapon type!");
-            if (!AddWeapon(defaultDefenseWeapon)) Debug.LogError("Conflicting weapon type!");
-            if (!AddWeapon(defaultSpecialWeapon)) Debug.LogError("Conflicting weapon type!");
-            if (!AddWeapon(defaultSubWeapon)) Debug.LogError("Conflicting weapon type!");
+            if (!AddWeapon(defaultMainWeapon)) Debug.LogWarning("Conflicting weapon type!");
+            if (!AddWeapon(defaultDefenseWeapon)) Debug.LogWarning("Conflicting weapon type!");
+            if (!AddWeapon(defaultSpecialWeapon)) Debug.LogWarning("Conflicting weapon type!");
+            if (!AddWeapon(defaultSubWeapon)) Debug.LogWarning("Conflicting weapon type!");
 
             GameEventManager.EquipWeapon += (x) => AddWeapon(x.Value as GameObject);
         }

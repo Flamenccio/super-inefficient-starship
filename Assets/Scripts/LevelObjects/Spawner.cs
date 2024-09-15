@@ -212,6 +212,14 @@ namespace Flamenccio.Core
             itemSpawner.SpawnItem("starshard", globalPosition, amount);
         }
 
+        public void SpawnItemBox()
+        {
+            var randomStage = levelManager.GetRandomStage();
+            var randomPosition = randomStage.GetGlobalPointInStage();
+
+            itemSpawner.SpawnItem("itembox", randomPosition);
+        }
+
         /// <summary>
         /// Takes a global position and returns it aligned with a grid.
         /// </summary>

@@ -10,6 +10,7 @@ using Flamenccio.DataHandling;
 using System.Collections.Generic;
 using System;
 using Flamenccio.Utility;
+using Unity.Mathematics;
 
 namespace Flamenccio.Core
 {
@@ -24,6 +25,7 @@ namespace Flamenccio.Core
         private int progress = 0;
         private int difficulty = 0;
         private int waveSpawnAmount = 1;
+        private float itemboxSpawnChance = ITEM_BOX_BASE_SPAWN_CHANCE;
 
         // constants
         private const float MAX_TIME_INCREASE = 0.5f;
@@ -34,6 +36,9 @@ namespace Flamenccio.Core
         private const float CHANCE_WALL_UPGRADE = 0.5f;
         private const int MIN_LEVEL_ENEMY_SPAWN = 1;
         private const int MIN_LEVEL_PORTAL_SPAWN = 6;
+        private const int ITEM_BOX_FIRST_LEVEL = 2; // item boxes are guaranteed to spawn here
+        private const float ITEM_BOX_BASE_SPAWN_CHANCE = 0.20f; // item boxes have a chance to spawn every level up
+        private const float ITEM_BOX_SPAWN_CHANCE_INCREASE = 0.10f;
 
         // timers
         private float maxTime = BASE_TIME;
@@ -155,6 +160,17 @@ namespace Flamenccio.Core
             }
 
             spawnControl.SpawnStage(); // spawn another stage
+
+            if (difficulty == ITEM_BOX_FIRST_LEVEL || UnityEngine.Random.Range(0f, 1f) < itemboxSpawnChance)
+            {
+                itemboxSpawnChance = ITEM_BOX_BASE_SPAWN_CHANCE;
+                spawnControl.SpawnItemBox();
+                // TODO make a banner that tells the playear about the item box + sfx
+            }
+            else
+            {
+                itemboxSpawnChance += ITEM_BOX_SPAWN_CHANCE_INCREASE;
+            }
 
             GameEventManager.OnLevelUp(GameEventManager.CreateGameEvent(difficulty, PlayerMotion.Instance.transform));
         }
