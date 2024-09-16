@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4050937865647289091}
   - component: {fileID: 4050937865647289103}
   - component: {fileID: 347042898502701286}
+  - component: {fileID: 8227026190940290714}
   m_Layer: 5
   m_Name: EnemyRadarArrow
   m_TagString: Untagged
@@ -60,6 +61,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisImage: {fileID: 5861926113831035807}
+--- !u!225 &8227026190940290714
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4050937865647289092}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &4979322539106367663
 GameObject:
   m_ObjectHideFlags: 0
