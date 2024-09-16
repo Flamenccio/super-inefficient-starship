@@ -145,8 +145,8 @@ namespace Flamenccio.Core
 
             UpdateCameraPosition?.Invoke();
 
-            Vector3 cameraNewPosition = new(target.position.x + cameraOffset.x, target.position.y + cameraOffset.y, gameObject.transform.position.z);
-            gameObject.transform.position = new(Mathf.Lerp(transform.position.x, cameraNewPosition.x, cameraMoveSpeed), Mathf.Lerp(transform.position.y, cameraNewPosition.y, cameraMoveSpeed), cameraNewPosition.z);
+            Vector3 cameraNewPosition = new(target.position.x + cameraOffset.x, target.position.y + cameraOffset.y, transform.position.z);
+            transform.position = new(Mathf.Lerp(transform.position.x, cameraNewPosition.x, cameraMoveSpeed), Mathf.Lerp(transform.position.y, cameraNewPosition.y, cameraMoveSpeed), cameraNewPosition.z);
         }
 
         private void UpdateControlScheme(InputManager.ControlScheme scheme)

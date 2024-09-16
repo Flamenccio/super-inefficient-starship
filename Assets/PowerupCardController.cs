@@ -2,10 +2,15 @@ using Flamenccio.Core;
 using Flamenccio.Effects;
 using Flamenccio.Localization;
 using Flamenccio.Powerup.Weapon;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 namespace Flamenccio.HUD
 {
@@ -18,6 +23,7 @@ namespace Flamenccio.HUD
 
         [SerializeField] private TMP_Text weaponName;
         [SerializeField] private TMP_Text weaponDescription;
+        [SerializeField] private TMP_Text weaponType;
 
         /// <summary>
         /// Tries to display a weapon object. If the given game object is not a weapon, returns with an error message.
@@ -40,7 +46,30 @@ namespace Flamenccio.HUD
             AssociatedWeapon = weapon;
             weaponName.text = objectDescription.GetObjectName().GetLocalizedString();
             weaponDescription.text = objectDescription.GetObjectDescription().GetLocalizedString();
+
+            // TODO temporary solution
+            if (weaponBase is WeaponDefense)
+            {
+                weaponType.text = LocalizationSettings.StringDatabase.GetLocalizedString("Misc", "misc.weapons.type.defense");
+            }
+            else if (weaponBase is WeaponMain)
+            {
+                weaponType.text = LocalizationSettings.StringDatabase.GetLocalizedString("Misc", "misc.weapons.type.main");
+            }
+            else if (weaponBase is WeaponSub)
+            {
+                weaponType.text= LocalizationSettings.StringDatabase.GetLocalizedString("Misc", "misc.weapons.type.sub");
+            }
+            else if (weaponBase is WeaponSpecial)
+            {
+                weaponType.text= LocalizationSettings.StringDatabase.GetLocalizedString("Misc", "misc.weapons.type.special");
+            }
+            else
+            {
+                Debug.LogError("Given weapon is not a weapon");
+            }
         }
+
 
         public void Clear()
         {
