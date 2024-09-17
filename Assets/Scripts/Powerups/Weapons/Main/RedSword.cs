@@ -42,7 +42,10 @@ namespace Flamenccio.Powerup.Weapon
 
         private void OnDestroy()
         {
-            buffManager.RemoveBuff(typeof(RedFrenzy));
+            if (!buffManager.RemoveBuff(typeof(RedFrenzy)))
+            {
+                Debug.LogWarning("failed to remove buff");
+            }
             GameEventManager.OnEnemyKill -= (_) => IncreaseKill();
             GameEventManager.OnPlayerHit -= (_) => ResetKill();
         }

@@ -91,6 +91,9 @@ namespace Flamenccio.Powerup.Buff
 
         public override void OnDestroy()
         {
+            // TODO this will not work
+            // try assigning the lambdas to a variable in OnCreate() and remove them here
+            Debug.Log("boom");
             base.OnDestroy();
             GameEventManager.OnPlayerHit -= (_) => Deactivate();
             GameEventManager.OnEnemyKill -= (_) => LevelUp();
@@ -114,6 +117,7 @@ namespace Flamenccio.Powerup.Buff
 
             if (Level > 0)
             {
+                // TODO localize please
                 FloatingTextManager.Instance.DisplayText("FRENZY LOST", PlayerMotion.Instance.PlayerPosition, Color.red, 1.0f, 30.0f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.Fade, true);
             }
 
