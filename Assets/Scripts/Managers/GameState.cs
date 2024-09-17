@@ -37,7 +37,7 @@ namespace Flamenccio.Core
         private const int MIN_LEVEL_ENEMY_SPAWN = 1;
         private const int MIN_LEVEL_PORTAL_SPAWN = 6;
         private const int ITEM_BOX_FIRST_LEVEL = 2; // item boxes are guaranteed to spawn here
-        private const float ITEM_BOX_BASE_SPAWN_CHANCE = 0.20f; // item boxes have a chance to spawn every level up
+        private const float ITEM_BOX_BASE_SPAWN_CHANCE = 0.10f; // item boxes have a chance to spawn every level up
         private const float ITEM_BOX_SPAWN_CHANCE_INCREASE = 0.10f;
 
         // timers
