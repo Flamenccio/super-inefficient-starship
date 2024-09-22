@@ -11,6 +11,11 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class WeaponManager : MonoBehaviour
     {
+        public WeaponMain EquippedMainWeapon { get => mainAttack; }
+        public WeaponSub EquippedSubWeapon { get => subAttack; }
+        public WeaponSpecial EquippedSpecialWeapon { get => specialAttack; }
+        public WeaponDefense EquippedDefenseWeapn { get => defenseAttack; }
+
         [SerializeField] private GameObject defaultMainWeapon;
         [SerializeField] private GameObject defaultDefenseWeapon;
         [SerializeField] private GameObject defaultSpecialWeapon;

@@ -15,7 +15,7 @@ namespace Flamenccio.Powerup.Buff
     /// </summary>
     public class BuffBase : IPowerup
     {
-        public string Name { get; protected set; }
+        public string WeaponID { get; protected set; }
 
         public int Level
         {

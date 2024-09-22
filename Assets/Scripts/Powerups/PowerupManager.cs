@@ -2,7 +2,7 @@ namespace Flamenccio.Powerup
 {
     public interface IPowerup
     {
-        string Name { get; }
+        string WeaponID { get; }
         int Level { get; }
         PowerupRarity Rarity { get; }
 

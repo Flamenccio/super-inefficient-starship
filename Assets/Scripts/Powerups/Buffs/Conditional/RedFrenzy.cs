@@ -36,7 +36,7 @@ namespace Flamenccio.Powerup.Buff
 
         protected override void OnCreate()
         {
-            Name = "Red Frenzy";
+            WeaponID = "Red Frenzy";
             static float SpeedBuff(int level) => level * MOVE_SPEED_BUFF;
             buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, SpeedBuff));
 

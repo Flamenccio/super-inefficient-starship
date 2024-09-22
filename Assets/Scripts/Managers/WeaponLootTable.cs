@@ -1,7 +1,9 @@
 using Flamenccio.Powerup;
+using Flamenccio.Powerup.Weapon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 namespace Flamenccio.DataHandling
@@ -49,9 +51,34 @@ namespace Flamenccio.DataHandling
         /// <param name="exceptions">Removes excepted weapons from being chosen</param>
         public GameObject GetRandomWeapon(float luck, List<GameObject> exceptions)
         {
-            // TODO all weapons have an equal chance for now, fix this later
-            luck = Mathf.Clamp(luck, MIN_LUCK, MAX_LUCK);
-            var modifiedTable = weaponTable.Except(exceptions).ToList();
+            // Convert list of GameObjects to list of WeaponBase
+            List<WeaponBase> weaponBaseExceptions = exceptions
+                .Select(x =>
+                {
+                    x.TryGetComponent<WeaponBase>(out var weaponbase);
+                    return weaponbase;
+                })
+                .Where(x => x != null)
+                .ToList();
+
+            // Create a temporary list of (WeaponBase, GameObject) tuple
+            var weaponBaseTable = weaponTable
+                .Select(x =>
+                {
+                    x.TryGetComponent<WeaponBase>(out var weaponBase);
+                    return new Tuple<WeaponBase, GameObject>(weaponBase, x);
+                })
+                .Where(x => x.Item1 != null)
+                .ToList();
+
+            // Remove weapons with the same WeaponId
+            var modifiedTable = weaponBaseTable
+                .Where(x =>
+                    !weaponBaseExceptions.Any(y => y.WeaponID.Equals(x.Item1.WeaponID)))
+                .Select(x => x.Item2)
+                .ToList();
+
+            // Finally, pick a random weapon
             int pick = UnityEngine.Random.Range(0, modifiedTable.Count);
 
             return modifiedTable[pick];

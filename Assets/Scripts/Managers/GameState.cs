@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System;
 using Flamenccio.Utility;
 using Unity.Mathematics;
+using Flamenccio.Powerup.Weapon;
+using System.Linq;
+using Unity.VisualScripting;
 
 namespace Flamenccio.Core
 {
@@ -332,13 +335,32 @@ namespace Flamenccio.Core
 
         private void CollectItemBox()
         {
+            WeaponManager weaponManager = PlayerMotion.Instance.gameObject.GetComponent<WeaponManager>();
+
+            List<WeaponBase> equippedWeapons = new()
+            {
+                weaponManager.EquippedMainWeapon,
+                weaponManager.EquippedSubWeapon,
+                weaponManager.EquippedSpecialWeapon,
+                weaponManager.EquippedDefenseWeapn,
+            };
+
+            List<GameObject> equippedWeaponObjects = equippedWeapons
+                .Where(x => x != null)
+                .Select(x => x.gameObject)
+                .ToList();
+
             SetPauseState(true);
             List<GameObject> randomWeapons = new();
             WeaponLootTable weaponLoot = new();
             
             for (int i = 0; i < 3; i++)
             {
-                randomWeapons.Add(weaponLoot.GetRandomWeapon(0f, randomWeapons));
+                // Get a random set of weapons except for the ones already equipped
+                // AND those already randomly selected
+                var newWeapon = weaponLoot.GetRandomWeapon(0f, equippedWeaponObjects);
+                equippedWeaponObjects.Add(newWeapon);
+                randomWeapons.Add(newWeapon);
             }
 
             InputManager.Instance.ChangeActionMap(InputManager.ControlActionMap.Menu);
