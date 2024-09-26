@@ -108,7 +108,7 @@ namespace Flamenccio.Powerup.Weapon
         {
             PlayerMotion.Instance.Move(-transform.right, 20f, PARRY_DURATION);
             CameraEffects.Instance.SlowMo(0.5f);
-            CameraEffects.Instance.Zoom(0.1f, 0.4f, -1f);
+            CameraEffects.Instance.Zoom(0.1f, 0.4f, -3f);
             AudioManager.Instance.PlayOneShot(reloadPerfectSfx, transform.position);
             EffectManager.Instance.SpawnEffect(reloadPerfectVfx, transform.position);
             int total = playerAtt.UseKillPoints();
