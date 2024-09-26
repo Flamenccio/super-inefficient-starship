@@ -1,3 +1,4 @@
+using Flamenccio.Attack;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -26,14 +27,29 @@ namespace Flamenccio.Components
             Alive = true;
         }
 
+        /// <summary>
+        /// Calculates damage from attack
+        /// </summary>
+        /// <param name="attack">Incoming attack</param>
+        public void Damage(Collider2D attack)
+        {
+            if (!attack.TryGetComponent<BulletControl>(out var bulletControl))
+            {
+                Debug.Log("no bullet control");
+                return;
+            }
+
+            Damage(bulletControl.PlayerDamage);
+        }
+
         public void Damage(int damage)
         {
             CurrentHP = Mathf.Clamp(CurrentHP - damage, -1, MaxHP);
 
             if (CurrentHP <= 0)
             {
-                Alive = false;
                 Death?.Invoke();
+                Alive = false;
             }
         }
     }

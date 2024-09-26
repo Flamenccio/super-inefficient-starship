@@ -13,7 +13,7 @@ namespace Flamenccio.Components
     public class EntityEventAnimator : MonoBehaviour
     {
         // This only works for sprite animation, since it's mainly controlled by flags
-        private Animator animator;
+        [SerializeField] private Animator animator;
 
         private List<AnimatorControllerParameter> animatorParameters = new();
         private IEnumerator currentAnimation;
@@ -21,7 +21,7 @@ namespace Flamenccio.Components
 
         private void Awake()
         {
-            if (!TryGetComponent<Animator>(out animator))
+            if (animator == null && !TryGetComponent<Animator>(out animator))
             {
                 Debug.LogError("No animator attached");
                 return;

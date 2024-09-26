@@ -1,7 +1,7 @@
 using Flamenccio.Components;
-using System.Collections;
-using System.Collections.Generic;
+using Flamenccio.Core;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Flamenccio.Enemy
 {
@@ -10,10 +10,21 @@ namespace Flamenccio.Enemy
     /// </summary>
     public class EnemyBehavior : MonoBehaviour, DistanceBehaviorCull.IDistanceDisable
     {
+        public UnityEvent AttackTelegraph;
         protected bool culled = false;
+        protected EnemyAttributes attributes;
+
+        // The length of the "blinking" effect before the enemy attacks
+        protected const float ATTACK_TELEGRAPH_DURATION = 0.25f;
 
         protected void Awake()
         {
+            if (!TryGetComponent<EnemyAttributes>(out attributes))
+            {
+                Debug.LogError("No attached EnemyAttributes");
+                return;
+            }
+
             OnSpawn();
         }
 
@@ -32,7 +43,14 @@ namespace Flamenccio.Enemy
         /// <summary>
         /// Called whenever enemy dies
         /// </summary>
-        public virtual void OnDeath() { }
+        public virtual void OnDeath()
+        {
+            if (!attributes.Alive) return;
+
+            Spawner.Instance.SpawnStarShard(transform.position, attributes.Loot);
+            GameEventManager.OnEnemyKill(GameEventManager.CreateGameEvent(transform.position));
+            Destroy(gameObject);
+        }
 
         /// <summary>
         /// Called under FixedUpdate()
