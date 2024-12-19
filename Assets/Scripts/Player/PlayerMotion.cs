@@ -15,7 +15,7 @@ namespace Flamenccio.Effects
         public static PlayerMotion Instance { get; private set; }
         public Vector2 PlayerPosition { get => transform.position; }
         public Transform PlayerTransform { get => transform; }
-        public Vector2 PlayerVelocity { get => rb.velocity; }
+        public Vector2 PlayerVelocity { get => rb.linearVelocity; }
         [SerializeField] private Rigidbody2D rb;
 
         private enum Restrictions
@@ -128,7 +128,7 @@ namespace Flamenccio.Effects
         {
             direction.Normalize();
             RestrictMovement(t);
-            rb.velocity = direction * speed;
+            rb.linearVelocity = direction * speed;
         }
 
         /// <summary>

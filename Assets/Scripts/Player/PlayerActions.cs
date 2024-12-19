@@ -200,13 +200,13 @@ namespace Flamenccio.Core.Player
         {
             if (input.MoveInputVector != Vector2.zero) // if the player is providing direcitonal input:
             {
-                Vector2 newVelocity = new((input.MoveInputVector.x * acceleration) + rb.velocity.x, (input.MoveInputVector.y * acceleration) + rb.velocity.y);
+                Vector2 newVelocity = new((input.MoveInputVector.x * acceleration) + rb.linearVelocity.x, (input.MoveInputVector.y * acceleration) + rb.linearVelocity.y);
                 newVelocity = Vector2.ClampMagnitude(newVelocity, playerAtt.MoveSpeed);
-                rb.velocity = newVelocity;
+                rb.linearVelocity = newVelocity;
             }
-            else if (rb.velocity.magnitude > 0f) // otherwise, if no directional input is given:
+            else if (rb.linearVelocity.magnitude > 0f) // otherwise, if no directional input is given:
             {
-                rb.velocity = new Vector2(rb.velocity.x - (rb.velocity.x * deceleration), rb.velocity.y - (rb.velocity.y * deceleration));
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x - (rb.linearVelocity.x * deceleration), rb.linearVelocity.y - (rb.linearVelocity.y * deceleration));
             }
         }
 

@@ -60,7 +60,7 @@ namespace Flamenccio.Attack
         {
             if (rb.bodyType != RigidbodyType2D.Static)
             {
-                rb.velocity = transform.right * moveSpeed;
+                rb.linearVelocity = transform.right * moveSpeed;
             }
 
             if (rotationIsStatic) rb.transform.rotation = Quaternion.identity;

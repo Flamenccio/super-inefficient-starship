@@ -20,7 +20,7 @@ namespace Flamenccio.Attack.Enemy
             {
                 AllAngle fireAngle = new()
                 {
-                    Vector = Vector2.Perpendicular(rb.velocity * direction)
+                    Vector = Vector2.Perpendicular(rb.linearVelocity * direction)
                 };
                 spawnTimer = 0.0f;
                 Instantiate(phantomBullet, transform.position, Quaternion.Euler(0f, 0f, fireAngle.Degree));

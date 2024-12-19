@@ -58,7 +58,7 @@ namespace Flamenccio.Effects.Visual
             {
                 float targetAngle = Mathf.Rad2Deg * Mathf.Atan2(target.position.y - transform.position.y, target.position.x - transform.position.x);
                 rb.rotation = Mathf.LerpAngle(rb.rotation, targetAngle, turnSpeed);
-                rb.velocity = transform.right * speed;
+                rb.linearVelocity = transform.right * speed;
             }
         }
 

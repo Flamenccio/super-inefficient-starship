@@ -8,7 +8,7 @@ namespace Flamenccio.Attack.Player
         {
             base.Launch();
             var i = EffectManager.Instance.SpawnTrail(TrailPool.Trails.SmokeTrail, transform.position).gameObject.GetComponent<SmokePuffControl>();
-            i.Launch(rb.velocity);
+            i.Launch(rb.linearVelocity);
         }
     }
 }

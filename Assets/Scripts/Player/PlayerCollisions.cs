@@ -38,7 +38,7 @@ namespace Flamenccio.Core.Player
             {
                 StartCoroutine(HurtInvuln());
                 BulletControl bullet = collision.GetComponent<BulletControl>();
-                Vector2 knockbackVector = CalculateKnockbackAngle(PlayerMotion.Instance.PlayerVelocity, collision.attachedRigidbody.velocity);
+                Vector2 knockbackVector = CalculateKnockbackAngle(PlayerMotion.Instance.PlayerVelocity, collision.attachedRigidbody.linearVelocity);
                 PlayerMotion.Instance.Knockback(knockbackVector, bullet.KnockbackMultiplier);
                 GameEventManager.OnPlayerHit(GameEventManager.CreateGameEvent(bullet.PlayerDamage, transform));
                 return;

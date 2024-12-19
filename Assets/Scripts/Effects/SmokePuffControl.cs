@@ -24,7 +24,7 @@ namespace Flamenccio.Effects.Visual
 
         public void Launch(Vector2 velocity)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.AddForce(velocity, ForceMode2D.Impulse);
         }
 

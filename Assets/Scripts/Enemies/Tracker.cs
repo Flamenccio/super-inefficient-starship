@@ -83,7 +83,7 @@ namespace Enemy
 
         private void WanderBehavior()
         {
-            rb.velocity = travelDirection.Vector.normalized * moveSpeed;
+            rb.linearVelocity = travelDirection.Vector.normalized * moveSpeed;
             faceDirection.Degree = travelDirection.Degree;
 
             if (behaviorTimer > 0f || behaviorState != EnemyState.Wander) return;
@@ -137,7 +137,7 @@ namespace Enemy
             behaviorTimer = CHASE_BEHAVIOR_TIMER_MAX;
             travelDirection.Vector = target.transform.position - transform.position;
             faceDirection.Degree = travelDirection.Degree;
-            rb.velocity = travelDirection.Vector.normalized * moveSpeed;
+            rb.linearVelocity = travelDirection.Vector.normalized * moveSpeed;
         }
 
         private void ChaseCheck()
@@ -181,7 +181,7 @@ namespace Enemy
         // Unlike other states, this one is run every frame.
         private void AttackBehavior()
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
 
             if (behaviorState != EnemyState.Attack || target == null) return;
 
