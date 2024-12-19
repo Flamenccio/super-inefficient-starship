@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponId: rocketshotgun
-  cost1: 1
+  cost1: 3
   cooldown: 0.7
   aimAssisted: 0
   mainAttack: {fileID: 6935910722787141603, guid: f466f050c720526419020135364982b3, type: 3}
@@ -101,15 +101,15 @@ MonoBehaviour:
     - rid: 7087253232774283290
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 3
     - rid: 7087253232774283291
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 3
     - rid: 7087253232774283292
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 1
 --- !u!114 &-2434935076295688872
 MonoBehaviour:
   m_ObjectHideFlags: 0

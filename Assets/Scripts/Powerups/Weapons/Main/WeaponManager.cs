@@ -2,6 +2,7 @@ using UnityEngine;
 using Flamenccio.HUD;
 using System.Collections.Generic;
 using System;
+using Flamenccio.Core;
 
 namespace Flamenccio.Powerup.Weapon
 {
@@ -10,6 +11,11 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class WeaponManager : MonoBehaviour
     {
+        public WeaponMain EquippedMainWeapon { get => mainAttack; }
+        public WeaponSub EquippedSubWeapon { get => subAttack; }
+        public WeaponSpecial EquippedSpecialWeapon { get => specialAttack; }
+        public WeaponDefense EquippedDefenseWeapn { get => defenseAttack; }
+
         [SerializeField] private GameObject defaultMainWeapon;
         [SerializeField] private GameObject defaultDefenseWeapon;
         [SerializeField] private GameObject defaultSpecialWeapon;
@@ -61,10 +67,12 @@ namespace Flamenccio.Powerup.Weapon
 
         private void Start()
         {
-            if (!AddWeapon(defaultMainWeapon)) Debug.LogError("Conflicting weapon type!");
-            if (!AddWeapon(defaultDefenseWeapon)) Debug.LogError("Conflicting weapon type!");
-            if (!AddWeapon(defaultSpecialWeapon)) Debug.LogError("Conflicting weapon type!");
-            if (!AddWeapon(defaultSubWeapon)) Debug.LogError("Conflicting weapon type!");
+            if (!AddWeapon(defaultMainWeapon)) Debug.LogWarning("Conflicting weapon type!");
+            if (!AddWeapon(defaultDefenseWeapon)) Debug.LogWarning("Conflicting weapon type!");
+            if (!AddWeapon(defaultSpecialWeapon)) Debug.LogWarning("Conflicting weapon type!");
+            if (!AddWeapon(defaultSubWeapon)) Debug.LogWarning("Conflicting weapon type!");
+
+            GameEventManager.EquipWeapon += (x) => AddWeapon(x.Value as GameObject);
         }
 
         private void Update()

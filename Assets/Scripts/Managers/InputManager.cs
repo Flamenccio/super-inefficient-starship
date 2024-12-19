@@ -1,4 +1,5 @@
 using Flamenccio.Core;
+using Flamenccio.Effects;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,14 +19,22 @@ namespace Flamenccio.Utility
         public float MoveInputRadians { get => moveInput.Radian; }
         public Vector2 MoveInputVector { get => moveInput.Vector; }
         public float MousePositionDistance { get; private set; }
+        [SerializeField] private PlayerInput inputMap;
         private AllAngle aimInput = new();
         private AllAngle moveInput = new();
         private bool startCalled = false;
+        private Transform playerTransform;
 
         public enum ControlScheme
         {
             KBM,
-            XBOX
+            Gamepad
+        };
+
+        public enum ControlActionMap
+        {
+            Game,
+            Menu
         };
 
         public ControlScheme CurrentScheme { get; private set; }
@@ -34,6 +43,7 @@ namespace Flamenccio.Utility
         {
             if (Instance != null && Instance != this)
             {
+                Debug.LogWarning("InputManager instance destroyed");
                 Destroy(this);
             }
             else
@@ -45,6 +55,7 @@ namespace Flamenccio.Utility
         private void Start()
         {
             startCalled = true;
+            playerTransform = PlayerMotion.Instance.PlayerTransform;
         }
 
         private void Update()
@@ -55,6 +66,23 @@ namespace Flamenccio.Utility
             }
         }
 
+
+        /// <summary>
+        /// Change the game's current action mapping
+        /// </summary>
+        public void ChangeActionMap(ControlActionMap newMap)
+        {
+            switch (newMap)
+            {
+                case ControlActionMap.Game:
+                    inputMap.SwitchCurrentActionMap("Game");
+                    return;
+                case ControlActionMap.Menu:
+                    inputMap.SwitchCurrentActionMap("Menu");
+                    return;
+            }
+        }
+
         public void OnControlSchemeChange(PlayerInput input)
         {
             UpdateControlScheme(input);
@@ -62,10 +90,10 @@ namespace Flamenccio.Utility
 
         private void UpdateControlScheme(PlayerInput input)
         {
-            if (input.currentControlScheme.Equals("XBOX"))
+            if (input.currentControlScheme.Equals("Gamepad"))
             {
                 MousePositionDistance = 100f;
-                CurrentScheme = ControlScheme.XBOX;
+                CurrentScheme = ControlScheme.Gamepad;
             }
             else if (input.currentControlScheme.Equals("KBM"))
             {
@@ -100,8 +128,8 @@ namespace Flamenccio.Utility
         private void MouseAim()
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            aimInput.Vector = (mousePos - (Vector2)transform.position).normalized;
-            MousePositionDistance = Vector2.Distance(transform.position, mousePos);
+            aimInput.Vector = (mousePos - (Vector2)playerTransform.position).normalized;
+            MousePositionDistance = Vector2.Distance(playerTransform.position, mousePos);
         }
     }
 }

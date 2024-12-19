@@ -7,7 +7,7 @@ namespace Flamenccio.Powerup.Buff
     {
         public HealthBoost()
         {
-            Name = "Health boost";
+            WeaponID = "Health boost";
             static float f(int level) =>  level;
             buffs.Add(new StatBuff(PlayerAttributes.Attribute.MaxHP, f));
         }

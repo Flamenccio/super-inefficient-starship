@@ -5,6 +5,7 @@ namespace Flamenccio.Utility
 {
     public enum Tag
     {
+        None,
         Player,
         Wall,
         Star,

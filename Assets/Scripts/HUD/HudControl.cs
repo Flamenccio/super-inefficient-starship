@@ -1,5 +1,6 @@
 using Flamenccio.Core;
 using Flamenccio.Powerup;
+using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 
@@ -23,13 +24,34 @@ namespace Flamenccio.HUD
         [SerializeField] private PlayerAttributes playerAtt;
         [SerializeField] private CrosshairAmmoController crosshairAmmo;
 
+        private bool hidden = false;
+
+        private void Start()
+        {
+            UIEventManager.DisplayWeapons += (_) => SetDisplayVisibility(false);
+            UIEventManager.DisplayGameHUD += () => SetDisplayVisibility(true);
+        }
+
         private void Update()
         {
             UpdateDisplays();
         }
 
+        private void SetDisplayVisibility(bool visible)
+        {
+            hidden = !visible;
+            scoreDisplay.enabled = visible;
+            timeDisplay.enabled = visible;
+            killPointsDisplay.enabled = visible;
+            progressDisplay.enabled = visible;
+            killPointBonusDisplay.enabled = visible;
+            hpDisplay.enabled = visible;
+        }
+
         private void UpdateDisplays()
         {
+            if (hidden) return;
+
             // update score and timers
             progressDisplay.text = $"{gState.Progress} / {gState.DifficultyCurve(gState.Level + 1)}";
             scoreDisplay.text = playerAtt.Ammo.ToString();

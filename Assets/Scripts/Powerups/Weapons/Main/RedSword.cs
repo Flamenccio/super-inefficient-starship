@@ -27,8 +27,9 @@ namespace Flamenccio.Powerup.Weapon
         {
             base.Startup();
             Level = 1;
-            Rarity = PowerupRarity.Uncommon;
+            //Rarity = PowerupRarity.Uncommon;
             cooldownTimer = 0f;
+            //playerAtt.AddAmmo(playerAtt.MaxAmmo);
         }
 
         private void OnEnable()
@@ -41,7 +42,10 @@ namespace Flamenccio.Powerup.Weapon
 
         private void OnDestroy()
         {
-            buffManager.RemoveBuff(typeof(RedFrenzy));
+            if (!buffManager.RemoveBuff(typeof(RedFrenzy)))
+            {
+                Debug.LogWarning("failed to remove buff");
+            }
             GameEventManager.OnEnemyKill -= (_) => IncreaseKill();
             GameEventManager.OnPlayerHit -= (_) => ResetKill();
         }

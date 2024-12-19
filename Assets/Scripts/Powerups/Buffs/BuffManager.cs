@@ -141,7 +141,7 @@ namespace Flamenccio.Powerup.Buff
         /// </summary>
         private int FindBuff(BuffBase b)
         {
-            return FindBuff(b.Name);
+            return FindBuff(b.WeaponID);
         }
 
         private int FindBuff(string buffName)
@@ -149,7 +149,7 @@ namespace Flamenccio.Powerup.Buff
             int i = 0;
             foreach (BuffBase bb in buffs)
             {
-                if (bb.Name.Equals(buffName))
+                if (bb.WeaponID.Equals(buffName))
                 {
                     return i;
                 }

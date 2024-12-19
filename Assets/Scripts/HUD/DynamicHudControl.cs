@@ -5,6 +5,7 @@ using TMPro;
 using Flamenccio.Core;
 using UnityEngine.UI;
 using Flamenccio.Powerup;
+using System;
 
 namespace Flamenccio.HUD
 {
@@ -26,7 +27,7 @@ namespace Flamenccio.HUD
 
         private void Awake()
         {
-            GameEventManager.OnLevelUp += (x) => DisplayLevelUpText((int)x.Value);
+            GameEventManager.OnLevelUp += (x) => DisplayLevelUpText(Convert.ToInt32(x.Value));
             levelUpUIComponents.SetActive(false);
         }
 
@@ -141,7 +142,7 @@ namespace Flamenccio.HUD
             for (int i = 0; i < amount; i++)
             {
                 Destroy(specialCharges[^(i + 1)]); // destroy last charge in list
-                specialCharges.RemoveAt(specialCharges.Count - i);
+                specialCharges.RemoveAt(Mathf.Clamp(specialCharges.Count - i, 0, 100));
             }
 
             float xOffset = amount * (SPECIAL_CHARGE_DISTANCE / 2f);

@@ -20,7 +20,7 @@ namespace Flamenccio.Powerup.Weapon
         protected override void Startup()
         {
             base.Startup();
-            Rarity = PowerupRarity.Common;
+            //Rarity = PowerupRarity.Common;
         }
 
         public override void Tap(float aimAngleDeg, float moveAngleDeg, Vector2 origin)

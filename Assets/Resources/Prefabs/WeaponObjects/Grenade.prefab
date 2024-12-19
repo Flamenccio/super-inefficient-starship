@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponId: grenade
-  cost1: 1
+  cost1: 3
   cooldown: 2
   aimAssisted: 0
   mainAttack: {fileID: 51615182096661947, guid: 0e534d63fd7d8a04a88d681df6d50841, type: 3}
@@ -122,12 +122,12 @@ MonoBehaviour:
     - rid: 7087253232774283268
       type: {class: FloatVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 1.5
     - rid: 7087253232774283269
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 1
     - rid: 7087253232774283270
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 1

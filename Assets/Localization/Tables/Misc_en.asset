@@ -22,6 +22,22 @@ MonoBehaviour:
     m_Localized: FRENZY LOST
     m_Metadata:
       m_Items: []
+  - m_Id: 8738208350572544
+    m_Localized: Main
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8738247365988352
+    m_Localized: Sub
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8738278961680384
+    m_Localized: Special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8738361761435648
+    m_Localized: Defense
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

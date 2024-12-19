@@ -7,7 +7,7 @@ namespace Flamenccio.Powerup.Buff
     {
         public MovementSpeed()
         {
-            Name = "Thruster Upgrade";
+            WeaponID = "Thruster Upgrade";
             Class = BuffClass.Agility;
             static float f1(int level) => level * 0.10f;
             buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, f1));

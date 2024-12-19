@@ -12,7 +12,7 @@ namespace Flamenccio.Powerup.Weapon
     /// </summary>
     public class WeaponBase : MonoBehaviour, IPowerup
     {
-        public string Name { get => weaponId; }
+        public string WeaponID { get => weaponId; }
         public int Level { get; protected set; }
         public PowerupRarity Rarity { get; protected set; }
         public WeaponType Type { get => weaponType; }

@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponId: redsword
-  cost1: 1
+  cost1: 5
   cooldown: 0.16666667
   aimAssisted: 0
   mainAttack: {fileID: 4987484921250193485, guid: 8ebe98b6deb844546855cec568b0162c, type: 3}
@@ -95,7 +95,7 @@ MonoBehaviour:
     - name: damage_2
       variable:
         rid: 7087253232774283283
-    - name: cost_1
+    - name: cost_2
       variable:
         rid: 7087253232774283284
     - name: frenzy_buff
@@ -107,15 +107,15 @@ MonoBehaviour:
     - rid: 7087253232774283281
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 2
     - rid: 7087253232774283282
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 1
     - rid: 7087253232774283283
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:
-        m_Value: 0
+        m_Value: 1
     - rid: 7087253232774283284
       type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
       data:

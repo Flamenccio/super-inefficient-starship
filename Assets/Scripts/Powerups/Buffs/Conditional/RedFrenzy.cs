@@ -22,6 +22,11 @@ namespace Flamenccio.Powerup.Buff
         private const int LOSS_AMMO_DEDUCTION = 10;
         private const float MOVE_SPEED_BUFF = 0.02f;
 
+        // workarounds
+        private Action<GameEventInfo> deactivateBuff;
+        private Action<GameEventInfo> levelUpBuff;
+        private Action<GameEventInfo> showLevelText;
+
         public RedFrenzy(PlayerAttributes p, Action<List<PlayerAttributes.Attribute>> a)
         {
             levelBuff = a;
@@ -31,13 +36,20 @@ namespace Flamenccio.Powerup.Buff
 
         protected override void OnCreate()
         {
-            Name = "Red Frenzy";
+            WeaponID = "Red Frenzy";
             static float SpeedBuff(int level) => level * MOVE_SPEED_BUFF;
             buffs.Add(new StatBuff(PlayerAttributes.Attribute.MoveSpeed, SpeedBuff));
-            GameEventManager.OnPlayerHit += (_) => Deactivate();
-            GameEventManager.OnEnemyKill += (_) => LevelUp();
-            GameEventManager.OnEnemyKill += (x) => ShowLevelText(x.EventOrigin);
-            attributes.AddAmmo(attributes.MaxAmmo);
+
+            // set Actions to methods
+            // this is a workaround to remove lambda expressions from Actions
+            deactivateBuff = (_) => Deactivate();
+            levelUpBuff = (_) => LevelUp();
+            showLevelText = (x) => ShowLevelText(x.EventOrigin);
+
+            GameEventManager.OnPlayerHit += deactivateBuff;
+            GameEventManager.OnEnemyKill += levelUpBuff;
+            GameEventManager.OnEnemyKill += showLevelText;
+            attributes.AddAmmo(attributes.MaxAmmo); // TODO breaks when scene is reloaded: attributes is null
             localAmmoCostModifier = attributes.AddLocalAmmoCostModifier(PlayerAttributes.AmmoUsage.MainTap, false);
         }
 
@@ -92,9 +104,9 @@ namespace Flamenccio.Powerup.Buff
         public override void OnDestroy()
         {
             base.OnDestroy();
-            GameEventManager.OnPlayerHit -= (_) => Deactivate();
-            GameEventManager.OnEnemyKill -= (_) => LevelUp();
-            GameEventManager.OnEnemyKill -= (x) => ShowLevelText(x.EventOrigin);
+            GameEventManager.OnPlayerHit -= deactivateBuff;
+            GameEventManager.OnEnemyKill -= levelUpBuff;
+            GameEventManager.OnEnemyKill -= showLevelText;
             attributes.RemoveLocalAmmoCostModifier(localAmmoCostModifier);
         }
 
@@ -114,6 +126,7 @@ namespace Flamenccio.Powerup.Buff
 
             if (Level > 0)
             {
+                // TODO localize please
                 FloatingTextManager.Instance.DisplayText("FRENZY LOST", PlayerMotion.Instance.PlayerPosition, Color.red, 1.0f, 30.0f, FloatingTextControl.TextAnimation.ZoomOut, FloatingTextControl.TextAnimation.Fade, true);
             }
 

@@ -19,6 +19,22 @@ MonoBehaviour:
     m_Key: misc.flytext.frenzylost
     m_Metadata:
       m_Items: []
+  - m_Id: 8738208350572544
+    m_Key: misc.weapons.type.main
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8738247365988352
+    m_Key: misc.weapons.type.sub
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8738278961680384
+    m_Key: misc.weapons.type.special
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8738361761435648
+    m_Key: misc.weapons.type.defense
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

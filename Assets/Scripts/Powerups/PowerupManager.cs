@@ -2,7 +2,7 @@ namespace Flamenccio.Powerup
 {
     public interface IPowerup
     {
-        string Name { get; }
+        string WeaponID { get; }
         int Level { get; }
         PowerupRarity Rarity { get; }
 
@@ -12,8 +12,8 @@ namespace Flamenccio.Powerup
     public enum PowerupRarity
     {
         Common,
-        Uncommon,
         Rare,
-        Legendary
+        Legendary,
+        Relic
     };
 }

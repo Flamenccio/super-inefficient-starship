@@ -107,12 +107,20 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 7601902157402112
     m_Localized: "[TAP] Fires {missile_min} homing missiles.\n[HOLD] Loads an additional
-      missile. On release, fires all missiles; up to {max_missiles}.\nMissiles will
+      missile. On release, fires all missiles; up to {missile_max}.\nMissiles will
       lock on to targets in front of you. When locked on, missiles ignore wall collision.\n 
       > Damage (per missile): {damage_1}\n  > Cost: {cost_1}"
     m_Metadata:
       m_Items:
       - rid: 7087253052275818498
+  - m_Id: 8319131270352896
+    m_Localized: Dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8319170843611136
+    m_Localized: Quickly move a set distance.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
