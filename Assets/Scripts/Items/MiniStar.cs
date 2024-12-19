@@ -29,9 +29,9 @@ namespace Flamenccio.Item
 
         protected override void ConstantEffect()
         {
-            if (rb.velocity.magnitude > 0f)
+            if (rb.linearVelocity.magnitude > 0f)
             {
-                rb.velocity = new Vector2(rb.velocity.x - (rb.velocity.x * DECELERATION), rb.velocity.y - (rb.velocity.y * DECELERATION));
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x - (rb.linearVelocity.x * DECELERATION), rb.linearVelocity.y - (rb.linearVelocity.y * DECELERATION));
             }
         }
 
@@ -40,7 +40,7 @@ namespace Flamenccio.Item
             if (collider.gameObject.CompareTag(TagManager.GetTag(Tag.InvisibleWall)) 
                 || collider.gameObject.CompareTag(TagManager.GetTag(Tag.PrimaryWall)))
             {
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
             }
         }
 
@@ -49,7 +49,7 @@ namespace Flamenccio.Item
             if (collision.gameObject.CompareTag(TagManager.GetTag(Tag.InvisibleWall))
                 || collision.gameObject.CompareTag(TagManager.GetTag(Tag.PrimaryWall)))
             {
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
             }
         }
     }

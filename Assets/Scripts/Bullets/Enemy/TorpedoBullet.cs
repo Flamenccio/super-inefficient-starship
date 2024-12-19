@@ -43,7 +43,7 @@ namespace Flamenccio.Attack.Enemy
             if (player == null)
             {
                 // search for the player nearby
-                rb.rotation = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+                rb.rotation = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;
                 Collider2D search = Physics2D.OverlapCircle(transform.position, SEARCH_RADIUS, playerLayer);
 
                 if (search != null) player = search.gameObject;
@@ -56,7 +56,7 @@ namespace Flamenccio.Attack.Enemy
                     Vector = new Vector2(player.transform.position.x - transform.position.x, player.transform.position.y - transform.position.y)
                 };
                 rb.rotation = Mathf.LerpAngle(rb.rotation, toPlayer.Degree, TURN_SPEED);
-                rb.velocity = transform.right * moveSpeed;
+                rb.linearVelocity = transform.right * moveSpeed;
             }
         }
 

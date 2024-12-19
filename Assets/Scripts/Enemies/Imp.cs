@@ -43,7 +43,7 @@ namespace Enemy
             float xDiff = player.position.x - transform.position.x;
             float faceAngle = Mathf.LerpAngle(transform.rotation.eulerAngles.z, Mathf.Atan2(yDiff, xDiff) * Mathf.Rad2Deg, TURNING_SPEED);
             transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, faceAngle));
-            rb.velocity = new Vector2(transform.right.x * moveSpeed, transform.right.y * moveSpeed);
+            rb.linearVelocity = new Vector2(transform.right.x * moveSpeed, transform.right.y * moveSpeed);
         }
 
         public void Enrage()

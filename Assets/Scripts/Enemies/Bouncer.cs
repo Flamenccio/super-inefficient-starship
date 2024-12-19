@@ -25,7 +25,7 @@ namespace Enemy
 
         protected override void Behavior()
         {
-            rb.velocity = travelDirection * moveSpeed;
+            rb.linearVelocity = travelDirection * moveSpeed;
             TravelRay();
             base.Behavior();
         }

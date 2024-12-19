@@ -19,7 +19,7 @@ namespace Flamenccio.Effects.Visual
         {
             this.origin = origin;
             travelDirection = (destination - origin).normalized;
-            rb.velocity = travelDirection * SPEED;
+            rb.linearVelocity = travelDirection * SPEED;
         }
     }
 }

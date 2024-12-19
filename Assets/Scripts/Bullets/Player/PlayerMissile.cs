@@ -58,7 +58,7 @@ namespace Flamenccio.Attack.Player
                 Vector = target.position - transform.position,
             };
             rb.rotation = Mathf.LerpAngle(rb.rotation, angle.Degree, turningSpeed);
-            rb.velocity = transform.right * moveSpeed;
+            rb.linearVelocity = transform.right * moveSpeed;
             turningSpeed = Mathf.Clamp01(turningSpeed + Time.deltaTime);
         }
 
