@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: Localization-String-Tables-English (en)
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-English (en)
-  m_Data:
-    m_SerializedData: []
   m_GUID: ab817c9928c2e8c429ebb4df4ac20e53
   m_SerializeEntries:
   - m_GUID: bba182b3757c6c841988e26637f2a0f4
@@ -23,24 +21,28 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en
     - Preload
-  - m_GUID: fe3b8d0f26e38f942a94adf98b82dbb6
-    m_Address: Weapons_en
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-en
-    - Preload
-  - m_GUID: f6621251a8fcf1347a6659db74bf8d4c
-    m_Address: Powerups_en
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-en
-    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc0a5bba7a8749749b1d7c38de9b4784
     m_Address: Misc_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6621251a8fcf1347a6659db74bf8d4c
+    m_Address: Powerups_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe3b8d0f26e38f942a94adf98b82dbb6
+    m_Address: Weapons_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 5a5497b6581a3154f951a23bc53f6473, type: 2}
   m_SchemaSet:

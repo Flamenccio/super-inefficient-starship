@@ -13,26 +13,28 @@ MonoBehaviour:
   m_Name: Localization-Assets-Shared
   m_EditorClassIdentifier: 
   m_GroupName: Localization-Assets-Shared
-  m_Data:
-    m_SerializedData: []
   m_GUID: 7c834e0f46aa3f64fb5279319fc9f6ce
   m_SerializeEntries:
-  - m_GUID: a251eecac4d91594e8e03369dbb95294
-    m_Address: Assets/Localization/Tables/HUD Shared Data.asset
-    m_ReadOnly: 1
-    m_SerializedLabels: []
-  - m_GUID: 746ffd358d8e22f4dadd12123cc1ea77
-    m_Address: Assets/Localization/Tables/Weapons Shared Data.asset
-    m_ReadOnly: 1
-    m_SerializedLabels: []
-  - m_GUID: cc843317e6bec064da9b2d9ea5da55ef
-    m_Address: Assets/Localization/Tables/Powerups Shared Data.asset
-    m_ReadOnly: 1
-    m_SerializedLabels: []
   - m_GUID: 3938719b28041a845a9e1d9e2a0c28e3
     m_Address: Assets/Localization/Tables/Misc Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 746ffd358d8e22f4dadd12123cc1ea77
+    m_Address: Assets/Localization/Tables/Weapons Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a251eecac4d91594e8e03369dbb95294
+    m_Address: Assets/Localization/Tables/HUD Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc843317e6bec064da9b2d9ea5da55ef
+    m_Address: Assets/Localization/Tables/Powerups Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 5a5497b6581a3154f951a23bc53f6473, type: 2}
   m_SchemaSet:

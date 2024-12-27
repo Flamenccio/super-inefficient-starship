@@ -8,7 +8,6 @@ namespace Flamenccio.Enemy
     {
         public int Tier { get => tier; }
         public int Loot { get => loot; }
-        public List<GameObject> Attacks = new();
         [SerializeField] protected int tier;
         [SerializeField] protected int loot;
     }
