@@ -225,8 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distanceThreshold: 20
-  scripts:
-  - {fileID: 2769378630644200490}
+  scripts: []
 --- !u!114 &7455411481360575807
 MonoBehaviour:
   m_ObjectHideFlags: 0
