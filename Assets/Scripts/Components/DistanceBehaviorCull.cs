@@ -1,3 +1,4 @@
+using Flamenccio.Effects;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,6 +20,11 @@ namespace Flamenccio.Components
         private bool scriptsEnabled = true;
         [Tooltip("Methods that will be invoked when this GameObject is too far from player.")] public UnityEvent OnDistanceDisable;
         [Tooltip("Methods that will be invoked when this GameObject returns to working distance from player.")] public UnityEvent OnDistanceEnable;
+
+        private void Start()
+        {
+            player = PlayerMotion.Instance.PlayerTransform;
+        }
         
         private void Update()
         {
