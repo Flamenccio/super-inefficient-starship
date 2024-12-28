@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5212334320166749361}
   - component: {fileID: 2476110882302739471}
   - component: {fileID: -6759107143658499248}
+  - component: {fileID: 173709709697153046}
   m_Layer: 6
   m_Name: TrackingTurret
   m_TagString: Enemy
@@ -87,15 +88,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d268a6ac2ad67b4285b6da26dcf37b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 2
-  loot: 3
-  tier: 3
-  moveSpeed: 0
-  spriteRen: {fileID: 8314071820538327257}
-  animator: {fileID: 6743287909538618003}
-  enemyBullet: {fileID: 4787159891083559322, guid: e6829f2a81430cc49a9b8219c8195416, type: 3}
-  searchRadius: 15
-  fireRate: 1
+  AttackTelegraph:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &3297321879875336315
 Rigidbody2D:
   serializedVersion: 5
@@ -136,8 +131,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distanceThreshold: 20
-  scripts:
-  - {fileID: 972426940777397615}
+  OnDistanceDisable:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -6759107143658499248}
+        m_TargetAssemblyTypeName: Flamenccio.Enemy.EnemyBehavior, Assembly-CSharp
+        m_MethodName: Disable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDistanceEnable:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -6759107143658499248}
+        m_TargetAssemblyTypeName: Flamenccio.Enemy.EnemyBehavior, Assembly-CSharp
+        m_MethodName: Enable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5212334320166749361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +175,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Death:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -6759107143658499248}
+        m_TargetAssemblyTypeName: Flamenccio.Enemy.EnemyBehavior, Assembly-CSharp
+        m_MethodName: OnDeath
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   maxHP: 2
   tier: 3
   loot: 3
@@ -172,7 +207,19 @@ MonoBehaviour:
   triggerEvents:
   - Collision:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 5212334320166749361}
+          m_TargetAssemblyTypeName: Flamenccio.Components.EntityAttributes, Assembly-CSharp
+          m_MethodName: Damage
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     Tag: PBullet
 --- !u!114 &-6759107143658499248
 MonoBehaviour:
@@ -186,6 +233,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8624a6742424322e78ac6a66d9be82b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AttackTelegraph:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 173709709697153046}
+        m_TargetAssemblyTypeName: Flamenccio.Components.EntityEventAnimator, Assembly-CSharp
+        m_MethodName: PlayAnimationTemporarily
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: fc213db94b3dbfd49aaaabac5d71bd80, type: 2}
+          m_ObjectArgumentAssemblyTypeName: Flamenccio.Effects.Visual.TemporalAnimationInfo,
+            Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  fireRate: 1.5
+  range: 20
+  bullet: {fileID: 4787159891083559322, guid: e6829f2a81430cc49a9b8219c8195416, type: 3}
+--- !u!114 &173709709697153046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065507533629051066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18fb9723d9a21da48b9879681a0ea8e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 6743287909538618003}
 --- !u!1 &7078871115011122033
 GameObject:
   m_ObjectHideFlags: 0
