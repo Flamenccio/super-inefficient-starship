@@ -1,7 +1,5 @@
-using Flamenccio.Effects;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Flamenccio.Components
 {
@@ -17,44 +15,24 @@ namespace Flamenccio.Components
         }
 
         [SerializeField] private float distanceThreshold = 20f; // 20 is default distance.
-        [SerializeField, Tooltip("Monobehaviour components placed here must implement the IDistanceDisable interface.")] private List<MonoBehaviour> scripts = new();
         private Transform player;
         private bool scriptsEnabled = true;
-
-        private void Awake()
-        {
-            scripts = FilterScriptList(scripts);
-        }
-
-        private void Start()
-        {
-            player = PlayerMotion.Instance.PlayerTransform;
-        }
-
+        [Tooltip("Methods that will be invoked when this GameObject is too far from player.")] public UnityEvent OnDistanceDisable;
+        [Tooltip("Methods that will be invoked when this GameObject returns to working distance from player.")] public UnityEvent OnDistanceEnable;
+        
         private void Update()
         {
             if (Vector2.Distance(transform.position, player.position) > distanceThreshold)
             {
-                EnableScripts(false);
+                SetScriptsActive(false);
             }
             else
             {
-                EnableScripts(true);
+                SetScriptsActive(true);
             }
         }
 
-        /// <summary>
-        /// Filters a given list of MonoBehaviours.
-        /// </summary>
-        /// <returns>A list of MonoBehaviours that implement the IDistanceDisable interface.</returns>
-        private List<MonoBehaviour> FilterScriptList(List<MonoBehaviour> scriptList)
-        {
-            return scriptList
-                .Where(script => script is IDistanceDisable)
-                .ToList();
-        }
-
-        private void EnableScripts(bool enable)
+        private void SetScriptsActive(bool enable)
         {
             if (scriptsEnabled == enable) return;
 
@@ -62,17 +40,11 @@ namespace Flamenccio.Components
 
             if (enable)
             {
-                foreach (var script in scripts)
-                {
-                    (script as IDistanceDisable).Enable();
-                }
+                OnDistanceEnable?.Invoke();
             }
             else
             {
-                foreach (var script in scripts)
-                {
-                    (script as IDistanceDisable).Disable();
-                }
+                OnDistanceDisable?.Invoke();
             }
         }
     }
