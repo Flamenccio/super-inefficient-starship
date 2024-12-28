@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1065507533629051068}
   - component: {fileID: 324416880175892521}
-  - component: {fileID: 972426940777397615}
   - component: {fileID: 3297321879875336315}
   - component: {fileID: -1693050331800171703}
   - component: {fileID: 5212334320166749361}
@@ -76,21 +75,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &972426940777397615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1065507533629051066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d268a6ac2ad67b4285b6da26dcf37b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AttackTelegraph:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!50 &3297321879875336315
 Rigidbody2D:
   serializedVersion: 5
@@ -180,6 +164,21 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Flamenccio.Enemy.EnemyBehavior, Assembly-CSharp
         m_MethodName: OnDeath
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDamage:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -6759107143658499248}
+        m_TargetAssemblyTypeName: Flamenccio.Enemy.EnemyBehavior, Assembly-CSharp
+        m_MethodName: OnDamage
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

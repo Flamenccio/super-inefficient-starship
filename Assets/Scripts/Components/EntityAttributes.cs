@@ -10,7 +10,10 @@ namespace Flamenccio.Components
     /// </summary>
     public class EntityAttributes : MonoBehaviour
     {
-        [Tooltip("What should be notified when this Enemy dies?")] public UnityEvent Death;
+        [Tooltip("Invokes upon dying.")] public UnityEvent Death;
+
+        [Tooltip("Invokes upon taking damage (but NOT dying). Passes in damage taken.")]
+        public UnityEvent<int> OnDamage;
         public int CurrentHP { get; private set; }
         public int MaxHP { get => maxHP; }
         public bool Alive { get; private set; }
@@ -50,7 +53,10 @@ namespace Flamenccio.Components
             {
                 Death?.Invoke();
                 Alive = false;
+                return;
             }
+            
+            OnDamage?.Invoke(damage);
         }
     }
 }

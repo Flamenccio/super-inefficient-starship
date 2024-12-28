@@ -52,6 +52,12 @@ namespace Flamenccio.Enemy
             Destroy(gameObject);
         }
 
+        public virtual void OnDamage(int damage)
+        {
+            // Play hit effect when hit
+            GameEventManager.OnEnemyHit.Invoke(GameEventManager.CreateGameEvent(transform.position));
+        }
+
         /// <summary>
         /// Called under FixedUpdate()
         /// </summary>
