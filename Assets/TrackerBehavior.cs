@@ -1,11 +1,10 @@
 using UnityEngine;
 using Flamenccio.Utility;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Flamenccio.Core.Player;
 using Flamenccio.Objects;
 using Flamenccio.Utility.Timer;
+using Flamenccio.Utility;
 
 namespace Flamenccio.Enemy
 {
@@ -81,15 +80,11 @@ namespace Flamenccio.Enemy
 
         private void Attack(Vector2 position)
         {
+            // TODO spawn bullet
         }
 
         #region States
         #region Wander state
-        private void WanderState()
-        {
-            WanderCheck();
-            WanderBehavior();
-        }
 
         private void WanderBehavior()
         {
@@ -112,7 +107,7 @@ namespace Flamenccio.Enemy
                 travelDirection.Degree = random + CorrectPath(obstacle.normal, travelDirection.Vector);
             }
 
-            var track = SearchForGameObjectsWithTag(playerTrackTags, true, RADAR_RADIUS, playerLayer | footprintLayer, invisWallLayer);
+            var track = EntityScanner.SearchForNearestGameObjectsWithTag(playerTrackTags, transform.position, true, RADAR_RADIUS, footprintLayer, invisWallLayer);
 
             // If no tracks found, return
             if (!track) return;
@@ -135,11 +130,6 @@ namespace Flamenccio.Enemy
         #endregion
 
         #region Chase state
-        private void ChaseState()
-        {
-            ChaseCheck();
-            ChaseBehavior();
-        }
 
         private void ChaseBehavior()
         {
@@ -153,7 +143,7 @@ namespace Flamenccio.Enemy
 
         private void ChaseCheck()
         {
-            GameObject playerScan = SearchForGameObjectsWithTag( true, attackRange, playerLayer, invisWallLayer, TagManager.GetTag(Tag.Player));
+            GameObject playerScan = EntityScanner.SearchForNearestGameObjectsWithTag(transform.position, true, attackRange, playerLayer, invisWallLayer, TagManager.GetTag(Tag.Player));
 
             if (playerScan)
             {
@@ -183,11 +173,6 @@ namespace Flamenccio.Enemy
         #endregion
 
         #region Attack state
-        private void AttackState()
-        {
-            AttackCheck();
-            AttackBehavior();
-        }
 
         // Unlike other states, this one is run every frame.
         private void AttackBehavior()
@@ -212,7 +197,7 @@ namespace Flamenccio.Enemy
 
             float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
 
-            if (!IsInLineOfSight(transform, target.transform, attackRange, invisWallLayer, playerLayer)
+            if (!EntityScanner.IsInLineOfSight(transform.position, target.transform.position, attackRange, invisWallLayer, playerLayer)
                 || distanceToPlayer > attackRange)
             {
                 target = SearchFootprint();
@@ -244,75 +229,13 @@ namespace Flamenccio.Enemy
             }
         }
 
-        /// <summary>
-        /// Returns a nearby GameObject with given tag.
-        /// </summary>
-        /// <param name="tags">The possible tags that valid GameObjects can have.</param>
-        /// <param name="inLineOfSight">Do these GameObjects have to be within line of sight?</param>
-        /// <param name="searchRadius">How far to search.</param>
-        /// <param name="obstructingLayers">The layers that may obstruct line of sight.</param>
-        /// <param name="targetLayers">The layers where the target GameObjects reside.</param>
-        /// <returns>A GameObject. Null if there are no such GameObjects.</returns>
-        private GameObject SearchForGameObjectsWithTag(List<string> tags, bool inLineOfSight, float searchRadius, LayerMask targetLayers, LayerMask obstructingLayers)
-        {
-            List<Collider2D> playerTracks = new(Physics2D.OverlapCircleAll(transform.position, searchRadius, targetLayers));
-
-            return playerTracks
-                .ConvertAll(a => a.gameObject)
-                .Find(x =>
-                {
-                    float distanceToTrack = Vector2.Distance(transform.position, x.transform.position);
-                    bool tagMatch = tags.Contains(x.tag);
-                    bool isInLineOfSight = IsInLineOfSight(transform, x.transform, distanceToTrack, obstructingLayers, targetLayers);
-
-                    return tagMatch && (!inLineOfSight || isInLineOfSight);
-                });
-        }
-
-        /// <summary>
-        /// Returns a nearby GameObject with given tag.
-        /// </summary>
-        /// <param name="tags">The possible tags that valid GameObjects can have.</param>
-        /// <param name="inLineOfSight">Do these GameObjects have to be within line of sight?</param>
-        /// <param name="searchRadius">How far to search.</param>
-        /// <param name="obstructingLayers">The layers that may obstruct line of sight.</param>
-        /// <param name="targetLayers">The layers where the target GameObjects reside.</param>
-        /// <returns>A GameObject. Null if there are no such GameObjects.</returns>
-        private GameObject SearchForGameObjectsWithTag(bool inLineOfSight, float searchRadius, LayerMask targetLayers, LayerMask obstructingLayers, params string[] tags)
-        {
-            var tagList = tags.ToList();
-            return SearchForGameObjectsWithTag(tagList, inLineOfSight, searchRadius, targetLayers, obstructingLayers);
-        }
-
         #region Footprints
         /// <summary>
         /// Finds and returns the closest footprint.
         /// </summary>
         private GameObject SearchFootprint()
         {
-            List<Collider2D> footprints = new();
-
-            // Contact filter to find footprints
-            var footprintContactFilter = new ContactFilter2D();
-            footprintContactFilter.SetLayerMask(footprintLayer);
-
-            Physics2D.OverlapCircle(transform.position, RADAR_RADIUS, footprintContactFilter, footprints);
-            
-            var closestDistance = Mathf.Infinity;
-            GameObject closestFootprint = null;
-
-            foreach (var footprint in footprints)
-            {
-                var distanceToFootprint = Vector2.Distance(transform.position, footprint.transform.position);
-
-                if (!IsInLineOfSight(transform, footprint.transform, distanceToFootprint, invisWallLayer, footprintLayer)) continue;
-
-                if (distanceToFootprint < closestDistance)
-                {
-                    closestDistance = distanceToFootprint;
-                    closestFootprint = footprint.gameObject;
-                }
-            }
+            var closestFootprint = EntityScanner.SearchForNearestGameObjectsWithTag(transform.position, true, RADAR_RADIUS, footprintLayer, invisWallLayer, TagManager.GetTag(Tag.PlayerFootprint));
 
             return closestFootprint;
         }
@@ -331,7 +254,7 @@ namespace Flamenccio.Enemy
                 return null;
             }
             
-            if (!IsInLineOfSight(transform, target.transform, distanceToFootprint, invisWallLayer, footprintLayer))
+            if (!EntityScanner.IsInLineOfSight(transform.position, target.transform.position, distanceToFootprint, invisWallLayer, footprintLayer))
             {
                 return target = GetPreviousFootprint(currentFootprint);
             }
@@ -397,21 +320,6 @@ namespace Flamenccio.Enemy
             
             checkTimer.StartTimer();
             behaviorTimer.StartTimer();
-        }
-
-        private bool IsInLineOfSight(Transform origin, Transform target, float maxDist, LayerMask obstructingLayers, LayerMask targetLayers)
-        {
-            Vector2 dir = target.position - origin.position;
-            RaycastHit2D ray = Physics2D.Raycast(origin.position, dir.normalized, maxDist, obstructingLayers | targetLayers);
-
-            if (!ray)
-            {
-                return false;
-            }
-
-            int hitLayer = ray.collider.gameObject.layer;
-
-            return (targetLayers & (1 << hitLayer)) != 0;
         }
     }
 }
