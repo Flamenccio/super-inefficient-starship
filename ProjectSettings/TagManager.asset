@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - Wall
   - Star
@@ -21,6 +21,7 @@ TagManager:
   - ItemBox
   - Portal
   - Sensor
+  - WallDestroyer
   layers:
   - Default
   - TransparentFX
@@ -70,3 +71,5 @@ TagManager:
   - name: UI
     uniqueID: 120903243
     locked: 0
+  m_RenderingLayers:
+  - Default

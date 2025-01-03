@@ -290,7 +290,6 @@ namespace Flamenccio.Enemy
 
         private void ChangeState(EnemyState state)
         {
-            //behaviorMaxTime = 0f;
             behaviorState = state; 
             behaviorTimer.StopTimer();
             behaviorTimer.ClearLapListeners();
