@@ -5,7 +5,7 @@ namespace Flamenccio.Objects
     [RequireComponent(typeof(CircleCollider2D))]
     public class WallDestroyer : MonoBehaviour
     {
-        public GameObject FollowTarget { get; private set; }
+        public Transform FollowTarget { get; private set; }
         public float Radius { get => collider.radius; }
         public bool Sleeping { get; private set; }
         private CircleCollider2D collider;

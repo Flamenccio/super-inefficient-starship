@@ -15,7 +15,6 @@ namespace Flamenccio.Objects
     {
         public Action OnDeath;
         public string GetObjectName { get => objectName; }
-        [Tooltip("Game objects with these tags will destroy this object.")] [SerializeField] private List<string> dangerousTags = new List<string>();
         [SerializeField] private string destroyVfx;
         [SerializeField] private string spawnVfx;
         [SerializeField] private string destroySfx;
@@ -40,20 +39,20 @@ namespace Flamenccio.Objects
             maxLifeSpan -= Time.deltaTime;
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        public void OnBulletHit(Collider2D collision)
         {
-            if (dangerousTags.Contains(collision.gameObject.tag))
+            if (!collision.gameObject.TryGetComponent(out BulletControl bulletControl)) return;
+            
+            currentHP -= bulletControl.ObjectDamage;
+            
+            if (currentHP <= 0)
             {
-                currentHP -= collision.GetComponent<BulletControl>().ObjectDamage;
-                if (currentHP <= 0)
+                if (level == 0)
                 {
-                    if (level == 0)
-                    {
-                        AudioManager.Instance.PlayOneShot(destroySfx, transform.position);
-                        Die();
-                    }
-                    Downgrade();
+                    AudioManager.Instance.PlayOneShot(destroySfx, transform.position);
+                    Die();
                 }
+                Downgrade();
             }
         }
 
