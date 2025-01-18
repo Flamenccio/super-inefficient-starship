@@ -20,6 +20,12 @@ namespace Flamenccio.Utility.Timer
         {
             public OffsetListener(float offsetSeconds, OffsetReferencePoint referencePoint, float endTimeSeconds, Action listener)
             {
+                if (referencePoint == OffsetReferencePoint.FromEnd && offsetSeconds <= 0f)
+                {
+                    Debug.LogError($"Tried to set offset listener to end of timer; use a LapListener instead.");
+                    return;
+                }
+                
                 EndTime = endTimeSeconds;
                 ReferencePoint = referencePoint;
                 TimeOffsetSeconds = offsetSeconds;
@@ -67,13 +73,15 @@ namespace Flamenccio.Utility.Timer
             /// <param name="elapsedTime">Current elapsed time</param>
             public void Poll(float elapsedTime)
             {
-                if (!listenerCalled && elapsedTime >= CallTime)
+                // TODO update this to support call times at 0 (beginning)
+                
+                if (!listenerCalled && (elapsedTime >= CallTime && elapsedTime < EndTime))
                 {
                     listenerCalled = true;
                     Listener?.Invoke();
                 }
 
-                if (listenerCalled && elapsedTime < CallTime)
+                if (listenerCalled && elapsedTime >= EndTime)
                 {
                     listenerCalled = false;
                 }
@@ -189,6 +197,14 @@ namespace Flamenccio.Utility.Timer
             var oldListeners = lapListeners?.GetInvocationList().ToList();
             lapListeners = () => { };
             return oldListeners;
+        }
+
+        public List<OffsetListener> ClearOffsetListeners()
+        {
+            var listeners = offsetListeners?.ToList();
+            pollOffsetListeners = null;
+            offsetListeners?.Clear();
+            return listeners;
         }
 
         /// <summary>

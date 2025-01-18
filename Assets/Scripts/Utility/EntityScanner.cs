@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Build.Pipeline;
 
 namespace Flamenccio.Utility
 {
@@ -70,27 +71,37 @@ namespace Flamenccio.Utility
             var colliders = new List<Collider2D>();
             var contactFilter = new ContactFilter2D();
             contactFilter.SetLayerMask(targetLayers);
-            Physics2D.OverlapCircle(searchPoint, searchRadius, contactFilter, colliders);
-
+            //var amt = Physics2D.OverlapCircle(searchPoint, searchRadius, contactFilter, colliders);
+            colliders = Physics2D.OverlapCircleAll(searchPoint, searchRadius, targetLayers).ToList();
+            
             // Filter colliders to conditions specified in parameters
-            colliders = colliders.Where((x) =>
+            result = colliders.Where((x) =>
             {
-                var inLineOfSight = IsInLineOfSight(searchPoint, x.transform.position, Vector2.Distance(searchPoint, x.transform.position), obstructingLayer, targetLayers);
+                var inLineOfSight = IsInLineOfSight(
+                    searchPoint, 
+                    x.transform.position, 
+                    Vector2.Distance(searchPoint, x.transform.position), 
+                    obstructingLayer, 
+                    targetLayers);
+                
                 var hasSpecifiedTags = tags.Contains(x.tag);
                 
                 return (inLineOfSight || !lineOfSight) && hasSpecifiedTags;
             })
+            .Select(x => x.gameObject)
             .ToList();
             
-            result = colliders.Select(x => x.gameObject).ToList();
-            
-            return colliders.Count;
+            return result.Count;
         }
         
         public static bool IsInLineOfSight(Vector2 origin, Vector2 target, float maxDist, LayerMask obstructingLayers, LayerMask targetLayers)
         {
-            Vector2 dir = target - origin;
-            RaycastHit2D ray = Physics2D.Raycast(origin, dir.normalized, maxDist, obstructingLayers | targetLayers);
+            Vector2 dir = (target - origin).normalized;
+            RaycastHit2D ray = Physics2D.Raycast(
+                origin, 
+                dir, 
+                maxDist, 
+                obstructingLayers | targetLayers);
 
             if (!ray)
             {
@@ -98,8 +109,9 @@ namespace Flamenccio.Utility
             }
 
             int hitLayer = ray.collider.gameObject.layer;
+            
 
-            return (targetLayers & (1 << hitLayer)) != 0;
+            return (targetLayers & (1 << hitLayer)) > 0;
         }
     }
 }

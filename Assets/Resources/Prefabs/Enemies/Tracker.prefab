@@ -120,7 +120,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5061009787506184065}
   - component: {fileID: 5061009787506184067}
-  - component: {fileID: 5061009787506184064}
   - component: {fileID: 5061009787506184071}
   - component: {fileID: 8259752896932496880}
   - component: {fileID: -1029326180052358198}
@@ -148,6 +147,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6725216876588347490}
+  - {fileID: 8841939361839721161}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &5061009787506184067
@@ -186,39 +186,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &5061009787506184064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5061009787506184076}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55293ac8022f9b24e902c6a692529b2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 3
-  loot: 4
-  tier: 5
-  moveSpeed: 4
-  spriteRen: {fileID: 7836364339937057156}
-  animator: {fileID: 6133615341230344078}
-  enemyBullet: {fileID: 4787159891083559322, guid: e6829f2a81430cc49a9b8219c8195416, type: 3}
-  searchRadius: 10
-  fireRate: 0.75
-  wallsLayer:
-    serializedVersion: 2
-    m_Bits: 1536
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  invisWallLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  footprintLayer:
-    serializedVersion: 2
-    m_Bits: 2048
 --- !u!50 &5061009787506184071
 Rigidbody2D:
   serializedVersion: 5
@@ -231,7 +198,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
-  m_Mass: 0.0001
+  m_Mass: 10
   m_LinearDamping: 0
   m_AngularDamping: 0
   m_GravityScale: 0
@@ -261,10 +228,34 @@ MonoBehaviour:
   distanceThreshold: 40
   OnDistanceDisable:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5458893822471440821}
+        m_TargetAssemblyTypeName: Flamenccio.Enemy.EnemyBehavior, Assembly-CSharp
+        m_MethodName: Disable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDistanceEnable:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5458893822471440821}
+        m_TargetAssemblyTypeName: Flamenccio.Enemy.EnemyBehavior, Assembly-CSharp
+        m_MethodName: Enable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &-1029326180052358198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,4 +318,102 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackTelegraph:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -5096291543073651722}
+        m_TargetAssemblyTypeName: Flamenccio.Components.EntityEventAnimator, Assembly-CSharp
+        m_MethodName: PlayAnimationTemporarily
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: fc213db94b3dbfd49aaaabac5d71bd80, type: 2}
+          m_ObjectArgumentAssemblyTypeName: Flamenccio.Effects.Visual.TemporalAnimationInfo,
+            Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  fireRate: 2
+  wallsLayer:
+    serializedVersion: 2
+    m_Bits: 1536
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  invisWallLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  footprintLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  moveSpeed: 4
+  attackRange: 12
+  bulletPrefab: {fileID: 4787159891083559322, guid: e6829f2a81430cc49a9b8219c8195416, type: 3}
+--- !u!1001 &1567518106856712149
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5061009787506184065}
+    m_Modifications:
+    - target: {fileID: 5911254813367992744, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_Name
+      value: WallDestroyer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5911254813367992744, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+--- !u!4 &8841939361839721161 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8031062078769843484, guid: ba17f4646d72e93f59ab3d9c7f6628ac, type: 3}
+  m_PrefabInstance: {fileID: 1567518106856712149}
+  m_PrefabAsset: {fileID: 0}

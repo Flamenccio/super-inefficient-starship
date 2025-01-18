@@ -5,6 +5,7 @@ using Flamenccio.Core.Player;
 using Flamenccio.Objects;
 using Flamenccio.Utility.Timer;
 using Flamenccio.Utility;
+using UnityEditor;
 
 namespace Flamenccio.Enemy
 {
@@ -19,13 +20,13 @@ namespace Flamenccio.Enemy
 
         // fields
         [SerializeField] private float fireRate;
-        [SerializeField] private LayerMask wallsLayer;
         [SerializeField] private LayerMask wallLayer;
         [SerializeField] private LayerMask invisWallLayer;
         [SerializeField] private LayerMask footprintLayer;
         [SerializeField] private LayerMask playerLayer;
         [SerializeField] private float moveSpeed = 1.0f;
         [SerializeField] private float attackRange = 1.0f;
+        [SerializeField] private GameObject bulletPrefab;
 
         // Timers
         private EventTimer behaviorTimer;
@@ -39,7 +40,7 @@ namespace Flamenccio.Enemy
 
         // constants
         private const float OBSTACLE_SCAN_RADIUS = 1f / 2f;
-        private const float OBSTACLE_SCAN_DISTANCE = 1f;
+        private const float OBSTACLE_SCAN_DISTANCE = 1.0f;
         private const float RADAR_RADIUS = 10.0f; // radius of circle used to find player tracks
         private const float FOOTPRINT_DISTANCE_MIN = 1.0f; // distance to footprint that tracker must be before going to next one
         private const float FOOTPRINT_DISTANCE_MAX = 8f;
@@ -47,8 +48,7 @@ namespace Flamenccio.Enemy
         private const float WANDER_BEHAVIOR_TIMER_MIN = 3.0f;
         private const float WANDER_BEHAVIOR_TIMER_MAX = 5.0f;
         private const float CHASE_BEHAVIOR_TIMER_MAX = 0.5f;
-        private const float PATH_CORRECTION_RANDOMIZER_MIN = 0f; // both in degrees
-        private const float PATH_CORRECTION_RANDOMIZER_MAX = 20f;
+        private const float PATH_CORRECTION_RANDOMIZER = 20f;
         private readonly List<string> playerTrackTags = new() { TagManager.GetTag(Tag.Player), TagManager.GetTag(Tag.PlayerFootprint) };
 
         // necessary classes
@@ -64,23 +64,38 @@ namespace Flamenccio.Enemy
                 enabled = false;
                 return;
             }
-            
+        }
+
+        private void Start()
+        {
             // Initialize event timers
             behaviorTimer = new(1.0f, true);
             checkTimer = new(CHECK_TIMER_MAX, true);
             attackTimer = new(fireRate, true);
             attackTimer.AddLapListener(() => Attack(target.transform.position));
-            ChangeState(EnemyState.Wander);
+            attackTimer.StopTimer();
+            travelDirection.Degree = 0f;
+            ChangeState(EnemyState.Wander, true);
         }
 
         protected override void Behavior()
         {
+            if (behaviorState == EnemyState.Attack)
+            {
+                // Faces player when attacking
+                faceDirection.Vector = target.transform.position - transform.position;
+            }
+            
             rb.rotation = Mathf.LerpAngle(rb.rotation, faceDirection.Degree, 0.2f);
         }
 
         private void Attack(Vector2 position)
         {
-            // TODO spawn bullet
+            var angle = new AllAngle()
+            {
+                Vector = position - (Vector2)transform.position
+            };
+            Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0f, 0f, angle.Degree));
         }
 
         #region States
@@ -88,30 +103,42 @@ namespace Flamenccio.Enemy
 
         private void WanderBehavior()
         {
-            rb.linearVelocity = travelDirection.Vector.normalized * moveSpeed;
-            faceDirection.Degree = travelDirection.Degree;
-
+            var converter = new AllAngle();
+            converter.Degree = UnityEngine.Random.Range(0f, 360f);
+            MoveInDirection(converter.Vector);
+            
             // Set behavior timer to a random value
+            /*
             var newTime = UnityEngine.Random.Range(WANDER_BEHAVIOR_TIMER_MIN, WANDER_BEHAVIOR_TIMER_MAX);
+            behaviorTimer.StopTimer();
             behaviorTimer.SetLapTime(newTime);
-            travelDirection.Degree = UnityEngine.Random.Range(0f, 360f);
+            behaviorTimer.StartTimer();
+            */
         }
 
         private void WanderCheck()
         {
-            RaycastHit2D obstacle = Physics2D.CircleCast(transform.position, OBSTACLE_SCAN_RADIUS, travelDirection.Vector, OBSTACLE_SCAN_DISTANCE, wallsLayer);
+            RaycastHit2D obstacle = Physics2D.CircleCast(transform.position, OBSTACLE_SCAN_RADIUS, rb.linearVelocity.normalized, OBSTACLE_SCAN_DISTANCE, wallLayer | invisWallLayer);
 
-            if (!obstacle)
+            if (obstacle)
             {
-                var random = UnityEngine.Random.Range(PATH_CORRECTION_RANDOMIZER_MIN, PATH_CORRECTION_RANDOMIZER_MAX);
-                travelDirection.Degree = random + CorrectPath(obstacle.normal, travelDirection.Vector);
+                var random = UnityEngine.Random.Range(-PATH_CORRECTION_RANDOMIZER, PATH_CORRECTION_RANDOMIZER);
+                var converter = new AllAngle();
+                converter.Degree = random + CorrectPath(obstacle.normal, rb.linearVelocity.normalized);
+                MoveInDirection(converter.Vector);
             }
 
-            var track = EntityScanner.SearchForNearestGameObjectsWithTag(playerTrackTags, transform.position, true, RADAR_RADIUS, footprintLayer, invisWallLayer);
+            var track = EntityScanner.SearchForNearestGameObjectsWithTag(
+                transform.position, 
+                true, 
+                RADAR_RADIUS, 
+                footprintLayer | playerLayer, 
+                invisWallLayer, 
+                TagManager.GetTag(Tag.PlayerFootprint), TagManager.GetTag(Tag.Player));
 
             // If no tracks found, return
             if (!track) return;
-
+            
             target = track;
 
             if (track.CompareTag(TagManager.GetTag(Tag.Player)))
@@ -136,37 +163,53 @@ namespace Flamenccio.Enemy
             if (!target) return;
 
             ClearPath();
-            travelDirection.Vector = target.transform.position - transform.position;
-            faceDirection.Degree = travelDirection.Degree;
-            rb.linearVelocity = travelDirection.Vector.normalized * moveSpeed;
+            MoveInDirection(target.transform.position - transform.position);
         }
 
         private void ChaseCheck()
         {
+            // Check for nearby player in line of sight
             GameObject playerScan = EntityScanner.SearchForNearestGameObjectsWithTag(transform.position, true, attackRange, playerLayer, invisWallLayer, TagManager.GetTag(Tag.Player));
 
             if (playerScan)
             {
-                ChangeState(EnemyState.Attack);
                 target = playerScan;
-
+                ChangeState(EnemyState.Attack);
                 return;
             }
 
-            // Try to get the Footprint script from target.
-            if (!target || !target.TryGetComponent<Footprint>(out var currentFootprint))
+            // TODO FIX
+            // If the current target doesn't exist or is not a footprint, wander
+            if (!target)
             {
+                Debug.Log("Wandering: target doesn't exist");
                 ChangeState(EnemyState.Wander);
                 target = null;
-
                 return;
             }
 
+            if (!target.CompareTag(TagManager.GetTag(Tag.PlayerFootprint)))
+            {
+                Debug.Log("Wandering: target is not a footprint");
+                target = null;
+                ChangeState(EnemyState.Wander);
+                return;
+            }
+
+            if (!target.TryGetComponent<Footprint>(out var currentFootprint))
+            {
+                Debug.Log("Wandering: no footprint script found on target");
+                target = null;
+                ChangeState(EnemyState.Wander);
+                return;
+            }
+            
             float distanceToFootprint = Vector2.Distance(transform.position, target.transform.position);
             target = FollowFootprint(currentFootprint, distanceToFootprint);
 
             if (!target)
             {
+                Debug.Log("Wandering: could not find footprint");
                 ChangeState(EnemyState.Wander);
             }
         }
@@ -174,31 +217,32 @@ namespace Flamenccio.Enemy
 
         #region Attack state
 
-        // Unlike other states, this one is run every frame.
         private void AttackBehavior()
         {
             rb.linearVelocity = Vector2.zero;
 
-            if (behaviorState != EnemyState.Attack || !target) return;
+            if (!target) return;
 
-            faceDirection.Vector = target.transform.position - transform.position;
             Attack(target.transform.position);
         }
 
         private void AttackCheck()
         {
-            if (behaviorState != EnemyState.Attack) return;
-
             if (!target)
             {
                 ChangeState(EnemyState.Wander);
                 return;
             }
 
-            float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
+            var distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
+            var isInLineOfSight = EntityScanner.IsInLineOfSight(
+                transform.position, 
+                target.transform.position, 
+                Mathf.Min(distanceToPlayer, attackRange), 
+                invisWallLayer, 
+                playerLayer);
 
-            if (!EntityScanner.IsInLineOfSight(transform.position, target.transform.position, attackRange, invisWallLayer, playerLayer)
-                || distanceToPlayer > attackRange)
+            if (!isInLineOfSight || distanceToPlayer > attackRange)
             {
                 target = SearchFootprint();
                 ChangeState(EnemyState.Chase);
@@ -235,8 +279,14 @@ namespace Flamenccio.Enemy
         /// </summary>
         private GameObject SearchFootprint()
         {
-            var closestFootprint = EntityScanner.SearchForNearestGameObjectsWithTag(transform.position, true, RADAR_RADIUS, footprintLayer, invisWallLayer, TagManager.GetTag(Tag.PlayerFootprint));
-
+            var closestFootprint = EntityScanner.SearchForNearestGameObjectsWithTag(
+                transform.position, 
+                true, 
+                RADAR_RADIUS, 
+                footprintLayer, 
+                invisWallLayer, 
+                TagManager.GetTag(Tag.PlayerFootprint));
+            
             return closestFootprint;
         }
 
@@ -288,29 +338,44 @@ namespace Flamenccio.Enemy
         }
         #endregion
 
-        private void ChangeState(EnemyState state)
+        private void ChangeState(EnemyState state, bool force = false)
         {
+            if (behaviorState == state && !force) return;
+            
+            Debug.Log($"Switch state to {state}");
+            
             behaviorState = state; 
             behaviorTimer.StopTimer();
             behaviorTimer.ClearLapListeners();
+            behaviorTimer.ClearOffsetListeners();
             checkTimer.StopTimer();
             checkTimer.ClearLapListeners();
+            checkTimer.ClearOffsetListeners();
 
             switch (state)
             {
                 case EnemyState.Attack:
+                    // These AddOffsetListener are used instead of AddLapListener to set execution at the start
+                    //behaviorTimer.AddOffsetListener(AttackBehavior, 0f, EventTimer.OffsetListener.OffsetReferencePoint.FromStart);
+                    //checkTimer.AddOffsetListener(AttackCheck, 0f, EventTimer.OffsetListener.OffsetReferencePoint.FromStart);
+                    behaviorTimer.SetLapTime(fireRate);
                     behaviorTimer.AddLapListener(AttackBehavior);
                     checkTimer.AddLapListener(AttackCheck);
-                    behaviorTimer.SetLapTime(0f);
+                    behaviorTimer.AddOffsetListener(() => AttackTelegraph?.Invoke(), ATTACK_TELEGRAPH_DURATION, EventTimer.OffsetListener.OffsetReferencePoint.FromEnd);
+                    rb.linearVelocity = Vector2.zero; // Stop movement when attacking
                     break;
 
                 case EnemyState.Chase:
+                    //behaviorTimer.AddOffsetListener(ChaseBehavior, 0f, EventTimer.OffsetListener.OffsetReferencePoint.FromStart);
+                    //checkTimer.AddOffsetListener(ChaseCheck, 0f, EventTimer.OffsetListener.OffsetReferencePoint.FromStart);
                     behaviorTimer.AddLapListener(ChaseBehavior);
                     checkTimer.AddLapListener(ChaseCheck);
                     behaviorTimer.SetLapTime(CHASE_BEHAVIOR_TIMER_MAX);
                     break;
 
                 case EnemyState.Wander:
+                    //behaviorTimer.AddOffsetListener(WanderBehavior, 0f, EventTimer.OffsetListener.OffsetReferencePoint.FromStart);
+                    //checkTimer.AddOffsetListener(WanderCheck, 0f, EventTimer.OffsetListener.OffsetReferencePoint.FromStart);
                     behaviorTimer.AddLapListener(WanderBehavior);
                     checkTimer.AddLapListener(WanderCheck);
                     behaviorTimer.SetLapTime(WANDER_BEHAVIOR_TIMER_MAX);
@@ -319,6 +384,17 @@ namespace Flamenccio.Enemy
             
             checkTimer.StartTimer();
             behaviorTimer.StartTimer();
+        }
+
+        /// <summary>
+        /// Immediately moves enemy in given direction.
+        /// </summary>
+        /// <param name="direction">Direction to move in.</param>
+        private void MoveInDirection(Vector2 direction)
+        {
+            var normalizedDirection = direction.normalized;
+            rb.linearVelocity = normalizedDirection * moveSpeed;
+            faceDirection.Vector = normalizedDirection;
         }
     }
 }
