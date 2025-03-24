@@ -11,6 +11,7 @@ namespace Enemy
     public interface IEnemy
     {
         int Tier { get; }
+        GameObject GameObject { get; }
     }
 
     /// <summary>
@@ -18,6 +19,8 @@ namespace Enemy
     /// </summary>
     public class EnemyBase : Destructables, DistanceBehaviorCull.IDistanceDisable
     {
+        public GameObject GameObject { get => gameObject; }
+        
         [SerializeField] protected int tier;
         [SerializeField] protected float moveSpeed = 0f;
         [SerializeField] protected SpriteRenderer spriteRen;

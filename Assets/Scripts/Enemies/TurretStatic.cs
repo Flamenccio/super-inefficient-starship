@@ -9,7 +9,10 @@ namespace Enemy
     public class TurretStatic : EnemyShootBase, IEnemy
     {
         public int Tier { get => tier; }
-        [Tooltip("Where to fire bullets (in degrees).")][SerializeField] private List<float> angles = new();
+        
+        [Tooltip("Where to fire bullets (in degrees).")]
+        [SerializeField] 
+        private List<float> angles = new();
 
         protected override void Behavior()
         {

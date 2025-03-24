@@ -8,6 +8,7 @@ namespace Enemy
     public class TurretSpin : EnemyShootBase, IEnemy
     {
         public int Tier { get => tier; }
+        
         [SerializeField] private float rotationSpeed = 1f;
         private int rotationDirection = 1;
 

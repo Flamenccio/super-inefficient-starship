@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Enemy;
+using Flamenccio.Enemy;
 
 namespace Flamenccio.Core
 {
@@ -10,89 +10,115 @@ namespace Flamenccio.Core
     /// </summary>
     public class EnemyList : MonoBehaviour
     {
-        private const int MAXIMUM_LEVEL = 20;
+        public class EnemyTier
+        {
+            public EnemyTier(int tier)
+            {
+                Tier = tier;
+            }
+            
+            public int Tier { get; }
+            public List<EnemyAttributes> Enemies { get => enemies; }
+            private List<EnemyAttributes> enemies = new();
+        }
+        
+        [SerializeField] private string enemiesPath;
         private const int MINIMUM_ENEMY_SPAWNING_LEVEL = 1;
-        private List<GameObject> enemyList = new();
-        private GameObject[][] enemyListTiered = new GameObject[MAXIMUM_LEVEL][];
+        private List<EnemyTier> tieredEnemyList = new();
 
         private void Start()
         {
-            enemyList.AddRange(Resources.LoadAll<GameObject>("Prefabs/Enemies"));
-
-            for (int i = 0; i < enemyListTiered.Length; i++) // initialize array
-            {
-                enemyListTiered[i] = new GameObject[10];
-            }
-
-            SortLists();
+            var rawList =
+                Resources.LoadAll<GameObject>(enemiesPath)
+                .ToList();
+            tieredEnemyList = SortEnemies(rawList);
         }
 
         public GameObject GetRandomEnemy(int difficulty)
         {
-            if (difficulty < MINIMUM_ENEMY_SPAWNING_LEVEL) return null; // don't spawn anything if level isn't high enough
+            // Don't spawn anything if level isn't high enough
+            if (difficulty < MINIMUM_ENEMY_SPAWNING_LEVEL) return null;
 
-            GameObject enemy;
-            int tier = UnityEngine.Random.Range(MINIMUM_ENEMY_SPAWNING_LEVEL, difficulty);
+            var randomTier =
+                Random.Range(MINIMUM_ENEMY_SPAWNING_LEVEL,
+                    difficulty);
+            
+            // Check if there is a EnemyTier with exact tier
+            var hasExactTier = tieredEnemyList.Any(
+                e => e.Tier == randomTier);
+            var tier = tieredEnemyList[0];
 
-            while (true)
+            if (hasExactTier)
             {
-                int n = FindEmptySlot(enemyListTiered[tier]);
-                enemy = enemyListTiered[tier][UnityEngine.Random.Range(0, n)];
-                if (enemy == null)
+                tier = tieredEnemyList.First(e => e.Tier == randomTier);
+            }
+            else
+            {
+                // Find greatest tier less than randomTier
+                var lastTier = tieredEnemyList[0];
+
+                foreach (var e in tieredEnemyList)
                 {
-                    tier--;
+                    if (e.Tier > randomTier)
+                    {
+                        tier = lastTier;
+                        break;
+                    }
+                    
+                    lastTier = e;
+                }
+            }
+            
+            // Get random enemy in tier
+            var randomEnemy = Random.Range(0, tier.Enemies.Count);
+
+            return tier.Enemies[randomEnemy].gameObject;
+        }
+
+        private List<EnemyTier> SortEnemies(List<GameObject> enemies)
+        {
+            var tieredList = new List<EnemyTier>();
+
+            foreach (var e in enemies)
+            {
+                if (!e.TryGetComponent(out EnemyAttributes ie))
+                {
+                    Debug.LogWarning("Could not find type " +
+                                     $"{typeof(EnemyAttributes)} in {e}. " +
+                                     "Skipping.");
                     continue;
                 }
-                return enemy;
+                
+                RegisterEnemy(ie, tieredList);
             }
+            
+            // Finally sort the tieredList by each element's
+            // Tier property and return it
+            return tieredList.OrderBy(e => e.Tier).ToList();
         }
 
-        private void SortLists()
+        private void RegisterEnemy(EnemyAttributes enemy, 
+            List<EnemyTier> tieredList)
         {
-            foreach (GameObject obj in enemyList)
+            // If the tier is less than 0, don't add
+            if (enemy.Tier < 0) return;
+            
+            // Look for existing tier in tieredList
+            var existingTier =
+                tieredList.Exists(tier => tier.Tier == enemy.Tier);
+
+            if (existingTier)
             {
-                var list = obj.GetComponents<MonoBehaviour>().OfType<IEnemy>();
-                var list2 = list
-                    .Select(ie => ie.Tier)
-                    .Where(t => t >= 0)
-                    .ToList();
-
-                if (list2.Count == 0) continue;
-
-                var tier = list2[0];
-                int free = FindEmptySlot(enemyListTiered[tier]);
-                enemyListTiered[tier][free] = obj;
+                var tier = tieredList.First(tier => tier.Tier == enemy
+                    .Tier);
+                tier.Enemies.Add(enemy);
             }
-        }
-
-        /// <summary>
-        /// finds an empty slot in the given variant dimension of a given tier
-        /// </summary>
-        /// <param name="array">the tier </param>
-        /// <returns>the index of the free slot; -1 if there are no free slots</returns>
-        private int FindEmptySlot(GameObject[] array)
-        {
-            int i = 0;
-            foreach (GameObject obj in array)
+            else
             {
-                if (obj == null) return i;
-                i++;
+                var tier = new EnemyTier(enemy.Tier);
+                tier.Enemies.Add(enemy);
+                tieredList.Add(tier);
             }
-            return -1;
-        }
-
-        public GameObject GetPrefab(int difficulty, int random)
-        {
-            if (random >= enemyListTiered[difficulty].Length)
-            {
-                random = enemyListTiered[difficulty].Length - 1;
-            }
-            return enemyListTiered[difficulty][random];
-        }
-
-        public int GetTierCount(int tier)
-        {
-            return FindEmptySlot(enemyListTiered[tier]);
         }
     }
 }

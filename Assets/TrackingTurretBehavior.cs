@@ -18,9 +18,11 @@ namespace Flamenccio.Enemy
             // Set up attack timer
             attackEventTimer = new(fireRate, true);
             attackEventTimer.AddLapListener(Attack);
-            attackEventTimer.AddOffsetListener(() => AttackTelegraph?.Invoke
-                (), ATTACK_TELEGRAPH_DURATION, EventTimer.OffsetListener.OffsetReferencePoint.FromEnd);
-            
+            attackEventTimer.AddOffsetListener(
+                () => AttackTelegraph?.Invoke(),
+                ATTACK_TELEGRAPH_DURATION,
+                EventTimer.OffsetListener.OffsetReferencePoint
+                    .FromEnd);
             // Get player transform
             player = PlayerMotion.Instance.PlayerTransform;
         }

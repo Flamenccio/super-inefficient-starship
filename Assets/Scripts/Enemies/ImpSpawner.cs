@@ -8,8 +8,7 @@ namespace Enemy
     /// </summary>
     public class ImpSpawner : EnemyBase, IEnemy
     {
-        public int Tier
-        { get { return tier; } }
+        public int Tier { get => tier; }
 
         [SerializeField] private GameObject impPrefab;
 

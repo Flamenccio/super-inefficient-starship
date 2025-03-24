@@ -11,7 +11,7 @@ namespace Enemy
     /// </summary>
     public class Imp : EnemyShootBase, IEnemy
     {
-        public int Tier { get { return tier; } }
+        public int Tier { get => tier; }
 
         [SerializeField] private GameObject hitboxPrefab;
         [SerializeField] private float hitRadius = 1.0f;
