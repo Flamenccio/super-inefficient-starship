@@ -33,14 +33,14 @@ namespace Flamenccio.HUD
 
         private void CreateNewArrow(Transform bullet)
         {
-            float minY = Camera.main.orthographicSize;
-            float minX = minY * Camera.main.aspect;
-            dynamicHud.DisplayBulletRadarArrow(bullet, minX, minY, circleCollider.radius);
+            dynamicHud.DisplayBulletRadarArrow(bullet, 
+                circleCollider.radius);
         }
 
         private void SetRadarRadius(float radius)
         {
-            circleCollider.radius = Mathf.Clamp(radius, MIN_RADAR_RADIUS, MAX_RADAR_RADIUS);
+            circleCollider.radius = Mathf.Clamp(radius, 
+                MIN_RADAR_RADIUS, MAX_RADAR_RADIUS);
         }
     }
 }

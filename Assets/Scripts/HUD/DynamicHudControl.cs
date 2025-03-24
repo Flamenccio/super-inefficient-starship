@@ -49,14 +49,20 @@ namespace Flamenccio.HUD
             levelUpUIComponents.SetActive(false);
         }
 
-        public void DisplayBulletRadarArrow(Transform bullet, float minDistanceX, float minDistanceY, float maxDistance)
+        public void DisplayBulletRadarArrow(Transform bullet, float maxDistance)
         {
+            Debug.Log("Bullet arrow obsolete");
+            /*
             if (bullet == null) return;
 
-            var instance = Instantiate(enemyRadarArrow, transform).GetComponent<EnemyRadarArrowControl>();
+            var instance = Instantiate(enemyRadarArrow, transform)
+                .GetComponent<EnemyRadarArrowControl>();
             instance.Target = bullet;
-            instance.SetRange(minDistanceX, maxDistance, minDistanceY, maxDistance);
+            
+            // DEBUG VALUE
+            instance.MaxDistanceFromEllipse = 1000f;
             instance.Ready = true;
+            */
         }
 
         #region special charges

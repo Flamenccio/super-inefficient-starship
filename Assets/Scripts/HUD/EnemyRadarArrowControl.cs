@@ -9,10 +9,13 @@ namespace Flamenccio.HUD
     /// </summary>
     public class EnemyRadarArrowControl : MonoBehaviour
     {
+        /*
         /// <summary>
         /// The current Transform this arrow is tracking.
         /// </summary>
         public Transform Target { get; set; }
+        public float MaxDistanceFromEllipse { get; set; }
+        
         public bool Ready
         {
             get => ready;
@@ -21,6 +24,7 @@ namespace Flamenccio.HUD
                 if (!ready) ready = value;
             }
         }
+        
         private Transform player;
         [SerializeField] private Image thisImage;
 
@@ -28,60 +32,101 @@ namespace Flamenccio.HUD
         private float PATH_HALF_WIDTH;
         private float PATH_HALF_HEIGHT;
 
-        private float maxYDistance;
-        private float minYDistance;
-
-        private float maxXDistance;
-        private float minXDistance;
-
         private bool ready = false;
+        private Camera thisCamera;
 
         private void Awake()
         {
             player = PlayerMotion.Instance.PlayerTransform;
-            PATH_HALF_HEIGHT = (Camera.main.pixelHeight) / 4f;
-            PATH_HALF_WIDTH = (Camera.main.pixelWidth) / 4f;
+            thisCamera = Camera.main;
+            PATH_HALF_HEIGHT = thisCamera.pixelHeight / 4f;
+            PATH_HALF_WIDTH = thisCamera.pixelWidth / 4f;
         }
 
         private void Update()
         {
             if (!Ready) return;
 
-            if (Target == null)
+            if (!Target)
             {
                 Destroy(gameObject);
-                return; // return is absolutely redundant, but somehow fixes bugs (???)
+                return;
             }
 
-            Vector2 targetPosition = Target.position;
-            float distance = Vector2.Distance(targetPosition, player.position);
+            var targetPosition = Target.position;
 
-            if (distance > maxXDistance)
+            var translatedTargetPosition = targetPosition -
+               thisCamera.transform.position;
+
+            var positionOnEllipse = GetPositionOnPath
+                (translatedTargetPosition);
+            
+            var distanceFromEllipse = Vector2.Distance(
+                positionOnEllipse, translatedTargetPosition);
+
+            var distanceFromCenterToEllipsePoint = Vector2.Distance
+                (Vector2.zero, positionOnEllipse);
+            
+            var distanceFromCenterToTarget = Vector2.Distance
+                (Vector2.zero, thisCamera.WorldToScreenPoint(targetPosition));
+            
+            var insideEllipse = distanceFromCenterToEllipsePoint 
+                >= distanceFromCenterToTarget;
+            
+            Debug.Log("1: " + distanceFromCenterToEllipsePoint);
+            Debug.Log("2: " + distanceFromCenterToTarget);
+            
+            // When the distanceFromCenterToTarget is smaller than
+            // the distanceFromCenterToEllipsePoint, the
+            // translatedTargetPosition is inside the ellipse
+            if (insideEllipse)
+            {
+                UpdateSprite(MaxDistanceFromEllipse);
+            }
+            else
+            {
+                UpdateSprite(distanceFromEllipse);
+            }
+            
+            // If the distance from center to ellipse point is
+            // larger than the distance from ellipse point to target,
+            // "clamp" the distanceFromEllipse to 0
+            if (!insideEllipse && distanceFromEllipse >= 
+                MaxDistanceFromEllipse)
             {
                 Destroy(gameObject);
-                return; // return is redundant
+                return;
             }
-
-            transform.SetLocalPositionAndRotation(GetPositionOnPath(targetPosition), Quaternion.Euler(0f, 0f, GetRotationDegrees(targetPosition))); // update transform
-            UpdateSprite(targetPosition, player.position);
-        }
-
-        private Vector2 GetPositionOnPath(float radian)
-        {
-            return new(PATH_HALF_WIDTH * Mathf.Cos(radian), PATH_HALF_HEIGHT * Mathf.Sin(radian));
+            
+            // Update transform
+            transform.SetLocalPositionAndRotation(
+                positionOnEllipse, 
+                Quaternion.Euler(
+                    0f, 0f, GetRotationDegrees(targetPosition)));
         }
 
         private Vector2 GetPositionOnPath(Vector2 target)
         {
-            Vector2 targetOffset = target - (Vector2)Camera.main.transform.position;
-            float angleRadians = Mathf.Atan2(targetOffset.y, targetOffset.x);
+            return new Vector2(GetPositionOnEllipse(target.x, 
+                target), GetPositionOnEllipse(target.y, target));
+        }
 
-            return GetPositionOnPath(angleRadians);
+        private float GetPositionOnEllipse(float component,
+            Vector2 target)
+        {
+            return component * (PATH_HALF_WIDTH * PATH_HALF_HEIGHT) /
+                Mathf.Sqrt(
+                    Mathf.Pow(PATH_HALF_WIDTH, 2f) * Mathf.Pow(target
+                    .y, 2f) +
+                    Mathf.Pow(PATH_HALF_HEIGHT, 2f) * Mathf
+                    .Pow(target.x, 2f)
+                    );
         }
 
         private float GetRotationRadians(Vector2 target)
         {
-            Vector2 targetOffset = target - (Vector2)Camera.main.transform.position;
+            var targetOffset = target - (Vector2)thisCamera
+                .transform.position;
 
             return Mathf.Atan2(targetOffset.y, targetOffset.x);
         }
@@ -91,50 +136,16 @@ namespace Flamenccio.HUD
             return Mathf.Rad2Deg * GetRotationRadians(target);
         }
 
-        private void UpdateSprite(Vector2 target, Vector2 camera)
+        private void UpdateSprite(float distance)
         {
-            Vector2 difference = target - camera;
-            difference = new(Mathf.Abs(difference.x), Mathf.Abs(difference.y));
-
-            if (difference.x > difference.y) // use the larger difference to calculate opacity
-            {
-                UpdateSprite(difference.x, minXDistance, maxXDistance);
-            }
-            else
-            {
-                UpdateSprite(difference.y, minYDistance, maxYDistance);
-            }
+            var opacitySlope = -1f / MaxDistanceFromEllipse;
+            var opacity = Mathf.Clamp01(opacitySlope * distance + 1);
+            thisImage.color = new Color(
+                thisImage.color.r, 
+                thisImage.color.g, 
+                thisImage.color.b, 
+                opacity);
         }
-
-        private void UpdateSprite(float distance, float min, float max)
-        {
-            if (distance < min)
-            {
-                thisImage.color = new(thisImage.color.r, thisImage.color.g, thisImage.color.b, 0f); // make completely transparent
-                return;
-            }
-
-            float opacitySlope = -1f / (max - min);
-            float opacity = Mathf.Clamp01((opacitySlope * distance) - (opacitySlope * max));
-            thisImage.color = new(thisImage.color.r, thisImage.color.g, thisImage.color.b, opacity);
-        }
-
-        /// <summary>
-        /// Update the distances between the player and enemy where this arrow will be visible.
-        /// <para>Note that all minimums MUST be smaller than maximums, or this method will reject all inputs.</para>
-        /// </summary>
-        /// <param name="minX">Minimum distance on x-axis.</param>
-        /// <param name="maxX">Maximum distance on x-axis.</param>
-        /// <param name="minY">Minimum distance on y-axis.</param>
-        /// <param name="maxY">Maximum distance on y-axis.</param>
-        public void SetRange(float minX, float maxX, float minY, float maxY)
-        {
-            if (minX >= maxX || minY >= maxY) return;
-
-            minXDistance = minX;
-            maxXDistance = maxX;
-            minYDistance = minY;
-            maxYDistance = maxY;
-        }
+        */
     }
 }
